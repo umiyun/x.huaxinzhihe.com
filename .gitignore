@@ -8,3 +8,9 @@
 **/node_modules
 *.zip
 *.mp3
+**/resource
+**/layui
+**/img*
+**/font
+**/js
+**/lib

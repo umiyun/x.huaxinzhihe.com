@@ -5,7 +5,7 @@ global $_W, $_GPC;
 
 $uniacid = intval($_W['uniacid']);
 $op = !empty($_GPC['op']) ? $_GPC['op'] : 'display';
-
+//砍价
 if ($op == 'post') {
 
 

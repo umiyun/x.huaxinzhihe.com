@@ -1,0 +1,9 @@
+# Created by .ignore support plugin (hsz.mobi)
+*.png
+*.jpg
+*.jprg
+.idea
+*.log
+**/dist
+**/node_modules
+*.zip

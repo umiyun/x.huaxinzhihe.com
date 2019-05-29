@@ -1,0 +1,376 @@
+{template 'header'}
+<style>
+    .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+        vertical-align: middle;
+    }
+    .layui-table-view .layui-table{
+        width: 100%;
+    }
+    .layui-table-cell{
+        height: auto;
+    }
+</style>
+<div class="layui-tab layui-tab-brief site-demo-table">
+    <ul class="layui-tab-title site-demo-title" style="margin-bottom: 20px">
+        <li {if $op == '' || $op == 'display'}class="layui-this"{/if}>
+        <a href="{php echo $this->createWebUrl('case')}">案例列表</a>
+        </li>
+        <li {if $op == 'post'}class="layui-this"{/if}>
+        <a href="{php echo $this->createWebUrl('case',array('op'=>'post','id'=>$id))}">{if $id}编辑{else}添加{/if}案例</a>
+        </li>
+    </ul>
+    {if $op == 'display' || $op == ''}
+        <div class="panel-default" style="display:none;">
+            <div class="panel-heading">查询</div>
+            <div class="panel-body">
+                <form action="./index.php" method="get" class="form-horizontal" role="form" id="form1">
+                    <input type="hidden" name="c" value="site">
+                    <input type="hidden" name="a" value="entry">
+                    <input type="hidden" name="m" value="{YOUMI_NAME}">
+                    <input type="hidden" name="do" value="case">
+
+                    <div class="form-group">
+                        <label class="col-md-1 col-lg-1 control-label">状态</label>
+                        <div class="col-md-3">
+                            <select name="status" class="form-control">
+                                <option value="">--所有--</option>
+                                <option {if $_GPC['status'] == 0}selected{/if} value='0'>否</option>
+                                <option {if $_GPC['status'] == 1}selected{/if} value='1'>是</option>
+                            </select>
+                        </div>
+                        <label class="col-md-4 col-lg-1 control-label">关键词</label>
+                        <div class="col-md-4">
+                            <input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}" placeholder="可模糊查询">
+                        </div>
+                        <div class="col-md-1">
+                            <button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {if $list}
+        <div class="layui-form layui-border-box layui-table-view" lay-filter="LAY-table-1" lay-id="test" style=" ">
+            <div class="layui-table-box">
+                <div class="layui-table-header">
+                    <table cellspacing="0" cellpadding="0" border="0" class="layui-table">
+                        <thead>
+                        <tr>
+                            <th>
+                                <div class="layui-table-cell"><span>排序</span></div>
+                            </th>
+                            <th>
+                                <div class="layui-table-cell"><span>类型</span></div>
+                            </th>
+                            <th>
+                                <div class="layui-table-cell"><span>行业</span></div>
+                            </th>
+                            <th>
+                                <div class="layui-table-cell"><span>节日</span></div>
+                            </th>
+                            <th>
+                                <div class="layui-table-cell"><span>品牌</span></div>
+                            </th>
+                            <th>
+                                <div class="layui-table-cell"><span>模块名称</span></div>
+                            </th>
+                            <th>
+                                <div class="layui-table-cell"><span>案例名称</span></div>
+                            </th>
+                            <th>
+                                <div class="layui-table-cell"><span>案例logo</span></div>
+                            </th>
+                            <th>
+                                <div class="layui-table-cell"><span>案例说明</span></div>
+                            </th>
+                            <th>
+                                <div class="layui-table-cell"><span>是否推荐</span></div>
+                            </th>
+                            <th>
+                                <div class="layui-table-cell"><span>创建时间</span></div>
+                            </th>
+                            <th>
+                                <div align="right" class="layui-table-cell"><span>操作</span></div>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {loop $list $index $item}
+                        <tr data-index="0" class="">
+                            <td><div class="layui-table-cell">{$item['sort']}</div></td>
+                            <td><div class="layui-table-cell">{$item['cate1title']}</div></td>
+                            <td><div class="layui-table-cell">{$item['cate2title']}</div></td>
+                            <td><div class="layui-table-cell">{$item['cate3title']}</div></td>
+                            <td><div class="layui-table-cell">{$item['cate4title']}</div></td>
+                            <td><div class="layui-table-cell">{$item['moduletitle']}</div></td>
+                            <td><div style="max-width: 200px" class="layui-table-cell">{$item['title']}</div></td>
+                            <td><div class="layui-table-cell"><img style="width: 50px;" src="{php echo tomedia($item['logo'])}"></div></td>
+                            <td><div class="layui-table-cell">{$item['desc']}</div></td>
+                            <td><div class="layui-table-cell">{$item['statusname']}</div></td>
+                            <td><div class="layui-table-cell">{php echo date('Y-m-d H:i' , $item['createtime'])}</div></td>
+                            <td align="right">
+                                <div class="layui-table-cell">
+                                    <!--<a class="layui-btn layui-btn-sm" href="{php echo './index.php?c=site&a=entry&do=activity&m=' . $item['module']}" title="活动管理">活动管理</a>-->
+                                    <a class="layui-btn layui-btn-sm layui-btn-normal" href="{php echo $this->createWebUrl('case',array('op'=>'post','id'=>$item['id'],'type'=>'copy'))}" title="一键复制"><i class="layui-icon layui-icon-file-b"></i>一键复制</a>
+                                    <a class="layui-btn layui-btn-sm layui-btn-normal" href="{php echo $this->createWebUrl('case',array('op'=>'post','id'=>$item['id']))}" title="修改"><i class="layui-icon layui-icon-edit"></i>修改</a>
+                                    <a class="layui-btn layui-btn-sm layui-btn-danger" href="{php echo $this->createWebUrl('case',array('op'=>'del','id'=>$item['id']))}" onclick="return confirm('确认删除吗？');return false;" title="删除"><i class="layui-icon layui-icon-delete"></i>删除</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {/loop}
+                        <tr>
+                            <td style="padding-right: 10px" colspan="11" align="right">共计{$total}条数据</td>
+                        </tr>
+                        <tr>
+                            <td colspan="11" align="right">{$pager}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!--<div class="panel-body">-->
+            <!--<form action="" method="post" class="form-horizontal form">-->
+                <!--<div class="table-responsive panel-body">-->
+                    <!--<table class="table table-hover">-->
+                        <!--<thead class="navbar-inner">-->
+                            <!--<th class="text-center">类型</th>-->
+                            <!--<th class="text-center">行业</th>-->
+                            <!--<th class="text-center">节日</th>-->
+                            <!--<th class="text-center">品牌</th>-->
+                            <!--<th class="text-center">模块名称</th>-->
+                            <!--<th class="text-center">案例名称</th>-->
+                            <!--<th class="text-center">案例logo</th>-->
+                            <!--<th class="text-center">案例说明</th>-->
+                            <!--<th class="text-center">是否推荐</th>-->
+                            <!--<th class="text-center">创建时间</th>-->
+                            <!--<th style="text-align:right;">操作</th>-->
+                        <!--</thead>-->
+                        <!--<tbody id="level-list">-->
+                        <!--{loop $list $index $item}-->
+                        <!--<tr>-->
+                            <!--<td align="center">-->
+                                <!--<div class="type-parent">{$item['cate1title']}</div>-->
+                            <!--</td>-->
+
+                            <!--<td align="center">-->
+                                <!--<div class="type-parent">{$item['cate2title']}</div>-->
+                            <!--</td>-->
+
+                            <!--<td align="center">-->
+                                <!--<div class="type-parent">{$item['cate3title']}</div>-->
+                            <!--</td>-->
+
+                            <!--<td align="center">-->
+                                <!--<div class="type-parent">{$item['cate4title']}</div>-->
+                            <!--</td>-->
+
+                            <!--<td align="center">-->
+                                <!--<div class="type-parent">{$item['moduletitle']}</div>-->
+                            <!--</td>-->
+
+                            <!--<td align="center">-->
+                                <!--<div class="type-parent">{$item['title']}</div>-->
+                            <!--</td>-->
+
+                            <!--<td align="center">-->
+                                <!--<div class="type-parent"><img style="width: 48px;height: 48px;" src="{php echo tomedia($item['logo'])}"></div>-->
+                            <!--</td>-->
+
+                            <!--<td align="center">-->
+                                <!--<div class="type-parent">{$item['desc']}</div>-->
+                            <!--</td>-->
+
+                            <!--<td align="center">-->
+                                <!--<div class="type-parent">{$item['statusname']}</div>-->
+                            <!--</td>-->
+
+                            <!--<td align="center">-->
+                                <!--<div class="type-parent">{if $item['createtime']}{php echo date('Y-m-d H:i' , $item['createtime'])}{else}{/if}</div>-->
+                            <!--</td>-->
+
+                            <!--<td align="right">-->
+                                <!--&lt;!&ndash;<a class="btn btn-success btn-sm" href="{php echo './index.php?c=site&a=entry&do=activity&m=' . $item['module']}" title="活动管理">活动管理</a>&ndash;&gt;-->
+                                <!--<a class="btn btn-info btn-sm" href="{php echo $this->createWebUrl('case',array('op'=>'post','id'=>$item['id']))}" title="编辑">修改</a>-->
+                                <!--<a class="btn btn-danger btn-sm" href="{php echo $this->createWebUrl('case',array('op'=>'del','id'=>$item['id']))}" onclick="return confirm('确认删除吗？');return false;" title="删除">删除</a>-->
+                            <!--</td>-->
+                        <!--</tr>-->
+                        <!--{/loop}-->
+                        <!--<tr>-->
+                            <!--<td colspan="11" align="right">共计{$total}条数据</td>-->
+                        <!--</tr>-->
+                        <!--{if $pager}-->
+                        <!--<tr>-->
+                            <!--<td colspan="11" align="right">{$pager}</td>-->
+                        <!--</tr>-->
+                        <!--{/if}-->
+                        <!--</tbody>-->
+                    <!--</table>-->
+                <!--</div>-->
+            <!--</form>-->
+        <!--</div>-->
+        {else}
+        <div style="text-align: center;padding: 90px 0;" class="panel panel-default">暂无数据~</div>
+        {/if}
+    {/if}
+</div>
+{if $op == 'post'}
+<div class="main">
+	<form action="{php echo $this->createWebUrl('case',array('op' =>'post'))}" method="post" class="form-horizontal form">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				编辑案例
+			</div>
+			<div class="panel-body">
+			
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">类型</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <select name="data[cate_id1]" class="form-control">
+                            <option value="">--请选择类型--</option>
+                            {loop $cate1s $cate1}
+                            <option {if $item['cate_id1'] == $cate1['id']}selected{/if} value="{$cate1['id']}">{$cate1['title']}</option>
+                            {/loop}
+                        </select>
+                    </div>
+                </div>
+                                
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">行业</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <select name="data[cate_id2]" class="form-control">
+                            <option value="">--请选择行业--</option>
+                            {loop $cate2s $cate2}
+                            <option {if $item['cate_id2'] == $cate2['id']}selected{/if} value="{$cate2['id']}">{$cate2['title']}</option>
+                            {/loop}
+                        </select>
+                    </div>
+                </div>
+                                
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">节日</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <select name="data[cate_id3]" class="form-control">
+                            <option value="">--请选择节日--</option>
+                            {loop $cate3s $cate3}
+                            <option {if $item['cate_id3'] == $cate3['id']}selected{/if} value="{$cate3['id']}">{$cate3['title']}</option>
+                            {/loop}
+                        </select>
+                    </div>
+                </div>
+                                
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">品牌</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <select name="data[cate_id4]" class="form-control">
+                            <option value="">--请选择品牌--</option>
+                            {loop $cate4s $cate4}
+                            <option {if $item['cate_id4'] == $cate4['id']}selected{/if} value="{$cate4['id']}">{$cate4['title']}</option>
+                            {/loop}
+                        </select>
+                    </div>
+                </div>
+                                
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>模块</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <select name="data[module]" class="form-control">
+                            <option value="">--请选择模块--</option>
+                            {loop $modules $module}
+                            <option {if $item['module'] == $module['module']}selected{/if} value="{$module['module']}">{$module['title']}</option>
+                            {/loop}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>模板</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <select name="data[template_id]" class="form-control">
+                            <option value="">--请选择模板--</option>
+                            {loop $templates $template}
+                            <option {if $item['template_id'] == $template['id']}selected{/if} value="{$template['id']}">{$template['title']}</option>
+                            {/loop}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>案例名称</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" id='data[title]' name="data[title]" class="form-control" value="{$item['title']}" />
+                    </div>
+                </div>
+                                
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">案例logo</label>
+                    <div class="col-sm-8 col-xs-12">
+                        {php echo tpl_form_field_image('data[logo]', $item['logo'])}
+                    </div>
+                </div>
+                                
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>案例说明</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" id='data[desc]' name="data[desc]" class="form-control" value="{$item['desc']}" />
+                    </div>
+                </div>
+                                
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>示例url</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" id='data[link]' name="data[link]" class="form-control" value="{$item['link']}" />
+                    </div>
+                </div>
+                                
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">是否推荐</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <label class='radio-inline'>
+                            <input type='radio' name='data[status]' value='0' {if $item['status'] == 0}checked{/if} /> 否
+                        </label>
+                        <label class='radio-inline'>
+                            <input type='radio' name='data[status]' value='1' {if $item['status'] == 1}checked{/if} /> 是
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">排序</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" name="data[sort]" class="form-control" value="{$item['sort']}" />
+                        <span class="help-block">默认为0，数值越大越靠前</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-8">
+                        <input type="submit" name="submit" value="立即提交" class="layui-btn" />
+                        <input type="hidden" name="token" value="{$_W['token']}" />
+                        <input type="hidden" name="id" value="{$item['id']}" />
+                        <input type="hidden" name="type" value="{$_GPC['type']}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>
+<script>
+    require(['jquery.ui'],function() {
+        $('.multi-img-details').sortable({scroll: 'false'});
+        $('.multi-img-details').sortable('option', 'scroll', false);
+    })
+    $('form').submit(function () {
+        if($('input[name="data[title]"]').val() == ''){
+            util.message('请输入标题');
+            return false;
+        }
+        if($('select[name="data[module]"]').val() == ''){
+            util.message('请选择模块');
+            return false;
+        }
+    })
+</script>
+{/if}
+
+{template 'common/footer'}
+    

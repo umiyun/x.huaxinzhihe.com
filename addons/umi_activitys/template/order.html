@@ -1,0 +1,202 @@
+{template 'header'}
+<style>
+    .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+        vertical-align: middle;
+    }
+    .layui-table-view .layui-table{
+        width: 100%;
+    }
+    .layui-table-cell{
+        height: auto;
+    }
+</style>
+<div class="layui-tab layui-tab-brief site-demo-table">
+    <ul class="layui-tab-title site-demo-title" style="margin-bottom: 20px">
+        <li {if $op == '' || $op == 'display'}class="layui-this"{/if}>
+        <a href="javascript:;">商家续费记录</a>
+        </li>
+    </ul>
+    {if $op == 'display' || $op == ''}
+        <div class="panel-default" style="display:none;">
+            <div class="panel-heading">查询</div>
+            <div class="panel-body">
+                <form action="./index.php" method="get" class="form-horizontal" role="form" id="form1">
+                    <input type="hidden" name="c" value="site">
+                    <input type="hidden" name="a" value="entry">
+                    <input type="hidden" name="m" value="{YOUMI_NAME}">
+                    <input type="hidden" name="do" value="order">
+
+                    <div class="form-group">
+                        <label class="col-md-1 col-lg-1 control-label">状态</label>
+                        <div class="col-md-3">
+                            <select name="status" class="form-control">
+                                <option value="">--所有--</option>
+                            </select>
+                        </div>
+                        <label class="col-md-4 col-lg-1 control-label">关键词</label>
+                        <div class="col-md-4">
+                            <input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}" placeholder="可模糊查询">
+                        </div>
+                        <div class="col-md-1">
+                            <button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {if $list}
+        <div class="layui-form layui-border-box layui-table-view" lay-filter="LAY-table-1" lay-id="test" style=" ">
+        <div class="layui-table-box">
+            <div class="layui-table-header">
+                <table cellspacing="0" cellpadding="0" border="0" class="layui-table">
+                    <thead>
+                    <tr>
+                        <th>
+                            <div class="layui-table-cell"><span>用户</span></div>
+                        </th>
+                        <th>
+                            <div class="layui-table-cell"><span>套餐</span></div>
+                        </th>
+                        <th>
+                            <div class="layui-table-cell"><span>商品名</span></div>
+                        </th>
+                        <th>
+                            <div class="layui-table-cell"><span>订单号</span></div>
+                        </th>
+                        <th>
+                            <div class="layui-table-cell"><span>金额</span></div>
+                        </th>
+                        <th>
+                            <div class="layui-table-cell"><span>时间</span></div>
+                        </th>
+                        <th>
+                            <div class="layui-table-cell"><span>状态</span></div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {loop $list $index $item}
+                    <tr data-index="0" class="">
+                        <td><div class="layui-table-cell">
+                            <img src="{$item['member']['avatar']}" style="width: 30px;height: 30px;border-radius: 50%">
+                            <div>昵称：{$item['member']['nickname']}</div>
+                            <div>姓名：{$item['member']['realname']}</div>
+                            <div>电话：{$item['member']['mobile']}</div>
+                        </div></td>
+                        <td><div class="layui-table-cell">{$item['mealtitle']}</div></td>
+                        <td><div style="max-width: 200px" class="layui-table-cell">{$item['title']}</div></td>
+                        <td><div class="layui-table-cell">
+                            商户订单号：{$item['tid']} <br>
+                            {if $item['transid']}微信支付单号：{$item['transid']} <br>{/if}
+                        </div></td>
+                        <td><div class="layui-table-cell">￥{$item['price']}</div></td>
+                        <td><div class="layui-table-cell">
+                            {if $item['createtime']}下单：{php echo date('Y-m-d H:i' , $item['createtime'])}{/if} <br>
+                            {if $item['pay_time']}支付：{php echo date('Y-m-d H:i' , $item['pay_time'])}{/if}
+                        </div></td>
+                        <td><div class="layui-table-cell">{$item['statusname']}</div></td>
+                    </tr>
+                    {/loop}
+                    <tr>
+                        <td style="padding-right: 10px" colspan="9" align="right">共计{$total}条数据</td>
+                    </tr>
+                    {if $pager}
+                    <tr>
+                        <td colspan="9" align="right">{$pager}</td>
+                    </tr>
+                    {/if}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+        <!--<div class="panel-body">-->
+            <!--<form action="" method="post" class="form-horizontal form">-->
+
+                <!--<div class="table-responsive panel-body">-->
+                    <!--<table class="table table-hover">-->
+                        <!--<thead class="navbar-inner">-->
+                            <!--<th class="text-center">用户</th>-->
+                            <!--<th class="text-center">套餐</th>-->
+                            <!--<th class="text-center">商品名</th>-->
+                            <!--<th class="text-center">订单号</th>-->
+                            <!--<th class="text-center">商户订单号</th>-->
+                            <!--<th class="text-center">金额</th>-->
+                            <!--<th class="text-center">支付时间</th>-->
+                            <!--<th class="text-center">微信支付单号</th>-->
+                            <!--<th class="text-center">状态</th>-->
+                            <!--<th class="text-center">下单时间</th>-->
+                            <!--<th style="text-align:right;">操作</th>-->
+                        <!--</thead>-->
+                        <!--<tbody id="level-list">-->
+                        <!--{loop $list $index $item}-->
+                        <!--<tr>-->
+                            <!--<td align="center">-->
+                                <!--<div class="type-parent">{$item['openid']}</div>-->
+                            <!--</td>-->
+
+                            <!--<td align="center">-->
+                                <!--<div class="type-parent">{$item['mealtitle']}</div>-->
+                            <!--</td>-->
+
+                            <!--<td align="center">-->
+                                <!--<div class="type-parent">{$item['title']}</div>-->
+                            <!--</td>-->
+
+                            <!--<td align="center">-->
+                                <!--<div class="type-parent">{$item['ordersn']}</div>-->
+                            <!--</td>-->
+
+                            <!--<td align="center">-->
+                                <!--<div class="type-parent">{$item['tid']}</div>-->
+                            <!--</td>-->
+
+                            <!--<td align="center">-->
+                                <!--<div class="type-parent">{$item['price']}</div>-->
+                            <!--</td>-->
+
+                            <!--<td align="center">-->
+                                <!--<div class="type-parent">{if $item['pay_time']}{php echo date('Y-m-d H:i' , $item['pay_time'])}{else}{/if}</div>-->
+                            <!--</td>-->
+
+                            <!--<td align="center">-->
+                                <!--<div class="type-parent">{$item['transid']}</div>-->
+                            <!--</td>-->
+
+                            <!--<td align="center">-->
+                                <!--<div class="type-parent">{$item['status']}</div>-->
+                            <!--</td>-->
+
+                            <!--<td align="center">-->
+                                <!--<div class="type-parent">{if $item['createtime']}{php echo date('Y-m-d H:i' , $item['createtime'])}{else}{/if}</div>-->
+                            <!--</td>-->
+
+                            <!--<td align="right">-->
+
+                                <!--<a class="btn btn-danger btn-sm" href="{php echo $this->createWebUrl('order',array('op'=>'del','id'=>$item['id']))}" onclick="return confirm('确认删除吗？');return false;" title="删除">删除</a>-->
+                            <!--</td>-->
+                        <!--</tr>-->
+                        <!--{/loop}-->
+                        <!--<tr>-->
+                            <!--<td colspan="11" align="right">共计{$total}条数据</td>-->
+                        <!--</tr>-->
+                        <!--{if $pager}-->
+                        <!--<tr>-->
+                            <!--<td colspan="11" align="right">{$pager}</td>-->
+                        <!--</tr>-->
+                        <!--{/if}-->
+                        <!--</tbody>-->
+                    <!--</table>-->
+                <!--</div>-->
+            <!--</form>-->
+        <!--</div>-->
+        {else}
+        <div style="text-align: center;padding: 90px 0;" class="panel panel-default">暂无数据~</div>
+        {/if}
+    {/if}
+</div>
+<script>
+    console.log({php echo json_encode($list)})
+</script>
+{template 'common/footer'}
+    

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns="http://s.we7.cc" versionCode="0.8,1.0">
+	<application setting="false">
+		<name><![CDATA[活动宝]]></name>
+		<identifie><![CDATA[umi_activitys]]></identifie>
+		<version><![CDATA[1.3.0]]></version>
+		<type><![CDATA[biz]]></type>
+		<ability><![CDATA[活动宝]]></ability>
+		<description><![CDATA[活动宝QQ群：758511946]]></description>
+		<author><![CDATA[攸米网络]]></author>
+		<url><![CDATA[http://s.we7.cc]]></url>
+	</application>
+	<platform>
+		<subscribes>
+			<message type="text" />
+		</subscribes>
+		<handles>
+			<message type="subscribe" />
+			<message type="qr" />
+			<message type="text" />
+			<message type="image" />
+		</handles>
+		<rule embed="false" />
+		<card embed="false" />
+		<supports>
+			<item type="app" ></item>
+		</supports>
+	</platform>
+	<bindings>
+		<cover>
+			<entry title="首页" do="index" state="" direct="false" />
+		</cover>
+		<menu>
+			<entry title="系统设置" do="system" state="" direct="false" displayorder="1"/>
+			<entry title="首页轮播" do="banner" state="" direct="false" displayorder="2"/>
+			<entry title="行业管理" do="industry" state="" direct="false" displayorder="3"/>
+			<entry title="商家管理" do="shop" state="" direct="false" displayorder="4"/>
+			<entry title="分类管理" do="cate" state="" direct="false" displayorder="5"/>
+			<entry title="案例管理" do="case" state="" direct="false" displayorder="6"/>
+			<entry title="套餐管理" do="meal" state="" direct="false" displayorder="7"/>
+			<entry title="音乐分类" do="musiccate" state="" direct="false" displayorder="8"/>
+			<entry title="音乐管理" do="music" state="" direct="false" displayorder="9"/>
+			<entry title="帮助分类" do="helpcate" state="" direct="false" displayorder="10"/>
+			<entry title="帮助管理" do="help" state="" direct="false" displayorder="11"/>
+			<entry title="订单管理" do="order" state="" direct="false" displayorder="12"/>
+			<entry title="图片分类" do="imgcate" state="" direct="false" displayorder="13"/>
+			<entry title="图片管理" do="img" state="" direct="false" displayorder="14"/>
+			<entry title="模版管理" do="template" state="" direct="false" displayorder="15"/>
+			<entry title="公告管理" do="notice" state="" direct="false" displayorder="16"/>
+			<entry title="特效管理" do="effects" state="" direct="false" displayorder="17"/>
+			<entry title="特效分类" do="effectscate" state="" direct="false" displayorder="18"/>
+			<entry title="提现管理" do="withdraw" state="" direct="false" displayorder="19"/>
+			<entry title="活动管理" do="activitys" state="" direct="false" displayorder="20"/>
+			<entry title="导航管理" do="navs" state="" direct="false" displayorder="21"/>
+
+		</menu>
+	</bindings>
+	<permissions>
+	</permissions>
+	<install><![CDATA[install.php]]></install>
+	<uninstall><![CDATA[]]></uninstall>
+	<upgrade><![CDATA[upgrade.php]]></upgrade>
+</manifest>

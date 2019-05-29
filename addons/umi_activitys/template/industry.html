@@ -1,0 +1,141 @@
+{template 'header'}
+<style>
+    .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+        vertical-align: middle;
+    }
+    .layui-table-view .layui-table{
+        width: 100%;
+    }
+    .layui-table-cell{
+        height: auto;
+    }
+</style>
+<div class="layui-tab layui-tab-brief site-demo-table">
+    <ul class="layui-tab-title site-demo-title" style="margin-bottom: 20px">
+        <li {if $op == '' || $op == 'display'}class="layui-this"{/if}>
+        <a href="{php echo $this->createWebUrl('industry')}">行业列表</a>
+        </li>
+        <li {if $op == 'post'}class="layui-this"{/if}>
+        <a href="{php echo $this->createWebUrl('industry',array('op'=>'post','id'=>$id))}">{if $id}编辑{else}添加{/if}行业</a>
+        </li>
+    </ul>
+    {if $op == 'display' || $op == ''}
+        {if $list}
+        <div class="layui-form layui-border-box layui-table-view" lay-filter="LAY-table-1" lay-id="test" style=" ">
+            <div class="layui-table-box">
+                <div class="layui-table-header">
+                    <table cellspacing="0" cellpadding="0" border="0" class="layui-table">
+                        <thead>
+                        <tr>
+                            <th>
+                                <div class="layui-table-cell"><span>行业名称</span></div>
+                            </th>
+                            <th>
+                                <div class="layui-table-cell"><span>行业logo</span></div>
+                            </th>
+                            <th>
+                                <div class="layui-table-cell"><span>状态</span></div>
+                            </th>
+                            <th>
+                                <div class="layui-table-cell"><span>创建时间</span></div>
+                            </th>
+                            <th>
+                                <div align="right" class="layui-table-cell"><span>操作</span></div>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {loop $list $index $item}
+                        <tr data-index="0" class="">
+                            <td style="max-width: 300px"><div class="layui-table-cell">{$item['title']}</div></td>
+                            <td><div class="layui-table-cell"><img style="width: 50px;" src="{php echo tomedia($item['logo'])}"></div></td>
+                            <td><div class="layui-table-cell">{$item['statusname']}</div></td>
+                            <td><div class="layui-table-cell">{php echo date('Y-m-d H:i' , $item['createtime'])}</div></td>
+                            <td align="right">
+                                <div class="layui-table-cell">
+                                    <a class="layui-btn layui-btn-sm layui-btn-normal" href="{php echo $this->createWebUrl('industry',array('op'=>'post','id'=>$item['id']))}" title="修改"><i class="layui-icon layui-icon-edit"></i>修改</a>
+                                    <a class="layui-btn layui-btn-sm layui-btn-danger" href="{php echo $this->createWebUrl('industry',array('op'=>'del','id'=>$item['id']))}" onclick="return confirm('确认删除吗？');return false;" title="删除"><i class="layui-icon layui-icon-delete"></i>删除</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {/loop}
+                        <tr>
+                            <td style="padding-right: 10px" colspan="9" align="right">共计{$total}条数据</td>
+                        </tr>
+                        {if $pager}
+                        <tr>
+                            <td colspan="9" align="right">{$pager}</td>
+                        </tr>
+                        {/if}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {else}
+        <div style="text-align: center;padding: 90px 0;" class="panel panel-default">暂无数据~</div>
+        {/if}
+    {/if}
+</div>
+{if $op == 'post'}
+<div class="main">
+	<form action="{php echo $this->createWebUrl('industry',array('op' =>'post'))}" method="post" class="form-horizontal form">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				编辑行业
+			</div>
+			<div class="panel-body">
+			
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>行业名称</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" id='data[title]' name="data[title]" class="form-control" value="{$item['title']}" />
+                    </div>
+                </div>
+                                
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">行业logo</label>
+                    <div class="col-sm-8 col-xs-12">
+                        {php echo tpl_form_field_image('data[logo]', $item['logo'])}
+                    </div>
+                </div>
+                                
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">状态</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <label class='radio-inline'>
+                            <input type='radio' name='data[status]' value='1' {if $item['status'] == 1}checked{/if} /> 启用
+                        </label>
+                        <label class='radio-inline'>
+                            <input type='radio' name='data[status]' value='2' {if $item['status'] == 2}checked{/if} /> 禁用
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-8">
+                        <input type="submit" name="submit" value="立即提交" readonly class="layui-btn" />
+                        <input type="hidden" name="token" value="{$_W['token']}" />
+                        <input type="hidden" name="id" value="{$item['id']}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>
+<script>
+    require(['jquery.ui'],function() {
+        $('.multi-img-details').sortable({scroll: 'false'});
+        $('.multi-img-details').sortable('option', 'scroll', false);
+    })
+    $('form').submit(function () {
+        if($('input[name="data[title]"]').val() == ''){
+            util.message('请输入标题');
+            return false;
+        }
+    })
+</script>
+{/if}
+
+{template 'common/footer'}
+    

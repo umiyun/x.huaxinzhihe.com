@@ -1,0 +1,228 @@
+{template 'header'}
+<style>
+    body{
+        background: #f3f3f3;
+    }
+    .detail{
+        background: #fff;
+        margin: 3% 0;
+        padding: 2%;
+        display: block;
+    }
+    .d_top h5{
+        color: #555;
+    }
+    .d_data{
+        margin-top: 10px;
+    }
+    .d_data>div{
+        width: 25%;
+        background: #FFE6BF;
+        padding: 10px 0;
+    }
+    .d_data .bg1{
+        background: #FEEED7;
+    }
+    .btns{
+        background: #fff;
+        padding: 15px 5px;
+    }
+    .btns>div{
+        margin: 5px 0;
+    }
+    .btns span{
+        width: 70%;
+        font-size: 12px;
+    }
+    .a_btn{
+        width: 28%;
+    }
+    .btns2{
+
+    }
+    .btns2 a{
+        width: 25%;
+        text-align: center;
+        border: 1px solid #F8A40D;
+        margin: 2% 4%;
+        border-radius: 5px;
+    }
+    .hx{
+        position: fixed;
+        border: 1px solid #aaaaaa;
+        border-radius: 10px;
+        top: 15%;
+        background: #fff;
+        color: #111;
+        padding: 5%;
+        width: 80%;
+        left: 10%;
+        z-index: 20;
+        display: none;
+    }
+    .hx .icon-Close{
+        position: absolute;
+        left: 44%;
+        bottom: -30%;
+        z-index: 20;
+        font-size: 40px;
+        color: #fff;
+    }
+    .hx img{
+        width: 100%;
+    }
+</style>
+
+<div class="detail">
+    <div class="d_top flex flex_a_center">
+        <img style="width: 90px;height:90px;margin-right: 5px" src="{$item['logo']}" alt="">
+        <div class="flex1 p_relative" style="height: 90px">
+            <h5 class="p_absolute" style="top: 0;left: 0">{$item['title']}</h5>
+            <div class="p_absolute" style="bottom: 0;left: 0">
+                <div class="ft12 color777" style="">创建时间:{php echo date('Y-m-d H:i:s',$item['createtime'])}</div>
+                <div class="ft12 color777" style="">开始时间:{php echo date('Y-m-d H:i:s',$activity['starttime'])}</div>
+                <div class="ft12 color777" style="">结束时间:{php echo date('Y-m-d H:i:s',$activity['endtime'])}</div>
+            </div>
+        </div>
+    </div>
+    <div class="flex d_data">
+        <div class="text_center">{$activity['pv']}<br><span class="color777 ft12">浏览人数</span></div>
+        <div class="text_center bg1">{$activity['share']}<br><span class="color777 ft12">分享人数</span></div>
+        <div class="text_center">{$activity['participate']}<br><span class="color777 ft12">报名人数</span></div>
+        <div class="text_center bg1">{$activity['success']}<br><span class="color777 ft12">中奖人次</span></div>
+    </div>
+</div>
+<div class="btns">
+    <div class="flex flex_j_center">
+        <span>分享至朋友圈：保存二维码图片分享</span>
+        <a href="javascript:;" class="a_btn" onclick="hecheng()">二维码</a>
+    </div>
+    <div class="flex flex_j_center">
+        <span>配置到公众号：复制链接到公众号</span>
+        <a href="javascript:;" class="a_btn" onclick="copy()">复制链接</a>
+    </div>
+    <div class="flex flex_j_center flex_a_center">
+        <span>印刷二维码：保存二维码用于印刷</span>
+        <a href="javascript:;" class="a_btn" onclick="qrcode(this)" data-url="{$_W['siteroot']}index.php?c=entry&i={$_W['uniacid']}&do=index&activity_id={$item['activity_id']}&m={$item['module']}">二维码</a>
+    </div>
+    <div class="flex flex_j_center flex_a_center">
+        <span>报名信息：在线查看报名人员情况</span>
+        <a href="{php echo $this->createMobileUrl('cuts',['op'=>'prize','activity_id'=>$item['activity_id'],module=>$item['module']])}" class="a_btn">报名信息</a>
+    </div>
+    <!--<div class="flex flex_j_center">-->
+        <!--<span>分享图标：分享链接中显示的小图标</span>-->
+        <!--<a href="javascript:;" class="a_btn">修改</a>-->
+    <!--</div>-->
+    <div class="flex flex_j_center flex_a_center">
+        <span>中奖：在线核对中奖顾客情况</span>
+        <a href="{php echo $this->createMobileUrl('prize_log',['activity_id'=>$item['activity_id'],module=>$item['module']])}" class="a_btn">中奖记录</a>
+    </div>
+</div>
+<div class="btns2 flex flex_wrap">
+    <a href="./index.php?c=entry&i={$_W['uniacid']}&do=index&activity_id={$item['activity_id']}&m={$item['module']}"><i class="iconfont icon-chakan"></i>查看</a>
+    <a href="{php echo $this->createMobileUrl('making')}&case_id={$item['case_id']}&module={$item['module']}&activity_id={$item['id']}&cz=bj"><i class="iconfont icon-bianji1"></i>编辑</a>
+    <!--<a href=""><i class="iconfont icon-tianqi_icon"></i>名单</a>-->
+    <a href="{php echo $this->createMobileUrl('making')}&case_id={$item['case_id']}&module={$item['module']}&activity_id={$item['id']}&cz=fz"><i class="iconfont icon-tianjia"></i>复制</a>
+
+    <a class="down_status" href="javascript:;" {if $item['status']=='2'}style="display:none;"{/if}><i class="iconfont icon-shangchuanxiangshangjiantou"></i>下架</a>
+
+    <a class="up_status" href="javascript:;" {if $item['status']=='1'}style="display:none;"{/if}><i class="iconfont icon-xsaaa"></i>上架</a>
+
+    <a class="del_status" href="javascript:;" {if $item['status']=='4'}style="display:none;"{/if}><i class="iconfont icon-Close"></i>删除</a>
+</div>
+<!--二维码-->
+<div class="bg_fixed"></div>
+<div class="hx">
+    <div id="qrcode"></div>
+    <i class="iconfont icon-Close" onclick="$('.hx,.bg_fixed').fadeOut()"></i>
+</div>
+{template 'temp/canvas_share'}
+{template 'temp/icon_backhome'}
+<input style="position: fixed;top: -10%;" type="text" id="inp" value="{$_W['siteroot']}index.php?c=entry&i={$_W['uniacid']}&do=index&activity_id={$item['activity_id']}&m={$item['module']}" />
+<script>
+    function copy() {
+        var Url2=document.getElementById("inp");
+        Url2.select(); // 选择对象
+        try{
+            if(document.execCommand('copy', false, null)){
+                document.execCommand("Copy");
+                $.toast("复制成功");
+            } else{
+                $.toast("复制失败",'cancel');
+            }
+        } catch(err){
+            $.toast("复制失败",'cancel');
+        }
+    }
+
+</script>
+
+<script>
+    // 提示
+    function tips(txt){
+        $('.tips').html(txt).fadeIn()
+        setTimeout(function(){$('.tips').fadeOut()},1500);
+    }
+    function qrcode(self) {
+        $('#qrcode').html('')
+        new QRCode(document.getElementById("qrcode"), $(self).attr('data-url'));  // 设置要生成二维码的链接
+        $('.hx,.bg_fixed').fadeIn()
+    }
+    //下架
+    $('.down_status').click(function () {
+        $.post(
+            "{php echo $this->createMobileUrl('activitys',['op'=>'un_status'])}",
+            {
+                'activity_id':"{$_GPC['activity_id']}",
+            },
+            function (data) {
+                tips(data.message)
+                $('.down_status').hide()
+                $('.up_status').show()
+            },'json'
+        )
+    })
+    //上架
+    $('.up_status').click(function () {
+        $.post(
+            "{php echo $this->createMobileUrl('activitys',['op'=>'up_status'])}",
+            {
+                'activity_id':"{$_GPC['activity_id']}",
+            },
+            function (data) {
+                tips(data.message)
+                $('.up_status').hide()
+                $('.down_status').show()
+            },'json'
+        )
+    })
+    //删除
+    $('.del_status').click(function () {
+        var r=confirm("确定删除该活动吗?")
+        if (r==true)
+        {
+            $.post(
+                "{php echo $this->createMobileUrl('activitys',['op'=>'del_status'])}",
+                {
+                    'activity_id':"{$_GPC['activity_id']}",
+                },
+                function (data) {
+                    tips(data.message);
+                    setTimeout(function () {
+                        location.href="{php echo $this->createMobileUrl('activitys',['op'=>'activitys_my'])}";
+                    },1500)
+                },'json'
+            )
+        }
+
+    })
+
+
+
+    console.log('$item',{php echo json_encode($item)})
+    console.log('$_W',{php echo json_encode($_W)})
+    console.log('$activity',{php echo json_encode($activity)})
+</script>
+
+
+{template 'footer'}

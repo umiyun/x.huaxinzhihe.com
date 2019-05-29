@@ -1,0 +1,379 @@
+{template 'header'}
+<link rel="stylesheet" type="text/css" href="{YOUMI_URL_APP}hui/hui.css" />
+<link rel="stylesheet" type="text/css" href="{YOUMI_URL_APP}js/layout/base.css" />
+<script type="text/javascript" src="{YOUMI_URL_APP}hui/hui.js" charset="utf-8"></script>
+<script type="text/javascript" src="{YOUMI_URL_APP}hui/hui-picker.js" charset="utf-8"></script>
+<style>
+    *{box-sizing: inherit;}
+    div{
+        font-size: 12px;
+    }
+    .a_head{
+        position: relative;
+    }
+    .h_img{
+        width: 100%;
+    }
+    #musicSelect,#effectsSelect{
+        position: absolute;
+        top: 43%;
+        right: 2%;
+        z-index: 5;
+        padding: 2%;
+        border-radius: 50%;
+        background: rgba(0,0,0,0.7);
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        line-height: 13px;
+    }
+    .a_head .iconfont{
+        color: #fff;
+        font-size: 20px;
+    }
+    #effectsSelect{
+        top: 65%;
+    }
+    .h_tips{
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        color: #fff;
+        background: rgba(0,0,0,0.4);
+        padding: 0 4%;
+    }
+    .h_changes{
+        color: #fff;
+        font-size: 16px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 5;
+        width: 100%;
+    }
+    .img_change{
+        margin-left: 2%;
+    }
+    .h_changes .iconfont{
+        font-size: 20px;
+        color: #F8A40D;
+    }
+    .stencil_change,.img_change{
+        background: rgba(0,0,0,0.6);
+        padding: 0 2%;
+        width: 25%;
+    }
+
+    .a_content{
+        margin: 4%;
+        box-sizing: border-box;
+    }
+    .c_title{
+        text-align: center;
+    }
+    .c_title_btn{
+        background: rgba(0,0,0,0.4);
+        display: inline-block;
+        color: #fff;
+        padding: 1% 2%;
+        margin: 2%;
+    }
+    .c_title_tips{
+        color: #777;
+    }
+    textarea{
+        border: 1px dashed #F8A40D;
+        text-align: center;
+        margin: 0;
+    }
+    .c_title textarea{
+        padding: 2%;
+        font-size: 16px;
+        padding-bottom: 10px;
+    }
+    .c_title_tips{
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+        color: #ddd;
+    }
+    .ct_date>span{
+        width: 25%;
+    }
+    .ct_date>input{
+        width: 52%;
+        margin: 2% 4%;
+    }
+    input[type=color], input[type=date], input[type=datetime-local], input[type=datetime], input[type=email], input[type=month], input[type=number], input[type=password], input[type=search], input[type=tel], input[type=text], input[type=time], input[type=url], input[type=week], select{
+        border: 1px dashed #F8A40D;
+        text-align: center;
+        margin: 0 2%;
+        height: 35px;
+        padding: 5px;
+    }
+    .basic_setting{
+        background: #fff;
+        border: 1px solid #aaa;
+        border-radius: 10px;
+        padding: 2%;
+    }
+
+    .s_price{
+
+    }
+    .p_gimg{
+        text-align: center;
+        border: 1px solid #aaa;
+        width: 100px;
+        height: 100px;
+        overflow: hidden;
+    }
+    .p_price{
+        margin-left: 4%;
+    }
+    input.select_goodimg{
+        opacity: 0;
+    }
+    .p_gimg .select_goodimg,.p_gimg .good_logo{
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+    .p_gimg .good_logo{
+        z-index: 5;
+    }
+</style>
+
+<div>
+    <!--头部-->
+    <div class="a_head">
+        <img class="h_img" src="{YOUMI_URL_APP}img/m_headimg.jpg" alt="">
+        <div id="musicSelect">
+            <i class="iconfont icon-tianqi_icon"></i>
+            <div class="ft12" style="color: #fff">音乐</div>
+        </div>
+        <div id="effectsSelect">
+            <i class="iconfont icon-tianqi_icon"></i>
+            <div class="ft12" style="color: #fff">特效</div>
+        </div>
+        <div class="h_tips">图片建议尺寸:750*600</div>
+        <div class="h_changes flex flex_a_center">
+            <div class="stencil_change flex flex_a_center">
+                <i class="iconfont icon-tianqi_icon"></i>
+                <div class="ft14">更换模板</div>
+            </div>
+            <div class="img_change flex flex_a_center">
+                <i class="iconfont icon-tianqi_icon"></i>
+                <div class="ft14">更换图片</div>
+            </div>
+        </div>
+
+    </div>
+    <!--下部分，背景图片 background->repeat-->
+    <div class="a_content">
+        <!--活动标题-->
+        <div class="c_title">
+            <div class="c_title_btn flex flex_a_center">
+                <i class="iconfont icon-tianqi_icon sys_color"></i>
+                <span>更改标题</span>
+            </div>
+            <div class="p_relative">
+                <textarea maxlength="30">**家纺新装上阵，一次搞定所有床上用品！</textarea>
+                <span class="ft10 c_title_tips">包括标点符号最多30字</span>
+            </div>
+            <div class="ct_date flex flex_a_center flex_wrap">
+                <span><i class="iconfont icon-tianqi_icon"></i>活动时间</span>
+                <input type="text" id='datetime-picker1' value="1922"/>
+                <span>至</span>
+                <input type="text" id='datetime-picker2'/>
+            </div>
+        </div>
+
+        <div class="basic_setting flex flex_wrap">
+            <div class="s_price flex flex_wrap flex_j_between">
+                <div class="p_gimg p_relative">
+                    <div>
+                        <input class="select_goodimg" type="file" accept="image/png,image/gif,image/jpeg" onchange="selectGoodimg(this)">
+                        <i class="iconfont icon-tianqi_icon" style="font-size: 30px"></i>
+                        <div>添加图片</div>
+                        <div>(只能添加一张)</div>
+                    </div>
+                    <img class="good_logo" src="" alt="">
+                </div>
+                <div class="p_price flex1">
+                    <div class="s_detail">
+                        <div class="flex flex_a_center">
+                            <span><i class="iconfont icon-tianqi_icon"></i>原价</span>
+                            <input type="number" class=""/>
+                            <span>元</span>
+                        </div>
+                        <div></div>
+                    </div>
+                    <div class="s_detail">
+                        <div class="flex flex_a_center">
+                            <span><i class="iconfont icon-tianqi_icon"></i>底价</span>
+                            <input type="number" class=""/>
+                            <span>元</span>
+                        </div>
+                        <div></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="s_detail">
+                <div class="flex flex_a_center">
+                    <span><i class="iconfont icon-tianqi_icon"></i>原价</span>
+                    <input type="number" class=""/>
+                    <span>元</span>
+                </div>
+                <div></div>
+            </div>
+            <div class="s_detail">
+                <div class="flex flex_a_center">
+                    <span><i class="iconfont icon-tianqi_icon"></i>底价</span>
+                    <input type="number" class=""/>
+                    <span>元</span>
+                </div>
+                <div></div>
+            </div>
+
+        </div>
+
+
+
+    </div>
+    <!--模板弹窗-->
+
+
+    <!--更换图片弹窗-->
+
+
+
+</div>
+
+
+<script>
+
+
+    console.log({php echo json_encode($logo)})
+</script>
+<script>
+    var datas={
+        music_id:'',
+        effects_id:'',
+        music_id:'',
+        music_id:'',
+        music_id:'',
+        music_id:'',
+        music_id:'',
+    };
+
+
+
+    var musicSelect = new huiPicker('#musicSelect', function(){
+        var val = musicSelect.getVal(1);
+        var txt = musicSelect.getText(1);
+        datas.music_id=val;
+    });
+    var effectsSelect = new huiPicker('#effectsSelect', function(){
+        var val = musicSelect.getVal(1);
+        var txt = musicSelect.getText(0);
+        datas.effects_id=val;
+    });
+    musicSelect.level = 2;
+    effectsSelect.level = 2;
+    var musics = [{
+            value: '10',
+            text: '无',
+            children: [
+                {
+                    value: '20',
+                    text: '无背景音效'
+                }
+            ]
+        },
+        {
+            value: '1',
+            text: '轻音乐',
+            children: [
+                {
+                    value: '2',
+                    text: 'victory'
+                }
+            ]
+        },
+        {
+            value: '3',
+            text: '流行音乐',
+            children: [
+                {
+                    value: '4',
+                    text: '勇敢走出去'
+                }
+            ]
+        },
+    ];
+    var effects = [{
+            value: '0',
+            text: '无',
+            children: [
+                {
+                    value: '0',
+                    text: '无背景动效'
+                }
+            ]
+        },
+        {
+            value: '1',
+            text: '促销',
+            children: [
+                {
+                    value: '2',
+                    text: '彩纸'
+                },
+                {
+                    value: '2',
+                    text: '黄丝带'
+                },
+                {
+                    value: '2',
+                    text: '彩球'
+                },
+                {
+                    value: '2',
+                    text: '优惠券'
+                }
+            ]
+        },
+        {
+            value: '3',
+            text: '节庆',
+            children: [
+                {
+                    value: '4',
+                    text: '康乃馨'
+                }
+            ]
+        },
+    ];
+    musicSelect.bindRelevanceData(musics);
+    effectsSelect.bindRelevanceData(effects);
+
+    $("#datetime-picker1").datetimePicker();
+    $("#datetime-picker2").datetimePicker();
+
+
+   function selectGoodimg(self) {
+       var reader=new FileReader();
+       reader.onload=function(e){
+           // console.log( reader.result);  //或者 e.target.result都是一样的，都是base64码
+            $('.good_logo').attr('src',reader.result)
+       }
+       reader.readAsDataURL(self.files[0])
+   }
+
+</script>
+{template 'footer'}

@@ -1,0 +1,25 @@
+{template 'header'}
+<style>
+
+</style>
+{if !empty($withdraw)}
+    {loop $withdraw $wv}
+    <div class="weui-cell">
+        <div class="weui-cell__bd">
+            <p>{php echo date('Y-m-d H:i:s',$wv['createtime'])}</p>
+            <p class="ft12 color777">{$wv['statusname']}</p>
+        </div>
+        <div class="weui-cell__ft sys_color">{$wv['apply']}元</div>
+    </div>
+    {/loop}
+{else}
+    <div style="padding: 22% 0 30% 0;text-align: center;">
+        <i class="iconfont icon-kong" style="font-size: 6rem;display: block;margin: 0 auto;"></i>
+        <div style="font-size: 20px;margin-bottom: 15px">暂无提现记录~</div>
+    </div>
+{/if}
+<script>
+
+    console.log({php echo json_encode($withdraw)})
+</script>
+{template 'footer'}

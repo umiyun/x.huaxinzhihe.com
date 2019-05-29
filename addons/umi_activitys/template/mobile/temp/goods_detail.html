@@ -1,0 +1,72 @@
+<div class="basic_setting p_relative flex flex_wrap">
+    <!--图片 价格-->
+    <div class="s_price flex flex_wrap flex_j_between flex_a_center">
+        <div class="p_gimg p_relative flex_a_center">
+            <input class="select_goodimg" type="file" accept="" onchange="selectGoodimg(this)">
+            <div>
+                <i class="iconfont icon-tupiantianjia" style="font-size: 30px"></i>
+                <div class="color777 ft14">添加图片</div>
+                <div class="color777 ft10">(只能添加一张)</div>
+            </div>
+            <img class="good_logo" src="" alt="">
+            <input type="hidden" class="good_id">
+            <span>商品 <span class="sort_goods">1</span></span>
+        </div>
+        <div class="p_price flex1">
+            <div class="s_detail">
+                <div class="flex flex_a_center">
+                    <span class="word-break"><i class="iconfont icon-essential"></i>原价</span>
+                    <input type="number" class="d_oprice"/>
+                    <span>元</span>
+                </div>
+                <div class="ft10 color777">如有报名者不可修改</div>
+            </div>
+            <div class="s_detail">
+                <div class="flex flex_a_center">
+                    <span class="word-break"><i class="iconfont icon-essential"></i>底价</span>
+                    <input type="number" class="d_rprice"/>
+                    <span>元</span>
+                </div>
+                <div class="ft10 color777">如有报名者不可修改</div>
+            </div>
+        </div>
+    </div>
+    <!--砍价次数-->
+    <div class="s_nums flex">
+        <div class="s_detail">
+            <div class="flex flex_a_center">
+                <span class="word-break"><i class="iconfont icon-essential"></i>需砍价</span>
+                <input type="number" class="d_times"/>
+                <span>次</span>
+                <div></div>
+            </div>
+        </div>
+        <div class="s_detail">
+            <div class="flex flex_a_center">
+                <span class="word-break"><i class="iconfont icon-essential"></i>数量</span>
+                <input type="number" class="d_gnum"/>
+                <span>份</span>
+            </div>
+            <div class="ft10 color777">如有报名者，数量只能增不能减</div>
+        </div>
+    </div>
+    <!--描述-->
+    <textarea style="display: none" class="s_desc text_left" placeholder="商品描述(200字内)" maxlength="200"></textarea>
+    <!--添加图片-->
+    <div class="s_goodimg p_relative" style="display: none">
+        <input class="select_good2img" type="file" accept="" onchange="selectGoodimg(this)">
+        <div>
+            <i class="iconfont icon-tupiantianjia" style="font-size: 30px"></i>
+            <div class="color777 ft14">添加图片</div>
+            <div class="color777 ft10">(只能添加一张)</div>
+        </div>
+        <img class="good_logo" src="" alt="">
+    </div>
+    <!--简介-->
+    <div class="s_intro">
+        <!--<img src="{YOUMI_URL_APP}img/m_titlebg1.png" alt="">-->
+        <input class="i_intro d_title" type="text" placeholder="商品标题（最多15字）" maxlength="15">
+    </div>
+    <!--删除-->
+    <i onclick="$(this).parent().remove();sortGoods()" class="s_close iconfont icon-delete-s"></i>
+</div>

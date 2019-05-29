@@ -1,0 +1,157 @@
+{template 'header'}
+<style>
+    body{
+        background: #f3f3f3;
+    }
+    .head_top{
+        padding: 10%;
+        font-size: 20px;
+        text-align: center;
+    }
+    .head_top img{
+        width: 35%;
+        border-radius: 50%;
+    }
+    .head_top .ht_name{
+        font-size: 18px;
+    }
+    .weui-cells{
+        margin-top: 0.5em;
+    }
+    .weui-cell__hd img{
+        width: 45px;
+    }
+    .bg_fixed{
+        z-index: 600;
+    }
+    .kefu{
+        position: fixed;
+        top: 20%;
+        left: 20%;
+        width: 60%;
+        z-index: 610;
+        display: none;
+    }
+    .datas{
+        border-top: 1px solid #eee;
+    }
+    .datas>div{
+        width: 33%;
+        text-align: center;
+        padding: 10px 0;
+    }
+</style>
+
+<div>
+    <div class="weui-cells" style="margin-top: 0;padding: 10px 0">
+        <a class="weui-cell weui-cell_access" href="{php echo $this->createMobileUrl('login')}">
+            <div class="weui-cell__hd">
+                <img src="{$_W['fans']['avatar']}" style="width: 40px;margin-right: 10px;border-radius: 50%;">
+            </div>
+            <div class="weui-cell__bd">
+                <p style="font-size: 16px">{$_W['fans']['nickname']}</p>
+                {if $shop['mobile']}
+                <p style="font-size: 12px;color: #777"><i style="font-size: 12px" class="iconfont icon-mobile"></i>{$shop['mobile']}</p>
+                {/if}
+            </div>
+            <div class="weui-cell__ft"></div>
+        </a>
+    </div>
+
+    <div class="weui-cells">
+        <a class="weui-cell weui-cell_access" href="javascript:;">
+            <div class="weui-cell__hd"><i style="font-size: 22px;margin-right:5px;color: #27C9FF" class="iconfont icon-shuju"></i></div>
+            <div class="weui-cell__bd">
+                <p>数据统计</p>
+            </div>
+        </a>
+        <div class="datas flex flex_j_center">
+            <div>
+                <div>
+                    <i style="font-size: 15px;color: #F16C6E" class="iconfont icon-huodong"></i>
+                    活动总数
+                </div>
+                <a href="{php echo $this->createMobileUrl('activitys',['op'=>'activitys_my'])}" style="font-size: 16px;margin-top: 5px;display: block">{$total}</a>
+            </div>
+            <div style="border-left: 1px solid #eee;border-right: 1px solid #eee;">
+                <div>
+                    <i style="font-size: 15px;color: #A3F6D7" class="iconfont icon-baoming"></i>
+                    报名人数
+                </div>
+                <p style="font-size: 16px;margin-top: 5px">{$total_participate}</p>
+            </div>
+            <div>
+                <div>
+                    <i style="font-size: 15px;color: #FD9606" class="iconfont icon-yuedu"></i>
+                    阅读人数
+                </div>
+                <p style="font-size: 16px;margin-top: 5px">{$total_pv}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="weui-cells">
+
+        <a class="weui-cell weui-cell_access" href="{php echo $this->createMobileUrl('buying')}">
+            <div class="weui-cell__hd"><i style="font-size: 22px;margin-right:5px;color: #FD9606" class="iconfont icon-VIP"></i></div>
+            <div class="weui-cell__bd">
+                <p>VIP会员 {if $is_vip==1}<span style="color: #555">{$endtime}到期</span> {/if}</p>
+            </div>
+            <div class="weui-cell__ft" style="color: #E15778">{if $is_vip==1}续费{else}立即购买{/if}</div>
+        </a>
+
+        <a class="weui-cell weui-cell_access" href="{php echo $this->createMobileUrl('helping')}">
+            <div class="weui-cell__hd"><i style="font-size: 22px;margin-right:5px;color: #F26D66" class="iconfont icon-B-zhinan"></i></div>
+            <div class="weui-cell__bd">
+                <p>使用指南</p>
+            </div>
+            <div class="weui-cell__ft"></div>
+        </a>
+        {if $is_vip==1}
+        <a class="weui-cell weui-cell_access" href="{php echo $this->createMobileUrl('renew')}">
+            <div class="weui-cell__hd"><i style="font-size: 22px;margin-right:5px;color: #67A2F7" class="iconfont icon-iconfontweixin"></i></div>
+            <div class="weui-cell__bd">
+                <p>续费记录</p>
+            </div>
+            <div class="weui-cell__ft"></div>
+        </a>
+        {/if}
+        <a class="weui-cell weui-cell_access" href="{php echo $this->createMobileUrl('user',['op'=>'user_balance'])}">
+            <div class="weui-cell__hd"><i style="font-size: 23px;margin-right:5px;color: #F48E41" class="iconfont icon-wallet"></i></div>
+            <div class="weui-cell__bd">
+                <p>我的钱包</p>
+            </div>
+            <div class="weui-cell__ft" style="color: #E15778">{php echo ($account['unsettle']+$account['settled'])}</div>
+        </a>
+        <a class="weui-cell weui-cell_access" href="{php echo $this->createMobileUrl('verification',['op'=>'setting'])}">
+            <div class="weui-cell__hd"><i style="font-size: 22px;margin-right:5px;color: #67A2F7" class="iconfont icon-man1"></i></div>
+            <div class="weui-cell__bd">
+                <p>核销人员</p>
+            </div>
+            <div class="weui-cell__ft"></div>
+        </a>
+        <a class="weui-cell weui-cell_access" href="javascript:;" onclick="$('.bg_fixed,.kefu').fadeIn()">
+            <div class="weui-cell__hd"><i style="font-size: 22px;margin-right:5px;color: #47DBA1" class="iconfont icon-kefu"></i></div>
+            <div class="weui-cell__bd">
+                <p>联系客服</p>
+            </div>
+            <div class="weui-cell__ft"></div>
+        </a>
+    </div>
+
+    <!--客服二维码-->
+    <div class="bg_fixed" onclick="$('.bg_fixed,.kefu').fadeOut()"></div>
+    <img class="kefu" src="{php echo tomedia($setting['kefu'])}" alt="">
+
+    {template 'temp/footerbar'}
+
+</div>
+
+
+<script>
+
+    console.log({php echo json_encode($account)})
+    console.log({php echo json_encode($setting)})
+    console.log('$total',{$total})
+</script>
+{template 'footer'}

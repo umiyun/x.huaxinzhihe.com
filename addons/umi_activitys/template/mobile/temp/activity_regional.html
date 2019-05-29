@@ -1,0 +1,110 @@
+<style>
+    .weui-cell:before{display: none}
+    .sj_del{
+        right: 5px;
+        top: -6px;
+        font-size: 25px;
+        color: #f9292a;
+    }
+    .s_quyu>div{
+        background: #FEDCEA;
+        margin: 2% 0;
+    }
+    .d_num{
+        position: initial!important;
+        margin: 0 12% 0 2%!important;
+    }
+</style>
+<div class="ce_common p_relative">
+    <div class="ceg_title p_relative">
+        <img class="titlebgimg" src="{if $activity['titlebgimg']}{$activity['titlebgimg']}{else}{YOUMI_URL_APP}img/m_titlebg2.png{/if}" alt="">
+        <input class="border_transparent" type="text" value="区域限制" readonly>
+    </div>
+
+    <div class="flex flex_wrap flex_j_between flex_a_center cel_content">
+        <div class="flex flex_a_center">
+            <span class="word-break"><i class="iconfont icon-essential"></i>活动区域限制</span>
+            <div class="weui-cells weui-cells_radio flex">
+                <label class="weui-cell weui-check__label" for="regional1">
+                    <div class="weui-cell__bd">
+                        <div class="word-break">不限制</div>
+                    </div>
+                    <div class="weui-cell__ft">
+                        <input name="regional" type="radio" class="d_regional weui-check" id="regional1" value="1" onchange="changeRegional(this)" {if $activity['regional']!='2'}checked{/if} />
+                        <span class="weui-icon-checked"></span>
+                    </div>
+                </label>
+                <label class="weui-cell weui-check__label" for="regional2">
+                    <div class="weui-cell__bd">
+                        <div class="word-break">限制</div>
+                    </div>
+                    <div class="weui-cell__ft">
+                        <input name="regional" type="radio" class="d_regional weui-check" id="regional2" value="2" onchange="changeRegional(this)" {if $activity['regional']=='2'}checked{/if}>
+                        <span class="weui-icon-checked"></span>
+                    </div>
+                </label>
+            </div>
+        </div>
+        <div class="s_detail nd_regional" style="width: 100%; {if $activity['regional']!='2'}display:none;{/if}">
+            <div class="flex flex_a_center">
+                <i class="iconfont icon-essential"></i>
+                <span class="word-break">百度密钥</span>
+                <input type="text" class="d_ak" value="{$activity['ak']}">
+            </div>
+        </div>
+        <div class="s_detail nd_regional" style="width: 100%; {if $activity['regional']!='2'}display:none;{/if}">
+            <div class="flex flex_a_center">
+                <input type="text" id="r_address" value="">
+                <div class="a_raddbtn">
+                    <i class="iconfont icon-webicon308"></i>
+                    <b>添加区域</b>
+                </div>
+            </div>
+            {if $activity['r_address']}
+            <div class="s_quyu">
+                {loop $activity['r_address'] $adx $av}
+                <div class="flex flex_a_center p_relative">
+                    <span class="word-break">所选区域</span>
+                    <input type="text" class="d_num" value="{$av}"/>
+                    <i onclick="$(this).parent().remove();" class="p_absolute iconfont icon-delete-s sj_del"></i>
+                </div>
+                {/loop}
+            </div>
+            {else}
+            <div class="s_quyu">
+
+            </div>
+            {/if}
+        </div>
+    </div>
+</div>
+<script>
+    /* 地区选择， 关联型数据 */
+    var rAddress = new huiPicker('#r_address', function(){
+        var rsheng   = rAddress.getText(0);
+        var rshi     = rAddress.getText(1);
+        var rqu      = rAddress.getText(2);
+        hui('#r_address').val(rsheng +' '+ rshi +' '+rqu);
+    });
+    rAddress.level = 3;
+    rAddress.bindRelevanceData(cities);
+    //添加区域
+    $('.a_raddbtn').click(function(){
+        var ar_add=$('#r_address').val().split(' ')[2];
+        if (ar_add) {
+            $('.s_quyu').append('<div class="flex flex_a_center p_relative">' +
+                '    <span class="word-break">所选区域</span>' +
+                '    <input type="text" class="d_num" readonly value="'+ar_add+'"/>' +
+            '    <i onclick="$(this).parent().remove();" class="p_absolute iconfont icon-delete-s sj_del"></i>' +
+            '</div>')
+        }
+    })
+    //是否限制区域
+    function changeRegional(self) {
+        if(self.value=='1'){
+            $('.nd_regional').hide()
+        }else{
+            $('.nd_regional').show()
+        }
+    }
+</script>

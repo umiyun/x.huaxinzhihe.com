@@ -1,0 +1,12 @@
+{template 'header'}
+<div>
+
+    {php echo htmlspecialchars_decode($help['desc'])}
+
+
+</div>
+<script>
+    console.log({php echo json_encode($help)})
+</script>
+
+{template 'footer'}

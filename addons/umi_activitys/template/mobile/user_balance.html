@@ -1,0 +1,120 @@
+{template 'header'}
+<style>
+    body{
+        background: #f3f3f3;
+    }
+    .head_top{
+        background: linear-gradient(#F59D10,#EE831B,#EFDCBC,#f3f3f3,#f3f3f3);
+        background-size: 100% 100%;
+        padding: 10% 5%;
+        font-size: 20px;
+        text-align: center;
+        height: 245px;
+    }
+    .head_top>div{
+        background: #fff;
+        border-radius:5px ;
+    }
+    .head_top img{
+        width: 100%;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+        margin-top: -10px;
+    }
+    .icon-yue1{
+        color: #DC1F1F;
+        font-size: 50px;
+    }
+    .withdraw{
+        font-size: 20px;
+    }
+    .icon-balance{
+        font-size: 18px;
+        margin-right: 5px;
+    }
+    .withdraw_btn{
+        margin: 5%;
+        width: 90%;
+        display: block;
+        font-size: 18px;
+    }
+    .withdraw_btn.active{
+        background: #ddd;
+    }
+    .withdraw_list{
+        top: 5%;
+        right: 0;
+        /*background: #F28C8C;*/
+        background: #EE841A;
+        color: #fff;
+        padding: 1% 4%;
+        border-top-left-radius: 3px;
+        border-bottom-left-radius: 3px;
+    }
+    .cardno{
+        margin: 0 5%;
+        box-sizing: border-box;
+        width: 90%!important;
+    }
+    .money{
+        margin: 5%!important;
+        width: 90%!important;
+    }
+</style>
+
+<div>
+    <div class="head_top">
+        <div class="p_relative">
+            <div>
+                <i class="iconfont icon-yue1"></i>
+                <div class="ft12" style="margin-top: -20px;">我的余额</div>
+            </div>
+            <div style="margin-top: 5px;">可提现:￥ <span class="withdraw">{php echo number_format($account['settled'], 2)}</span></div>
+            <div class="ft12 color777">待结算:￥{php echo number_format($account['unsettle'],2)}</div>
+            <div class="ft12 color777">申请中:￥{php echo number_format($account['apply'],2)}</div>
+            <div class="ft12 color777">已提现:￥{php echo number_format($account['withdraw'],2)}</div>
+
+            <img src="{YOUMI_URL_APP}img/user_bg2.png" alt="">
+            <a href="{php echo $this->createMobileUrl('user',['op'=>'withdraw_list'])}" class="withdraw_list p_absolute ft12">提现记录 <i class="iconfont icon-jiantou1 ft12"></i></a>
+        </div>
+    </div>
+</div>
+<input type="number" class="money" placeholder="请填写提现金额">
+<!--<input type="text" class="cardno" placeholder="请正确填写支付宝账号">-->
+<a href="javascript:;" class="a_btn withdraw_btn"><i class="iconfont icon-balance"></i>我 要 提 现</a>
+
+<div style="padding: 5%">
+    {php echo htmlspecialchars_decode($setting['verification'])}
+</div>
+
+<script>
+    $('.withdraw_btn').click(function(){
+        if(!$('.withdraw_btn').hasClass('active')) {
+            var money = $('.money').val();
+            var cardno = $('.cardno').val();
+            if (money) {
+                $.post(
+                    "{php echo $this->createMobileUrl('user',['op'=>'withdraw'])}",
+                    {
+                        'money': money,
+                        // 'cardno': cardno,
+                    },
+                    function (data) {
+                        if(data.errno==0){
+                            setTimeout(function(){
+                                location.href="{php echo $this->createMobileUrl('user',['op'=>'withdraw_list'])}"
+                            },2000)
+                        }
+                        tips(data.message)
+                    }, 'json'
+                )
+            }else{
+                tips('请输入提现金额');
+            }
+        }
+    })
+
+    // console.log({php echo json_encode($account)})
+    // console.log({php echo json_encode($shop)})
+</script>
+{template 'footer'}

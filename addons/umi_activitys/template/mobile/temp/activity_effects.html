@@ -1,0 +1,175 @@
+<style>
+    .moneybox{width: 100%;height: 100%;}
+
+    #leafContainer {
+        /*position: absolute;*/
+        /*width: 100%;*/
+        /*height: 100%;*/
+        overflow: hidden;
+    }
+
+    #leafContainer > div {
+        position: fixed;
+        z-index: 10;
+        width: 25px;
+        /*height: 150px;*/
+        -webkit-animation-iteration-count: infinite, infinite;
+        -webkit-animation-direction: normal, normal;
+        -webkit-animation-timing-function: linear, ease-in;
+    }
+    #leafContainer > div > img {
+        position: absolute;
+        width: 25px;
+        -webkit-animation-iteration-count: infinite;
+        -webkit-animation-direction: alternate;
+        -webkit-animation-timing-function: ease-in-out;
+        -webkit-transform-origin: 50% -100%;
+    }
+    @-webkit-keyframes fade {
+        0% {
+            opacity: 1;
+        }
+        95% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0;
+        }
+    }
+    @-webkit-keyframes drop {
+        0% {
+            -webkit-transform: translate(0px, -50px);
+        }
+        100% {
+            -webkit-transform: translate(0px, 650px);
+        }
+    }
+    @-webkit-keyframes clockwiseSpin {
+        0% {
+            -webkit-transform: rotate(-50deg);
+        }
+        100% {
+            -webkit-transform: rotate(50deg);
+        }
+    }
+    @-webkit-keyframes counterclockwiseSpinAndFlip {
+        0% {
+            -webkit-transform: scale(-1, 1) rotate(50deg);
+        }
+        100% {
+            -webkit-transform: scale(-1, 1) rotate(-50deg);
+        }
+    }
+
+</style>
+<div class="moneybox" id="leafContainer"></div>
+<script>
+    const NUMBER_OF_LEAVES = 10;
+    const width=window.screen.width;
+    function init(ii,jj){
+        var container = document.getElementById('leafContainer');
+        for (var i = 0; i < NUMBER_OF_LEAVES; i++)
+        {
+            container.appendChild(createALeaf(ii,jj));
+        }
+
+    }
+    function randomInteger(low, high)
+    {
+        return low + Math.floor(Math.random() * (high - low));
+    }
+    function randomFloat(low, high)
+    {
+        return low + Math.random() * (high - low);
+    }
+    function pixelValue(value)
+    {
+        return value + 'px';
+    }
+
+    function durationValue(value)
+    {
+        return value + 's';
+    }
+    function createALeaf(i,j)
+    {
+        var effects_imgs= {php echo json_encode($effectscate)}[i]['effects'][j]['imgs'];
+        var leafDiv = document.createElement('div');
+        var image = document.createElement('img');
+        image.src = effects_imgs[randomInteger(0, 4)];
+        leafDiv.style.top = "-10px";
+        leafDiv.style.left = pixelValue(randomInteger(0, width));
+        var spinAnimationName = (Math.random() < 1.5) ? 'clockwiseSpin' : 'counterclockwiseSpinAndFlip';
+        leafDiv.style.webkitAnimationName = 'fade, drop';
+        image.style.webkitAnimationName = spinAnimationName;
+        var fadeAndDropDuration = durationValue(randomFloat(13, 39));
+        var spinDuration = durationValue(randomFloat(3, 7));
+        leafDiv.style.webkitAnimationDuration = fadeAndDropDuration + ', ' + fadeAndDropDuration;
+        var leafDelay = durationValue(randomFloat(0, 0));
+        leafDiv.style.webkitAnimationDelay = leafDelay + ', ' + leafDelay;
+        image.style.webkitAnimationDuration = spinDuration;
+        leafDiv.appendChild(image);
+        return leafDiv;
+    }
+
+</script>
+<script>
+    var effectscate={php echo json_encode($effectscate)};
+    var effects = [
+        {
+            value: '0',
+            text: '无',
+            children: [
+                {
+                    value: '0',
+                    text: '无背景动效'
+                }
+            ]
+        }
+    ];
+    if(!!effectscate) {
+        for (var i=0;i<effectscate.length;i++) {
+            var obj={};
+            obj['value']=effectscate[i]['id']
+            obj['text']=effectscate[i]['title']
+            obj['children']=[];
+            for (var j=0;j<effectscate[i]['effects'].length;j++) {
+                obj['children'].push({
+                    value: effectscate[i]['effects'][j]['id'],
+                    text: effectscate[i]['effects'][j]['title'],
+                    imgs: effectscate[i]['effects'][j]['imgs']
+                })
+            }
+            effects.push(obj)
+        }
+        console.log(obj)
+    }
+    var effectsSelect = new huiPicker('#effectsSelect', function(){
+        var val = effectsSelect.getVal(1);
+        var txt = effectsSelect.getText(0);
+        if(val==0){
+            $('#leafContainer').html('').hide()
+            datas['effects_imgs']='';
+        }else {
+            for (var ie = 0; ie < effectscate.length; ie++) {
+                for (var je = 0; je < effectscate[ie]['effects'].length; je++) {
+                    if (effectscate[ie]['effects'][je]['id'] == val) {
+                        datas['effects_imgs'] = effectscate[ie]['effects'][je]['imgs'];
+                        datas['effects_id'] = val;
+                        if (val != '0') {
+                            $('#leafContainer').html('').show()
+                            window.addEventListener('load', init(ie, je), false);
+                        } else {
+                            $('#leafContainer').hide()
+                        }
+                        return
+                    }
+                }
+            }
+        }
+        datas.effects_id=val;
+    });
+    effectsSelect.level = 2;
+    effectsSelect.bindRelevanceData(effects);
+    $("#datetime-picker2").datetimePicker();
+</script>

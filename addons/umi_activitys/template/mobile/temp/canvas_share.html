@@ -1,0 +1,199 @@
+
+<style>
+	.a_hcimg{
+		display: none;
+		position: fixed;
+		top: 5%;
+		left: 10%;
+		width: 80%;
+		z-index: 300;
+	}
+	.a_hcimg img{
+		border-radius: 5px;
+		width: 100%;
+	}
+	.a_hcimg .icon-Close{
+		color: #fff;
+		bottom: -2px;
+		left: 46%;
+		font-size: 30px;
+		position: fixed;
+	}
+</style>
+<script src="{YOUMI_URL_APP}js/qrcode.min.js"></script>
+<div id="qrcode" style="display: none"></div>
+<!--合成分享图片-->
+<div class="a_hcimg" style="display: none">
+	<div id="imgBox" align="center">
+		<img src="">
+	</div>
+	<!--关闭-->
+	<i onclick=" $('.a_hcimg,.bg_fixed').hide()" class="iconfont icon-Close"></i>
+</div>
+<script>
+
+
+    function hecheng(){
+        new QRCode(document.getElementById("qrcode"), $('#inp').val());  // 设置要生成二维码的链接
+		setTimeout(function () {
+            $.post(
+                "{php echo $this->createMobileUrl('upload',['op'=>'image'])}",
+                {
+                    'file':$('#qrcode img').attr('src'),
+                    'name':'code',
+                    'size':'800',
+                    'type':'png',
+                    'nosave':1
+                },
+                function (data) {
+                    if(data.errno==0) {
+                        $('#qrcode img').attr('src', data.message);
+                        var avatar = ("{$_W['fans']['avatar']}");
+                        if (avatar.slice(0, 5) != 'https') {
+                            avatar = avatar.replace('http', 'https');
+                        }
+                        var imgs = [
+                            // $('.h_img').attr('src'),
+                            "{$activity['image']}",
+                            "{$activity['bgimage']}",
+                            "{YOUMI_URL_APP}img/share_bg6.png",
+                            avatar,
+                            $('#qrcode img').attr('src'),
+                            avatar
+                        ];
+                        console.log(imgs);
+                        draw(function () {
+                            document.getElementById('imgBox').innerHTML = '<img src="' + base64[0] + '">';
+                        }, imgs)
+                        $('.open_share').hide();
+                        $('.a_hcimg,.bg_fixed').show()
+                    }else{
+                        tips(data.message)
+                    }
+                },'json'
+            )
+        },800)
+    }
+
+    var base64=[];
+    function draw(fn,imgs){
+        var c=document.createElement('canvas'),
+            ctx=c.getContext('2d'),
+            len=imgs.length;
+        c.width=1000;
+        c.height=1700;
+        ctx.rect(0,0,c.width,c.height);
+        ctx.fillStyle='#fff';
+        ctx.fill();
+
+        // canvas_text();
+        function drawing(n){
+            if(n<len){
+                // if(n==3){
+                //     var draw = function(obj) {
+                //         // 创建图片纹理
+                //         var pattern = ctx.createPattern(obj, "no-repeat");
+                //         // 如果要绘制一个圆，使用下面代码
+                //         // ctx.arc(obj.width / 2, 40, 500, 0, 2 * Math.PI);
+                //         // 这里使用圆角矩形
+                //         ctx.roundRect(0, 0, obj.width, obj.height, 92);
+                //
+                //         // 填充绘制的圆
+                //         ctx.fillStyle = pattern;
+                //         ctx.fill();
+                //     }
+                // }
+                var img=new Image;
+                img.crossOrigin = 'Anonymous'; //解决跨域
+                // img.crossOrigin = "*"; // 设置图片跨域问题
+                img.src=imgs[n];
+                img.onload=function(){
+                    if(n==0){
+                        ctx.drawImage(img,0,0,1000,800);
+                    }
+                    if(n==1){
+                        ctx.drawImage(img,0,800,1000,900);
+                    }
+                    if(n==2){
+                        ctx.drawImage(img,80,520,840,1100);
+                    }
+                    if(n==3){
+                        // draw(this);
+                        ctx.drawImage(img,400,440,200,200);
+                        canvas_text(c,ctx, "{$_W['fans']['nickname']}参加的这个活动太赞了,快进来看看吧!", "32px bold 黑体", "#666", 680);
+                        canvasTextAutoLine(c,ctx,"{$activity['title']}",c,490,800,66)
+                    }
+                    if(n==4){
+                        ctx.drawImage(img,200,920,600,600);
+                        canvas_text(c,ctx, "长 按 识 别 二 维 码 进 入 活 动", "42px bold 黑体", "#111", 1560);
+                    }
+                    if(n==5){
+                        ctx.drawImage(img,430,1150,150,150);
+                    }
+
+                    drawing(n+1);//递归
+                }
+            }else{
+                //保存生成作品图片
+                base64.push(c.toDataURL("image/jpeg",0.8));
+                //alert(JSON.stringify(base64));
+                fn();
+            }
+        }
+        drawing(0);
+    }
+    function canvas_text(c,_paint, _text, _fontSzie, _color, _height) {
+        _paint.font = _fontSzie;
+        _paint.fillStyle = _color;
+        _paint.textAlign = "center";
+        _paint.textBaseline = "middle";
+        _paint.fillText(_text, c.width / 2, _height);
+    }
+    //            str:要绘制的字符串
+    //            canvas:canvas对象
+    //            initX:绘制字符串起始x坐标
+    //            initY:绘制字符串起始y坐标
+    //            lineHeight:字行高，自己定义个值即可
+    function canvasTextAutoLine(c,ctx,str,canvas,initX,initY,lineHeight){
+        var lineWidth = 0;
+        ctx.font = '48px bold 黑体';
+        ctx.fillStyle = '#E18F3D';
+        var canvasWidth =c.width;
+        var lastSubStrIndex= 0;
+        for(let i=0;i<str.length;i++){
+            lineWidth+=ctx.measureText(str[i]).width;
+            //减去initX,防止边界出现的问题
+            if(lineWidth>canvasWidth-300){
+                ctx.fillText(str.substring(lastSubStrIndex,i),initX,initY);
+                initY+=lineHeight;
+                lineWidth=0;
+                lastSubStrIndex=i;
+            }
+            if(i==str.length-1){
+                ctx.fillText(str.substring(lastSubStrIndex,i+1),initX,initY);
+            }
+        }
+    }
+    //圆角矩形
+    CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
+        var min_size = Math.min(w, h);
+        if (r > min_size / 2) r = min_size / 2;
+        // 开始绘制
+        this.beginPath();
+        this.moveTo(x + r, y);
+        this.arcTo(x + w, y, x + w, y + h, r);
+        this.arcTo(x + w, y + h, x, y + h, r);
+        this.arcTo(x, y + h, x, y, r);
+        this.arcTo(x, y, x + w, y, r);
+        this.closePath();
+        return this;
+    }
+
+</script>
+
+
+
+
+
+
+

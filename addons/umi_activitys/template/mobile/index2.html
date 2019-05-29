@@ -1,0 +1,240 @@
+{template 'header'}
+<!--<script src="{YOUMI_URL_APP}lib/fastclick.js"></script>-->
+<!--<script src="{YOUMI_URL_APP}lib/swiper.js"></script>-->
+<script src="{YOUMI_URL_APP}js/swiper2.js"></script>
+<style>
+    .swiper-container {
+        width: 100%;
+    }
+
+    .swiper-container img {
+        display: block;
+        width: 100%;
+    }
+    .swiper-pagination-bullet,.images_num span {
+        width: 18px;
+        height: 4px;
+        border-radius: 10px;
+    }
+    .icon-tianqi_icon{
+        margin: 0 5%;
+        font-size: 20px;
+        color: #F8A40D;
+    }
+    .browse{
+        color: #04be02;
+    }
+
+    .grids{
+        border-top: 1px solid #eee;
+        margin: 0 2%;
+        padding: 2% 0;
+    }
+    .grids>.text_center{
+        width: 16%;
+        margin: 2% 4.5%;
+        color: #000;
+        font-size: 12px;
+    }
+    .grids img{
+        width: 100%;
+        border-radius: 50%;
+    }
+    .notice_active{
+        margin-top: 10px;
+    }
+    .l_list{
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .l_list .detail{
+        {if $setting['template_col']=='3'}
+        width: 30%;
+        {else}
+        width: 46%;
+        {/if}
+        margin-bottom: 2%;
+        margin-left: 2.5%;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        display: flex;
+        display: -webkit-flex;
+        flex-flow: column;
+        -webkit-flex-flow: column;
+    }
+    .detail .d_link>div{
+        font-size: 10px;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        left: 0;
+        background: rgba(0,0,0,0.7);
+        color: #fff;
+        padding: 2px;
+    }
+    .l_list img{
+        width: 100%;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+    }
+    .weui-cells:after{
+        display: none;
+    }
+    .list a p{
+        font-weight: 900;
+    }
+    .weui-cells{margin-top: 0}
+    .d_link{
+        display: block;
+        position: relative;
+        flex:1;
+    }
+    .d_btn{
+        padding: 4px 2px;
+        text-align: right;
+    }
+    .d_btn a{
+        background: #f8a40d;
+        color: #fff;
+        padding: 2px 6px;
+        border-radius: 20px;
+        font-size: 12px;
+        display: block;
+        text-align: center;
+    }
+</style>
+<style>
+    .sliderImage{width: 100%;position: relative;overflow: hidden}
+    .sliderImage .images{width: 100%;overflow: hidden;margin: 0 auto}
+    .images ul{position: relative;overflow: hidden}
+    .images ul li{width: 100%;float: left;position: relative}
+    .images img{width: 100%}
+    .sliderImage .images_num{width: 100%;height: 24px;line-height: 24px;vertical-align: middle;text-align: center;position: absolute;z-index: 100;bottom: 0;left: 0}
+    .images_num span{display: inline-block;width: 18px;height: 4px;background: #000;-webkit-border-radius: 10px;border-radius: 10px;margin: 0 6px;vertical-align: middle;opacity: 0.2}
+    .images_num span.curr{width: 18px;height: 4px;background: #F8A40D;-webkit-border-radius: 10px;border-radius: 10px;opacity: 1}
+</style>
+<div>
+    <!--<div class="">-->
+        <!--<a href=""></a>-->
+    <!--</div>-->
+
+    <!--banner-->
+    <!--<div class="swiper-container">-->
+        <!--<div class="swiper-wrapper">-->
+            <!--{loop $banner $bv}-->
+            <!--<a href="{if !empty($bv['description'])}{$bv['description']}{else}javascript:;{/if}" class="swiper-slide"><img src="{$bv['image']}" /></a>-->
+            <!--{/loop}-->
+        <!--</div>-->
+        <!--<div class="swiper-pagination"></div>-->
+    <!--</div>-->
+
+    <div class="sliderImage">
+        <div class="images" id="sliderImg" style="visibility: visible;">
+            <ul>
+                {loop $banner $adv}
+                <li><a href="{if !empty($adv['link'])}{$adv['link']}{else}javascript:;{/if}" ><img src="{$adv['image']}" style='width:100%;'></a></li>
+                {/loop}
+            </ul>
+        </div>
+        <div class="images_num" id="sliderNum">
+            {php $slideNum = 1;}
+            {loop $banner $adv}
+            <span{if $slideNum == 1} class="curr"{/if}></span>
+            {php $slideNum++;}
+            {/loop}
+        </div>
+    </div>
+
+
+    <!--活动浏览-->
+    {if $is_vip==0}
+    {if !empty($shop)}
+        <div class="ft12 flex flex_j_center flex_a_center" style="margin-bottom: 2%">
+            <i class="iconfont icon-tianqi_icon"></i>
+            <span>活动仅可浏览 <span class="browse">{$times}</span>次</span>
+            <a class="ft16" href="{php echo $this->createMobileUrl('buying')}" style="margin-left: 2%">成为vip会员 <i class="iconfont icon-jiantou1"></i></a>
+            <i class="iconfont icon-tianqi_icon"></i>
+        </div>
+    {/if}
+    {/if}
+
+    {template 'temp/activity_notice'}
+
+    <!--导航-->
+    <div class="grids flex flex_wrap">
+        {loop $navs $nv}
+        <a href="{if $nv['link2']}{$nv['link2']}{else}{$nv['link']}{/if}" class="text_center">
+            <img src="{php echo tomedia($nv['image'])}" alt="">
+            <text>{$nv['title']}</text>
+        </a>
+        {/loop}
+    </div>
+
+    {loop $cate $cv}
+    {if $cv['case']}
+    <div class="list">
+        <div class="weui-cells">
+            <a class="weui-cell weui-cell_access" href="javascript:;">
+                <div class="weui-cell__bd">
+                    <p>{$cv['title']}</p>
+                </div>
+                <div class="weui-cell__ft" style="font-size: 12px" onclick="goMore({$cv['id']})">更多模板</div>
+            </a>
+        </div>
+        <div class="l_list">
+            {loop $cv['case'] $adx $av}
+            {if $sdx<6}
+            <div class="detail">
+                <a class="d_link" href="{$av['link']}">
+                    <img src="{$av['logo']}" alt="">
+                    <div>{$av['title']}</div>
+                </a>
+                <div class="d_btn">
+                    <a href="{php echo $this->createMobileUrl('making',['case_id'=>$av['id'],'module'=>$av['module']])}">马上制作</a>
+                </div>
+            </div>
+            {/if}
+            {/loop}
+        </div>
+    </div>
+    {/if}
+    {/loop}
+
+    {template 'temp/footerbar'}
+</div>
+
+
+<script>
+    $(function() {
+        new Swipe($('#sliderImg')[0], {
+            speed:500,
+            auto:3000,
+            callback: function(){
+                var lis = $("#sliderNum").children();
+                lis.removeClass("curr").eq(this.index).addClass("curr");
+            }
+        });
+    });
+</script>
+<script>
+    // $(function() {
+    //     FastClick.attach(document.body);
+    // });
+    // $(".swiper-container").swiper({
+    //     loop: true,
+    //     autoplay: 3000
+    // });
+    function goMore(id){
+        location.href="{php echo $this->createMobileUrl('activitys')}&cate_id="+id;
+    }
+
+    console.log('$cate',{php echo json_encode($cate)})
+    console.log('$case',{php echo json_encode($case)})
+    console.log('$banner',{php echo json_encode($banner)})
+    // console.log({php echo json_encode($is_vip)})
+</script>
+{template 'footer'}

@@ -1,0 +1,265 @@
+<style>
+    .a_head{
+        position: relative;
+    }
+    .h_img{
+        width: 100%;
+    }
+    #musicSelect,#effectsSelect{
+        position: absolute;
+        top: 2%;
+        right: 2%;
+        z-index: 5;
+        padding: 2%;
+        border-radius: 50%;
+        background: rgba(0,0,0,0.7);
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        line-height: 13px;
+    }
+    #musicSelect .iconfont{
+        color: #fff;
+        font-size: 20px;
+    }
+    #effectsSelect{
+        top: 65%;
+    }
+    .h_tips{
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        color: #fff;
+        background: rgba(0,0,0,0.4);
+        padding: 0 4%;
+    }
+    .h_changes{
+        color: #fff;
+        font-size: 16px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 5;
+        width: 100%;
+    }
+    .img_change{
+        margin-left: 2%;
+    }
+    .h_changes .iconfont{
+        font-size: 20px;
+        color: #F8A40D;
+    }
+    .template_change,.img_change{
+        background: rgba(0,0,0,0.6);
+        padding: 0 2%;
+        width: 25%;
+    }
+
+
+    .a_changeimg,.a_changetemplate{
+        position: fixed;
+        width: 100%;
+        left: 0;
+        bottom: -50%;
+        background: rgba(0,0,0,0.8);
+        z-index: 20;
+        color: #fff;
+    }
+    .a_changeimg .btn,.a_changetemplate .btn{
+        color: #fff;
+        font-size: 14px;
+        background: #E18F3D;
+        padding: 4px 8px;
+        border-radius: 3px;
+    }
+    .ac_imgs,.at_imgs{
+        overflow-x: auto;
+        width: 100%;
+        white-space: nowrap;
+        padding: 2% 1%;
+    }
+    .at_imgs{
+        padding: 0 1%;
+    }
+    .ac_imgs img,.at_imgs>div{
+        width: 27%;
+        margin: 1%;
+        border-bottom: 2px solid transparent;
+        display: inline-block;
+        text-align: center;
+        position: relative;
+        max-height: 100px;
+    }
+    .ac_imgs img.active,.at_imgs>div.active img{
+        top: -10px;
+    }
+    .at_imgs img{
+        width: 100%;
+        position: relative;
+    }
+    .ac_btns,.at_btns{
+        padding:2%;
+    }
+    .ac_cates{
+        overflow-x: auto;
+        width: 100%;
+        white-space: nowrap;
+        padding: 2% 1%;
+        background: rgba(0,0,0,0.5);
+    }
+    .ac_cates>div{
+        width: 15%;
+        margin: 1%;
+        border-bottom: 2px solid transparent;
+        display: inline-block;
+        text-align: center;
+        padding: 2px 4px;
+        border-radius: 5px;
+        background: transparent;
+
+    }
+    .ac_cates>div.active{
+        background: rgba(140,140,140,0.9);
+    }
+</style>
+{template 'temp/canvas_share'}
+<div id="musicSelect">
+    <i class="iconfont icon-music"></i>
+    <div class="ft12" style="color: #fff">音乐</div>
+</div>
+<!--模板弹窗-->
+<div class="a_changetemplate">
+    <div class="at_btns flex flex_j_end flex_a_center">
+        <div class="at_btns">
+            <a class="btn atb_cancel" style="background: #aaa!important;margin-right: 5px" href="javascript:;">取消</a>
+            <a class="btn atb_sure" href="javascript:;">确定</a>
+        </div>
+    </div>
+    <div class="at_imgs">
+        {loop $template $tdx $tv}
+        <div onclick="changeTemplate(this)">
+            <img data-bgimage="{$tv['bgimage']}" src="{$tv['image']}" data-id="{$tv['id']}" alt="">
+            <div>{$tv['title']}</div>
+        </div>
+        {/loop}
+    </div>
+</div>
+<!--更换图片弹窗-->
+<div class="a_changeimg">
+    <div class="ac_btns flex flex_j_between flex_a_center">
+        <div class="flex flex_a_center">
+            <a href="javascript:;" class="btn p_relative">
+                <span>上传图片</span>
+                <input class="select_goodimg" type="file" accept="" onchange="selectCateimg(this)">
+            </a>
+            <div class="weui-cells weui-cells_checkbox" style="background: transparent">
+                <label class="weui-cell weui-check__label" for="s_public" style="padding: 0;margin: 0">
+                    <div class="weui-cell__hd">
+                        <input type="checkbox" class="weui-check" name="checkbox1" id="s_public" checked="checked">
+                        <i class="weui-icon-checked"></i>
+                    </div>
+                    <div class="weui-cell__bd">
+                        <p class="ft12 color_fff">公开此图</p>
+                    </div>
+                </label>
+            </div>
+            <!--<span style="margin-left: 5px" class="color_fff ft10">建议尺寸 750*600</span>-->
+        </div>
+        <div>
+            <a class="btn acb_cancel" style="background: #aaa!important;margin-right: 5px" href="javascript:;">取消</a>
+            <a class="btn acb_sure" href="javascript:;">确定</a>
+        </div>
+    </div>
+    <div class="ac_imgs">
+        {loop $imgcate[0]['img'] $iidx $iiv}
+        <img onclick="changeImg(this)" src="{$iiv['image']}" data-id="{$iiv['id']}" alt="">
+        {/loop}
+    </div>
+    <div class="ac_cates">
+        {loop $imgcate $idx $iv}
+        <div onclick="changeImgcate(this)" class="{if $idx==0}active{/if}" data-idx="{$idx}" data-id="{$iv['id']}">{$iv['title']}</div>
+        {/loop}
+    </div>
+</div>
+
+<script>
+    //更换图片
+    function changeImg(self) {
+        if(!$(self).hasClass('active')){
+            $('.ac_imgs img').removeClass('active')
+            $(self).addClass('active')
+            $('.h_img').attr('src',$(self).attr('src'))
+        }
+    }
+    $('.img_change').click(function () {
+        $(".a_changeimg").animate({bottom:"0"},800);
+        $('.bg_fixed').show()
+    })
+    $('.acb_cancel').click(function () {
+        $('.h_img').attr('src', $('.h_img').attr('data-src'))
+        $(".a_changeimg").animate({bottom:"-45%"},800);
+        $('.bg_fixed').hide()
+    })
+    $('.acb_sure').click(function () {
+        $(".a_changeimg").animate({bottom:"-45%"},800);
+        $('.h_img').attr('data-src', $('.h_img').attr('src'))
+        $('.bg_fixed').hide()
+        datas.image=$('.h_img').attr('src')
+    })
+
+    //更换模板
+    $('.template_change').click(function () {
+        $(".a_changetemplate").animate({bottom:"0"},600);
+        $('.bg_fixed').show()
+    })
+    function changeTemplate(self) {
+        if(!$(self).hasClass('active')){
+            $('.at_imgs>div').removeClass('active')
+            $(self).addClass('active')
+            $('.h_img').attr('src',$(self).find('img').attr('src'))
+            $('.a_content').css('background','url("'+$(self).find('img').attr('data-bgimage')+'") repeat 100%')
+            datas.bgimage=$(self).find('img').attr('data-bgimage')
+            datas.template_id=$(self).find('img').attr('data-id')
+        }
+    }
+    $('.atb_cancel').click(function () {
+        $('.h_img').attr('src', $('.h_img').attr('data-src'))
+        $('.a_content').css('background','url("'+$('.h_img').attr('data-bgimage')+'") repeat 100%')
+        $(".a_changetemplate").animate({bottom:"-45%"},600);
+        $('.bg_fixed').hide()
+    })
+    $('.atb_sure').click(function () {
+        $(".a_changetemplate").animate({bottom:"-45%"},600);
+        $('.h_img').attr('data-src', $('.h_img').attr('src')).attr('data-bgimage',datas.bgimage).attr('data-templateid',datas.template_id)
+        $('.bg_fixed').hide()
+    })
+
+    function selectCateimg(self) {
+        var reader=new FileReader();
+        var arr=$(self).val().split('\\');
+        arr=arr[arr.length-1].split('/');
+        var my=arr[arr.length-1];//这就是要取得的图片名称
+        reader.onload=function(e){
+            $.post(
+                "{php echo $this->createMobileUrl('making',['op'=>'upimg'])}",
+                {
+                    'file':reader.result,
+                    'name':my,
+                    'size':e.total,
+                    'public':$('#s_public')[0].checked?'1':'2',
+                    'imgcate_id':$('.ac_cates .active').attr('data-id'),
+                    'module':"{$_GPC['module']}",
+                    'activity_id':"{$activity_id}",
+                },
+                function (data) {
+                    $('.h_img').attr('src',data.data.image)
+                },'json'
+            )
+            console.log( e);  //或者 e.target.result都是一样的，都是base64码
+            console.log( reader);  //或者 e.target.result都是一样的，都是base64码
+        }
+        reader.readAsDataURL(self.files[0])
+    }
+
+
+</script>

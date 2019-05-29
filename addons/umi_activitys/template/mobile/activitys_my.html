@@ -1,0 +1,90 @@
+{template 'header'}
+<style>
+    body{
+        background: #f3f3f3;
+    }
+    .list{
+        margin-top: 42px;
+    }
+    .detail{
+        background: #fff;
+        margin: 3% 0;
+        padding: 2%;
+        display: block;
+    }
+    .a_navbar{
+        position: fixed;
+        z-index: 10;
+        left: 0;
+        width: 100%;
+        top: 0;
+        background: #fff;
+        margin: 0;
+        padding: 0;
+    }
+    .a_navbar a{
+        display: inline-block;
+        width: 32%;
+        text-align: center;
+        padding: 2% 0;
+        border-bottom: 2px solid transparent;
+        box-sizing: border-box;
+        color: #000;
+    }
+    .a_navbar a.active{
+        border-bottom: 2px solid #F8A40D;
+        color: #F8A40D;
+    }
+    .icon-jiantouyou{
+        color: #aaa;
+        margin-left: 5%;
+    }
+    .d_top h5{
+        color: #555;
+    }
+</style>
+
+<div class="a_navbar">
+    <a href="{php echo $this->createMobileUrl('activitys',['status'=>'1','op'=>'activitys_my'])}" {if $_GPC['status']=='1'||empty($_GPC['status'])}class="active"{/if}>进行中</a>
+    <a href="{php echo $this->createMobileUrl('activitys',['status'=>'3','op'=>'activitys_my'])}" {if $_GPC['status']=='3'}class="active"{/if}>未开始</a>
+    <a href="{php echo $this->createMobileUrl('activitys',['status'=>'2','op'=>'activitys_my'])}" {if $_GPC['status']=='2'}class="active"{/if}>已下架</a>
+</div>
+{if empty($list)}
+<div style="padding: 22% 0 30% 0;text-align: center;">
+    <i class="iconfont icon-kong" style="font-size: 6rem;display: block;margin: 0 auto;"></i>
+    <div style="font-size: 20px;margin-bottom: 15px">暂无活动~</div>
+    {if $_GPC['status']=='1'||empty($_GPC['status'])}
+    <a style="font-size: 20px" href="{php echo $this->createMobileUrl('activitys')}" class="a_btn">立即创建活动</a>
+    {/if}
+</div>
+{else}
+<div class="list">
+    {loop $list $lv}
+    <a href="{php echo $this->createMobileUrl('activitys',['op'=>'activitys_detail','activity_id'=>$lv['id']])}" class="detail">
+        <div class="d_top flex flex_a_center">
+            <img style="width: 90px;height:90px;margin-right: 5px" src="{$lv['logo']}" alt="">
+            <div class="flex1 p_relative" style="height: 90px">
+                <h5 class="p_absolute" style="top: 0;left: 0">{$lv['title']}</h5>
+                <div class="p_absolute ft12 color777 flex flex_j_between" style="bottom: 3px;width: 100%">
+                    <span>浏览量: <span class="syscolor">{$lv['pv']}</span></span>
+                    <span>报名数: <span class="syscolor">{$lv['participate']}</span></span>
+                </div>
+            </div>
+            <i class="iconfont icon-jiantouyou"></i>
+        </div>
+    </a>
+    {/loop}
+</div>
+{/if}
+<script>
+    // 提示
+    function tips(txt){
+        $('.tips').html(txt).fadeIn()
+        setTimeout(function(){$('.tips').fadeOut()},1500);
+    }
+
+    console.log({php echo json_encode($list)})
+</script>
+
+{template 'temp/footerbar'}
+{template 'footer'}

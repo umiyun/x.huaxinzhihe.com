@@ -1,0 +1,93 @@
+{template 'header'}
+<div id="js-keyword-display">
+	<div ng-controller="KeywordDisplay" ng-cloak>
+		<table class="table we7-table table-hover vertical-middle">
+			<col width="150px"/>
+			<col width="200px" />
+			<col width="" />
+			<col width="250px" />
+			<tr>
+				<th>二维码</th>
+				<th class="text-left">入口名称</th>
+				<th class="text-right">操作</th>
+			</tr>
+			<tr>
+				<td data-url="{php echo $_W['siteroot'] . 'app/' . $this->createMobileUrl('index')}" data-size="100" class="js-url-qrcode">
+					<div class="qrcode-block"><canvas></canvas></div>
+				</td>
+				<td class="text-left">首页</td>
+				<td>
+					<div class="link-group" style="position:relative;">
+						<a href="javascript:;" data-url="{php echo $_W['siteroot'] . 'app/' . $this->createMobileUrl('index')}" style="margin-right:0px;" class="color-default js-clip">复制链接</a>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td data-url="{php echo $_W['siteroot'] . 'app/' . $this->createMobileUrl('activitys')}" data-size="100" class="js-url-qrcode">
+					<div class="qrcode-block"><canvas></canvas></div>
+				</td>
+				<td class="text-left">创建活动</td>
+				<td>
+					<div class="link-group" style="position:relative;">
+						<a href="javascript:;" data-url="{php echo $_W['siteroot'] . 'app/' . $this->createMobileUrl('activitys')}" style="margin-right:0px;" class="color-default js-clip">复制链接</a>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td data-url="{php echo $_W['siteroot'] . 'app/' . $this->createMobileUrl('buying')}" data-size="100" class="js-url-qrcode">
+					<div class="qrcode-block"><canvas></canvas></div>
+				</td>
+				<td class="text-left">购买套餐</td>
+				<td>
+					<div class="link-group" style="position:relative;">
+						<a href="javascript:;" data-url="{php echo $_W['siteroot'] . 'app/' . $this->createMobileUrl('buying')}" style="margin-right:0px;" class="color-default js-clip">复制链接</a>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td data-url="{php echo $_W['siteroot'] . 'app/' . $this->createMobileUrl('user')}" data-size="100" class="js-url-qrcode">
+					<div class="qrcode-block"><canvas></canvas></div>
+				</td>
+				<td class="text-left">我的钱包</td>
+				<td>
+					<div class="link-group" style="position:relative;">
+						<a href="javascript:;" data-url="{php echo $_W['siteroot'] . 'app/' . $this->createMobileUrl('user')}" style="margin-right:0px;" class="color-default js-clip">复制链接</a>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+<script type="text/javascript">
+    $(function() {
+        require(['jquery.qrcode'], function(){
+            $('.js-url-qrcode').each(function(){
+                url = $(this).data('url');
+                $(this).find('.qrcode-block').html('').qrcode({
+                    render: 'canvas',
+                    width: $(this).data('size'),
+                    height: $(this).data('size'),
+                    text: url
+                });
+            });
+        });
+        $('.js-clip').each(function(){
+            util.clip(this, $(this).data('url'));
+        });
+    });
+    require(['underscore'], function() {
+        angular.module('replyFormApp').value('config', {
+            replydata: {php echo json_encode($reply['rule'])},
+        uniacid: {php echo json_encode($_W['uniacid'])},
+        links: {
+            postUrl: "{php echo url('platform/reply/post', array('m' => $_GPC['m']));}",
+        },
+    });
+        angular.bootstrap($('#js-keyword-display'), ['replyFormApp']);
+    });
+
+    window.validateReplyForm = function(key) {
+        return true;
+    }
+</script>
+{template 'common/footer'}

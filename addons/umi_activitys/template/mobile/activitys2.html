@@ -1,0 +1,447 @@
+{template 'header'}
+<style>
+    .grids{
+        border-top: 1px solid #eee;
+        overflow-x: auto;
+        position: fixed;
+        z-index: 8;
+        top: 0;
+        left: 0;
+        width: 100%;
+        white-space: nowrap;
+        background: #fff;
+        justify-content: space-around;
+    }
+    .grids>div{
+        width: 25%;
+        margin: 0 4%;
+        border-bottom: 2px solid transparent;
+    }
+    .grids img{
+        width: 100%;
+    }
+    .grids .ft12{
+        padding-bottom: 15%;
+        padding-top: 20%;
+        margin-top: -10%;
+    }
+    .grids i{
+        font-size: 16px;
+        margin: -5px;
+        position: relative;
+        top: 2px;
+    }
+    .grids>.active{
+        color: #F8A40D;
+        /*border-bottom: 2px solid #F8A40D;*/
+    }
+    .weui-cell__hd{
+        width: 30%;
+        margin-right: 4%;
+    }
+    .weui-cell__hd img{
+        width: 100%;
+        min-height: 90px; 
+    }
+    .weui-cell{
+        align-items: inherit;
+    }
+    .list .weui-cell__bd{
+        position: relative;
+    }
+    .weui-cells{
+        margin-top: 0;
+    }
+    .list .btns{
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+    }
+    .btns .a_btn{
+        margin-right: 5%;
+    }
+
+    .grids2{
+        top: 32px;
+        z-index: 5;
+        border-top: 1px solid #eee;
+        padding: 2%;
+        position: fixed;
+        left: 0;
+        width: 100%;
+        background: #fff;
+        box-shadow:0 2px 4px #ddd;
+        display: none;
+    }
+    .grids2 div{
+        background: #f3f3f3;
+        color: #000;
+        padding:2% 4%;
+        font-size: 12px;
+        text-align: center;
+        margin:2%;
+        float: left;
+        border: 1px solid #f3f3f3;
+    }
+    .grids2 div.active{
+        background: #FAE6CB;
+        color: #f8a40d;
+        border: 1px solid #f8a40d;
+    }
+
+    .explain{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: #fff;
+        z-index: 20;
+        height: 93%;
+        display: none;
+        overflow-y: auto;
+    }
+    .explain>h4{
+        text-align: center;
+        margin: 4%;
+        color: #F8A40D;
+    }
+    .explain .a_btn{
+        font-size: 16px;
+        padding: 4% 10%;
+    }
+    .list{
+        padding: 5px 0;
+    }
+    .l_list{
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .l_list .detail{
+        {if $setting['template_col']=='3'}
+        width: 30%;
+        {else}
+        width: 46%;
+        {/if}
+        margin-bottom: 2%;
+        margin-left: 2.5%;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        display: flex;
+        display: -webkit-flex;
+        flex-flow: column;
+        -webkit-flex-flow: column;
+    }
+    .detail .d_link>div{
+        font-size: 12px;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        left: 0;
+        background: rgba(0,0,0,0.7);
+        color: #fff;
+        padding: 2px;
+    }
+    .l_list img{
+        width: 100%;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+    }
+    .weui-cells:after{
+        display: none;
+    }
+    .list a p{
+        font-weight: 900;
+    }
+    .weui-cells{margin-top: 0}
+    .d_link{
+        display: block;
+        position: relative;
+        flex:1;
+    }
+    .d_btn{
+        padding: 4px;
+        text-align: right;
+    }
+    .d_btn a{
+        background: #f8a40d;
+        color: #fff;
+        padding: 2px 6px;
+        border-radius: 20px;
+        font-size: 12px;
+        display: block;
+        text-align: center;
+    }
+</style>
+<div class="navs">
+    <div class="grids flex">
+        <div data-cateid="{php echo intval($_GPC['cate_id'])}" data-type="1" onclick="grids(this)" class="text_center">
+            <div class="ft12">按类型分 <i data-icon="icon-arrLeft-fill" class="iconfont icon-sanx-up"></i></div>
+        </div>
+        <div data-cateid="0" data-type="2" onclick="grids(this)" class="text_center">
+            <div class="ft12">按行业分 <i data-icon="icon-arrLeft-fill" class="iconfont icon-sanx-up"></i></div>
+        </div>
+        <div data-cateid="0" data-type="3" onclick="grids(this)" class="text_center">
+            <div class="ft12">按节日分 <i data-icon="icon-arrLeft-fill" class="iconfont icon-sanx-up"></i></div>
+        </div>
+        <div data-cateid="0" data-type="4" onclick="grids(this)" class="text_center">
+            <div class="ft12">按品牌分 <i data-icon="icon-arrLeft-fill" class="iconfont icon-sanx-up"></i></div>
+        </div>
+    </div>
+    <div class="grids2 flex flex_wrap">
+        <!--<div onclick="grids2(this)" class="active">季节</div>-->
+    </div>
+    <div class="divheight" style="background-color: #f3f3f3;height: 45px"></div>
+    <div class="weui-cells list">
+        <div class="l_list"></div>
+        <!--<div class="weui-cell">-->
+            <!--<div class="weui-cell__hd"><img src="{YOUMI_URL_APP}img/acticity_img.jpg"></div>-->
+            <!--<div class="weui-cell__bd">-->
+                <!--<p>标题文字</p>-->
+                <!--<p>标题文字</p>-->
+                <!--<div class="btns flex">-->
+                    <!--<a href="" class="a_btn">-->
+                        <!--<i class="iconfont icon-tianqi_icon"></i>-->
+                        <!--<text>查看示例</text>-->
+                    <!--</a>-->
+                    <!--<a href="" class="a_btn">-->
+                        <!--<i class="iconfont icon-tianqi_icon"></i>-->
+                        <!--<text>我要制作</text>-->
+                    <!--</a>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    </div>
+    <div class="weui-loadmore">
+        <i class="weui-loading"></i>
+        <span class="weui-loadmore__tips">正在加载</span>
+    </div>
+
+    <!--商户须知-->
+    <div class="explain">
+        <h4>商户须知</h4>
+        <div style="margin: 4%">
+            {$setting['notice']}
+        </div>
+        <div class="text_center" style="margin: 8%"><a onclick="goPage()" href="javascript:;" class="a_btn">我知道了</a></div>
+    </div>
+
+
+    {template 'temp/footerbar'}
+</div>
+
+<script>
+
+    var case0={php echo json_encode($case)};//精选案例
+    var cate1={php echo json_encode($cate1)};//分类
+    var cate2={php echo json_encode($cate2)};
+    var cate3={php echo json_encode($cate3)};
+    var cate4={php echo json_encode($cate4)};
+
+    ajaxList(1)//加载精选案例
+    var isFirst=0;
+    var page=1;
+
+    $(document.body).infinite();
+    var loading = false;  //状态标记
+    $(document.body).infinite().on("infinite", function() {
+        if(loading) return;
+        loading = true;
+        setTimeout(function() {
+            ajaxList(page)
+        }, 700);   //模拟延迟
+    });
+
+    function grids(self) {
+        if($(self).hasClass('active')){
+            $('.grids2').slideToggle(400, function () {
+                animatList()
+            });
+            $('.grids>div').removeClass('active')
+            $(self).find('i.iconfont').removeClass('icon-arrLeft-fill').addClass('icon-sanx-up')
+        }else {
+            $(self).find('i.iconfont').removeClass('icon-sanx-up').addClass('icon-arrLeft-fill')
+            $('.grids>div').removeClass('active')
+            $(self).addClass('active')
+            var cateid=$(self).attr('data-cateid');
+            switch ($(self).attr('data-type')) {
+                case '0':
+                    ajaxCate(case0 || [], 0,cateid);
+                    break;
+                case '1':
+                    ajaxCate(cate1 || [], 1,cateid);
+                    break;
+                case '2':
+                    ajaxCate(cate2 || [], 2,cateid);
+                    break;
+                case '3':
+                    ajaxCate(cate3 || [], 3,cateid);
+                    break;
+                case '4':
+                    ajaxCate(cate4 || [], 4,cateid);
+                    break;
+            }
+        }
+    }
+
+    function grids2(self,type,cate_id) {
+        if($(self).hasClass('active')){return false;}
+        $('.grids2 div').removeClass('active');
+        $(self).addClass('active');
+        var gclsname='.grids>div[data-type="'+type+'"]';
+        $(gclsname).attr('data-cateid',cate_id);
+        page=1;
+        ajaxList(page)
+    }
+
+
+    //计算弹性DIV高度
+    function animatList() {
+        var grids2Height=$('.grids2')[0].offsetHeight||1;
+        if(grids2Height>0){
+            $('.divheight').css('height',45+grids2Height+'px')
+        }
+    }
+    // 加载二级分类
+    function ajaxCate(arr,type,cateid) {
+
+        if (arr.length <= 0) {
+            $('.grids2,.l_list').html('');
+        } else {
+            var html = '';
+            for (var key in arr) {
+                if(key==0){
+                    if(cateid==0){
+                        html += `<div data-id="${arr[key].id}" class="active" onclick="grids2(this,'${type}','0')">所有</div>`
+                    }else{
+                        html += `<div data-id="${arr[key].id}" onclick="grids2(this,'${type}','0')">所有</div>`
+                    }
+
+                }
+                if(cateid==arr[key].id){
+                    html += `<div data-id="${arr[key].id}" class="active" onclick="grids2(this,'${type}','${arr[key].id}')">${arr[key].title}</div>`
+                }else{
+                    html += `<div data-id="${arr[key].id}" onclick="grids2(this,'${type}','${arr[key].id}')">${arr[key].title}</div>`
+                }
+
+            }
+            $('.grids2').html(html).slideDown(400, function () {
+                animatList()
+            })
+        }
+        if(type==1&&isFirst==1){
+            $('.grids2>div').removeClass('active');
+            var gclsname='.grids2>div[data-id="'+{php echo intval($_GPC['cate_id'])}+'"]';
+            $(gclsname).addClass('active');
+        }
+    }
+    // 加载列表数据
+    function ajaxList(page) {
+        $.post(
+            "{php echo $this->createMobileUrl('activitys',['op'=>'case_list'])}",
+            {
+                'page':page,
+                'type': 0,
+                'cate_id1': $($('.grids>div')[0]).attr('data-cateid'),
+                'cate_id2': $($('.grids>div')[1]).attr('data-cateid'),
+                'cate_id3': $($('.grids>div')[2]).attr('data-cateid'),
+                'cate_id4': $($('.grids>div')[3]).attr('data-cateid')
+            },
+            function (data) {
+                console.log(data)
+                    if (data.data.length > 0) {
+                        listHtml(data.data)
+                    } else {
+                        if(page==1) {
+                            $('.l_list').html('');
+                            $('.weui-loadmore').hide()
+                            $.toast("暂无数据", "text");
+                        }else{
+                            $('.weui-loadmore').hide();
+                            $.toast("加载完毕", "text");
+                        }
+                    }
+            }, 'json'
+        )
+    }
+    //我要制作按钮
+    function openExplain(id,module) {
+        $('.explain').show(400).attr('data-id',id).attr('data-module',module)
+    }
+    // 我知道了按钮，跳转
+    function goPage() {
+        var id=$('.explain').attr('data-id');
+        var module=$('.explain').attr('data-module');
+        location.href="{php echo $this->createMobileUrl('making')}&case_id="+id+'&module='+module;
+    }
+    function listHtml(arr){
+        isFirst++;
+        var html='';
+        for (var key in arr){
+            // html+=`<div class="weui-cell">
+            //     <div class="weui-cell__hd"><img src="${arr[key].logo}"></div>
+            //     <div class="weui-cell__bd">
+            //         <p>${arr[key].title}</p>
+            //         <p class="ft12" style="color: #B0B0B0">${arr[key].desc}</p>
+            //         <div class="btns flex">
+            //             <a href="${arr[key].link}" class="a_btn">
+            //                 <i class="iconfont icon-chakan"></i>
+            //                 <text>查看示例</text>
+            //             </a>
+            //             <div onclick="openExplain('${arr[key].id}','${arr[key].module}')" class="a_btn">
+            //                 <i class="iconfont icon-tianjia"></i>
+            //                 <text>我要制作</text>
+            //             </div>
+            //         </div>
+            //     </div>
+            // </div>`
+            // html+=`<a href="${arr[key].link}" class="detail">
+            //             <div>
+            //                 <img src="${arr[key].logo}">
+            //                 <div>${arr[key].title}</div>
+            //             </div>
+            //         </a>`
+            var link="{php echo $this->createMobileUrl('making')}&case_id="+arr[key].id+'&module='+arr[key].module;
+            html+=`<div class="detail">
+                        <a class="d_link" href="${arr[key].link}">
+                        <img src="${arr[key].logo}">
+                        <div>${arr[key].title}</div>
+                        </a>
+                        <div class="d_btn">
+                        <a href="${link}">马上制作</a>
+                        </div>
+                    </div>`
+        }
+        // html+='</div>';
+        if(page==1) {
+            if(arr.length<9){
+                $('.weui-loadmore').hide()
+            }else{
+                $('.weui-loadmore').show()
+            }
+            $('.l_list').html(html)
+        }else{
+            $('.grids2').slideUp(100, function () {
+                animatList()
+            });
+            $('.l_list').append(html)
+        }
+        page++;
+        loading = false;
+    }
+
+
+
+
+    console.log(case0)
+    console.log(cate1)
+    console.log(cate2)
+    console.log(cate3)
+    console.log(cate4)
+</script>
+
+{template 'footer'}

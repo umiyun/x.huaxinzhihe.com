@@ -1,0 +1,58 @@
+<style>
+    .c_title{
+        text-align: center;
+    }
+   
+    .c_title_btn{
+        background: rgba(0,0,0,0.4);
+        display: inline-block;
+        color: #fff;
+        padding: 1% 2%;
+        margin: 2%;
+    }
+    .c_title_tips{
+        color: #777;
+    }
+    textarea{
+        border: 1px dashed #F9292A;
+        text-align: center;
+        margin: 0;
+        padding: 5px;
+    }
+    .c_title textarea{
+        padding: 2%;
+        font-size: 16px;
+        padding-bottom: 10px;
+        font-weight: 900;
+    }
+    .c_title_tips{
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+        color: #ddd;
+    }
+    .ct_date>span{
+        width: 25%;
+    }
+    .ct_date>input{
+        width: 52%;
+        margin: 2% 4%;
+        margin-bottom: 10px!important;
+    }
+</style>
+<div class="c_title">
+    <div class="c_title_btn flex flex_a_center">
+        <!--<i class="iconfont icon-bianji1 sys_color"></i>-->
+        <span>活动标题</span>
+    </div>
+    <div class="p_relative">
+        <textarea class="d_title" maxlength="25">{$activity['title']}</textarea>
+        <span class="ft10 c_title_tips">包括标点符号最多25字</span>
+    </div>
+    <div class="ct_date flex flex_a_center flex_wrap">
+        <span><i class="iconfont icon-essential"></i>活动时间</span>
+        <input type="text" id='datetime-picker1' value="{if $activity['starttime']}{php echo date('Y-m-d H:i',$activity['starttime'])}{/if}"/>
+        <span>至</span>
+        <input type="text" id='datetime-picker2' value="{if $activity['starttime']}{php echo date('Y-m-d H:i',$activity['endtime'])}{/if}"/>
+    </div>
+</div>

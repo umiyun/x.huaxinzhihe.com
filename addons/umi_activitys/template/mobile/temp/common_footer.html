@@ -1,0 +1,13 @@
+<!--底部按钮-->
+<div class="footer_btns">
+    <div class="fb_btns flex flex_j_center flex_a_center">
+        <div class="sys_color" onclick="submit('1')">预览</div>
+        <div class="sys_bgcolor" onclick="submit('2')">保存</div>
+    </div>
+    {if $is_vip==0}
+    <a href="{$setting['copyright_url']}" class="fb_tip flex flex_j_around flex_a_center ft16">
+        <div class="color_fff">{$setting['copyright']}</div>
+        {if $setting['copyright_buy']}<span>{$setting['copyright_buy']}</span>{else}<span>去购买</span>{/if}
+    </a>
+    {/if}
+</div>

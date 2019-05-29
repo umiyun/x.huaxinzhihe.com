@@ -1,0 +1,80 @@
+{template 'header'}
+<style>
+    a{
+        color: #000;
+    }
+    .grids{
+        border-top: 1px solid #eee;
+        overflow-x: auto;
+        position: fixed;
+        z-index: 8;
+        top: 0;
+        left: 0;
+        width: 100%;
+        white-space: nowrap;
+        background: #fff;
+        justify-content: space-around;
+        box-shadow:0px 2px 4px #ddd;
+    }
+    .grids>a{
+        width: 20%;
+        margin: 4% 4% 0 4%;
+        border-bottom: 2px solid transparent;
+    }
+    .grids img{
+        width: 100%;
+    }
+    .grids .ft14{
+        padding-bottom: 15%;
+        margin-top: -10%;
+    }
+    .grids i{
+        font-size: 25px;
+    }
+    .grids>.active{
+        color: #F8A40D;
+        border-bottom: 2px solid #F8A40D;
+    }
+    .a_content{
+        padding: 2%;
+    }
+    .weui-cell{
+        padding: 15px;
+    }
+</style>
+
+<div>
+
+    <div class="grids flex">
+        {loop $helpcate $hv}
+        <a href="{php echo $this->createMobileUrl('helping',['cate_id'=>$hv['id']])}" class="text_center {if $cate_id==$hv['id']}active{/if}">
+            <div class="ft14">{$hv['title']}</div>
+        </a>
+        {/loop}
+    </div>
+
+    <div style="height: 45px;background: #fff"></div>
+    <div class="a_content">
+        {if !empty($logo)}<img style="width: 100%" src="{$logo}" alt="">{/if}
+        <div class="weui-cells">
+            {loop $help $pv}
+            <a class="weui-cell weui-cell_access" href="{if !empty($pv['link'])}{$pv['link']}{else}{php echo $this->createMobileUrl('helping',['op'=>'hDesc','id'=>$pv['id']])}{/if}">
+                <div class="weui-cell__bd">
+                    <p>{$pv['title']}</p>
+                </div>
+                <div class="weui-cell__ft"></div>
+            </a>
+            {/loop}
+        </div>
+    </div>
+
+    {template 'temp/icon_backhome'}
+</div>
+
+
+<script>
+    console.log({php echo json_encode($helpcate)})
+    console.log({php echo json_encode($help)})
+    console.log({php echo json_encode($logo)})
+</script>
+{template 'footer'}

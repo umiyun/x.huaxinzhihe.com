@@ -1,0 +1,157 @@
+{template 'header'}
+<style>
+    .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+        vertical-align: middle;
+    }
+    .layui-table-view .layui-table{
+        width: 100%;
+    }
+    .layui-table-cell{
+        height: auto;
+    }
+    .qrcode2{
+        display: none;
+        position: fixed;
+        top: 15%;
+        left: 40%;
+        z-index: 10;
+        text-align: center;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #555;
+        background-color: #fff;
+    }
+</style>
+<script src="{YOUMI_URL_TEMP}resource/qrcode.min.js"></script>
+<div class="layui-tab layui-tab-brief site-demo-table">
+    <ul class="layui-tab-title site-demo-title" style="margin-bottom: 20px">
+        <li class="layui-this">
+            <a href="javascript:;">活动管理列表</a>
+        </li>
+    </ul>
+    <div class="panel-default">
+        <div class="panel-heading">查询</div>
+        <div class="panel-body">
+            <form action="./index.php" method="get" class="form-horizontal" role="form" id="form1">
+                <input type="hidden" name="c" value="site">
+                <input type="hidden" name="a" value="entry">
+                <input type="hidden" name="m" value="{YOUMI_NAME}">
+                <input type="hidden" name="do" value="activitys">
+                
+                <div class="form-group">
+                    <label class="col-md-1 col-lg-1 control-label">商家</label>
+                    <div class="col-md-2" style="margin-bottom: 15px">
+                        <select name="shop_id" class="form-control">
+                            <option value="">--所有--</option>
+                            {loop $shops $sv}
+                            <option {if $sv['id']==$_GPC['shop_id']}selected{/if} value="{$sv['id']}">{$sv['title']}</option>
+                            {/loop}
+                        </select>
+                    </div>
+                    <label class="col-md-1 col-lg-1 control-label">模块</label>
+                    <div class="col-md-2" style="margin-bottom: 15px">
+                        <select name="module" class="form-control">
+                            <option value="">--所有--</option>
+                            {loop $modules $mv}
+                            <option {if $mv['module']==$_GPC['module']}selected{/if} value="{$mv['module']}">{$mv['title']}</option>
+                            {/loop}
+                        </select>
+                    </div>
+                    <label class="col-md-1 col-lg-1 control-label">状态</label>
+                    <div class="col-md-2" style="margin-bottom: 15px">
+                        <select name="status" class="form-control">
+                            <option value="">--所有--</option>
+                            <option {if $status==1}selected{/if} value="1">上架</option>
+                            <option {if $status==2}selected{/if} value="2">下架</option>
+                            <option {if $status==3}selected{/if} value="3">未开始</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1">
+                        <button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    {if $list}
+    <div class="layui-form layui-border-box layui-table-view" lay-filter="LAY-table-1" lay-id="test" style=" ">
+        <div class="layui-table-box">
+            <div class="layui-table-header">
+                <table cellspacing="0" cellpadding="0" border="0" class="layui-table">
+                    <thead>
+                    <tr>
+                        <th>
+                            <div class="layui-table-cell"><span>商家</span></div>
+                        </th>
+                        <th>
+                            <div class="layui-table-cell"><span>模块</span></div>
+                        </th>
+                        <th>
+                            <div class="layui-table-cell"><span>活动标题</span></div>
+                        </th>
+                        <th>
+                            <div class="layui-table-cell"><span>浏览量/报名数</span></div>
+                        </th>
+                        <th>
+                            <div class="layui-table-cell"><span>状态</span></div>
+                        </th>
+                        <th>
+                            <div class="layui-table-cell"><span>创建时间</span></div>
+                        </th>
+                        <th>
+                            <div align="right" class="layui-table-cell"><span>操作</span></div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {loop $list $index $item}
+                    <tr data-index="0" class="">
+                        <td><div class="layui-table-cell">{$item['shoptitle']}</div></td>
+                        <td><div class="layui-table-cell">{$item['moduletitle']}</div></td>
+                        <td><div class="layui-table-cell">{$item['title']}</div></td>
+                        <td><div class="layui-table-cell">{$item['pv']}/{$item['participate']}</div></td>
+                        <td><div class="layui-table-cell">{$item['statusname']}</div></td>
+                        <td><div class="layui-table-cell">{if $item['createtime']}{php echo date('Y-m-d H:i' , $item['createtime'])}{/if}</div></td>
+                        <td align="right">
+                            <div class="layui-table-cell">
+
+                                <a href="{php echo $this->createWebUrl('cuts',['activity_id'=>$item['activity_id'],'shop_id'=>$item['shop_id'],'module'=>$item['module']])}" class="layui-btn layui-btn-sm layui-btn-normal">报名管理</a>
+                                <div style="position: relative" onclick="qrcode(this)" data-url="{php echo $_W['siteroot'] . 'app/index.php?i='.$item['uniacid'].'&m=umi_activitys&c=entry&do=activitys&op=activitys_detail&activity_id='.$item['id']}" class="layui-btn layui-btn-sm layui-btn-warm"><i class="layui-icon layui-icon-cellphone-fine"></i>修改活动</div>
+                                <a href="javascript:;" data-url="{php echo $_W['siteroot'] . 'app/index.php?i='.$item['uniacid'].'&c=entry&do=index&activity_id='.$item['activity_id'].'&m='.$item['module']}" class="color-default js-clip">复制链接</a>
+
+                            </div>
+                        </td>
+                    </tr>
+                    {/loop}
+                    <tr>
+                        <td style="padding-right: 10px" colspan="9" align="right">共计{$total}条数据</td>
+                    </tr>
+                    {if $pager}
+                    <tr>
+                        <td colspan="9" align="right">{$pager}</td>
+                    </tr>
+                    {/if}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="qrcode2">
+        <div id="qrcode" onclick="$('.qrcode2').hide()"></div>
+        <b>点击二维码关闭</b>
+    </div>
+
+    {else}
+    <div style="text-align: center;padding: 90px 0;" class="panel panel-default">暂无数据~</div>
+    {/if}
+
+<script>
+    function qrcode(self){
+        $('#qrcode').html('');
+        new QRCode(document.getElementById("qrcode"), $(self).attr('data-url'));  // 设置要生成二维码的链接
+        $('.qrcode2').show();
+    }
+    console.log({php echo json_encode($list)})
+</script>
+{template 'common/footer'}
+    

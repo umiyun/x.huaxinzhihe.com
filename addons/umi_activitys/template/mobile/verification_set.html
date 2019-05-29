@@ -1,0 +1,196 @@
+{template 'header'}
+<style>
+    .container{
+        margin-bottom: 50px;
+    }
+    .v_top{
+        background: #FFF6CB;
+        padding: 10px 5px;
+    }
+    .v_cells img{
+        width: 45px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+    .weui-cells{
+        margin-top: 0;
+    }
+    .addmember{
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        padding: 8px;
+        border-radius: 0;
+        font-size: 16px;
+    }
+    .v_add{
+        position: absolute;
+        z-index: 20;
+        top: 5%;
+        width: 80%;
+        left: 10%;
+        background: #fff;
+        padding: 10px;
+        border-radius: 5px;
+        display: none;
+    }
+    .va_search{
+
+    }
+    .va_search a{
+        height: 40px;
+        background: #f8a40d;
+        color: #fff;
+        width: 60px;
+        text-align: center;
+        line-height: 40px;
+        border-bottom-right-radius: 5px;
+        border-top-right-radius: 5px;
+    }
+    .va_search input{
+        border-bottom-right-radius: 0;
+        border-top-right-radius: 0;
+    }
+    .v_add .icon-Close{
+        position: fixed;
+        left: 44%;
+        bottom: 10%;
+        z-index: 20;
+        font-size: 40px;
+        color: #fff;
+    }
+    .va_cells{
+        margin:  10% 0;
+        min-height: 100px;
+        max-height: 250px;
+        overflow-y: auto;
+    }
+    .va_btn.active{
+        background: #aaa;
+    }
+</style>
+
+<div class="v_top ft12 color777">本店共有核销员 <span>{php echo count($list)}</span> 位</div>
+<div class="v_cells weui-cells">
+    {loop $list $lv}
+    <div class="weui-cell">
+        <div class="weui-cell__hd"><img src="{$lv['avatar']}"></div>
+        <div class="weui-cell__bd">
+            <p>{$lv['nickname']}</p>
+        </div>
+        <div class="weui-cell__ft" data-openid="{$lv['openid']}" onclick="delMember(this)">删除</div>
+    </div>
+    {/loop}
+</div>
+<div class="a_btn addmember" onclick="$('.v_add,.bg_fixed').fadeIn()">添加收银员</div>
+<!--添加弹窗-->
+<div class="bg_fixed"></div>
+<div class="v_add">
+    <div class="va_search flex flex_a_center">
+        <input type="text" placeholder="请输入用户昵称">
+        <a href="javascript:;">搜索</a>
+    </div>
+    <div class="va_cells weui-cells weui-cells_radio">
+        <!--<label class="weui-cell weui-check__label" for="x11">-->
+            <!--<div class="weui-cell__bd">-->
+                <!--<p>会员1</p>-->
+            <!--</div>-->
+            <!--<div class="weui-cell__ft">-->
+                <!--<input type="radio" class="weui-check" name="radio1" id="x11">-->
+                <!--<span class="weui-icon-checked"></span>-->
+            <!--</div>-->
+        <!--</label>-->
+
+    </div>
+    <div class="a_btn va_btn active">添加</div>
+    <i class="iconfont icon-Close" onclick="$('.v_add,.bg_fixed').fadeOut()"></i>
+</div>
+<script>
+
+    console.log({php echo json_encode($list)})
+
+    $('.va_search a').click(function(){
+        var keyword=$('.va_search input').val();
+        if(keyword){
+            $.post(
+                "{php echo $this->createMobileUrl('verification',array('op'=>'search'))}",
+                {
+                    keyword: keyword
+                }, function (data) {
+                    if(data.length>0){
+                        var html='';
+                        for(var i=0;i<data.length;i++){
+                            html+='<label onclick="$(\'.va_btn\').removeClass(\'active\')" class="weui-cell weui-check__label" for="x'+i+'">' +
+                                '    <div class="weui-cell__bd">' +
+                                '        <p>'+data[i]['nickname']+'</p>' +
+                                '    </div>' +
+                                '    <div class="weui-cell__ft">' +
+                                '        <input data-openid="'+data[i]['openid']+'"  type="radio" name="radio1" class="weui-check" id="x'+i+'">' +
+                                '        <span class="weui-icon-checked"></span>' +
+                                '    </div>' +
+                                '</label>'
+                        }
+                        $('.va_btn').removeClass('active');
+                        $('.va_cells').html(html);
+                    }else{
+                        tips('没有搜索到会员')
+                    }
+                },'json'
+            )
+        }
+    })
+
+
+    //添加核销员
+    $('.va_btn').click(function () {
+        if(!$(this).hasClass('active')){
+            var obj=$('.va_cells input:checked');
+            $.post(
+                "{php echo $this->createMobileUrl('verification',array('op'=>'addmember'))}",
+                {
+                    nopenid: obj.attr('data-openid')
+                }, function (data) {
+                    if(data.errno==0){
+
+                        var html='<div class="weui-cell">' +
+                            '    <div class="weui-cell__hd"><img src="'+data.data.avatar+'"></div>' +
+                            '    <div class="weui-cell__bd">' +
+                            '        <p>'+data.data.nickname+'</p>' +
+                            '    </div>' +
+                            '    <div class="weui-cell__ft" data-openid="'+data.data.openid+'" onclick="delMember(this)">删除</div>' +
+                            '</div>'
+                        $('.v_add,.bg_fixed').fadeOut()
+                        $('.v_cells').append(html)
+                        $('.v_top span').html($('.v_top span').html()-0+1)
+                    }else{
+                        tips(data.message)
+                    }
+                },'json'
+            )
+        }
+    })
+    //删除
+    function delMember(self) {
+        var r=confirm("确定删除该核销员?")
+        if (r==true)
+        {
+            $.post(
+                "{php echo $this->createMobileUrl('verification',array('op'=>'delmember'))}",
+                {
+                    openid: $(self).attr('data-openid')
+                }, function (data) {
+                    tips(data.message)
+                    if(data.errno==0){
+                        $(self).parent().remove();
+                        $('.v_top span').html($('.v_top span').html()-1)
+                    }
+                },'json'
+            )
+        }
+    }
+
+</script>
+
+
+{template 'footer'}

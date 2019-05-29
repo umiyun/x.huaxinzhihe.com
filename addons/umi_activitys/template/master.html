@@ -1,0 +1,341 @@
+{template 'header'}
+<style>
+    .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+        vertical-align: middle;
+    }
+    .layui-table-view .layui-table{
+        width: 100%;
+    }
+    .layui-table-cell{
+        height: auto;
+    }
+</style>
+<div class="layui-tab layui-tab-brief site-demo-table">
+    <ul class="layui-tab-title site-demo-title" style="margin-bottom: 20px">
+        <li {if $op == '' || $op == 'display'}class="layui-this"{/if}>
+        <a href="{php echo $this->createWebUrl('master')}">管理员列表</a>
+        </li>
+        <li {if $op == 'post'}class="layui-this"{/if}>
+        <a href="{php echo $this->createWebUrl('master',['op'=>'post','id'=>$id])}">{if $id}编辑{else}添加{/if}管理员</a>
+        </li>
+    </ul>
+    {if $op == 'display' || $op == ''}
+        <div class="panel-default" style="display:none;">
+            <div class="panel-heading">查询</div>
+            <div class="panel-body">
+                <form action="./index.php" method="get" class="form-horizontal" role="form" id="form1">
+                    <input type="hidden" name="c" value="site">
+                    <input type="hidden" name="a" value="entry">
+                    <input type="hidden" name="m" value="{YOUMI_NAME}">
+                    <input type="hidden" name="do" value="master">
+
+                    <div class="form-group">
+                        <label class="col-md-1 col-lg-1 control-label">状态</label>
+                        <div class="col-md-3">
+                            <select name="status" class="form-control">
+                                <option value="">--所有--</option>
+                                <option {if $_GPC['status'] == 1}selected{/if} value='1'></option>
+                                <option {if $_GPC['status'] == 2}selected{/if} value='2'></option>
+                                <option {if $_GPC['status'] == 3}selected{/if} value='3'></option>
+                            </select>
+                        </div>
+                        <label class="col-md-4 col-lg-1 control-label">关键词</label>
+                        <div class="col-md-4">
+                            <input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}" placeholder="可模糊查询">
+                        </div>
+                        <div class="col-md-1">
+                            <button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {if $list}
+        <!--<div class="panel-body">-->
+            <!--<form action="" method="post" class="form-horizontal form">-->
+
+                <!--<div class="table-responsive panel-body">-->
+                    <!--<table class="table table-hover">-->
+                        <!--<thead class="navbar-inner">-->
+                            <!--<th class="text-center">用户</th>-->
+                            <!--<th class="text-center">姓名</th>-->
+                            <!--<th class="text-center">手机号</th>-->
+                            <!--<th class="text-center">密码</th>-->
+                            <!--<th class="text-center">状态</th>-->
+                            <!--<th class="text-center">注册时间</th>-->
+                            <!--<th style="text-align:right;">操作</th>-->
+                        <!--</thead>-->
+                        <!--<tbody id="level-list">-->
+                        <!--{loop $list $index $item}-->
+                        <!--<tr>-->
+                            <!--<td align="center">-->
+                                <!--<div class="type-parent">{$item['openid']}</div>-->
+                            <!--</td>-->
+
+                            <!--<td align="center">-->
+                                <!--<div class="type-parent">{$item['realname']}</div>-->
+                            <!--</td>-->
+
+                            <!--<td align="center">-->
+                                <!--<div class="type-parent">{$item['mobile']}</div>-->
+                            <!--</td>-->
+
+                            <!--<td align="center">-->
+                                <!--<div class="type-parent">{$item['password']}</div>-->
+                            <!--</td>-->
+
+                            <!--<td align="center">-->
+                                <!--<div class="type-parent">{$item['statusname']}</div>-->
+                            <!--</td>-->
+
+                            <!--<td align="center">-->
+                                <!--<div class="type-parent">{if $item['createtime']}{php echo date('Y-m-d H:i' , $item['createtime'])}{else}{/if}</div>-->
+                            <!--</td>-->
+
+                            <!--<td align="right">-->
+                                <!--<a class="btn btn-info btn-sm" href="{php echo $this->createWebUrl('master',array('op'=>'post','id'=>$item['id']))}" title="编辑">修改</a>-->
+                                <!--<a class="btn btn-danger btn-sm" href="{php echo $this->createWebUrl('master',array('op'=>'del','id'=>$item['id']))}" onclick="return confirm('确认删除吗？');return false;" title="删除">删除</a>-->
+                            <!--</td>-->
+                        <!--</tr>-->
+                        <!--{/loop}-->
+                        <!--<tr>-->
+                            <!--<td colspan="7" align="right">共计{$total}条数据</td>-->
+                        <!--</tr>-->
+                        <!--{if $pager}-->
+                        <!--<tr>-->
+                            <!--<td colspan="7" align="right">{$pager}</td>-->
+                        <!--</tr>-->
+                        <!--{/if}-->
+                        <!--</tbody>-->
+                    <!--</table>-->
+                <!--</div>-->
+            <!--</form>-->
+        <!--</div>-->
+        <div class="layui-form layui-border-box layui-table-view" lay-filter="LAY-table-1" lay-id="test" style=" ">
+            <div class="layui-table-box">
+                <div class="layui-table-header">
+                    <table cellspacing="0" cellpadding="0" border="0" class="layui-table">
+                        <thead>
+                        <tr>
+                            <th>
+                                <div class="layui-table-cell"><span>用户</span></div>
+                            </th>
+                            <th>
+                                <div class="layui-table-cell"><span>姓名</span></div>
+                            </th>
+                            <th>
+                                <div class="layui-table-cell"><span>手机号</span></div>
+                            </th>
+                            <th>
+                                <div class="layui-table-cell"><span>状态</span></div>
+                            </th>
+                            <th>
+                                <div class="layui-table-cell"><span>注册时间</span></div>
+                            </th>
+                            <th>
+                                <div align="right" class="layui-table-cell"><span>操作</span></div>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {loop $list $index $item}
+                        <tr data-index="0" class="">
+                            <td><div class="layui-table-cell">
+                                {if $item['member']}
+                                <img style="width:40px;height:40px;padding:1px;margin-right:5px;border:1px solid #ccc;border-radius: 50%;" src="{php echo tomedia($item['member']['avatar'])}">{$item['member']['nickname']}
+                                {else}
+                                <div class="type-parent">{$item['mobile']}</div>
+                                {/if}
+                                <div class="type-parent" style="display:none;">{$item['wxopenid']}</div>
+                            </div></td>
+                            <td><div class="layui-table-cell">{$item['realname']}</div></td>
+                            <td><div class="layui-table-cell">{$item['mobile']}</div></td>
+                            <td><div class="layui-table-cell">{$item['statusname']}</div></td>
+                            <td><div class="layui-table-cell">{php echo date('Y-m-d H:i' , $item['createtime'])}</div></td>
+                            <td align="right">
+                                <div class="layui-table-cell">
+                                    <a class="layui-btn layui-btn-sm layui-btn-normal" href="{php echo $this->createWebUrl('master',array('op'=>'post','id'=>$item['id']))}" title="修改"><i class="layui-icon layui-icon-edit"></i>修改</a>
+                                    <a class="layui-btn layui-btn-sm layui-btn-danger" href="{php echo $this->createWebUrl('master',array('op'=>'del','id'=>$item['id']))}" onclick="return confirm('确认删除吗？');return false;" title="删除"><i class="layui-icon layui-icon-delete"></i>删除</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {/loop}
+                        <tr>
+                            <td style="padding-right: 10px" colspan="9" align="right">共计{$total}条数据</td>
+                        </tr>
+                        {if $pager}
+                        <tr>
+                            <td colspan="9" align="right">{$pager}</td>
+                        </tr>
+                        {/if}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {else}
+        <div style="text-align: center;padding: 90px 0;" class="panel panel-default">暂无数据~</div>
+        {/if}
+    {/if}
+
+    {if $op == 'post'}
+    <div class="main">
+        <form action="{php echo $this->createWebUrl('master',array('op' =>'post'))}" method="post" class="form-horizontal form">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    编辑管理员
+                </div>
+                <div class="panel-body">
+
+
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style='color:red'>*</span>用户</label>
+                        <div class="col-sm-8 col-xs-12">
+                            <input type='hidden' id='openid' name='data[openid]' value="{$saler['openid']}"/>
+                            <div class='input-group'>
+                                <input type="text" name="saler" maxlength="30" value="{if !empty($saler)}{$saler['nickname']}{/if}" id="saler" class="form-control" readonly/>
+                                <div class='input-group-btn'>
+                                    <button class="btn btn-default" type="button" onclick="popwin=$('#modal-module-menus').modal();">选择用户</button>
+                                </div>
+                            </div>
+                            <span class="help-block"></span>
+                            {if !empty($saler)}
+                            <span class='help-block'>
+                                <img style="width:100px;height:100px;border:1px solid #ccc;padding:1px" src="{$saler['avatar']}" id="avatar"/>
+                            </span>
+                            {/if}
+                            <div id="modal-module-menus" class="modal fade" tabindex="-1">
+                                <div class="modal-dialog" style='width: 920px;'>
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button aria-hidden="true" data-dismiss="modal" class="close one" type="button">
+                                                ×
+                                            </button>
+                                            <h3>选择用户微信</h3>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="keyword" value="" id="search-kwd" placeholder="请输入用户昵称/手机号"/>
+                                                    <span class='input-group-btn'>
+                                                        <button type="button" class="btn btn-default" onclick="search_members();">搜索</button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div id="module-menus" style="padding-top:5px;"></div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <a href="#" class="btn btn-default" data-dismiss="modal" aria-hidden="true" id="c1">关闭</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+                        function search_members() {
+                            if ($.trim($('#search-kwd').val()) == '') {
+                                util.message('请输入关键词');
+                                return;
+                            }
+                            $("#module-menus").html("正在搜索....")
+                            $.get("{php echo $this->createWebUrl('master',array('op'=>'search'))}", {
+                                keyword: $.trim($('#search-kwd').val())
+                            }, function (dat) {
+                                var html = '<div style="max-height:500px;overflow:auto;min-width:850px;">' +
+                                    '<table class="table table-hover" style="min-width:850px;">' +
+                                    '<thead>' +
+                                    '    <th>用户</th>' +
+                                    '</thead>' +
+                                    '<tbody>';
+
+                                for (var i = 0; i < dat.ds.length; i++) {
+                                    var fun = "'select_member(" + JSON.stringify(dat.ds[i]);
+                                    var dan = "'";
+                                    html += '<tr><td><img src=' + dat.ds[i]['avatar'] + ' style="width:30px;height:30px;padding1px;border:1px solid #ccc" > ' + dat.ds[i]['nickname'] + '</td>' +
+                                        '<td>' + dat.ds[i]['mobile'] + '</td>' +
+                                        '<td style="width:80px;"><a href="javascript:;" onclick=' + fun + ',"saler")' + dan + '>选择</a></td></tr>';
+                                }
+                                html += '</tbody></table></div>';
+                                $('#module-menus').html(html);
+                            }, 'json');
+
+                        }
+
+                        function select_member(o, type) {
+                            if (type == 'saler') {
+                                $("#openid").val(o.openid);
+                                $("#saler").val(o.nickname);
+                                $("#avatar").attr('src', o.avatar);
+                                $(".one").click();
+                            } else {
+                                $("#messageopenid").val(o.openid);
+                                $("#messagesaler").val(o.nickname);
+                                $("#messageavatar").attr('src', o.avatar);
+                                $(".two").click();
+                            }
+
+                        }
+                    </script>
+
+
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>姓名</label>
+                        <div class="col-sm-8 col-xs-12">
+                            <input type="text" id='data[realname]' name="data[realname]" class="form-control" value="{$item['realname']}" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>手机号</label>
+                        <div class="col-sm-8 col-xs-12">
+                            <input type="text" id='data[mobile]' name="data[mobile]" class="form-control" value="{$item['mobile']}" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">状态</label>
+                        <div class="col-sm-8 col-xs-12">
+                            <label class='radio-inline'>
+                                <input type='radio' name='data[status]' value='1' {if $item['status'] == 1}checked{/if} />启用
+                            </label>
+                            <label class='radio-inline'>
+                                <input type='radio' name='data[status]' value='2' {if $item['status'] == 2}checked{/if} />禁用
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-3 col-md-2 control-label">注册时间</label>
+                        <div class="col-sm-8 col-xs-12">
+                            {php echo tpl_form_field_date('data[createtime]', $item['createtime'],true)}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-8">
+                    <input type="submit" name="submit" value="提交" class="btn btn-info col-lg-1" />
+                    <input type="hidden" name="token" value="{$_W['token']}" />
+                    <input type="hidden" name="id" value="{$item['id']}" />
+                </div>
+            </div>
+        </form>
+    </div>
+    <script>
+        require(['jquery.ui'],function() {
+            $('.multi-img-details').sortable({scroll: 'false'});
+            $('.multi-img-details').sortable('option', 'scroll', false);
+        })
+        $('form').submit(function () {
+            if($('input[name="data[title]"]').val() == ''){
+                util.message('请输入标题');
+                return false;
+            }
+        })
+    </script>
+    {/if}
+
+{template 'common/footer'}
+    

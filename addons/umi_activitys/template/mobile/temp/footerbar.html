@@ -1,0 +1,25 @@
+
+    <div style="height: 60px"></div>
+
+    <div class="weui-tab footer">
+        <div class="weui-tabbar">
+            <a href="{php echo $this->createMobileUrl('index')}" class="weui-tabbar__item {if $_GPC['do']=='index'||$_GPC['do']==''}weui-bar__item--on{/if}">
+                <div class="weui-tabbar__icon">
+                    <img src="{YOUMI_URL_APP}img/home{if $_GPC['do']=='index'||$_GPC['do']==''}_s{/if}.png" alt="">
+                </div>
+                <p class="weui-tabbar__label">首页</p>
+            </a>
+            <a href="{php echo $this->createMobileUrl('activitys')}" class="weui-tabbar__item {if $_GPC['do']=='activitys'}weui-bar__item--on{/if}">
+                <div class="weui-tabbar__icon">
+                    <img src="{YOUMI_URL_APP}img/activity{if $_GPC['do']=='activitys'}_s{/if}.png" alt="">
+                </div>
+                <p class="weui-tabbar__label">活动</p>
+            </a>
+            <a href="{php echo $this->createMobileUrl('user')}" class="weui-tabbar__item {if $_GPC['do']=='user'}weui-bar__item--on{/if}">
+                <div class="weui-tabbar__icon">
+                    <img src="{YOUMI_URL_APP}img/user{if $_GPC['do']=='user'}_s{/if}.png" alt="">
+                </div>
+                <p class="weui-tabbar__label">我的</p>
+            </a>
+        </div>
+    </div>

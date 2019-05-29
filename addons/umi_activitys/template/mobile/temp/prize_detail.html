@@ -1,0 +1,46 @@
+<div class="basic_setting p_relative flex flex_wrap">
+    <!--图片 价格-->
+    <div class="s_price flex flex_wrap flex_j_between flex_a_center">
+        <div class="p_gimg p_relative flex_a_center">
+            <input class="select_goodimg" type="file" accept="" onchange="selectGoodimg(this)">
+            <div>
+                <i class="iconfont icon-tupiantianjia" style="font-size: 30px"></i>
+                <div class="color777 ft14">添加图片</div>
+                <div class="color777 ft10">(只能添加一张)</div>
+            </div>
+            <img class="good_logo" src="" alt="">
+            <input type="hidden" class="good_id">
+        </div>
+        <div class="p_price flex1">
+            <div class="s_detail" style="margin-bottom: 5px">
+                <div class="flex flex_a_center">
+                    <span class="word-break"><i class="iconfont icon-essential"></i>奖品名称</span>
+                    <input type="text" class="d2_title"/>
+                </div>
+            </div>
+            <div class="s_detail" style="margin-bottom: 5px">
+                <div class="flex flex_a_center">
+                    <span class="word-break"><i class="iconfont icon-essential"></i>中将概率</span>
+                    <input type="number" class="d2_odds"/>
+                    <span>%</span>
+                </div>
+            </div>
+            <div class="s_detail">
+                <div class="flex flex_a_center">
+                    <span class="word-break"><i class="iconfont icon-essential"></i>奖品数量</span>
+                    <input type="number" class="d2_num"/>
+                    <span>份</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--次数-->
+    <div class="s_nums weui-cell weui-cell_switch">
+        <div class="weui-cell__bd">是否中奖</div>
+        <div class="weui-cell__ft">
+            <input class="weui-switch" type="checkbox">
+        </div>
+    </div>
+    <!--删除-->
+    <i onclick="$(this).parent().remove();" class="s_close iconfont icon-delete-s"></i>
+</div>

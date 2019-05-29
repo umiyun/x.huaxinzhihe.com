@@ -1,0 +1,59 @@
+{if !empty($notice)}
+<style>
+    .notice_active {
+        height: 1rem;
+        padding: 0;
+        overflow: hidden;
+        position: relative;
+        margin-bottom: 10px;
+    }
+    .notice_active i.iconfont{
+        left: 8px;
+    }
+    .notice_active ul{
+        padding: 0 6px;
+        padding-left: 40px;
+    }
+    .notice_active li{
+        list-style-type:none;
+        line-height: 1rem;
+        overflow: hidden;
+        color: #111111;
+    }
+</style>
+<div class="notice_active ac_messages sys_color">
+    <i class="p_absolute iconfont icon-laba"></i>
+    <ul>
+        {loop $notice $nv}
+        <li class="notice_active_ch ft12">
+            <a href="
+            {if $nv['link']}
+                {$nv['link']}
+            {else}
+                {php echo $this->createMobileUrl('index',['op'=>'notice','id'=>$nv['id']])}
+            {/if}">{$nv['title']}</a>
+        </li>
+        {/loop}
+    </ul>
+</div>
+<script>
+    // 公告
+    function timer(opj){
+        $(opj).find('ul').animate({
+            marginTop : "-0.9rem"
+        },500,function(){
+            $(this).css({marginTop : "0.1rem"}).find("li:first").appendTo(this);
+        })
+    }
+    var num = $('.notice_active').find('li').length;
+    if(num > 1){
+        var time=setInterval('timer(".notice_active")',3000);
+        $('.gg_more a').mousemove(function(){
+            clearInterval(time);
+        }).mouseout(function(){
+            time = setInterval('timer(".notice_active")',3000);
+        });
+    }
+
+</script>
+{/if}

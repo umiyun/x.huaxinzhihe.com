@@ -1,0 +1,141 @@
+{template 'header'}
+<style>
+    .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+        vertical-align: middle;
+    }
+</style>
+<ul class="nav nav-tabs">
+    <li class="active">
+        <a href="">报名管理列表</a>
+    </li> 
+</ul>
+<div class="panel panel-default">
+    <div class="panel-default" style="display: none">
+        <div class="panel-heading">查询</div>
+        <div class="panel-body">
+            <form action="./index.php" method="get" class="form-horizontal" role="form" id="form1">
+                <input type="hidden" name="c" value="site">
+                <input type="hidden" name="a" value="entry">
+                <input type="hidden" name="m" value="{YOUMI_NAME}">
+                <input type="hidden" name="do" value="activitys">
+
+                <div class="form-group">
+                    <label class="col-md-1 col-lg-1 control-label">商家</label>
+                    <div class="col-md-2" style="margin-bottom: 15px">
+                        <select name="shop_id" class="form-control">
+                            <option value="">--所有--</option>
+                            {loop $shops $sv}
+                            <option {if $sv['id']==$_GPC['shop_id']}selected{/if} value="{$sv['id']}">{$sv['title']}</option>
+                            {/loop}
+                        </select>
+                    </div>
+                    <label class="col-md-1 col-lg-1 control-label">模块</label>
+                    <div class="col-md-2" style="margin-bottom: 15px">
+                        <select name="module" class="form-control">
+                            <option value="">--所有--</option>
+                            {loop $modules $mv}
+                            <option {if $mv['module']==$_GPC['module']}selected{/if} value="{$mv['module']}">{$mv['title']}</option>
+                            {/loop}
+                        </select>
+                    </div>
+                    <label class="col-md-1 col-lg-1 control-label">状态</label>
+                    <div class="col-md-2" style="margin-bottom: 15px">
+                        <select name="status" class="form-control">
+                            <option value="">--所有--</option>
+                            <option {if $status==1}selected{/if} value="1">上架</option>
+                            <option {if $status==2}selected{/if} value="2">下架</option>
+                            <option {if $status==3}selected{/if} value="3">未开始</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1">
+                        <button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    {if $list}
+    <div class="panel-body">
+        <form action="" method="post" class="form-horizontal form">
+            
+            <div class="table-responsive panel-body">
+                <table class="table table-hover">
+                    <thead class="navbar-inner">
+                        <th class="text-center">活动</th>
+                        <th class="text-center">用户信息</th>
+                        <th class="text-center">图集</th>
+                        <th class="text-center">浏览量/投票总数/分享人数</th>
+                        <th class="text-center">状态</th>
+                        <th class="text-center">报名时间</th>
+                        <th style="text-align:right;">操作</th>
+                    </thead>
+                    <tbody id="level-list">
+                    {loop $list $index $item}   
+                    <tr>
+                        <td align="center">
+                            <div class="type-parent">{$activity['title']}</div>
+                        </td>
+                        
+                        <td align="center">
+                            <div class="type-parent">
+                                <img style="width: 40px;height: 40px;border-radius: 50%" src="{$item['avatar']}" alt=""><br>
+                                {$item['realname']} <br>
+                                {$item['mobile']} <br>
+                                {$item['userinfo']}
+                            </div>
+                        </td>
+                        
+                        <td align="center">
+                            <div class="type-parent">
+                                {loop $item['vote_imgs'] $iv}
+                                <img style="width: 50px;" src="{$iv}" alt="">
+                                {/loop}
+                            </div>
+                        </td>
+                        <td align="center">
+                            <div class="type-parent">
+                                {$item['pv']} <br>
+                                {$item['times']}<br>
+                                {$item['share']}
+                            </div>
+                        </td>
+
+                        <td align="center">
+                            <div class="type-parent">{$item['statusname']}</div>
+                        </td>
+                        
+                        <td align="center">
+                            <div class="type-parent">{if $item['createtime']}{php echo date('Y-m-d H:i' , $item['createtime'])}{else}{/if}</div>
+                        </td>
+                        <td align="right">
+                            {if $item['status']==1}
+                            <a class="btn btn-success btn-sm" href="{php echo $this->createWebUrl('cuts',array('op'=>'audit','id'=>$item['id'],'status'=>2,'module'=>$_GPC['module']))}" onclick="return confirm('确认通过吗？');return false;" title="通过">通过</a>
+                            <a class="btn btn-danger btn-sm" href="{php echo $this->createWebUrl('cuts',array('op'=>'audit','id'=>$item['id'],'status'=>3,'module'=>$_GPC['module']))}" onclick="return confirm('确认拒绝吗？');return false;" title="拒绝">拒绝</a>
+                            {/if}
+                        </td>
+                    </tr>
+                    {/loop}
+                    <tr>
+                        <td colspan="9" align="right">共计{$total}条数据</td>
+                    </tr>
+                    {if $pager}
+                    <tr>
+                        <td colspan="9" align="right">{$pager}</td>
+                    </tr>
+                    {/if}
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    </div>
+    {else}
+    <div style="text-align: center;padding: 90px 0;" class="panel panel-default">暂无数据~</div>
+    {/if}
+</div>
+
+<script>
+    console.log({php echo json_encode($list)})
+    console.log({php echo json_encode($activity)})
+</script>
+{template 'common/footer'}
+    

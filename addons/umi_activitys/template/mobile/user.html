@@ -1,0 +1,73 @@
+{template 'header'}
+<style>
+    .head_top{
+        background: url('{YOUMI_URL_APP}img/user_bg.png');
+        background-size: 100% 100%;
+        padding: 10%;
+        font-size: 20px;
+        text-align: center;
+    }
+    .head_top img{
+        width: 35%;
+        border-radius: 50%;
+    }
+    .head_top .ht_name{
+        font-size: 18px;
+    }
+    .weui-cell__hd img{
+        width: 45px;
+    }
+</style>
+
+<div>
+    <div class="head_top">
+        <img src="{$_W['fans']['avatar']}" alt="">
+        <div class="ht_name">{$_W['fans']['nickname']}</div>
+        {if $is_vip==1}<div class="ft14 color777">VIP到期时间:{$endtime}</div>{/if}
+        <!--活动浏览-->
+        {if $is_vip==0}
+        <div class="ft12 flex flex_j_center flex_a_center" style="margin-bottom: 2%">
+            <i class="iconfont icon-tianqi_icon"></i>
+            <span>活动仅可浏览 <span class="browse">{$times}</span>次</span>
+            <a class="ft16" href="{php echo $this->createMobileUrl('buying')}" style="margin-left: 2%">成为vip会员 <i class="iconfont icon-jiantou1"></i></a>
+            <i class="iconfont icon-tianqi_icon"></i>
+        </div>
+        {/if}
+    </div>
+
+    <div class="weui-cells">
+        <a class="weui-cell weui-cell_access" href="{php echo $this->createMobileUrl('user',['op'=>'user_balance'])}">
+            <div class="weui-cell__hd"><img src="{YOUMI_URL_APP}img/user_pack.png"></div>
+            <div class="weui-cell__bd">
+                <p>我的钱包</p>
+            </div>
+            <div class="weui-cell__ft">{php echo ($account['unsettle']+$account['settled'])}元</div>
+        </a>
+        <a class="weui-cell weui-cell_access" href="{php echo $this->createMobileUrl('login')}">
+            <div class="weui-cell__hd"><img src="{YOUMI_URL_APP}img/user_setting.png"></div>
+            <div class="weui-cell__bd">
+                <p>账号设置</p>
+            </div>
+            <div class="weui-cell__ft">
+            </div>
+        </a>
+        <a class="weui-cell weui-cell_access" href="{php echo $this->createMobileUrl('verification',['op'=>'setting'])}">
+            <div class="weui-cell__hd"><img src="{YOUMI_URL_APP}img/index_user.png"></div>
+            <div class="weui-cell__bd">
+                <p>核销人员</p>
+            </div>
+            <div class="weui-cell__ft">
+            </div>
+        </a>
+    </div>
+
+    {template 'temp/footerbar'}
+
+</div>
+
+
+<script>
+
+    console.log({php echo json_encode($account)})
+</script>
+{template 'footer'}

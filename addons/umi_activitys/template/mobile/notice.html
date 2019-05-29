@@ -1,0 +1,11 @@
+{template 'header'}
+<h4 style="text-align: center">{$notice['title']}</h4>
+<div style="padding: 10px">
+    {php echo htmlspecialchars_decode($notice['description'])}
+</div>
+<script>
+    console.log({php echo json_encode($notice)})
+</script>
+
+
+{template 'footer'}

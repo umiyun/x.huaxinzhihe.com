@@ -1,0 +1,218 @@
+{template 'header'}
+<style>
+    body{
+        background: #f3f3f3;
+    }
+    .list{
+        text-align: center;
+    }
+    .detail{
+        width: 38%;
+        display: inline-block;
+        margin: 3% 5%;
+        background: #E64421;
+        color: #fff;
+        position: relative;
+        padding: 6% 2% 2% 2%;
+        box-sizing: border-box;
+        text-align: center;
+    }
+    .detail .d_top{
+        width: 120%;
+        position: absolute;
+        top: 0;
+        left: -10%;
+    }
+    .detail .d_price{
+        background: #F8C8BD;
+        border-radius: 3px;
+        color: #333;
+        margin: 0 2%;
+        padding: 2%;
+    }
+    .d_price p{
+        color: #E64421;
+        font-size: 12px;
+    }
+    .pay_price{
+        margin: 4% 4% 2% 4%;
+        background: #fff;
+        height: 46px;
+        line-height: 46px;
+        padding: 0 5%;
+        box-sizing: border-box;
+        border-bottom: 1px solid #ddd;
+    }
+    .detail_price{
+        margin-left: 5%;
+        padding-bottom: 1%;
+        border-bottom: 1px solid #f8a40d;
+    }
+    .a_btn{
+        margin: 5%;
+        font-size: 20px;
+    }
+    .a_btn.disable{
+        background: #DCDCDD;
+    }
+    .buying_hot{
+        position: absolute;
+        left: 0;
+        top: 0;
+        font-size: 40px;
+        color: #F8A40D;
+        z-index: 5;
+        width: 30%;
+    }
+    .preferential{
+        text-align: center;
+        position: absolute;
+        top: 0;
+        right: 2px;
+        background: #F8A40D;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+        padding: 0 2%;
+        color: #333;
+        z-index: 5;
+    }
+    .p_month{
+        color: #E64421;
+        font-size: 10px;
+    }
+    .d_desc{
+        position: absolute;
+        z-index: 10;
+        left: -10%;
+        width: 120%;
+        background: rgba(0,0,0,0.6);
+        top: 0;
+        height: 100%;
+        text-align: left;
+        padding: 5%;
+        display: none;
+    }
+    .d_desc p{
+        text-align: center;
+        color: #fff;
+    }
+    .d_desc div{
+        text-align: left;
+    }
+    .real_price{
+        flex: 1;
+        text-align: center;
+        color: #F8A40D;
+    }
+</style>
+
+<div class="list">
+    {loop $meal $mv}
+    <div class="detail" onclick="slideToggle(this,'{$mv['price']}','{$mv['id']}')">
+        <img class="d_top" src="{YOUMI_URL_APP}img/buying_bg.png" alt="">
+        <div>
+            <h2>{$mv['buy']}<span class="ft12">个月</span></h2>
+        </div>
+        <div class="d_price">
+            <div>￥{$mv['price']}</div>
+            <p>每月仅需{$mv['average']}元</p>
+        </div>
+        {if $mv['status']=='1'}<img class="buying_hot" src="{YOUMI_URL_APP}img/buying_hot.png" alt="">{/if}
+        {if intval($mv['gift'])>0}
+        <div class="preferential">
+            <div class="ft10">送</div>
+            <div class="p_month"><b class="ft14">{$mv['gift']}</b>个月</div>
+        </div>
+        {/if}
+        <div class="d_desc">
+            <p>服务内容</p>
+            <div class="ft10">{$mv['desc']}</div>
+        </div>
+    </div>
+    {/loop}
+
+</div>
+
+<div class="pay_price flex">
+    <div>支付金额</div>
+    <div class="real_price"></div>
+</div>
+<!--<a class="detail_price" href="">套餐价格详情</a>-->
+
+<div class="a_btn disable">立 即 开 通</div>
+<div style="margin: 5%;">
+    {php echo htmlspecialchars_decode($setting['meal_buy_info'])}
+</div>
+
+
+<script>
+    var meal_id;
+
+    function slideToggle(self,money,id){
+        $(self).siblings('.detail').find('.d_desc').slideUp(400)
+        $(self).find('.d_desc').slideToggle(400)
+        $('.real_price').html(money+'元')
+        $('.a_btn').removeClass('disable')
+        meal_id=id
+    }
+
+    $('.a_btn').click(function () {
+        if(!$(this).hasClass('disable')){
+            $.post(
+                "{php echo $this->createMobileUrl('order',['op'=>'create_order'])}",
+                {
+                    'meal_id': meal_id
+                },
+                function (data) {
+                    if (!!data.data.id) {
+                        var order_id=data.data.id;
+                        $.post(
+                            "{php echo $this->createMobileUrl('pay')}",
+                            {
+                                'order_id': data.data.id
+                            },
+                            function (data) {
+                                if (data.errno == 0) {
+                                    console.log(data)
+                                    WeixinJSBridge.invoke(
+                                        'getBrandWCPayRequest', {
+                                            "appId":data.data.appId,     //公众号名称，由商户传入
+                                            "timeStamp":data.data.timeStamp,         //时间戳，自1970年以来的秒数
+                                            "nonceStr":data.data.nonceStr, //随机串
+                                            "package":data.data.package,
+                                            "signType":data.data.signType,         //微信签名方式：
+                                            "paySign":data.data.paySign //微信签名
+                                        },
+                                        function(res){
+                                            if(res.err_msg == "get_brand_wcpay_request:ok"){
+                                                tips('购买成功')
+                                                setTimeout(function () {
+                                                    location.href="{php echo $this->createMobileUrl('user')}";
+                                                },1500)
+                                            }else{
+                                                $.post(
+                                                    "{php echo $this->createMobileUrl('order',['op'=>'cancel'])}",
+                                                    {
+                                                        'order_id': order_id
+                                                    },
+                                                )
+                                            }
+                                            setTimeout(function () {
+                                                location.reload();
+                                            },2000)
+                                        });
+                                } else {
+                                    tips(data.message)
+                                }
+                            }, 'json'
+                        )
+                    } else {
+                        tips(data.message);
+                    }
+                }, 'json'
+            );
+        }
+    })
+    console.log({php echo json_encode($meal)})
+</script>
+{template 'footer'}

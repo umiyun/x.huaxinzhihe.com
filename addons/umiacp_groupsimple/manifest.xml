@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns="http://www.umiyun.net" versionCode="0.8,1.0">
+	<application setting="false">
+		<name><![CDATA[活动宝拼团]]></name>
+		<identifie><![CDATA[umiacp_groupsimple]]></identifie>
+		<version><![CDATA[0.0.1]]></version>
+		<type><![CDATA[biz]]></type>
+		<ability><![CDATA[活动宝拼团]]></ability>
+		<description><![CDATA[同路人QQ群：758511946]]></description>
+		<author><![CDATA[同路人]]></author>
+		<url><![CDATA[http://www.umiyun.net]]></url>
+	</application>
+	  <platform>
+        <subscribes>
+            <message type="text"></message>
+            <message type="image"></message>
+            <message type="voice"></message>
+            <message type="video"></message>
+            <message type="shortvideo"></message>
+            <message type="location"></message>
+            <message type="link"></message>
+            <message type="subscribe"></message>
+            <message type="unsubscribe"></message>
+            <message type="qr"></message>
+            <message type="trace"></message>
+            <message type="click"></message>
+            <message type="view"></message>
+            <message type="merchant_order"></message>
+            <message type="user_get_card"></message>
+            <message type="user_del_card"></message>
+            <message type="user_consume_card"></message>
+        </subscribes>
+        <handles>
+            <message type="text"></message>
+            <message type="image"></message>
+            <message type="voice"></message>
+            <message type="video"></message>
+            <message type="shortvideo"></message>
+            <message type="location"></message>
+            <message type="link"></message>
+            <message type="subscribe"></message>
+            <message type="qr"></message>
+            <message type="trace"></message>
+            <message type="click"></message>
+            <message type="merchant_order"></message>
+            <message type="user_get_card"></message>
+            <message type="user_del_card"></message>
+            <message type="user_consume_card"></message>
+        </handles>
+        <supports>                              (在线安装或更新时会重新计算所有已购买的支持类型)
+            <item type="app" ></item>                 (发布公众号必须填写)
+            <!--<item type="plugin" ></item>
+            <item type="wxapp" ></item>               (发布小程序必须填写)
+            <item type="system_welcome" ></item>      (发布微擎首页必须填写)
+            <item type="webapp" ></item>              (发布 PC 版必须填写)
+            <item type="android" ></item>             (发布 APP[安卓]必须填写)
+            <item type="ios" ></item>                 (发布 APP[苹果]必须填写)-->
+        </supports>
+        <!--<plugin-main name="wx_nstore" ></plugin>        (在线安装或更新时会重新计算所有已购主应用)
+        <plugins>                               (在线安装或更新时会重新计算所有已购插件)
+            <item name="ewei_hotel" ></item>
+            <item name="ewei_hotel2" ></item>
+        </plugins>-->
+        <rule embed="true" ></rule>
+        <card embed="true" ></card>
+        <oauth type="userinfo" ></oauth>
+    </platform>
+	<bindings>
+		<cover>
+			<entry title="首页" do="index" state="" direct="false" />
+		</cover>
+		<menu>
+			<entry title="系统设置" do="system" state="" direct="false" />
+			<entry title="用户管理" do="member" state="" direct="false" />
+            <entry title="活动管理" do="activity" state="" direct="false" />
+            <entry title="订单管理" do="order" state="" direct="false" />
+			<!--<entry title="分类管理" do="cate" state="" direct="false" />-->
+		</menu>
+	</bindings>
+	<permissions>
+	</permissions>
+	<install>
+		<![CDATA[
+
+-- ----------------------------
+-- Table structure for ims_umiacp_groupsimple_setting
+-- ----------------------------
+DROP TABLE IF EXISTS `ims_umiacp_groupsimple_setting`;
+CREATE TABLE `ims_umiacp_groupsimple_setting`  (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) NOT NULL DEFAULT '0',
+  `skey` varchar(255) NOT NULL COMMENT '键',
+  `svalue` text COMMENT '值',
+  `status` tinyint(3) NOT NULL DEFAULT '1' COMMENT '状态:1,启用;2,禁用;',
+  `createtime` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `uniacid` (`uniacid`) USING BTREE,
+  KEY `skey` (`skey`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统基本配置';
+
+-- ----------------------------
+-- Table structure for ims_umiacp_groupsimple_log
+-- ----------------------------
+DROP TABLE IF EXISTS `ims_umiacp_groupsimple_log`;
+CREATE TABLE `ims_umiacp_groupsimple_log`  (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) NOT NULL DEFAULT '0',
+  `user_type` tinyint(3) NOT NULL DEFAULT '0' COMMENT '类型:1,后台;2,公众号;3,小程序;',
+  `mid` int(11) NOT NULL DEFAULT '0' COMMENT '用户mid',
+  `username` varchar(50) NOT NULL COMMENT '操作员昵称',
+  `op` varchar(255) NOT NULL COMMENT '操作位置',
+  `content` varchar(255) NOT NULL COMMENT '具体操作',
+  `status` tinyint(3) NOT NULL DEFAULT '1' COMMENT '状态:1,启用;2,禁用;',
+  `createtime` int(11) NOT NULL DEFAULT '0' COMMENT '操作时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `uniacid` (`uniacid`) USING BTREE,
+  KEY `type` (`user_type`) USING BTREE,
+  KEY `status` (`status`) USING BTREE,
+  KEY `mid` (`mid`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户操作日志';
+
+-- ----------------------------
+-- Table structure for ims_umiacp_groupsimple_member
+-- ----------------------------
+DROP TABLE IF EXISTS `ims_umiacp_groupsimple_member`;
+CREATE TABLE `ims_umiacp_groupsimple_member`  (
+  `mid` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) NOT NULL DEFAULT '0',
+  `openid` varchar(255) NOT NULL COMMENT '用户',
+  `wxopenid` varchar(255) NOT NULL COMMENT '小程序',
+  `fmid` tinyint(11) NOT NULL DEFAULT '0' COMMENT '推荐人',
+  `realname` varchar(255) NOT NULL COMMENT '姓名',
+  `mobile` varchar(255) NOT NULL COMMENT '手机号',
+  `password` varchar(255) NOT NULL COMMENT '密码',
+  `salt` varchar(255) NOT NULL COMMENT '秘钥',
+  `status` tinyint(3) NOT NULL DEFAULT '1' COMMENT '状态:1,正常;2,黑名单;',
+  `createtime` int(11) NOT NULL DEFAULT '0' COMMENT '注册时间',
+  PRIMARY KEY (`mid`),
+  KEY `uniacid` (`uniacid`),
+  KEY `openid` (`openid`,`wxopenid`),
+  KEY `mobile` (`mobile`),
+  KEY `status` (`status`),
+  KEY `wxopenid` (`wxopenid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户基本信息';
+
+-- ----------------------------
+-- Table structure for ims_umiacp_groupsimple_cate
+-- ----------------------------
+DROP TABLE IF EXISTS `ims_umiacp_groupsimple_cate`;
+CREATE TABLE `ims_umiacp_groupsimple_cate`  (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) NOT NULL DEFAULT '0',
+  `rank` int(11) NOT NULL DEFAULT '0',
+  `cate_id` int(11) NOT NULL DEFAULT '0',
+  `title` varchar(255) NOT NULL COMMENT '分类名',
+  `logo` varchar(255) NOT NULL COMMENT '分类logo',
+  `status` tinyint(3) NOT NULL DEFAULT '1' COMMENT '状态:1,启用;2,禁用;',
+  `createtime` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `uniacid` (`uniacid`) USING BTREE,
+  KEY `status` (`status`) USING BTREE,
+  KEY `title` (`title`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品分类';
+
+-- ----------------------------
+-- Table structure for ims_umiacp_groupsimple_goods
+-- ----------------------------
+DROP TABLE IF EXISTS `ims_umiacp_groupsimple_goods`;
+CREATE TABLE `ims_umiacp_groupsimple_goods` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) NOT NULL DEFAULT '0',
+  `shop_id` int(11) NOT NULL DEFAULT '0' COMMENT '商家',
+  `store_id` int(11) NOT NULL DEFAULT '0' COMMENT '门店',
+  `cate_id` int(11) NOT NULL DEFAULT '0' COMMENT '分类',
+  `title` varchar(255) NOT NULL COMMENT '\商品名',
+  `price` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '价格',
+  `valid_day` int(11) NOT NULL DEFAULT '0' COMMENT '有效期',
+  `image` varchar(255) NOT NULL COMMENT '主图',
+  `images` text NOT NULL COMMENT '图集',
+  `starttime` int(11) NOT NULL DEFAULT '0' COMMENT '开售时间',
+  `endtime` int(11) NOT NULL DEFAULT '0' COMMENT '停售时间',
+  `descs` varchar(255) NOT NULL COMMENT '简述',
+  `description` text COMMENT '详情',
+  `precautions` text COMMENT '注意事项',
+  `is_recommend` tinyint(3) NOT NULL DEFAULT '2' COMMENT '推荐:1,是;2,否;',
+  `success` int(11) NOT NULL DEFAULT '0' COMMENT '已售',
+  `stock` int(11) NOT NULL DEFAULT '1' COMMENT '库存',
+  `status` tinyint(3) NOT NULL DEFAULT '2' COMMENT '状态:1,上架;2,下架;3,售罄;',
+  `createtime` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `uniacid` (`uniacid`) USING BTREE,
+  KEY `shop_id` (`cate_id`, `shop_id`, `store_id`) USING BTREE,
+  KEY `is_recommend` (`is_recommend`) USING BTREE,
+  KEY `status` (`status`) USING BTREE,
+  KEY `starttime` (`starttime`, `endtime`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品';
+
+-- ----------------------------
+-- Table structure for ims_umiacp_groupsimple_puv
+-- ----------------------------
+DROP TABLE IF EXISTS `ims_umiacp_groupsimple_puv`;
+CREATE TABLE `ims_umiacp_groupsimple_puv`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) NOT NULL DEFAULT '0',
+  `page` varchar(255) NOT NULL COMMENT '页面',
+  `goods_id` int(11) NOT NULL DEFAULT '0' COMMENT '商品',
+  `pv` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '总浏览人次',
+  `uv` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '总浏览人数',
+    `status` tinyint(3) NOT NULL DEFAULT '1' COMMENT '状态:1,有效;2,无效;',
+  `createtime` int(11) NOT NULL COMMENT '总访问时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `uniacid` (`uniacid`) USING BTREE,
+  KEY `page` (`page`),
+  KEY `goods_id` (`goods_id`),
+  KEY `status` (`status`),
+  KEY `createtime` (`createtime`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='页面浏览puv';
+
+-- ----------------------------
+-- Table structure for ims_umiacp_groupsimple_puv_record
+-- ----------------------------
+DROP TABLE IF EXISTS `ims_umiacp_groupsimple_puv_record`;
+CREATE TABLE `ims_umiacp_groupsimple_puv_record`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) NOT NULL,
+  `openid` varchar(50) NOT NULL,
+  `goods_id` int(11) NOT NULL DEFAULT '0' COMMENT '访问商品',
+  `page` varchar(50) NOT NULL COMMENT '访问页面',
+  `input` text COMMENT '用户输入',
+  `status` tinyint(3) NOT NULL DEFAULT '1' COMMENT '状态:1,有效;2,无效;',
+  `createtime` int(11) NOT NULL DEFAULT '0' COMMENT '访问时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `uniacid` (`uniacid`) USING BTREE,
+  KEY `openid` (`openid`) USING BTREE,
+  KEY `page` (`page`) USING BTREE,
+  KEY `goods_id` (`goods_id`),
+  KEY `status` (`status`),
+  KEY `createtime` (`createtime`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='浏览页面详情';
+
+
+-- ----------------------------
+-- Table structure for ims_umiacp_groupsimple_order
+-- ----------------------------
+DROP TABLE IF EXISTS `ims_umiacp_groupsimple_order`;
+CREATE TABLE `ims_umiacp_groupsimple_order` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) NOT NULL DEFAULT '0',
+  `mid` int(11) NOT NULL DEFAULT '0' COMMENT '用户',
+  `goods_id` int(11) NOT NULL DEFAULT '0' COMMENT '商品',
+  `title` varchar(255) NOT NULL COMMENT '商品名',
+  `ordersn` varchar(255) NOT NULL COMMENT '订单号',
+  `tid` varchar(255) NOT NULL COMMENT '商户订单号',
+  `price` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '金额',
+  `pay_time` int(11) NOT NULL DEFAULT '0' COMMENT '支付时间',
+  `transid` varchar(255) NOT NULL COMMENT '微信支付单号',
+  `status` tinyint(3) NOT NULL COMMENT '状态:1,待付款;2,已付款;3,已核销;4,已取消;5,已退款;6,已失效;7,退款失败;',
+  `createtime` int(11) NOT NULL COMMENT '下单时间',
+  PRIMARY KEY (`id`),
+  KEY `uniacid` (`uniacid`),
+  KEY `mid` (`mid`),
+  KEY `tid` (`tid`, `ordersn`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品订单';
+
+        ]]>
+	</install>
+	<uninstall>
+		<![CDATA[
+		DROP TABLE IF EXISTS `ims_umiacp_groupsimple_setting`;
+		DROP TABLE IF EXISTS `ims_umiacp_groupsimple_log`;
+		DROP TABLE IF EXISTS `ims_umiacp_groupsimple_member`;
+		DROP TABLE IF EXISTS `ims_umiacp_groupsimple_cate`;
+		DROP TABLE IF EXISTS `ims_umiacp_groupsimple_order`;
+		DROP TABLE IF EXISTS `ims_umiacp_groupsimple_puv`;
+		DROP TABLE IF EXISTS `ims_umiacp_groupsimple_puv_record`;
+		]]>
+	</uninstall>
+	<upgrade></upgrade>
+</manifest>

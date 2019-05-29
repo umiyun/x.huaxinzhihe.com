@@ -1,0 +1,372 @@
+{template "common/header"}
+<style>
+    .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+        vertical-align: middle;
+    }
+
+</style>
+<style>
+    .dd-list {
+        display: block;
+        position: relative;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        padding-left: 30px;
+    }
+
+    .dd-list .dd-list {
+        padding-left: 30px;
+    }
+
+    .dd-collapsed .dd-list {
+        display: none;
+    }
+
+    .dd-item,
+    .dd-empty,
+    .dd-placeholder {
+        display: block;
+        position: relative;
+        margin: 0;
+        padding: 0;
+        min-height: 20px;
+        font-size: 13px;
+        line-height: 20px;
+    }
+
+    .dd-handle {
+        display: block;
+        margin: 5px 0;
+        padding: 5px 10px;
+        text-decoration: none;
+        border: 1px solid #ebebeb;
+        background: #fff;
+        -webkit-border-radius: 3px;
+        border-radius: 3px;
+        height: 42px;
+    }
+
+    .dd-handle:hover {
+        background: #fff;
+    }
+
+    .dd-item > button {
+        display: block;
+        position: relative;
+        cursor: pointer;
+        float: left;
+        width: 25px;
+        height: 20px;
+        margin: 5px 0;
+        padding: 0;
+        text-indent: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        border: 0;
+        background: transparent;
+        font-size: 12px;
+        line-height: 1;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .dd-item > button:before {
+        content: '+';
+        display: block;
+        position: absolute;
+        width: 100%;
+        text-align: center;
+        text-indent: 0;
+    }
+
+    .dd-item > button[data-action="collapse"]:before {
+        content: '-';
+    }
+
+    .dd-placeholder,
+    .dd-empty {
+        margin: 5px 0;
+        padding: 0;
+        min-height: 30px;
+        background: #f2fbff;
+        border: 1px dashed #b6bcbf;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+    }
+
+    .dd-empty {
+        border: 1px dashed #bbb;
+        min-height: 100px;
+        background-color: #e5e5e593;
+        background-color: #e5e5e5;
+        background-size: 60px 60px;
+        background-position: 0 0, 30px 30px;
+    }
+
+    .dd-dragel {
+        position: absolute;
+        pointer-events: none;
+        z-index: 9999;
+    }
+
+    .dd-dragel > .dd-item .dd-handle {
+        margin-top: 0;
+    }
+
+    .dd-dragel .dd-handle {
+        -webkit-box-shadow: 2px 4px 6px 0 rgba(0, 0, 0, .1);
+        box-shadow: 2px 4px 6px 0 rgba(0, 0, 0, .1);
+    }
+    .label-primary{
+        margin-right: 5px;
+    }
+</style>
+<ul class="nav nav-tabs">
+    <li {if $op=='' || $op=='display'}class="active"{/if}>
+        <a href="{php echo $this->createWebUrl('cate')}">分类管理</a>
+    </li>
+    <li {if $op=='post'}class="active"{/if}>
+        <a href="{php echo $this->createWebUrl('cate',array('op'=>'post','id'=>$_GPC['id'],'cate_id'=>$_GPC['cate_id']))}">
+            {if $_GPC['id']}编辑{else}添加{/if}分类
+        </a>
+    </li>
+</ul>
+{if $op == 'display' || $op == ''}
+<div class="panel panel-default">
+    <div class="panel panel-info" style="display:none;">
+        <div class="panel-heading">查询</div>
+        <div class="panel-body">
+            <form action="./index.php" method="get" class="form-horizontal" role="form" id="form1">
+                <input type="hidden" name="c" value="site">
+                <input type="hidden" name="a" value="entry">
+                <input type="hidden" name="m" value="umi_bidding">
+                <input type="hidden" name="do" value="cate">
+
+                <div class="form-group">
+                    <label class="col-md-4 col-lg-1 control-label">关键词</label>
+                    <div class="col-md-4">
+                        <input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}"
+                               placeholder="可模糊查询">
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    {if $list}
+    <div class="panel-body">
+        <form action="" method="post" class="form-horizontal form">
+
+            <div class="table-responsive panel-body">
+
+                {loop $list $row}
+                {if empty($row['cate_id'])}
+                <li class="dd-item full" data-id="{$row['id']}">
+                    {if count($children[$row['id']])>0}
+                    <button data-action="collapse" type="button" style="display: none;" onclick="$(this).hide().next().show().siblings('.dd-list').hide()">Collapse</button>
+                    <button data-action="expand" type="button" onclick="$(this).hide().prev().show().siblings('.dd-list').show()">Expand</button>
+                    {/if}
+                    <div class="dd-handle">
+                        <img src="{php echo tomedia($row['logo']);}" width='30' height="30" onerror="$(this).remove()"
+                             style='padding:1px;border: 1px solid #ccc;float:left;'/> &nbsp;
+                        [ID: {$row['id']}] {$row['title']} [序号：{$row['rank']}]
+                        <span class="pull-right">
+                            <div class="label {if $row['status']==1}label-primary{else}label-default{/if}"
+                                 data-toggle='ajaxSwitch' data-switch-value="{$row['status']}"
+                                 data-switch-value0="0|隐藏|label label-default|{php echo $this->createWebUrl('cate',array('op'=>'update_status','status'=>1,'id'=>$row['id']))}"
+                                  data-switch-value1="1|显示|label label-primary|{php echo $this->createWebUrl('cate',array('op'=>'update_status','status'=>0,'id'=>$row['id']))}"
+                            >
+                                {if $row['status']==1}显示{else}隐藏{/if}
+                            </div>
+
+                            <a class="btn btn-default btn-sm btn-operation btn-op"
+                               href="{php echo $this->createWebUrl('cate',array('op'=>'post','cate_id' => $row['id']))}"
+                               title=''>
+                                <span data-toggle="tooltip" data-placement="top" title="" data-original-title="添加子分类">添加子分类
+                                    <i class="icow icow-tianjia"></i>
+                                </span>
+                            </a>
+
+                            <a class='btn btn-default btn-sm btn-operation btn-op'
+                               href="{php echo $this->createWebUrl('cate',array('op'=>'post','id' => $row['id']))}">
+                                <span data-toggle="tooltip" data-placement="top" data-original-title="修改">修改
+                                    <i class="icow icow-bianji2"></i>
+                                </span>
+                            </a>
+                            <a class='btn btn-default btn-sm btn-operation btn-op' data-toggle='ajaxPost'
+                               href="{php echo $this->createWebUrl('cate',array('op'=>'del','id' => $row['id']))}"
+                               data-confirm='确认删除此分类吗？'>
+                                <span data-toggle="tooltip" data-placement="top" title="" data-original-title="删除">删除
+                                    <i class="icow icow-shanchu1"></i>
+                                </span>
+                            </a>
+                        </span>
+                    </div>
+                    {if count($children[$row['id']])>0}
+                    <ol class="dd-list" style="display: none">
+                        {loop $children[$row['id']] $child}
+                        <li class="dd-item full" data-id="{$child['id']}">
+                            {if count($children[$child['id']])>0}
+                            <button data-action="collapse" type="button" style="display: none;" onclick="$(this).hide().next().show().siblings('.dd-list').hide()">Collapse</button>
+                            <button data-action="expand" type="button" onclick="$(this).hide().prev().show().siblings('.dd-list').show()">Expand</button>
+                            {/if}
+                            <div class="dd-handle" style="width:100%;">
+                                <img src="{php echo tomedia($child['logo']);}" width='30' height="30" onerror="$(this).remove()"
+                                     style='padding:1px;border: 1px solid #ccc;float:left;'/> &nbsp;
+                                [ID: {$child['id']}] {$child['title']}
+                                <span class="pull-right">
+                                    <div class="label {if $child['status']==1}label-primary{else}label-default{/if}"
+                                         data-toggle='ajaxSwitch' data-switch-value="{$child['status']}"
+                                        data-switch-value0="0|隐藏|label label-default|{php echo $this->createWebUrl('cate',array('op'=>'update_status','status'=>1,'id'=>$child['id']))}"
+                                        data-switch-value1="1|显示|label label-primary|{php echo $this->createWebUrl('cate',array('op'=>'update_status','status'=>0,'id'=>$child['id']))}"
+                                    >
+                                        {if $child['status']==1}显示{else}隐藏{/if}
+                                    </div>
+                                    <a class='btn btn-default btn-sm btn-operation btn-op' title='添加子分类'
+                                       href="{php echo $this->createWebUrl('cate',array('op'=>'post','cate_id' => $child['id']))}">
+                                        <span data-toggle="tooltip" data-placement="top" title="" data-original-title="添加子分类">添加子分类
+                                            <i class="icow icow-tianjia"></i>
+                                        </span>
+                                    </a>
+                                    <a class='btn btn-default btn-sm btn-operation btn-op'
+                                       href="{php echo $this->createWebUrl('cate',array('op'=>'post','id' => $child['id']))}" title="">
+                                        <span data-toggle="tooltip" data-placement="top" title="" data-original-title="修改">修改
+                                            <i class="icow icow-bianji2"></i>
+                                        </span>
+                                    </a>
+                                    <a class='btn btn-default btn-sm btn-operation btn-op' data-toggle='ajaxPost' data-confirm="确认删除此分类吗？"
+                                       href="{php echo $this->createWebUrl('cate',array('op'=>'del','id' => $child['id']))}">
+                                        <span data-toggle="tooltip" data-placement="top" data-original-title="删除">删除
+                                            <i class="icow icow-shanchu1"></i>
+                                        </span>
+                                    </a>
+                                </span>
+                            </div>
+                            {if count($children[$child['id']])>0}
+
+                            <ol class="dd-list" style='width:100%;display: none'>
+                                {loop $children[$child['id']] $third}
+                                <li class="dd-item" data-id="{$third['id']}">
+                                    <div class="dd-handle">
+                                        <img src="{php echo tomedia($third['logo']);}" width='30' height="30" onerror="$(this).remove()"
+                                             style='padding:1px;border: 1px solid #ccc;float:left;'/> &nbsp;
+                                        [ID: {$third['id']}] {$third['title']}
+                                        <span class="pull-right">
+                                            <div class="label {if $third['status']==1}label-primary{else}label-default{/if}" data-toggle='ajaxSwitch' data-switch-value="{$third['status']}"
+                                            data-switch-value0="0|隐藏|label label-default|{php echo $this->createWebUrl('cate',array('op'=>'update_status','status'=>1,'id'=>$third['id']))}"
+                                            data-switch-value1="1|显示|label label-primary|{php echo $this->createWebUrl('cate',array('op'=>'update_status','status'=>0,'id'=>$third['id']))}"
+                                            >
+                                            {if $third['status']==1}显示{else}隐藏{/if}
+                                            </div>
+                                            <a class='btn btn-default btn-sm btn-operation btn-op'
+                                               href="{php echo $this->createWebUrl('cate',array('op'=>'post','id' => $third['id']))}" title="">
+                                                <span data-toggle="tooltip" data-placement="top" title="" data-original-title="修改">修改
+                                                    <i class="icow icow-bianji2"></i>
+                                                </span>
+                                            </a>
+                                            <a class='btn btn-default btn-sm btn-operation btn-op'
+                                               data-toggle='ajaxPost' data-confirm="确认删除此分类吗？"
+                                               href="{php echo $this->createWebUrl('cate',array('op'=>'del','id' => $third['id']))}">
+                                                <span data-toggle="tooltip" data-placement="top" data-original-title="删除">删除
+                                                    <i class="icow icow-shanchu1"></i>
+                                                </span>
+                                            </a>
+                                        </span>
+                                    </div>
+                                </li>
+                                {/loop}
+                            </ol>
+                            {/if}
+                        </li>
+                        {/loop}
+                    </ol>
+                    {/if}
+                </li>
+                {/if}
+                {/loop}
+            </div>
+        </form>
+    </div>
+    {else}
+    <div style="text-align: center;padding: 90px 0;" class="panel panel-default">暂无数据~</div>
+    {/if}
+</div>
+{/if}
+
+{if $op == 'post'}
+<div class="main">
+    <form action="{php echo $this->createWebUrl('cate',array('op' =>'post'))}" method="post"
+          class="form-horizontal form" enctype="multipart/form-data">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                编辑分类
+            </div>
+            <div class="panel-body">
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>排序</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="number" id='data[rank]' name="data[rank]" class="form-control" value="{$item['rank']}"/>
+                        <input type="hidden" id='data[cate_id]' name="data[cate_id]" class="form-control" value="{if $item['cate_id']}{$item['cate_id']}{else}{$cate_id}{/if}"/>
+                        <div class="help-block">数字越大越靠前</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>分类名</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" id='data[title]' name="data[title]" class="form-control" value="{$item['title']}"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">分类logo</label>
+                    <div class="col-sm-8 col-xs-12">
+                        {php echo tpl_form_field_image('data[logo]', $item['logo'])}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">是否启用</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <label class='radio-inline'>
+                            <input type='radio' name='data[status]' value='1' {if $item['status']==1}checked{/if} /> 启用
+                        </label>
+                        <label class='radio-inline'>
+                            <input type='radio' name='data[status]' value='0' {if $item['status']==0}checked{/if} /> 禁用
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-8">
+                <input type="submit" name="submit" value="提交" class="btn btn-info col-lg-1"/>
+                <input type="hidden" name="token" value="{$_W['token']}"/>
+                <input type="hidden" name="id" value="{$item['id']}"/>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    require(['jquery.ui'], function () {
+        $('.multi-img-details').sortable({scroll: 'false'});
+        $('.multi-img-details').sortable('option', 'scroll', false);
+    })
+    $('form').submit(function () {
+        if ($('input[name="data[title]"]').val() == '') {
+            util.message('请输入分类名');
+            return false;
+        }
+    })
+</script>
+{/if}
+<script>
+    console.log({php echo json_encode($list)});
+    console.log({php echo json_encode($children)});
+</script>
+{template "common/footer"}

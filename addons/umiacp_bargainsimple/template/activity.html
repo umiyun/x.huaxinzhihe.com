@@ -1,0 +1,592 @@
+{template 'common/header'}
+<style>
+    .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+        vertical-align: middle;
+    }
+</style>
+<ul class="nav nav-tabs">
+    <li {if $op == '' || $op == 'display'}class="active"{/if}>
+        <a href="{php echo $this->createWebUrl('activity')}">活动列表</a>
+    </li>
+    <li {if $op == 'post'}class="active"{/if}>
+        <a href="{php echo $this->createWebUrl('activity',array('op'=>'post','id'=>$id))}">{if $id}编辑{else}添加{/if}活动</a>
+    </li>
+</ul>
+{if $op == 'display' || $op == ''}
+<div class="panel panel-default">
+    <div class="panel-default" style="display:none;">
+        <div class="panel-heading">查询</div>
+        <div class="panel-body">
+            <form action="./index.php" method="get" class="form-horizontal" role="form" id="form1">
+                <input type="hidden" name="c" value="site">
+                <input type="hidden" name="a" value="entry">
+                <input type="hidden" name="m" value="{YOUMI_NAME}">
+                <input type="hidden" name="do" value="activity">
+
+                <div class="form-group">
+                    <label class="col-md-1 col-lg-1 control-label">状态</label>
+                    <div class="col-md-3">
+                        <select name="status" class="form-control">
+                            <option value="">--所有--</option>
+                        </select>
+                    </div>
+                    <label class="col-md-4 col-lg-1 control-label">关键词</label>
+                    <div class="col-md-4">
+                        <input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}" placeholder="可模糊查询">
+                    </div>
+                    <div class="col-md-1">
+                        <button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    {if $list}
+    <div class="panel-body">
+        <form action="" method="post" class="form-horizontal form">
+
+            <div class="table-responsive panel-body">
+                <table class="table table-hover">
+                    <thead class="navbar-inner">
+                        <th class="text-center">标题</th>
+                        <th class="text-center">限制区域</th>
+                        <th class="text-center">中途付款</th>
+                        <th class="text-center">活动时间</th>
+                        <th class="text-center">状态</th>
+                        <th class="text-center">创建时间</th>
+                        <th style="text-align:right;">操作</th>
+                    </thead>
+                    <tbody id="level-list">
+                    {loop $list $index $item}
+                    <tr>
+                        <td align="center">
+                            <div class="type-parent">{$item['title']}</div>
+                        </td>
+
+                        <td align="center">
+                            <div class="type-parent">{if $item['regional']==1}不限制{else}限制{/if}</div>
+                        </td>
+
+                        <td align="center">
+                            <div class="type-parent">{if $item['cutting_pay']==1}允许{else}不允许{/if}</div>
+                        </td>
+
+                        <td align="center">
+                            <div class="type-parent">{if $item['starttime']}{php echo date('Y-m-d H:i' , $item['starttime'])}{else}{/if}</div>
+                            <div class="type-parent">{if $item['endtime']}{php echo date('Y-m-d H:i' , $item['endtime'])}{else}{/if}</div>
+                        </td>
+
+                        <td align="center">
+                            <div class="type-parent">{$item['statusname']}</div>
+                        </td>
+
+                        <td align="center">
+                            <div class="type-parent">{if $item['createtime']}{php echo date('Y-m-d H:i' , $item['createtime'])}{else}{/if}</div>
+                        </td>
+
+                        <td align="right">
+                            <a href="javascript:;" data-url="{php echo $_W['siteroot'] . 'app/' . $this->createMobileUrl('index', ['activity_id' => $item['id']])}" class="color-default js-clip">复制链接</a>
+                            <!--<a class="btn btn-info btn-sm" href="{php echo $this->createWebUrl('virtual',array('activity_id'=>$item['id'],'op'=>'post'))}" title="虚拟人数">虚拟人数</a>-->
+                            <a class="btn btn-info btn-sm" href="{php echo $this->createWebUrl('saler',array('activity_id'=>$item['id']))}" title="核销员">核销员管理</a>
+                            <a class="btn btn-info btn-sm" href="{php echo $this->createWebUrl('cut',array('id'=>$item['id']))}" title="报名信息">报名信息</a>
+                            <a class="btn btn-info btn-sm" href="{php echo $this->createWebUrl('activity',array('op'=>'post','id'=>$item['id']))}" title="编辑">修改</a>
+                            <a class="btn btn-danger btn-sm" href="{php echo $this->createWebUrl('activity',array('op'=>'del','id'=>$item['id']))}" onclick="return confirm('确认删除吗？');return false;" title="删除">删除</a>
+                        </td>
+                    </tr>
+                    {/loop}
+                    <tr>
+                        <td colspan="7" align="right">共计{$total}条数据</td>
+                    </tr>
+                    {if $pager}
+                    <tr>
+                        <td colspan="7" align="right">{$pager}</td>
+                    </tr>
+                    {/if}
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    </div>
+    {else}
+    <div style="text-align: center;padding: 90px 0;" class="panel panel-default">暂无数据~</div>
+    {/if}
+</div>
+{/if}
+
+{if $op == 'post'}
+<div class="main">
+	<form action="{php echo $this->createWebUrl('activity',array('op' =>'post'))}" method="post" class="form-horizontal form">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				编辑活动
+			</div>
+			<div class="panel-body">
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>活动标题</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" id='data[title]' name="data[title]" class="form-control" value="{$item['title']}" />
+                    </div>
+                </div>
+
+                <div class="form-group" style="display: none">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">顶部主题</label>
+                    <div class="col-sm-8 col-xs-12">
+                        {php echo tpl_form_field_image('data[image]', $item['image'])}
+                    </div>
+                </div>
+
+                <div class="form-group" style="display: none">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">背景图</label>
+                    <div class="col-sm-8 col-xs-12">
+                        {php echo tpl_form_field_image('data[bgimage]', $item['bgimage'])}
+                    </div>
+                </div>
+                <div class="form-group" style="display: none">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>特效图集(必须四张)</label>
+                    <div class="col-sm-8">
+                        {php echo tpl_form_field_multi_image('data[effects_imgs]', $item['effects_imgs'])}
+                        <span class="help-block">背景透明，相同主题的四张图</span>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>背景音乐</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" id='data[music]' name="data[music]" class="form-control" value="{$item['music']}" />
+                        <span class="help-block">请填写有效的音频链接 例如：http://www.xxxxxx.mp3</span>
+                    </div>
+                </div>
+
+                <div class="form-group" style="display:none;">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">最多可参与几种商品砍价</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="number" name="data[cutnum]" class="form-control" value="{$item['cutnum']}" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">活动开始时间</label>
+                    <div class="col-sm-8 col-xs-12">
+                        {php echo tpl_form_field_date('data[starttime]', $item['starttime'],true)}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">活动结束时间</label>
+                    <div class="col-sm-8 col-xs-12">
+                        {php echo tpl_form_field_date('data[endtime]', $item['endtime'],true)}
+                    </div>
+                </div>
+
+                    <div class="goods">
+                        <input type="hidden" name="goods[0][id]" class="form-control" value="{$goods[0]['id']}" />
+                        <div class="detail" data-gdx="0">
+                            <div class="form-group" style="display: none">
+                                <label class="col-xs-12 col-sm-3 col-md-2 control-label">图片</label>
+                                <div class="col-sm-8 col-xs-12">
+                                    {php echo tpl_form_field_image('goods[' . $gdx . '][image]', $goods[0]['image'])}
+                                    <span class="help-block">请上传正方形图片</span>
+                                </div>
+                            </div>
+                            <div class="form-group" style="display: none">
+                                <label class="col-xs-12 col-sm-3 col-md-2 control-label">标题</label>
+                                <div class="col-sm-8 col-xs-12">
+                                    <input placeholder="最多15字" maxlength="15" type="text" name="goods[0][title]" class="form-control" value="{$goods[0]['title']}" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-12 col-sm-3 col-md-2 control-label">原价</label>
+                                <div class="col-sm-8 col-xs-12">
+                                    <input type="text" name="goods[0][oprice]" class="form-control" value="{$goods[0]['oprice']}" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-12 col-sm-3 col-md-2 control-label">底价</label>
+                                <div class="col-sm-8 col-xs-12">
+                                    <input type="text" name="goods[0][rprice]" class="form-control" value="{$goods[0]['rprice']}" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-12 col-sm-3 col-md-2 control-label">数量</label>
+                                <div class="col-sm-8 col-xs-12">
+                                    <input type="number" name="goods[0][gnum]" class="form-control" value="{$goods[0]['gnum']}" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-12 col-sm-3 col-md-2 control-label">砍价次数</label>
+                                <div class="col-sm-8 col-xs-12">
+                                    <input type="number" name="goods[0][times]" class="form-control" value="{$goods[0]['times']}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" style="display: none">
+                        <div class="col-sm-8 col-xs-12" style="text-align: center">
+                            <a href="javascript:;" onclick="addGoods()" style="margin-top:10px;"  title="添加商品">添加商品 <i class='fa fa-plus'></i></a>
+                            <a href="javascript:;" onclick="delGoods()" style="margin-top:10px;margin-left: 10%;"  title="删除商品">删除商品 <i class='fa fa-minus'></i></a>
+                        </div>
+                    </div>
+                <script>
+                    function addGoods() {
+                        var gdx=$('.goods .detail').length;
+                        var g_img='goods['+gdx+'][image]';
+                        var html='<div class="form-group detail" data-gdx="'+gdx+'">'+
+                            '<div class="form-group">'+
+                                '<label class="col-xs-12 col-sm-3 col-md-2 control-label">图片</label>'+
+                                '<div class="col-sm-8 col-xs-12">'+
+
+                                    '<div class="input-group ">'+
+                                        '<input type="text" name="goods['+gdx+'][image]" value="" class="form-control" autocomplete="off">'+
+                                        '<span class="input-group-btn">'+
+                                            '<button class="btn btn-default" type="button" onclick="showImageDialog(this);">选择图片</button>'+
+                                        '</span>'+
+                                    '</div>'+
+                                    '<div class="input-group " style="margin-top:.5em;">'+
+                                        '<img src="./resource/images/nopic.jpg" onerror="this.src=\'./resource/images/nopic.jpg\'; this.title=\'图片未找到.\'" class="img-responsive img-thumbnail" width="150">'+
+                                        '<em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片" onclick="deleteImage(this)">×</em>'+
+                                    '</div><span class="help-block">请上传正方形图片</span>'+
+                                '</div>'+
+                            '</div>'+
+                            '<div class="form-group">'+
+                                '<label class="col-xs-12 col-sm-3 col-md-2 control-label">标题</label>'+
+                                '<div class="col-sm-8 col-xs-12">'+
+                                    '<input placeholder="最多15字" maxlength="15" type="text" name="goods['+gdx+'][title]" class="form-control"/>'+
+                                '</div>'+
+                            '</div>'+
+                            '<div class="form-group">'+
+                                '<label class="col-xs-12 col-sm-3 col-md-2 control-label">原价</label>'+
+                                '<div class="col-sm-8 col-xs-12">'+
+                                    '<input type="text" name="goods['+gdx+'][oprice]" class="form-control"/>'+
+                                '</div>'+
+                            '</div>'+
+                            '<div class="form-group">'+
+                                '<label class="col-xs-12 col-sm-3 col-md-2 control-label">底价</label>'+
+                                '<div class="col-sm-8 col-xs-12">'+
+                                    '<input type="text" name="goods['+gdx+'][rprice]" class="form-control"/>'+
+                                '</div>'+
+                            '</div>'+
+                            '<div class="form-group">'+
+                                '<label class="col-xs-12 col-sm-3 col-md-2 control-label">数量</label>'+
+                                '<div class="col-sm-8 col-xs-12">'+
+                                    '<input type="number" name="goods['+gdx+'][gnum]" class="form-control"/>'+
+                                '</div>'+
+                            '</div>'+
+                            '<div class="form-group">'+
+                                '<label class="col-xs-12 col-sm-3 col-md-2 control-label">砍价次数</label>'+
+                                '<div class="col-sm-8 col-xs-12">'+
+                                    '<input type="number" name="goods['+gdx+'][times]" class="form-control"/>'+
+                                '</div>'+
+                            '</div>'+
+                        '</div>';
+                        $('.goods').append(html)
+                    }
+                    function delGoods() {
+                       $('.goods .detail:last-child').remove()
+                    }
+                </script>
+
+
+                <div class="form-group" style="display: none">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">活动优惠标题</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input maxlength="6" type="text" id='data[preferential_title]' name="data[preferential_title]" class="form-control" value="{$item['preferential_title']}" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">活动优惠内容</label>
+                    <div class="col-sm-8">
+                        <!--<textarea class="form-control" name="data[preferential_val]" >{$item['preferential_val']}</textarea>-->
+                        <input style="margin-bottom: 5px" class="form-control" name="data[preferential_val][]" type="text" value="{$item['preferential_val'][0]}">
+                        <input style="margin-bottom: 5px" class="form-control" name="data[preferential_val][]" type="text" value="{$item['preferential_val'][1]}">
+                        <input style="margin-bottom: 5px" class="form-control" name="data[preferential_val][]" type="text" value="{$item['preferential_val'][2]}">
+                        <input style="margin-bottom: 5px" class="form-control" name="data[preferential_val][]" type="text" value="{$item['preferential_val'][3]}">
+                        <input style="margin-bottom: 5px" class="form-control" name="data[preferential_val][]" type="text" value="{$item['preferential_val'][4]}">
+                        <input class="form-control" name="data[preferential_val][]" type="text" value="{$item['preferential_val'][5]}">
+                    </div>
+                </div>
+
+
+                <div class="form-group" style="display: none">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>活动描述标题</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input maxlength="6" type="text" id='data[desc_title]' name="data[desc_title]" class="form-control" value="{$item['desc_title']}" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>活动描述内容</label>
+                    <div class="col-sm-8">
+                        {php echo tpl_ueditor('data[desc_val]', $item['desc_val']);}
+                    </div>
+                </div>
+                <div class="form-group" style="display: none">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>活动描述图片</label>
+                    <div class="col-sm-8">
+                        {php echo tpl_form_field_multi_image('data[desc_imgs]', $item['desc_imgs'])}
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">活动规则内容</label>
+                    <div class="col-sm-8">
+                        {php echo tpl_ueditor('data[rule_val]', $item['rule_val']);}
+                    </div>
+                </div>
+
+
+                <div class="form-group" style="display: none">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">领取时间</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" id='data[receive_time]' name="data[receive_time]" class="form-control" value="{$item['receive_time']}" />
+                    </div>
+                </div>
+
+                <div class="form-group" style="display: none">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">领取地址</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" id='data[receive_address]' name="data[receive_address]" class="form-control" value="{$item['receive_address']}" />
+                    </div>
+                </div>
+
+                <div class="form-group" style="display: none">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">联系方式</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" id='data[receive_mobile]' name="data[receive_mobile]" class="form-control" value="{$item['receive_mobile']}" />
+                    </div>
+                </div>
+
+                <div class="form-group" style="display: none">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">商家介绍标题</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input maxlength="6" type="text" id='data[shop_title]' name="data[shop_title]" class="form-control" value="{$item['shop_title']}" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">商家介绍内容</label>
+                    <div class="col-sm-8">
+                        {php echo tpl_ueditor('data[shop_val]', $item['shop_val']);}
+                    </div>
+                </div>
+                <div class="form-group" style="display: none">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">商家介绍图片</label>
+                    <div class="col-sm-8">
+                        {php echo tpl_form_field_multi_image('data[shop_imgs]', $item['shop_imgs'])}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>商家姓名</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" id='data[shop_name]' name="data[shop_name]" class="form-control" value="{$item['shop_name']}" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>商家热线</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" id='data[shop_mobile]' name="data[shop_mobile]" class="form-control" value="{$item['shop_mobile']}" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">商家地址</label>
+                    <div class="col-xs-12 col-sm-8">
+                        {php echo tpl_form_field_district('district', $district)}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">商家详细地址</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" id='data[shop_address]' name="data[shop_address]" class="form-control" value="{$item['shop_address']}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">商家图片</label>
+                    <div class="col-sm-8 col-xs-12">
+                        {php echo tpl_form_field_image('data[shop_code]', $item['shop_code'])}
+                        <div class="help-block">建议上传二维码图片</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>用户信息收集</label>
+                    <div class="col-sm-8">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th style="text-align: center">信息项名称</th>
+                                <th style="text-align: center">必填项</th>
+                            </tr>
+                            </thead>
+                            <tbody id="param-items">
+                            <tr>
+                                <td>
+                                    <input name="data[userinfo][0][title]" readonly type="text" class="form-control param_title" value="姓名"/>
+                                    <!--<input name="data[userinfo][0]['checked']" type="hidden" class="form-control" value="{$item['userinfo'][0]['checked']}"/>-->
+                                </td>
+                                <td><input name="data[userinfo][0][checked]" type="checkbox" class="form-control param_value" checked="checked" readonly/></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input name="data[userinfo][1][title]" readonly type="text" class="form-control param_title" value="手机号"/>
+                                    <!--<input name="param_id[]" type="hidden" class="form-control" value="{$p['id']}"/>-->
+                                </td>
+                                <td><input name="data[userinfo][1][checked]" type="checkbox" class="form-control param_value" checked="checked" readonly/></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input placeholder="信息项名称" name="data[userinfo][2][title]" type="text" class="form-control param_title" value="{$item['userinfo'][2]['title']}"/>
+                                    <!--<input name="param_id[]" type="hidden" class="form-control" value="{$p['id']}"/>-->
+                                </td>
+                                <td><input name="data[userinfo][2][checked]" type="checkbox" class="form-control param_value" {if $item['userinfo'][2]['checked']}checked="checked"{/if}/></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input placeholder="信息项名称" name="data[userinfo][3][title]" type="text" class="form-control param_title" value="{$item['userinfo'][3]['title']}"/>
+                                    <!--<input name="param_id[]" type="hidden" class="form-control" value="{$p['id']}"/>-->
+                                </td>
+                                <td><input name="data[userinfo][3][checked]" type="checkbox" class="form-control param_value" {if $item['userinfo'][3]['checked']}checked="checked"{/if}/></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input placeholder="信息项名称" name="data[userinfo][4][title]" type="text" class="form-control param_title" value="{$item['userinfo'][4]['title']}"/>
+                                    <!--<input name="param_id[]" type="hidden" class="form-control" value="{$p['id']}"/>-->
+                                </td>
+                                <td><input name="data[userinfo][4][checked]" type="checkbox" class="form-control param_value" {if $item['userinfo'][4]['checked']}checked="checked"{/if}/></td>
+                            </tr>
+                            </tbody>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>分享图</label>
+                    <div class="col-sm-8">
+                        {php echo tpl_form_field_image('data[share_img]', $item['share_img'])}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>分享标题</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" name="data[share_title]" class="form-control" value="{$item['share_title']}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>分享描述</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" name="data[share_desc]" class="form-control" value="{$item['share_desc']}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">限制区域</label>
+                    <div class="col-xs-12 col-sm-8">
+                        <label class="radio radio-inline">
+                            <input onclick="$('.r_address').hide()" type="radio" name="data[regional]" value="1" {if intval($item['regional']) == 1||!$item['status']}checked="checked"{/if}> 不限制
+                        </label>
+                        <label class="radio radio-inline">
+                            <input onclick="$('.r_address').show()" type="radio" name="data[regional]" value="2" {if intval($item['regional']) == 2}checked="checked"{/if}> 限制
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">允许砍价中途付款</label>
+                    <div class="col-xs-12 col-sm-8">
+                        <label class="radio radio-inline">
+                            <input  type="radio" name="data[cutting_pay]" value="1" {if intval($item['cutting_pay']) == 1||!$item['status']}checked="checked"{/if}> 允许
+                        </label>
+                        <label class="radio radio-inline">
+                            <input  type="radio" name="data[cutting_pay]" value="2" {if intval($item['cutting_pay']) == 2}checked="checked"{/if}> 不允许
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group r_address" {if intval($item['regional']) == 1||!$item['status']}style="display:none;"{/if}>
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>活动区域</label>
+                    <div class="col-sm-7 col-xs-12 re_address">
+                        <div>
+                        {php echo tpl_form_field_district('readdress', [])}
+                            <span class="btn" onclick="addAddress()" style="position: absolute;right: -100px;top: 0;border: 1px solid #aaa;">添加</span>
+                        </div>
+                        {loop $item['r_address'] $rav}
+                        <div class="input-group" style="margin-top: 10px">
+                            <input type="text" name="re_address[]" readonly class="form-control" value="{$rav}">
+                            <span class="input-group-btn">
+                                <button class="btn" type="button" onclick="$(this).parent().parent().remove()">删除</button>
+                            </span>
+                        </div>
+                        {/loop}
+                    </div>
+                <script>
+                    function addAddress() {
+                        var area=$('select[name="readdress[district]"] option:selected').val();
+                        if(area&&area!='区/县'){
+                            $('.re_address').append('<div class="input-group" style="margin-top: 10px">' +
+                                '    <input type="text" name="re_address[]" readonly class="form-control" value="'+area+'">' +
+                                '    <span class="input-group-btn">' +
+                                '        <button class="btn" type="button" onclick="$(this).parent().parent().remove()">删除</button>' +
+                                '    </span>' +
+                                '</div>')
+                        }
+                    }
+                </script>
+                </div>
+                <div class="form-group r_address" {if intval($item['regional']) == 1||!$item['status']}style="display:none;"{/if}>
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">百度地图密钥</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" name="data[ak]" class="form-control" value="{$item['ak']}" />
+                        <div class="help-block"><a href="http://lbsyun.baidu.com/apiconsole/key?application=key" target="_blank">去申请</a></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">状态</label>
+                    <div class="col-xs-12 col-sm-8">
+                        <label class="radio radio-inline">
+                            <input type="radio" name="data[status]" value="1" {if intval($item['status']) == 1||!$item['status']}checked="checked"{/if}> 上架
+                        </label>
+                        <label class="radio radio-inline">
+                            <input type="radio" name="data[status]" value="2" {if intval($item['status']) == 2}checked="checked"{/if}> 下架
+                        </label>
+                        <label class="radio radio-inline">
+                            <input type="radio" name="data[status]" value="3" {if intval($item['status']) == 3}checked="checked"{/if}> 未开始
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-8">
+                <input type="submit" name="submit" value="提交" class="btn btn-info col-lg-1" />
+                <input type="hidden" name="token" value="{$_W['token']}" />
+                <input type="hidden" name="id" value="{$item['id']}" />
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    require(['jquery.ui'],function() {
+        $('.multi-img-details').sortable({scroll: 'false'});
+        $('.multi-img-details').sortable('option', 'scroll', false);
+    })
+    $('form').submit(function () {
+        if($('input[name="data[title]"]').val() == ''){
+            util.message('请输入标题');
+            return false;
+        }
+    })
+
+
+</script>
+{/if}
+<script>
+    console.log({php echo json_encode($item)})
+    console.log({php echo json_encode($list)})
+</script>
+
+{template 'common/footer'}

@@ -1,0 +1,114 @@
+{template 'common/header'}
+<style>
+    .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+        vertical-align: middle;
+    }
+</style>
+<ul class="nav nav-tabs">
+
+    <li {if $op=='post'}class="active"{/if}>
+    <a href="{php echo $this->createWebUrl('virtual',array('op'=>'post','id'=>$id,'activity_id'=>$_GPC['activity_id']))}">修改虚拟人数</a>
+    </li>
+</ul>
+
+{if $op == 'post'}
+<div class="main">
+    <form action="{php echo $this->createWebUrl('virtual',array('op' =>'post'))}" method="post"
+          class="form-horizontal form">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                修改虚拟人数
+            </div>
+            <div class="panel-body">
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span
+                            style="color:red">*</span>查看人数</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="number" id='data[pv]' name="data[pv]" class="form-control" value="{$item['pv']}"/>
+                        <div class="help-block">修改的值为最终人数</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span
+                            style="color:red">*</span>分享人数</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="number" id='data[share]' name="data[share]" class="form-control"
+                               value="{$item['share']}"/>
+                        <div class="help-block">修改的值为最终人数</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">成功人数</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="number" id='data[success]' name="data[success]" class="form-control"
+                               value="{$item['success']}"/>
+                        <div class="help-block">修改的值为最终人数</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">参与人数</label>
+                    <div class="col-sm-8 col-xs-12">
+
+                        <input type="number" name="data[participate]" class="form-control"/>
+
+                        <div class="help-block">修改的值为增加人数,例如20则增加20个虚拟人数</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">参与人点亮数</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="number" name="data[participate_num]" class="form-control"/>
+                        <div class="help-block">修改的值为最终人数</div>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span
+                            style="color:red">*</span>请选择要助力的人</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <select class="form-control" name="data[voter_id]" style="margin-bottom: 15px">
+                            {loop $voters $v}
+                            <option value="{$v['id']}">{$v['realname']}</option>
+                            {/loop}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">助力人数</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="number" name="data[light_num]" class="form-control"/>
+                        <div class="help-block">修改的值为增加人数,例如20则增加20个虚拟人数</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-8">
+                <input type="submit" name="submit" value="提交" class="btn btn-info col-lg-1"/>
+                <input type="hidden" name="token" value="{$_W['token']}"/>
+                <input type="hidden" name="id" value="{$item['id']}"/>
+                <input type="hidden" name="activity_id" value="{$_GPC['activity_id']}"/>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    require(['jquery.ui'], function () {
+        $('.multi-img-details').sortable({scroll: 'false'});
+        $('.multi-img-details').sortable('option', 'scroll', false);
+    })
+    $('form').submit(function () {
+        if ($('input[name="data[title]"]').val() == '') {
+            util.message('请输入标题');
+            return false;
+        }
+    })
+    // console.log({php echo json_encode($goods)})
+</script>
+{/if}
+
+{template 'common/footer'}

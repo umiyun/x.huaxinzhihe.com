@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns="http://www.we7.cc" versionCode="0.8,1.0">
+	<application setting="false">
+		<name><![CDATA[活动宝投票活动]]></name>
+		<identifie><![CDATA[umiacp_vote]]></identifie>
+		<version><![CDATA[1.1.2]]></version>
+		<type><![CDATA[biz]]></type>
+		<ability><![CDATA[活动宝投票活动]]></ability>
+		<description><![CDATA[同路人QQ群：758511946]]></description>
+		<author><![CDATA[同路人]]></author>
+		<url><![CDATA[http://www.we7.cc]]></url>
+	</application>
+	<platform>
+		<subscribes>
+			<message type="text" />
+		</subscribes>
+		<handles>
+			<message type="subscribe" />
+			<message type="qr" />
+			<message type="text" />
+			<message type="image" />
+		</handles>
+		<supports>
+
+			<item type="app" />
+
+		</supports>
+		<rule embed="false" />
+		<card embed="false" />
+	</platform>
+	<bindings>
+		<cover>
+			<entry title="首页" do="index" state="" direct="false" />
+		</cover>
+		<menu>
+			<entry title="炮灰域名" do="system" state="" direct="false" />
+			<entry title="活动管理" do="activity" state="" direct="false" />
+			<!--<entry title="订单管理" do="order" state="" direct="false" />-->
+			<entry title="投诉管理" do="complain" state="" direct="false" />
+			<!--<entry title="核销员管理" do="saler" state="" direct="false" />-->
+			<entry title="用户管理" do="member" state="" direct="false" />
+		</menu>
+	</bindings>
+	<permissions>
+	</permissions>
+	<install><![CDATA[upgrade.php]]></install>
+	<uninstall><![CDATA[]]></uninstall>
+	<upgrade><![CDATA[upgrade.php]]></upgrade>
+</manifest>

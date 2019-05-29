@@ -1,0 +1,101 @@
+{template 'common/header'}
+<style>
+    .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+        vertical-align: middle;
+    }
+</style>
+<ul class="nav nav-tabs">
+    <li {if $op == '' || $op == 'display'}class="active"{/if}>
+        <a href="{php echo $this->createWebUrl('cut')}">报名列表</a>
+    </li>
+</ul>
+{if $op == 'display' || $op == ''}
+<div class="panel panel-default">
+    <div class="panel-default" >
+        <div class="panel-heading">查询</div>
+        <div class="panel-body">
+            <form action="./index.php" method="get" class="form-horizontal" role="form" id="form1">
+                <input type="hidden" name="c" value="site">
+                <input type="hidden" name="a" value="entry">
+                <input type="hidden" name="m" value="{YOUMI_NAME}">
+                <input type="hidden" name="do" value="cut">
+                <input type="hidden" name="id" value="{$activity_id}">
+                <div class="form-group">
+
+                    <label class="col-md-4 col-lg-1 control-label">关键词</label>
+                    <div class="col-md-4">
+                        <input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}" placeholder="可模糊查询活动名/用户姓名电话">
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+                        <a href="{php echo $this->createWebUrl('cut',['id'=>$activity_id,'op'=>'download','status'=>$_GPC['status'],'keyword'=>$_GPC['keyword']])}" class="btn btn-default"><i class="fa fa-download"></i> 导出</a>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    {if $list}
+    <div class="panel-body">
+        <form action="" method="post" class="form-horizontal form">
+            
+            <div class="table-responsive panel-body">
+                <table class="table table-hover">
+                    <thead class="navbar-inner">
+                        <th class="text-center">活动</th>
+                        <th class="text-center">姓名</th>
+                        <th class="text-center">手机号</th>
+                        <th class="text-center">具体用户信息</th>
+                        <th class="text-center">发起时间</th>
+<!--                        <th style="text-align:right;">操作</th>-->
+                    </thead>
+                    <tbody id="level-list">
+                    {loop $list $index $item}   
+                    <tr>
+                        <td align="center">
+                            <div class="type-parent">{$item['activitytitle']}</div>
+                        </td>
+                        
+                        <td align="center">
+                            <div class="type-parent">{$item['realname']}</div>
+                        </td>
+                        
+                        <td align="center">
+                            <div class="type-parent">{$item['mobile']}</div>
+                        </td>
+                        
+                        <td align="center">
+                            <div class="type-parent">{$item['userinfo']}</div>
+                        </td>
+                        
+                        <td align="center">
+                            <div class="type-parent">{if $item['createtime']}{php echo date('Y-m-d H:i' , $item['createtime'])}{else}{/if}</div>
+                        </td>
+                        
+<!--                        <td align="right">-->
+<!--                            -->
+<!--                            <a class="btn btn-danger btn-sm" href="{php echo $this->createWebUrl('cut',array('op'=>'del','id'=>$item['id']))}" onclick="return confirm('确认删除吗？');return false;" title="删除">删除</a>-->
+<!--                        </td>-->
+                    </tr>
+                    {/loop}
+                    <tr>
+                        <td colspan="7" align="right">共计{$total}条数据</td>
+                    </tr>
+                    {if $pager}
+                    <tr>
+                        <td colspan="7" align="right">{$pager}</td>
+                    </tr>
+                    {/if}
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    </div>
+    {else}
+    <div style="text-align: center;padding: 90px 0;" class="panel panel-default">暂无数据~</div>
+    {/if}
+</div>
+{/if}
+        
+{template 'common/footer'}
+    

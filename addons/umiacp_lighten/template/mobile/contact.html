@@ -1,0 +1,79 @@
+<style>
+    .open_contact{
+        position: fixed;
+        border: 1px solid #aaaaaa;
+        border-radius: 10px;
+        top: 5%;
+        background: #fff;
+        color: #111;
+        padding: 5% 10%;
+        width: 80%;
+        left: 10%;
+        z-index: 20;
+        display: none;
+    }
+    .open_contact .icon-Close{
+        position: absolute;
+        left: 44%;
+        bottom: -50px;
+        z-index: 20;
+        font-size: 35px;
+        color: #fff;
+    }
+    .open_contact h4{
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 16px;
+    }
+    .open_contact div{
+        margin-bottom: 10px;
+    }
+    .oc_mobile a{
+        background: #E8362B;
+        color: #fff;
+        padding: 5px 15px;
+        border-radius: 5px;
+    }
+</style>
+<div class="open_contact">
+    <div>
+        <h4>商户客服: <span></span></h4>
+        <!--<div class="oc_name">-->
+            <!--<i class="iconfont icon-man"></i>-->
+            <!--<span></span>-->
+        <!--</div>-->
+        <div class="oc_mobile flex flex_a_center flex_j_between">
+            <span></span>
+            <a href="">一键拨打</a>
+        </div>
+        <div class="oc_address">
+            <i class="iconfont icon-weizhi"></i>
+            <span></span>
+        </div>
+        <img class="oc_code" src="" alt="">
+    </div>
+    <i class="iconfont icon-Close" onclick="$('.open_contact,.bg_fixed').fadeOut()"></i>
+</div>
+<script>
+    function openConcat(self){
+        $('.open_contact h4 span').html($(self).attr('data-name'))
+        $('.oc_mobile a').attr('href','tel:'+$(self).attr('data-mobile'))
+        $('.oc_mobile span').html($(self).attr('data-mobile'))
+
+        if($(self).attr('data-address')==''){
+            $('.oc_address span').hide()
+        }else{
+            $('.oc_address span').html($(self).attr('data-address'))
+            $('.oc_address span').show()
+        }
+        if($(self).attr('data-code')==''){
+            $('.oc_code').hide()
+        }else{
+            $('.oc_code').attr('src',$(self).attr('data-code'))
+            $('.oc_code').show()
+        }
+        $('.open_contact,.bg_fixed').fadeIn()
+    }
+
+    console.log({php echo json_encode($banner)})
+</script>

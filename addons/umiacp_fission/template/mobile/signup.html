@@ -1,0 +1,201 @@
+<style>
+    .open_signup,.open_userinfo{
+        position: fixed;
+        border: 1px solid #aaaaaa;
+        border-radius: 10px;
+        top: 8%;
+        background: #fff;
+        color: #111;
+        padding: 5%;
+        width: 80%;
+        left: 10%;
+        z-index: 20;
+        display: none;
+    }
+    .open_signup .icon-Close,.open_members .icon-Close,.open_userinfo .icon-Close{
+        position: fixed;
+        left: 44%;
+        bottom: 5%;
+        z-index: 20;
+        font-size: 40px;
+        color: #fff;
+    }
+    .open_signup .icon-Close{
+        bottom: -30%;
+        position: absolute;
+    }
+    .open_signup h4,.open_userinfo h4{
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    .open_signup div,.open_userinfo div{
+        margin-bottom: 10px;
+    }
+    .os_input input{
+        border-bottom: 1px solid #ddd;
+        text-align: left;
+    }
+    .os_btn{
+        display: block;
+        color: #fff;
+        font-size: 18px;
+        padding: 3%;
+        margin-top: 20px;
+    }
+</style>
+<div class="open_signup">
+    <div>
+        <h4>距离参加活动只剩一步啦!</h4>
+        <div class="text_center ft12 color777" style="margin-bottom: 10px;">（所填信息不会公开）</div>
+        {loop $activity['userinfo'] $av}
+        {if !empty($av['title'])}
+        <div class="os_input">
+            <input class="osi_input" type="text" data-name="{$av['title']}" data-required="{if $av['checked']}1{else}-1{/if}" value="" placeholder="请输入{$av['title']}{if $av['checked']}(必填){/if}">
+        </div>
+        {/if}
+        {/loop}
+        <a href="javascript:;" class="os_btn a_btn">去报名</a>
+    </div>
+    <i class="iconfont icon-Close" onclick="$('.open_signup,.bg_fixed').fadeOut()"></i>
+</div>
+<div class="open_userinfo">
+    <div>
+        <h4>我的报名信息</h4>
+        <div class="oc_name">
+            <i class="iconfont icon-man"></i>
+            <span>{$cut['realname']}</span>
+        </div>
+        <div class="oc_mobile">
+            <i class="iconfont icon-dianhua"></i>
+            <span>{$cut['mobile']}</span>
+        </div>
+        {if !empty($cut['userinfo'])}
+        <div class="oc_mobile">
+            <i class="iconfont icon-tubiao-qiapian"></i>
+            <span>{$cut['userinfo']}</span>
+        </div>
+        {/if}
+    </div>
+    <i class="iconfont icon-Close" onclick="$('.open_userinfo,.bg_fixed').fadeOut()"></i>
+</div>
+<script>
+    $('.os_btn').click(function () {
+        if(!regional){tips('您不在活动区域范围内');return false;}
+        var realname=$($(".os_input").eq(0)).find('input').val();
+        var mobile=$($(".os_input").eq(1)).find('input').val();
+        var userinfo='';
+
+        var tip=false;
+
+        if(realname==''){
+            tips('请输入姓名')
+            return false;
+        }
+        if(mobile==''){
+            tips('请输入手机号')
+            return false;
+        }
+        var myreg = /^(((13[0-9]{1})|(14[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[0-9]{1})|(18[0-9]{1})|(19[0-9]{1}))+\d{8})$/;
+        if(!myreg.test(mobile))
+        {
+            tips('请输入有效的手机号码');
+            return false;
+        }
+        if($('.os_input input').length>2){
+            for (var i=2;i<$('.os_input input').length;i++){
+
+                var i_val=$($('.os_input input')[i]).val()
+                var i_name=$($('.os_input input')[i]).attr('data-name')
+                userinfo+=i_name+':'+i_val+' ;'
+                if(i_val==''&&$($('.os_input input')[i]).attr('data-required')=='1'){
+                    tips('请输入'+i_name)
+                    tip=true;
+                    break;
+                    return false;
+                }
+            }
+        }
+        if(tip){
+            return false;
+        }
+        $.post(
+            "{php echo $this->createMobileUrl('index',array('op' =>'sign_up'))}",
+            {
+                'activity_id':"{$activity_id}",
+                'fmid':"{$_GPC['fmid']}",
+                'realname':realname,
+                'mobile':mobile,
+                'userinfo':userinfo,
+            },
+            function (data) {
+                if(data.errno==0){
+                    var cut_id=data.data.cut_id;
+                    localStorage.setItem('bm_userinfo',JSON.stringify({'realname':realname,'mobile':mobile}))
+                    if (data.data.status=='1') {
+                        // 不需要报名费
+                        tips('报名成功');
+                        setTimeout(function () {
+                            location.reload()
+                        }, 2000)
+                    }else{
+                        tips('报名成功,正在跳转支付');
+                        setTimeout(function () {
+                            $.post(
+                                "{php echo $this->createMobileUrl('order',['op'=>'create_order'])}",
+                                {
+                                    'cut_id': cut_id
+                                },
+                                function (data) {
+                                    if (!!data.data.id) {
+                                        var order_id=data.data.id;
+                                        $.post(
+                                            "{php echo $this->createMobileUrl('pay')}",
+                                            {
+                                                'order_id': data.data.id
+                                            },
+                                            function (data) {
+                                                if (data.errno == 0) {
+                                                    console.log(data)
+                                                    WeixinJSBridge.invoke(
+                                                        'getBrandWCPayRequest', {
+                                                            "appId":data.data.appId,     //公众号名称，由商户传入
+                                                            "timeStamp":data.data.timeStamp,         //时间戳，自1970年以来的秒数
+                                                            "nonceStr":data.data.nonceStr, //随机串
+                                                            "package":data.data.package,
+                                                            "signType":data.data.signType,         //微信签名方式：
+                                                            "paySign":data.data.paySign //微信签名
+                                                        },
+                                                        function(res){
+                                                            if(res.err_msg == "get_brand_wcpay_request:ok"){
+
+                                                            }else{
+                                                                $.post(
+                                                                    "{php echo $this->createMobileUrl('order',['op'=>'cancel'])}",
+                                                                    {
+                                                                        'order_id': order_id
+                                                                    },
+                                                                )
+                                                            }
+                                                            setTimeout(function () {
+                                                                location.reload();
+                                                            },2000)
+                                                        });
+                                                } else {
+                                                    tips(data.message)
+                                                }
+                                            }, 'json'
+                                        )
+                                    } else {
+                                        tips(data.message);
+                                    }
+                                }, 'json'
+                            );
+                        },2000)
+                    }
+
+                }else{
+                    tips(data.message);
+                }
+            },'json')
+    })
+</script>

@@ -1,0 +1,221 @@
+<style>
+    .open_signup,.open_userinfo{
+        position: fixed;
+        border: 1px solid #aaaaaa;
+        border-radius: 10px;
+        top: 5%;
+        background: #fff;
+        color: #111;
+        padding: 1% 3%;
+        width: 88%;
+        left: 6%;
+        z-index: 20;
+        display: none;
+    }
+    .open_signup>.icon-Close,.open_userinfo .icon-Close{
+        position: absolute;
+        left: 44%;
+        bottom: -50px;
+        z-index: 20;
+        font-size: 40px;
+        color: #fff;
+    }
+    .open_userinfo .icon-Close{
+        bottom: -35%;
+    }
+    .open_signup h4,.open_userinfo h4{
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    .open_signup div,.open_userinfo div{
+        margin-bottom: 10px;
+    }
+    .os_input input{
+        border-bottom: 1px solid #ddd;
+        text-align: left;
+    }
+    .os_btn{
+        display: block;
+        color: #fff;
+        font-size: 18px;
+        padding: 3%;
+        margin-top: 20px;
+    }
+
+    .s_goodimg{
+        text-align: center;
+        border-radius: 3px;
+    }
+    img.good_logo{
+        width: 50px;
+        height: 50px;
+    }
+    .s_imgs i.icon-Close{
+        position: absolute;
+        right: -10px;
+        top: -10px;
+        z-index: 10;
+        font-size: 20px;
+    }
+    .s_imgs>div{
+        margin-right: 5px;
+    }
+    input.select_good2img{
+        opacity: 0;
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+</style>
+<div class="open_signup">
+    <div>
+        <h4>距离参加活动只剩一步啦!</h4>
+        <!--<div class="text_center ft12 color777" style="margin-bottom: 10px;">（所填信息不会公开）</div>-->
+        {loop $activity['userinfo'] $av}
+        {if !empty($av['title'])}
+        <div class="os_input">
+            <input class="osi_input" type="text" data-name="{$av['title']}" data-required="{if $av['checked']}1{else}-1{/if}" value="" placeholder="请输入{$av['title']}{if $av['checked']}(必填){/if}">
+        </div>
+        {/if}
+        {/loop}
+        <div class="flex flex_a_center flex_wrap">
+            <div class="s_imgs flex">
+                <!--<div class="p_relative">-->
+                <!--<img class="good_logo d_vote_imgs" src="" alt="">-->
+                <!--<i class="iconfont icon-Close" onclick="$(this).parent().remove()"></i>-->
+                <!--</div>-->
+            </div>
+            <div class="s_goodimg p_relative flex flex_a_center">
+                <input class="select_good2img" type="file" onchange="selectGoodimg(this)">
+                <i class="iconfont icon-jiatupian" style="font-size: 45px;margin-left: 5px;margin-top: 5px"></i>
+            </div>
+        </div>
+        <a href="javascript:;" class="os_btn a_btn">去报名</a>
+    </div>
+    <i class="iconfont icon-Close" onclick="$('.open_signup,.bg_fixed').fadeOut()"></i>
+</div>
+<div class="open_userinfo">
+    <div>
+        <h4>我的报名信息</h4>
+        <div class="oc_name">
+            <i class="iconfont icon-man"></i>
+            <span>{$cut['realname']}</span>
+        </div>
+        <div class="oc_mobile">
+            <i class="iconfont icon-dianhua"></i>
+            <span>{$cut['mobile']}</span>
+        </div>
+        {if !empty($cut['userinfo'])}
+        <div class="oc_mobile">
+            <i class="iconfont icon-tubiao-qiapian"></i>
+            <span>{$cut['userinfo']}</span>
+        </div>
+        {/if}
+    </div>
+    <i class="iconfont icon-Close" onclick="$('.open_userinfo,.bg_fixed').fadeOut()"></i>
+</div>
+<script>
+    $('.os_btn').click(function () {
+        if(!regional){tips('您不在活动区域范围内');return false;}
+        var realname=$($(".os_input").eq(0)).find('input').val();
+        var mobile=$($(".os_input").eq(1)).find('input').val();
+        var userinfo='';
+
+        var tip=false;
+
+        if(realname==''){
+            tips('请输入姓名')
+            return false;
+        }
+        if(mobile==''){
+            tips('请输入手机号')
+            return false;
+        }
+        var myreg = /^(((13[0-9]{1})|(14[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[0-9]{1})|(18[0-9]{1})|(19[0-9]{1}))+\d{8})$/;
+        if(!myreg.test(mobile))
+        {
+            tips('请输入有效的手机号码');
+            return false;
+        }
+        if($('.os_input input').length>2){
+            for (var i=2;i<$('.os_input input').length;i++){
+
+                var i_val=$($('.os_input input')[i]).val()
+                var i_name=$($('.os_input input')[i]).attr('data-name')
+                userinfo+=i_name+':'+i_val+' ;'
+                if(i_val==''&&$($('.os_input input')[i]).attr('data-required')=='1'){
+                    tips('请输入'+i_name)
+                    tip=true;
+                    break;
+                    return false;
+                }
+            }
+        }
+        if(tip){
+            return false;
+        }
+        if($('.d_vote_imgs').length<=0){
+            tips('请上传图片');
+            return false;
+        }
+        var vote_imgs=[];
+        for (var j=0;j<$('.d_vote_imgs').length;j++){
+            vote_imgs.push($($('.d_vote_imgs')[j]).attr('src'));
+        }
+        $.post(
+            "{php echo $this->createMobileUrl('index',array('op' =>'sign_up'))}",
+            {
+                'activity_id':"{$activity_id}",
+                'realname':realname,
+                'mobile':mobile,
+                'userinfo':userinfo,
+                'vote_imgs':vote_imgs
+            },
+            function (data) {
+                if(data.errno==0){
+                    localStorage.setItem('bm_userinfo',JSON.stringify({'realname':realname,'mobile':mobile}))
+                    tips('报名成功');
+                    setTimeout(function () {
+                        location.href="{php echo $this->createMobileUrl('detail',array('activity_id' =>$_GPC['activity_id']))}&cut_id="+data.data.cut_id
+                    }, 1500)
+
+                }else{
+                    tips(data.message);
+                }
+            },'json')
+    })
+
+
+    function selectGoodimg(self) {
+        if($('.d_vote_imgs').length>=6){
+            tips('图片上传已达上限');
+            return false;
+        }
+        var reader=new FileReader();
+        var arr=$(self).val().split('\\');
+        arr=arr[arr.length-1].split('/');
+        var my=arr[arr.length-1].replace('.jpg','').replace('.png','').replace('.jpeg','');//这就是要取得的图片名称
+        reader.onload=function(e){
+            $.post(
+                "{php echo $this->createMobileUrl('index',['op'=>'upimg'])}",
+                {
+                    'file':reader.result,
+                    'name':my,
+                    'size':e.total,
+                    'module':"{$_GPC['module']}",
+                    'activity_id':"{$activity_id}",
+                },
+                function (data) {
+                    $('.s_imgs').append(' <div class="p_relative">' +
+                        '    <img class="good_logo d_vote_imgs" src="'+data.data.image+'" alt="">' +
+                        '    <i class="iconfont icon-Close" onclick="$(this).parent().remove()"></i>' +
+                        '</div>')
+                },'json'
+            )
+        }
+        reader.readAsDataURL(self.files[0])
+    }
+</script>

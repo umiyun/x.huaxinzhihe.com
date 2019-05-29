@@ -1,0 +1,111 @@
+{template 'common/header'}
+<style>
+    .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+        vertical-align: middle;
+    }
+</style>
+<ul class="nav nav-tabs">
+    <li>
+        <a href="{php echo $this->createWebUrl('complain')}">投诉管理列表</a>
+    </li> 
+</ul>
+{if $op == 'display' || $op == ''}
+<div class="panel panel-default">
+    <div class="panel-default" style="display:none;">
+        <div class="panel-heading">查询</div>
+        <div class="panel-body">
+            <form action="./index.php" method="get" class="form-horizontal" role="form" id="form1">
+                <input type="hidden" name="c" value="site">
+                <input type="hidden" name="a" value="entry">
+                <input type="hidden" name="m" value="{YOUMI_NAME}">
+                <input type="hidden" name="do" value="complain">
+                
+                <div class="form-group">
+                    <label class="col-md-1 col-lg-1 control-label">状态</label>
+                    <div class="col-md-3">
+                        <select name="status" class="form-control">
+                            <option value="">--所有--</option>
+                        </select>
+                    </div>
+                    <label class="col-md-4 col-lg-1 control-label">关键词</label>
+                    <div class="col-md-4">
+                        <input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}" placeholder="可模糊查询">
+                    </div>
+                    <div class="col-md-1">
+                        <button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    {if $list}
+    <div class="panel-body">
+        <form action="" method="post" class="form-horizontal form">
+            
+            <div class="table-responsive panel-body">
+                <table class="table table-hover">
+                    <thead class="navbar-inner">
+                        <th style="width: 20%" class="text-center">活动</th>
+                        <th style="width: 20%" class="text-center">投诉原因</th>
+                        <th class="text-center">投诉描述</th>
+                        <th class="text-center">手机号</th>
+                        <th class="text-center">用户信息</th>
+                        <th style="width: 10%" class="text-center">投诉时间</th>
+                    </thead>
+                    <tbody id="level-list">
+                    {loop $list $index $item}
+
+                    <tr>
+                        <td align="center">
+                            <div class="type-parent">{$item['title']}</div>
+                        </td>
+                        
+                        <td align="center">
+                            <div class="type-parent">{$item['reason']}</div>
+                        </td>
+                        
+                        <td align="center">
+                            <div class="type-parent">{$item['desc']}</div>
+                        </td>
+                        
+                        <td align="center">
+                            <div class="type-parent">{$item['mobile']}</div>
+                        </td>
+                        
+                        <td align="center">
+                            <div class="type-parent">
+                                <img src="{$item['member']['avatar']}" width='30' height="30" />
+                                {$item['member']['nickname']}
+                            </div>
+                        </td>
+                        
+                        <td align="center">
+                            <div class="type-parent">{if $item['createtime']}{php echo date('Y-m-d H:i' , $item['createtime'])}{else}{/if}</div>
+                        </td>
+                        
+                    </tr>
+                    {/loop}
+                    <tr>
+                        <td colspan="9" align="right">共计{$total}条数据</td>
+                    </tr>
+                    {if $pager}
+                    <tr>
+                        <td colspan="9" align="right">{$pager}</td>
+                    </tr>
+                    {/if}
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    </div>
+    {else}
+    <div style="text-align: center;padding: 90px 0;" class="panel panel-default">暂无数据~</div>
+    {/if}
+</div>
+{/if}
+
+<script>
+    console.log({php echo json_encode($list)})
+</script>
+{template 'common/footer'}
+    

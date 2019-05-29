@@ -1,0 +1,90 @@
+{template 'header'}
+<style>
+    body{
+        background: #f3f3f3;
+    }
+    .detail{
+        background: #fff;
+        margin: 3% 0;
+        padding: 2%;
+    }
+    .d_top{
+        border-bottom: 2px solid #eee;
+        padding-bottom: 2%;
+    }
+    .d_bottom{
+        padding-top: 2%;
+    }
+    .bg_fixed{
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 15;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        display: none;
+    }
+    .a_btn{
+        width: 100%;
+        font-size: 16px;
+        padding: 2%;
+    }
+    .d_content>div{
+        margin: 10px;
+    }
+</style>
+<div class="tips"></div>
+<div class="detail">
+    <div class="d_top flex">
+        <img style="width: 90px;height:90px;margin-right: 5px" src="{$order['goods']['image']}" alt="">
+        <div class="flex1 p_relative">
+            <div class="" >{$order['goods']['title']}</div>
+
+            <div class="color777 ft12 " style="position: absolute;bottom: 0;left: 0;">价格 ￥{$order['price']}</div>
+        </div>
+    </div>
+    <div class="d_content">
+        <div class="ft12 flex flex_j_between" ><span class="color777">单号</span> {$order['ordersn']}</div>
+        <div class="ft12 flex flex_j_between" ><span class="color777">下单时间</span> {php echo date('Y-m-d H:i:s',$order['pay_time'])}</div>
+        <div class="ft12 flex flex_j_between" ><span class="color777">支付时间</span> {php echo date('Y-m-d H:i:s',$order['pay_time'])}</div>
+        <div class="ft12 flex flex_j_between" ><span class="color777">用户姓名</span> {$order['cut']['realname']}</div>
+        <div class="ft12 flex flex_j_between" ><span class="color777">用户电话</span> {$order['cut']['mobile']}</div>
+    </div>
+    <div class="d_bottom flex flex_j_center">
+        <a href="javascript:;" class="a_btn hx_btn">
+            <i class="iconfont icon-saoyisao"></i>
+            <span>立即核销</span>
+        </a>
+    </div>
+</div>
+
+<script>
+    console.log({php echo json_encode($order)})
+    $('.hx_btn').click(function(){
+        $.post(
+            "{php echo $this->createMobileUrl('saler',array('op' =>'check','order_id'=>$_GPC['order_id']))}",
+            function (data) {
+               tips(data.message)
+                if(data.type=='success'){
+                    setTimeout(function () {
+                        wx.scanQRCode({
+                            needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+                            scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+                            success: function (res) {
+                                var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+                            }
+                        });
+                    },2000)
+                }
+            },'json'
+        )
+    })
+    // 提示
+    function tips(txt){
+        $('.tips').html(txt).fadeIn()
+        setTimeout(function(){$('.tips').fadeOut()},1500);
+    }
+</script>
+
+{template 'common/footer'}

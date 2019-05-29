@@ -1,0 +1,66 @@
+{template 'header'}
+<style>
+    body{
+        background: #f3f3f3;
+    }
+    .detail{
+        background: #fff;
+        margin: 3% 0;
+        padding: 2%;
+    }
+    .d_top{
+        border-bottom: 2px solid #eee;
+        padding-bottom: 2%;
+    }
+    .d_bottom{
+        padding-top: 2%;
+    }
+    .bg_fixed{
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 15;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        display: none;
+    }
+
+</style>
+{if empty($activity)}
+<div style="padding: 22% 0 30% 0;text-align: center;">
+    <i class="iconfont icon-kong" style="font-size: 18rem;display: block;margin: 30% auto 30% auto;"></i>
+    <div style="font-size: 20px">暂无数据~</div>
+</div>
+{else}
+{loop $activity $av}
+<div class="detail">
+    <div class="d_top flex">
+        <img style="width: 90px;height:90px;margin-right: 5px" src="{$av['image']}" alt="">
+        <div class="flex1 p_relative">
+            <div class="p_absolute" style="top: 0;left: 0">{$av['title']}</div>
+            <div class="color777 ft12 p_absolute" style="bottom: 0;left: 0">活动时间：{php echo date('Y-m-d H:i',$av['createtime'])} 到 {php echo date('Y-m-d H:i',$av['endtime'])}</div>
+        </div>
+    </div>
+    <div class="d_bottom flex flex_j_end">
+        <a href="{php echo $this->createMobileUrl('index',['activity_id'=>$av['id']])}">
+            <i class="iconfont icon-chakan"></i>
+            <span>查看活动</span>
+        </a>
+        <a data-name="名称" data-mobile="{$av['shop_mobile']}" data-address="{$av['shop_province']}{$av['shop_city']}{$av['shop_district']}" data-street="{$av['shop_address']}" href="javascript:;" style="margin-left: 10%" onclick="openConcat(this)">
+            <i class="iconfont icon-dianhua"></i>
+            <span>联系商家</span>
+        </a>
+    </div>
+</div>
+{/loop}
+{/if}
+<div class="bg_fixed"></div>
+
+<script>
+    console.log('$activity',{php echo json_encode($activity)})
+</script>
+
+{template 'contact'}
+
+{template 'common/footer'}

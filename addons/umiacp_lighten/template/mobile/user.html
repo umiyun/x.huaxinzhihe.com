@@ -1,0 +1,63 @@
+{template 'header'}
+<style>
+    body{
+        background: #f3f3f3;
+    }
+    .head_top{
+        background: url('{YOUMI_URL_APP}img/user_bg.png');
+        background-size: 100% 100%;
+        padding: 10%;
+        font-size: 20px;
+        text-align: center;
+    }
+    .head_top img{
+        width: 35%;
+        border-radius: 50%;
+    }
+    .head_top div{
+        font-size: 18px;
+    }
+    .weui-cell{
+        padding: 5%;
+        color: #111;
+        margin: 3% 0;
+        background: #fff;
+    }
+    .weui-cell img{
+        width: 10%;
+        margin-right: 3%;
+    }
+    .weui-cell i.iconfont{
+        color: #777;
+    }
+</style>
+
+<div>
+    <div class="head_top">
+        <img src="{$_W['fans']['avatar']}" alt="">
+        <div>{$_W['fans']['nickname']}</div>
+    </div>
+
+    <div class="weui-cells">
+        <a class="weui-cell flex flex_a_center" href="{php echo $this->createMobileUrl('activitys')}">
+            <img src="{YOUMI_URL_APP}img/user_pack.png">
+            <div class="weui-cell__bd flex1">我的活动</div>
+            <i class="iconfont icon-jiantouyou"></i>
+        </a>
+        <a class="weui-cell flex flex_a_center" href="{php echo $this->createMobileUrl('order')}">
+            <img src="{YOUMI_URL_APP}img/user_setting.png">
+            <div class="weui-cell__bd flex1">我的报名</div>
+            <i class="iconfont icon-jiantouyou"></i>
+        </a>
+    </div>
+
+
+
+</div>
+
+
+<script>
+
+    console.log({php echo json_encode($banner)})
+</script>
+{template 'common/footer'}

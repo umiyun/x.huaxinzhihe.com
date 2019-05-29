@@ -1,0 +1,1101 @@
+{template 'header'}
+    <!--<link rel=stylesheet href="//at.alicdn.com/t/font_700542_eam1egt84pt.css">-->
+    <link rel=stylesheet href="{YOUMI_URL_APP}css/style.css?v=1.8">
+    <script src="{YOUMI_URL_APP}js/jquery.liMarquee.js"></script>
+</head>
+<style>
+    .moneybox{width: 100%;height: 100%;}
+
+    #leafContainer {
+        /*position: absolute;*/
+        /*width: 100%;*/
+        /*height: 100%;*/
+        overflow: hidden;
+    }
+
+    #leafContainer > div {
+        position: fixed;
+        z-index: 10;
+        width: 25px;
+        /*height: 150px;*/
+        -webkit-animation-iteration-count: infinite, infinite;
+        -webkit-animation-direction: normal, normal;
+        -webkit-animation-timing-function: linear, ease-in;
+    }
+    #leafContainer > div > img {
+        position: absolute;
+        width: 25px;
+        -webkit-animation-iteration-count: infinite;
+        -webkit-animation-direction: alternate;
+        -webkit-animation-timing-function: ease-in-out;
+        -webkit-transform-origin: 50% -100%;
+    }
+    @-webkit-keyframes fade {
+        0% {
+            opacity: 1;
+        }
+        95% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0;
+        }
+    }
+    @-webkit-keyframes drop {
+        0% {
+            -webkit-transform: translate(0px, -50px);
+        }
+        100% {
+            -webkit-transform: translate(0px, 650px);
+        }
+    }
+    @-webkit-keyframes clockwiseSpin {
+        0% {
+            -webkit-transform: rotate(-50deg);
+        }
+        100% {
+            -webkit-transform: rotate(50deg);
+        }
+    }
+    @-webkit-keyframes counterclockwiseSpinAndFlip {
+        0% {
+            -webkit-transform: scale(-1, 1) rotate(50deg);
+        }
+        100% {
+            -webkit-transform: scale(-1, 1) rotate(-50deg);
+        }
+    }
+</style>
+<style>
+    body{
+        background: url("{$activity['bgimage']}") repeat 100%;
+    }
+    .a_btn{
+        background: #ff6e40;
+        color: #fff;
+        width: 100%;
+        display: block;
+        border-radius: 0;
+        font-size: 14px;
+        text-align: center;
+        padding: 10px;
+    }
+    .open_share{
+        position: fixed;
+        top: 8%;
+        width: 60%;
+        left: 20%;
+        z-index: 20;
+        color: #fff;
+        display: none;
+    }
+    .os_btns img{
+        background: #fff;
+        border-radius: 50%;
+        padding: 8px;
+        width: 50px;
+    }
+    .osb_cancel{
+        position: fixed;
+        bottom: 5%;
+        padding: 2px;
+        border-bottom: 1px solid #fff;
+        left: 45%;
+    }
+    .color_red{
+        color: #ED5F43
+    }
+    img{
+        width: 100%;
+    }
+    input[type=color], input[type=date], input[type=datetime-local], input[type=datetime], input[type=email], input[type=month], input[type=number], input[type=password], input[type=search], input[type=tel], input[type=text], input[type=time], input[type=url], input[type=week], select{
+        border: 1px solid transparent;
+        text-align: center;
+        margin: 0 2%;
+        height: 30px;
+        padding: 5px;
+        background: transparent;
+    }
+    .bg_fixed{
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 15;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        display: none;
+    }
+
+    .h_img{
+        width: 100%;
+    }
+    .ah_top{
+        background: rgba(0,0,0,0.7);
+        color: #aaa;
+        display: inline-flex;
+        padding: 0 6px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 5;
+    }
+    .ah_top span{
+        color: #fff;
+        font-weight: 700;
+    }
+    .a_head .iconfont{
+        position: fixed;
+        z-index: 5;
+        color: #fff;
+        font-size: 28px;
+        border-radius: 50%;
+        border: 1px solid #fff;
+        background: rgba(0,0,0,0.4);
+        left: 5%;
+        width: 35px;
+        height: 35px;
+        text-align: center;
+        line-height: 33px;
+    }
+    .icon-music{
+        top: 5%;
+    }
+    .icon-music.active,.icon-mofabang.active{
+        -webkit-animation: zhuan 2s linear infinite;
+    }
+    .icon-mofabang{
+        top: 15%;
+        font-size: 24px!important;
+    }
+    .ah_contact,.ah_complain,.ah_share{
+        top: 15%;
+        left: 5%;
+        width: 42px;
+        height: 42px;
+        background: #333;
+        color: #fff;
+        text-align: center;
+        padding: 6px;
+        line-height: 14px;
+        border-radius: 50%;
+        position: fixed;
+        z-index: 10;
+    }
+    .ah_complain{
+        left: inherit;
+        right: 5%;
+        top: 5%;
+        line-height: 30px;
+    }
+    .ah_share{
+        left: inherit;
+        right: 5%;
+        top: 5%;
+        line-height: 30px;
+    }
+    .ah_contact{
+        left: inherit;
+        right: 5%;
+        -webkit-animation: zhuan2 1.5s ease-in infinite;
+    }
+
+
+    .a_content{
+        padding: 4%;
+        box-sizing: border-box;
+        background: url("{$activity['bgimage']}") repeat 100%;
+        padding-bottom: 35%;
+    }
+    .ac_title{
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+    .ac_time{
+
+    }
+    .ac_time>div{
+        width: 100%;
+        text-align: center;
+        left: 0;
+        top: 28%;
+    }
+    .ac_time span{
+        color: #111;
+        background: #ED5F43;
+        border-radius: 50%;
+        padding: 2px;
+        margin: 0 2px;
+        display: inline-block;
+        /*width: 20px;*/
+        height: 20px;
+        text-align: center;
+        line-height: 16px;
+    }
+
+    .ac_messages{
+        margin: 5% 0;
+        text-align: center;
+        background: #FEF4DC;
+        width: 84%;
+        left: 8%;
+        position: relative;
+        border-radius: 10px;
+    }
+    .notice_active {
+        height: 3rem;
+        padding: 0;
+        overflow: hidden;
+        position: relative;
+    }
+    .notice_active ul{
+        padding: 0 6px;
+    }
+    .notice_active li{
+        list-style-type:none;line-height: 2.6rem;overflow: hidden;
+        text-align: center;
+    }
+
+
+    .ac_goods{
+        background: #fff;
+        border-radius: 5px;
+        padding: 2%;
+        margin-top: 20px;
+    }
+    .goods{
+        border: 1px solid #111;
+        border-radius: 5px;
+        padding: 12% 2% 2% 2%;
+        margin-top: 50px;
+    }
+    .goods .gt_logo{
+        width: 100px;
+        height: 100px;
+        margin-right: 3%;
+    }
+    .gt_detail>div{
+        margin: 10px 0;
+    }
+    .g_title{
+        width: 70%;
+        position: absolute;
+        top: -25px;
+        left: 15%;
+    }
+    .g_title>div{
+        position: absolute;
+        top: 5px;
+        width: 100%;
+        text-align: center;
+        left: 0;
+    }
+
+    .ac_youhui{
+        margin-top: 25px;
+    }
+    .acy_title{
+        width: 66%;
+        left: 17%;
+        margin-bottom: 8px;
+    }
+    .acy_title input{
+        width: 78%;
+        top: 5px;
+        left: 8%;
+        position: absolute;
+        z-index: 5;
+    }
+    .acy_content{
+        background: #fff;
+        border-radius: 5px;
+        padding: 2%;
+    }
+
+    .acs_content .acsc_title,.acsc_list>div{
+        display: flex;
+        display: -webkit-flex;
+        justify-content: space-around;
+        -webkit-justify-content: space-around;
+    }
+    .acs_content span{
+        width: 20%;
+        text-align: center;
+        margin-top: 5px;
+    }
+    .acsc_tip{
+        padding-top: 18px;
+        text-align: center;
+    }
+
+
+    .go_top{
+        position: fixed;
+        bottom: 15%;
+        right: 5%;
+        width: 50px;
+        height: 50px;
+        z-index: 10;
+        color: #fff;
+        border-radius: 50%;
+        background: rgba(0,0,0,0.6);
+        text-align: center;
+        line-height: 18px;
+        padding: 6px;
+        display: none;
+    }
+    .open_share{
+        position: fixed;
+        top: 8%;
+        width: 60%;
+        left: 20%;
+        z-index: 20;
+        color: #fff;
+        display: none;
+    }
+    .os_btns img{
+        background: #fff;
+        border-radius: 50%;
+        padding: 8px;
+        width: 50px;
+    }
+    .osb_cancel{
+        position: fixed;
+        bottom: 5%;
+        padding: 2px;
+        border-bottom: 1px solid #fff;
+        left: 45%;
+    }
+
+
+    .kanjia_btn{
+        -webkit-animation: kanjia 1s ease-in infinite;
+        margin-left: 5%;
+        min-width: 70px;
+    }
+    .open_kjtips{
+        position: fixed;
+        top: 10%;
+        width: 80%;
+        left: 10%;
+        z-index: 20;
+        background: #D3441B;
+        border-radius: 10px;
+        display: none;
+    }
+    .a_btn2{
+        width: 96%;
+        margin: 4% 2%;
+        display: block;
+        box-sizing: border-box;
+        padding: 2%;
+        font-size: 18px;
+    }
+    .a_btn3{
+        display: block;
+        width: 96%;
+        margin: 0 auto;
+    }
+    .ok_price{
+        margin: 4% 2% 8% 2%;
+    }
+    .a_footer{
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        padding: 4%;
+        background: rgba(0,0,0,0.7);
+        z-index: 10;
+        width: 100%;
+        text-align: center;
+    }
+    .a_footer a{
+        font-size: 20px;
+    }
+    .gdtp_bg{
+        width: 100%;
+        height: 10px;
+        background: #ddd;
+        border-radius: 10px;
+        margin: 5px 0;
+    }
+    .gdtp_bg>div{
+        background: #ED5F43;
+        border-radius: 20px;
+        height: 10px;
+    }
+    .gdtp_bg>span{
+        background: #fff;
+        width: 16px;
+        border-radius: 50%;
+        height: 16px;
+        border: 3px solid #ED5F43;
+        top: -3px;
+    }
+
+    @-webkit-keyframes zhuan {
+        0%{transform: rotate(0deg)}
+        100%{transform: rotate(360deg)}
+    }
+    @-webkit-keyframes zhuan2 {
+        0%{transform: rotate(0deg)}
+        45%{transform: rotate(-30deg)}
+        90%{transform: rotate(30deg)}
+        100%{transform: rotate(0deg)}
+    }
+    @-webkit-keyframes kanjia {
+        10%{
+            transform: rotate(-3deg) scale(0.9);
+        }
+        35%{
+            transform: rotate(3deg) scale(1.1);
+        }
+        45%{
+            transform: rotate(-3deg);
+        }
+        55%{
+            transform: rotate(3deg);
+        }
+        65%{
+            transform: rotate(-3deg);
+        }
+        90%{
+            transform: rotate(0) scale(1);
+        }
+    }
+
+    .acs_navbar{
+        border-bottom: 1px solid #ddd;
+    }
+    .acs_navbar>div{
+        padding: 2% 0;
+        border-bottom: 2px solid transparent;
+    }
+    .acs_navbar>div.active{
+        border-bottom: 2px solid #ED5F43;
+        color: #ED5F43;
+    }
+    .acysc_detail{
+        border: 2px solid #FD6E4A;
+        margin-bottom: 10px;
+    }
+    .acysc_detail span{
+        background: #FD6E4A;
+        width: 25px;
+        text-align: center;
+        color: #fff;
+        margin: 10px;
+        display: block;
+        border-radius: 50%;
+        height: 25px;
+        line-height: 25px;
+    }
+
+    .fb_tip{
+        padding: 1% 0;
+        position: relative;
+        background: rgba(0,0,0,0.7);
+    }
+    .fb_tip a{
+        font-size: 16px;
+    }
+    .fb_tip .iconfont{
+        color: #fff;
+        position: absolute;
+        right: 3px;
+        top: 5px;
+    }
+
+    .a_members{
+
+    }
+    .a_members>div{
+        width: 10%;
+        font-size: 12px;
+        margin: 5px;
+        text-align: center;
+        overflow: hidden;
+    }
+    .a_members img{
+        width: 100%;
+        border-radius: 50%;
+    }
+    .icon-tangniaobingleixing{
+        font-size: 28px;
+        padding-top: 5px;
+        width: 100%;
+        margin-bottom: 6px;
+        display: block;
+    }
+    .open_members{
+        position: fixed;
+        top: 5%;
+        background: #fff;
+        width: 90%;
+        left: 5%;
+        padding: 10px;
+        box-sizing: border-box;
+        height: 70%;
+        overflow-y: auto;
+        z-index: 30;
+        border-radius: 10px;
+        display: none;
+    }
+</style>
+<body style="background-color: #fff;">
+
+<div class="tips"></div>
+{if $activity['effects_imgs']}<div class="moneybox" id="leafContainer"></div>{/if}
+
+{if $nx_activity_info['phone'] != ''}
+<div id="phone" class="phone_fixed">
+    <img src="../addons/nx_actveline/template/style/img/phone.png" alt="">
+</div>
+{/if}
+<!-- 头部 -->
+<div class="a_head p_relative">
+    <img class="h_img" src="{$activity['image']}" alt="">
+    <div class="flex flex_a_center ah_top">
+        <span>{$activity['pv']}</span>人查看<span>{$activity['share']}</span>人分享<span>{$activity['participate']}</span>人报名
+    </div>
+    {if $activity['music']}<i id="music" class="iconfont icon-music active"><audio id="audiojs" src="{$activity['music']}" autoplay loop></audio></i>{/if}
+    {if $activity['effects_imgs']}<i class="iconfont icon-mofabang active"></i>{/if}
+
+    <a href="javascript:;" class="p_absolute ah_complain" onclick="$('#tem_complain').slideDown()">投诉</a>
+    <div class="p_absolute ah_contact" data-name="{$activity['shop_name']}" data-mobile="{$activity['shop_mobile']}" data-address="{$activity['shop_province']} {$activity['shop_city']} {$activity['shop_district']} {$activity['shop_address']}" data-code="{php echo tomedia($activity['shop_code'])}" onclick="openConcat(this)">联系商家</div>
+</div>
+<!-- 倒计时 -->
+<div class="time-box">
+    <div class="time">
+        <div class="time_title">距离活动结束</div>
+        {if $activity['status2'] == '2'}
+        <!-- <div class="timespan"></div> -->
+        <span style=" font-size: 20px;">活动已经结束</span>
+
+        {else}
+        <div class="timerbg">
+            <div class="time_text" id="dao">
+                <strong id="RemainD"></strong><span>天</span>
+                <strong id="RemainH"></strong><span>时</span>
+                <strong id="RemainM"></strong><span>分</span>
+                <strong id="RemainS"></strong><span>秒</span>
+            </div>
+        </div>
+        {/if}
+    </div>
+</div>
+<!-- 参与人数 -->
+<div class="personnel-box">
+    <div class="personnel">
+        <div class="personnel_title">
+            <i></i>
+            参与人数({php echo count($members)}人)
+        </div>
+        <ul>
+            {loop $members $mdx $mv}
+            <li style="width: 47px;">
+                <img src="{$mv['member']['avatar']}" alt="">
+                <p style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{$mv['member']['nickname']}</p>
+            </li>
+            {/loop}
+        </ul>
+    </div>
+</div>
+<!-- 购买人数 -->
+<div class="content_Record_box">
+    <div class="content">
+        <div class="content_title">
+            购买记录({php echo count($order_list)}人)
+        </div>
+        <div class="dowebok">
+            <div class="container-fluid">
+                {loop $order_list $key $value}
+                <div class="row" style="margin-bottom: 10px">
+                    <div class="col-md-2 col-xs-2" style="padding-right:0;">
+                        <img src="{$value['member']['avatar']}" alt="">
+                    </div>
+                    <div class="col-md-4 col-xs-4">
+                        <p style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{$value['member']['nickname']}</p>
+                    </div>
+                    <div class="col-md-6 col-xs-6">
+                        <p style="color: rgb(255, 71, 71);">
+                            已支付￥{$value['price']}
+                        </p>
+                        <p style="font-size: 12px;">{$value['createtime']}</p>
+                    </div>
+                </div>
+                {/loop}
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 活动介绍 -->
+<div class="content_Record_box">
+    <div class="content">
+        <div class="content_info">
+            <div class="content_title">
+                活动介绍
+            </div>
+            <div class="content_text">
+                {php echo htmlspecialchars_decode($activity['desc_val'])}
+                {loop $activity['desc_imgs'] $adv}
+                <img style="width: 100%;margin: 3px 0" src="{$adv}" alt="">
+                {/loop}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 立即报名 -->
+<div class="bottom_btn">
+    <div style="display: flex">
+        <div class="sign_btn" style="width: 40%">
+            {if $activity['status2']=='2'}
+            <div class="a_btn" >活动已结束</div>
+            {/if}
+            {if $activity['status2']=='4'}
+            <div onclick="openSign()" class="a_btn">我要报名</div>
+            {/if}
+            {if $activity['status2']=='5'}
+            <div class="a_btn pay_btn" >立即支付</div>
+            {/if}
+            {if $activity['status2']=='6'}
+            <div onclick="$('.open_userinfo,.bg_fixed').fadeIn()" class="a_btn" >报名信息</div>
+            {/if}
+            <!--<div class="sign_sign_btn pay_btn">立即报名</div>-->
+        </div>
+        <div class="change_btn" style="width: 40%">
+            <div class="change_change_btn" onclick="$('.open_share,.bg_fixed').fadeIn()">分享赚</div>
+        </div>
+        <div class="change_btn" style="width: 20%">
+            <a href="{php echo $this->createMobileUrl('user')}" class="change_change_btn" style="background: #00A1F3">我的</a>
+        </div>
+    </div>
+    {if $setting_activity&&$setting_activity['making_status']==1}
+    <div class="fb_tip flex flex_j_around flex_a_center ft16">
+        <div class="color_fff">{$setting_activity['copyright']}</div>
+        <a href="{$setting_activity['copyright_url']}">{if $setting_activity['copyright_buy']}{$setting_activity['copyright_buy']}{else}去购买{/if}</a>
+        <i class="iconfont icon-Close" onclick="$('.fb_tip').hide()"></i>
+    </div>
+    {/if}
+</div>
+<!-- 排行版 -->
+<div class="rankings-box">
+    <div class="rankings">
+        <div class="rankings_title">
+            - 赚钱排行榜 -
+        </div>
+        <div class="container-fluid">
+            <div class="row" style="margin-bottom: 10px;">
+                <div class="col-md-4 col-xs-4">
+                    排名
+                </div>
+                <div class="col-md-4 col-xs-3" style="text-align: center">
+                    推荐数
+                </div>
+                <div class="col-md-4 col-xs-5" style="text-align: center">
+                    佣金(元)
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            {loop $members2 $key $value}
+            <div class="row rankings_list">
+                <div class="col-md-4 col-xs-4" style="padding-left: 0; text-overflow: ellipsis;white-space: nowrap;overflow: hidden;">
+                    {$value['realname']}
+                </div>
+                <div class="col-md-4 col-xs-3" style="text-align: center">
+                    {$value['share_num']} 人
+                </div>
+                <div class="col-md-4 col-xs-5" style="text-align: center">
+                    <span style="color: rgb(253, 59, 0);">￥{$value['commision']}</span> 元
+                </div>
+            </div>
+            {/loop}
+        </div>
+    </div>
+</div>
+<!-- 排行版end -->
+{if $setting_activity&&$setting_activity['making_status2']==1}
+<div style="text-align: center;margin: 40px 0 0 0;">
+    <a href="{$_W['siteroot']}index.php?c=entry&i={$_W['uniacid']}&do=making&case_id={$activity_umi['case_id']}&m=umi_activitys&module={$_W['current_module']['name']}" style="color:#000;border: 1px solid #000;padding: 6px 16px;border-radius: 5px;text-decoration: none;">
+        <span>我也要创建活动</span>
+        <i class="iconfont icon-jiantou1" style="font-size: 12px"></i>
+    </a>
+</div>
+{/if}
+<div style=" height: 90px;"></div>
+<!--背景音乐-->
+<div class="van-toast van-toast--default van-toast--middle" style="z-index:2014;display: none;">
+    <div class="van-loading van-loading--circular van-loading--white">
+        <span class="loading__spinner">
+        <img src="../addons/nx_actveline/template/style/svg/puff.svg" />
+        </span>
+    </div>
+    <div class="van-toast__text">订单提交中...</div>
+</div>
+
+<div class="van-modal" style="z-index: 2013; display: none;"></div>
+
+<!--提交信息-->
+{template 'signup'}
+<div class="bg_fixed"></div>
+<!--分享-->
+<div class="open_share">
+    <img src="{YOUMI_URL_APP}img/m_share.png" alt="">
+    <div class="text_center" style="margin-bottom: 10px">————分享方式————</div>
+    <div class="os_btns flex flex_a_center flex_j_around">
+        <div class="text_center" onclick="tips('点击右上角分享给微信好友')">
+            <img src="{YOUMI_URL_APP}img/m_weixin.png" alt="">
+            <div>微信好友</div>
+        </div>
+        <div class="text_center" onclick="hecheng();">
+            <img src="{YOUMI_URL_APP}img/m_pyq.png" alt="">
+            <div>朋友圈</div>
+        </div>
+        <div class="osb_cancel" onclick="$('.open_share,.bg_fixed').fadeOut()">取消</div>
+    </div>
+</div>
+<!--海报-->
+{template 'canvas_share'}
+<!--投诉-->
+{template 'complain'}
+<!--联系商家-->
+{template 'contact'}
+<script>
+    function datetime_to_unix() {
+        // var date = "{$activity['endtime']}";//设置到期时间
+        // date = new Date(Date.parse(date.replace(/-/g, "/")));
+        // date = date.getTime();
+        return parseInt({$activity['endtime']});
+
+    }
+    function GetRTime() {
+        //当前时间戳
+        var timestamp = (Date.parse(new Date())) / 1000;
+        //设定时间的时间戳
+        var timestamp_set = datetime_to_unix();
+        //时间戳差
+        var cha_timestamp = timestamp_set - timestamp;
+        //剩余天数
+        var sy_day = parseInt(cha_timestamp / (3600 * 24))
+        //剩余小时
+        var sy_hour = parseInt((cha_timestamp - sy_day * 3600 * 24) / 3600);
+        //剩余分钟
+        var sy_min = parseInt((cha_timestamp - sy_hour * 3600 - sy_day * 24 * 3600) / 60);
+        //剩余秒数
+        var sy_miao = cha_timestamp - sy_day * 3600 * 24 - sy_hour * 3600 - sy_min * 60;
+        $("#RemainD").text(sy_day);
+        $("#RemainH").text(sy_hour);
+        $("#RemainM").text(sy_min);
+        $("#RemainS").text(sy_miao);
+    }
+    //定时执行，每秒刷新
+    $(function () {
+        var timer_rt = window.setInterval("GetRTime()", 1000);
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        // var color = "<?php echo empty($nx_activity_info['background']) ? '#00a1f3':$nx_activity_info['background'] ?>"
+        // $("body").css("background-color", color);
+        $('.dowebok').liMarquee({
+            direction: 'up',
+            runshort: false,
+            circular: false
+        });
+        $(".sign_sign_btn").click(function () {
+            $(".sign_sign_popup").show();
+        });
+        $("#share").click(function () {
+            var url = "{php echo $this->createMobileUrl('change',array('id' => $nx_activity_info['id']))}";
+            window.location.href = url;
+        });
+        $("#phone").click(function () {
+            var url = "{$nx_activity_info['phone']}";
+            window.location.href = "tel:" + url;
+        });
+        $(".sign_sign_btn_popup_hide").click(function () {
+            $(".sign_sign_popup").hide();
+        });
+
+        var amount_view = "{$amount_view}"
+        if (amount_view == 1) {
+
+        } else {
+
+        }
+        $('.js-wechat-pay').click(function () {
+            var name = $(" input[ name='name' ] ").val();
+            var phone = $(" input[ name='phone' ] ").val();
+            var address = $(" input[ name='address' ] ").val();
+            $(".van-modal").show();
+            $(".van-toast--middle").show();
+            post_order(name, phone, address);
+        });
+    });
+    function post_order(name,phone,address) {
+        var url = "{php echo $this->createMobileUrl('home', array('id' => $nx_activity_info['id'],'op' => 'post','cid' =>$cid))}";
+        if (name == "") {
+            $(".van-modal").hide();
+            $(".van-toast--middle").hide();
+            alert('请输入您的姓名');
+            return;
+        }
+        if (phone == "") {
+            $(".van-modal").hide();
+            $(".van-toast--middle").hide();
+            alert('请输入手机号');
+            return;
+        }
+        if (isChinaName(name) == false) {
+            $(".van-modal").hide();
+            $(".van-toast--middle").hide();
+            alert('请输入中文姓名');
+            return;
+        }
+        if (isPhoneNo(phone) == false) {
+            $(".van-modal").hide();
+            $(".van-toast--middle").hide();
+            alert('请正确输入11位的手机号码');
+            return;
+        }
+        //先通过AJAX获取最新的订单号
+        var data = { name: name, phone: phone, address: address };
+        $.getJSON(url, data, function (data, status) {
+            if (status == 'success') {
+                if (data.code == 0) {
+                    var urls = "{php echo $this->createMobileUrl('pay')}&id=" + data.ordertid
+                    window.location.href = urls;
+                }else if(data.code == 3){
+                    window.location.href = data.url;
+                }else {
+                    $(".van-modal").hide();
+                    $(".van-toast--middle").hide();
+                    alert(data.msg);
+                }
+            }
+        });
+    }
+    // 验证中文名称
+    function isChinaName(name) {
+        var pattern = /^[\u4E00-\u9FA5]{1,6}$/;
+        return pattern.test(name);
+    }
+    // 验证手机号
+    function isPhoneNo(phone) {
+        var pattern = /^1[345789]\d{9}$/;
+        return pattern.test(phone);
+    }
+</script>
+<script type="text/javascript">
+    const NUMBER_OF_LEAVES = 10;
+    const width=window.screen.width;
+    function init(){
+        var container = document.getElementById('leafContainer');
+        for (var i = 0; i < NUMBER_OF_LEAVES; i++)
+        {
+            container.appendChild(createALeaf());
+        }
+
+    }
+    function randomInteger(low, high)
+    {
+        return low + Math.floor(Math.random() * (high - low));
+    }
+    function randomFloat(low, high)
+    {
+        return low + Math.random() * (high - low);
+    }
+    function pixelValue(value)
+    {
+        return value + 'px';
+    }
+
+    function durationValue(value)
+    {
+        return value + 's';
+    }
+    function createALeaf()
+    {
+        var effects_imgs= {php echo json_encode($activity['effects_imgs'])};
+        var leafDiv = document.createElement('div');
+        var image = document.createElement('img');
+        image.src = effects_imgs[randomInteger(0, 4)];
+        leafDiv.style.top = "-10px";
+        leafDiv.style.left = pixelValue(randomInteger(0, width));
+        var spinAnimationName = (Math.random() < 1.5) ? 'clockwiseSpin' : 'counterclockwiseSpinAndFlip';
+        leafDiv.style.webkitAnimationName = 'fade, drop';
+        image.style.webkitAnimationName = spinAnimationName;
+        var fadeAndDropDuration = durationValue(randomFloat(13, 39));
+        var spinDuration = durationValue(randomFloat(3, 7));
+        leafDiv.style.webkitAnimationDuration = fadeAndDropDuration + ', ' + fadeAndDropDuration;
+        var leafDelay = durationValue(randomFloat(0, 0));
+        leafDiv.style.webkitAnimationDelay = leafDelay + ', ' + leafDelay;
+        image.style.webkitAnimationDuration = spinDuration;
+        leafDiv.appendChild(image);
+        return leafDiv;
+    }
+    window.addEventListener('load', init, false);
+    console.log('$setting_activity',{php echo json_encode($setting_activity)})
+    console.log('$activity',{php echo json_encode($activity)})
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        function audioAutoPlay() {
+            var audio = document.getElementById('audiojs');
+            audio.play();
+            document.addEventListener("WeixinJSBridgeReady", function () {
+                audio.play();
+            }, false);
+        }
+        audioAutoPlay();
+    });
+    if (/i(Phone|P(o|a)d)/.test(navigator.userAgent)) {
+        $(document).one('touchstart',
+            function(e) {
+                $('#audiojs').get(0).touchstart = true;
+                $('#audiojs').get(0).play();
+                return false;
+            }
+        );
+    }
+    var audio=document.getElementsByTagName('audio')[0];
+</script>
+<script>
+
+    $('.icon-music').click(function () {
+        if(audio.paused){
+            audio.play();
+            $(this).addClass('active')
+        }else{
+            audio.pause();
+            $(this).removeClass('active')
+        }
+    })
+    $('.icon-mofabang').click(function(){
+        if($(this).hasClass('active')){
+            $(this).removeClass('active')
+            $('#leafContainer').hide()
+        }else{
+            $(this).addClass('active')
+            $('#leafContainer').show()
+        }
+    })
+
+
+    // 公告
+    function timer(opj){
+        $(opj).find('ul').animate({
+            marginTop : "-2.1rem"
+        },500,function(){
+            $(this).css({marginTop : "0.3rem"}).find("li:first").appendTo(this);
+        })
+    }
+    $(function(){
+        var num = $('.notice_active').find('li').length;
+        if(num > 1){
+            var time=setInterval('timer(".notice_active")',3000);
+            $('.gg_more a').mousemove(function(){
+                clearInterval(time);
+            }).mouseout(function(){
+                time = setInterval('timer(".notice_active")',3000);
+            });
+        }
+    });
+    $('.go_top').click(function(){
+        $(window).scrollTop(0);
+        $('.go_top').fadeOut()
+    })
+
+    // 提示
+    function tips(txt){
+        $('.tips').html(txt).fadeIn()
+        setTimeout(function(){$('.tips').fadeOut()},1500);
+    }
+
+    //砍价
+    function openSign(){
+        var kj_userinfo=JSON.parse(localStorage.getItem('bm_userinfo'))
+        if(!!kj_userinfo){
+            $($(".os_input").eq(0)).find('input').val(kj_userinfo.realname)
+            $($(".os_input").eq(1)).find('input').val(kj_userinfo.mobile)
+        }
+
+        $('.open_signup,.bg_fixed').fadeIn()
+    }
+
+    // 支付
+    $('.pay_btn').click(function(){
+        $.post(
+            "{php echo $this->createMobileUrl('order',['op'=>'create_order'])}",
+            {
+                'cut_id': "{$cut['id']}"
+            },
+            function (data) {
+                if (!!data.data.id) {
+                    var order_id=data.data.id;
+                    $.post(
+                        "{php echo $this->createMobileUrl('pay')}",
+                        {
+                            'order_id': data.data.id
+                        },
+                        function (data) {
+                            if (data.errno == 0) {
+                                console.log(data)
+                                WeixinJSBridge.invoke(
+                                    'getBrandWCPayRequest', {
+                                        "appId":data.data.appId,     //公众号名称，由商户传入
+                                        "timeStamp":data.data.timeStamp,         //时间戳，自1970年以来的秒数
+                                        "nonceStr":data.data.nonceStr, //随机串
+                                        "package":data.data.package,
+                                        "signType":data.data.signType,         //微信签名方式：
+                                        "paySign":data.data.paySign //微信签名
+                                    },
+                                    function(res){
+                                        if(res.err_msg == "get_brand_wcpay_request:ok"){
+
+                                        }else{
+                                            $.post(
+                                                "{php echo $this->createMobileUrl('order',['op'=>'cancel'])}",
+                                                {
+                                                    'order_id': order_id
+                                                },
+                                            )
+                                        }
+                                        setTimeout(function () {
+                                            location.reload();
+                                        },2000)
+                                    });
+                            } else {
+                                tips(data.message)
+                            }
+                        }, 'json'
+                    )
+                } else {
+                    tips(data.message);
+                }
+            }, 'json'
+        );
+    })
+    var regional=true;
+    function map_click(lng,lat){
+        $.post(
+            "{php echo $this->createMobileUrl('index',['op'=>'regional'])}",
+            {
+                'lng': lng,
+                'lat': lat,
+                'activity_id':"{$activity_id}"
+            },
+            function (data) {
+                if(data.errno==1){
+                    tips(data.message,3000);
+                    regional=false;
+                }else{
+                    regional=true;
+                }
+            }, 'json'
+        );
+    }
+</script>
+{template 'footer'}

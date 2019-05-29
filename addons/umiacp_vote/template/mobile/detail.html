@@ -1,0 +1,555 @@
+{template 'header'}
+<style>
+    .moneybox{width: 100%;height: 100%;}
+
+    #leafContainer {
+        /*position: absolute;*/
+        /*width: 100%;*/
+        /*height: 100%;*/
+        overflow: hidden;
+    }
+
+    #leafContainer > div {
+        position: fixed;
+        z-index: 10;
+        width: 25px;
+        /*height: 150px;*/
+        -webkit-animation-iteration-count: infinite, infinite;
+        -webkit-animation-direction: normal, normal;
+        -webkit-animation-timing-function: linear, ease-in;
+    }
+    #leafContainer > div > img {
+        position: absolute;
+        width: 25px;
+        -webkit-animation-iteration-count: infinite;
+        -webkit-animation-direction: alternate;
+        -webkit-animation-timing-function: ease-in-out;
+        -webkit-transform-origin: 50% -100%;
+    }
+    @-webkit-keyframes fade {
+        0% {
+            opacity: 1;
+        }
+        95% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0;
+        }
+    }
+    @-webkit-keyframes drop {
+        0% {
+            -webkit-transform: translate(0px, -50px);
+        }
+        100% {
+            -webkit-transform: translate(0px, 650px);
+        }
+    }
+    @-webkit-keyframes clockwiseSpin {
+        0% {
+            -webkit-transform: rotate(-50deg);
+        }
+        100% {
+            -webkit-transform: rotate(50deg);
+        }
+    }
+    @-webkit-keyframes counterclockwiseSpinAndFlip {
+        0% {
+            -webkit-transform: scale(-1, 1) rotate(50deg);
+        }
+        100% {
+            -webkit-transform: scale(-1, 1) rotate(-50deg);
+        }
+    }
+
+</style>
+<style>
+    .color_red{
+        color: #ED5F43
+    }
+    img{
+        width: 100%;
+    }
+    input[type=color], input[type=date], input[type=datetime-local], input[type=datetime], input[type=email], input[type=month], input[type=number], input[type=password], input[type=search], input[type=tel], input[type=text], input[type=time], input[type=url], input[type=week], select{
+        border: 1px solid transparent;
+        text-align: center;
+        margin: 0 2%;
+        height: 30px;
+        padding: 5px;
+        background: transparent;
+    }
+    .bg_fixed{
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 15;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        display: none;
+    }
+
+    .h_img{
+        width: 100%;
+    }
+    .ah_top{
+        background: rgba(0,0,0,0.7);
+        color: #aaa;
+        display: inline-flex;
+        padding: 0 6px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 5;
+    }
+    .ah_top span{
+        color: #fff;
+        font-weight: 700;
+    }
+    .a_head .iconfont{
+        position: absolute;
+        z-index: 5;
+        color: #fff;
+        font-size: 28px;
+        border-radius: 50%;
+        border: 1px solid #fff;
+        background: rgba(0,0,0,0.4);
+        left: 5%;
+        width: 35px;
+        height: 35px;
+        text-align: center;
+        line-height: 33px;
+    }
+    .icon-music{
+        top: 10%;
+    }
+    .icon-music.active,.icon-mofabang.active{
+        -webkit-animation: zhuan 2s linear infinite;
+    }
+    .ah_user,.ah_share{
+        top: 35%;
+        left: 5%;
+        width: 42px;
+        height: 42px;
+        background: #333;
+        color: #fff;
+        text-align: center;
+        padding: 6px;
+        line-height: 14px;
+        border-radius: 50%;
+    }
+    .ah_share{
+        left: inherit;
+        right: 5%;
+        top: 7%;
+        line-height: 30px;
+    }
+
+    .a_content{
+        padding: 4%;
+        box-sizing: border-box;
+        background: url("{$activity['bgimage']}") repeat 100%;
+        padding-bottom: 35%;
+    }
+    .ac_time>div{
+        width: 100%;
+        text-align: center;
+        left: 0;
+        top: 28%;
+    }
+    .ac_time span{
+        color: #111;
+        background: #ED5F43;
+        border-radius: 50%;
+        padding: 2px;
+        margin: 0 2px;
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        text-align: center;
+        line-height: 16px;
+    }
+
+    .notice_active ul{
+        padding: 0 6px;
+    }
+    .notice_active li{
+        list-style-type:none;line-height: 2.6rem;overflow: hidden;
+        text-align: center;
+    }
+
+
+    .gt_detail>div{
+        margin: 10px 0;
+    }
+    .g_title>div{
+        position: absolute;
+        top: 5px;
+        width: 100%;
+        text-align: center;
+        left: 0;
+    }
+
+    .acy_title input{
+        width: 78%;
+        top: 5px;
+        left: 8%;
+        position: absolute;
+        z-index: 5;
+    }
+
+    .acs_content .acsc_title,.acsc_list>div{
+        display: flex;
+        display: -webkit-flex;
+        justify-content: space-around;
+        justify-content: space-around;
+        align-items: center;
+        -webkit-align-items: center;
+    }
+    .acsc_list img{
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+    }
+    .acs_content span{
+        width: 25%;
+        text-align: center;
+        margin-top: 5px;
+    }
+
+    .open_share{
+        position: fixed;
+        top: 8%;
+        width: 60%;
+        left: 20%;
+        z-index: 20;
+        color: #fff;
+        display: none;
+    }
+    .os_btns img{
+        background: #fff;
+        border-radius: 50%;
+        padding: 8px;
+        width: 50px;
+    }
+    .osb_cancel{
+        position: fixed;
+        bottom: 5%;
+        padding: 2px;
+        border-bottom: 1px solid #fff;
+        left: 45%;
+    }
+
+
+    .swing{
+        -webkit-animation: kanjia 1.5s ease-in infinite;
+    }
+    .a_footer{
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        padding: 4%;
+        background: rgba(0,0,0,0.7);
+        z-index: 10;
+        width: 100%;
+        text-align: center;
+    }
+    .a_footer a{
+        font-size: 14px;
+        width: 28%;
+        padding: 1.5% 0;
+    }
+    .gdtp_bg>div{
+        background: #ED5F43;
+        border-radius: 20px;
+        height: 10px;
+    }
+    .gdtp_bg>span{
+        background: #fff;
+        width: 16px;
+        border-radius: 50%;
+        height: 16px;
+        border: 3px solid #ED5F43;
+        top: -3px;
+    }
+
+    @-webkit-keyframes zhuan {
+        0%{transform: rotate(0deg)}
+        100%{transform: rotate(360deg)}
+    }
+    @-webkit-keyframes zhuan2 {
+        0%{transform: rotate(0deg)}
+        45%{transform: rotate(-30deg)}
+        90%{transform: rotate(30deg)}
+        100%{transform: rotate(0deg)}
+    }
+    @-webkit-keyframes kanjia {
+        10%{
+            transform: rotate(-3deg) scale(0.9);
+        }
+        35%{
+            transform: rotate(3deg) scale(1.1);
+        }
+        45%{
+            transform: rotate(-3deg);
+        }
+        55%{
+            transform: rotate(3deg);
+        }
+        65%{
+            transform: rotate(-3deg);
+        }
+        90%{
+            transform: rotate(0) scale(1);
+        }
+    }
+
+    .acs_navbar>div{
+        padding: 2% 0;
+        border-bottom: 2px solid transparent;
+    }
+    .acs_navbar>div.active{
+        border-bottom: 2px solid #ED5F43;
+        color: #ED5F43;
+    }
+    .acysc_detail span{
+        background: #FD6E4A;
+        width: 25px;
+        text-align: center;
+        color: #fff;
+        margin: 10px;
+        display: block;
+        border-radius: 50%;
+        height: 25px;
+        line-height: 25px;
+    }
+
+    .ac_member{
+
+    }
+    .ac_member img{
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+    .ac_detail{
+        padding: 10px 0;
+        border-bottom: 1px solid #aaa;
+    }
+    .ac_detail .iconfont{
+        margin-right: 3px;
+    }
+</style>
+<div>
+    <div class="tips"></div>
+    <div class="moneybox" id="leafContainer"></div>
+
+    <!--头部-->
+    <div class="a_head p_relative">
+        <img class="h_img" src="{$activity['image']}" alt="">
+        <div class="flex flex_a_center ah_top">
+            <span>{$cut['pv']}</span>人浏览 <span class="aht_times"> {$cut['times']}</span>人投票 <span> {$cut['share']}</span>人转发
+        </div>
+
+        <i id="music" class="iconfont icon-music active"><audio id="audiojs" src="{$activity['music']}" autoplay loop></audio></i>
+        <div class="p_absolute ah_share" onclick="$('.open_share,.bg_fixed').fadeIn()">分享</div>
+        <a href="{php echo $this->createMobileUrl('index',['activity_id'=>$_GPC['activity_id']])}" class="p_absolute ah_user">返回首页</a>
+    </div>
+    <!--下部分，背景图片 background->repeat-->
+    <div class="a_content">
+        <div class="ac_member flex flex_a_center ac_detail">
+            <img src="{$cut['avatar']}" alt="">
+            <span>{$cut['realname']}</span>
+        </div>
+        {if $cut['userinfo']}
+        <div class="ac_detail flex flex_a_center">
+            <i class="iconfont icon-gerenzhongxin1"></i>
+            <div>{$cut['userinfo']}</div>
+        </div>
+        {/if}
+        <div class="ac_detail flex flex_a_center">
+            <i class="iconfont icon-xiangshang"></i>
+            <div>{$cut['id']}号—当前排名第{php echo count($ranking)+1}名</div>
+        </div>
+        <div class="ac_detail flex flex_a_center">
+            <i class="iconfont icon-quanping"></i>
+            <div>距前一名差{$ranking_prev}票，后一名差{$ranking_next}票</div>
+        </div>
+        <div>
+            {loop $cut['vote_imgs'] $vv}
+            <img style="width: 100%;margin-top: 3px" src="{$vv}" alt="">
+            {/loop}
+        </div>
+        <div class="ac_detail flex flex_a_center flex_wrap">
+            <i class="iconfont icon-tangniaobingleixing"></i>
+            <span style="margin-right: 15px">支持者：</span>
+            {loop $m_avatar $mv}
+            <img class="" style="margin-left:-8px;width: 40px;height: 40px;border-radius: 50%;" src="{$mv['avatar']}" alt="">
+            {/loop}
+        </div>
+    </div>
+    <div class="bg_fixed"></div>
+    <!--提交信息-->
+    {template 'signup'}
+    {template 'signup_voter'}
+    <!--分享-->
+    <div class="open_share">
+        <img src="{YOUMI_URL_APP}img/m_share.png" alt="">
+        <div class="text_center" style="margin-bottom: 10px">————分享方式————</div>
+        <div class="os_btns flex flex_a_center flex_j_around">
+            <div class="text_center" onclick="tips('点击右上角分享给微信好友')">
+                <img src="{YOUMI_URL_APP}img/m_weixin.png" alt="">
+                <div>微信好友</div>
+            </div>
+            <div class="text_center" onclick="hecheng();">
+                <img src="{YOUMI_URL_APP}img/m_pyq.png" alt="">
+                <div>朋友圈</div>
+            </div>
+            <div class="osb_cancel" onclick="$('.open_share,.bg_fixed').fadeOut()">取消</div>
+        </div>
+    </div>
+    <!--底部按钮-->
+    <div class="a_footer flex flex_j_between">
+        <a onclick="voting({$cut['id']})" class="a_btn swing" href="javascript:;">给Ta投票</a>
+        {if $activity['status2']==4}
+        <a onclick="openSign()" class="a_btn" href="javascript:;">我要报名</a>
+        {/if}
+        <a onclick="$('.open_share,.bg_fixed').fadeIn()" class="a_btn" href="javascript:;">帮Ta拉票</a>
+    </div>
+
+</div>
+{template 'canvas_share'}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        function audioAutoPlay() {
+            var audio = document.getElementById('audiojs');
+            audio.play();
+            document.addEventListener("WeixinJSBridgeReady", function () {
+                audio.play();
+            }, false);
+        }
+        audioAutoPlay();
+    });
+    if (/i(Phone|P(o|a)d)/.test(navigator.userAgent)) {
+        $(document).one('touchstart',
+            function(e) {
+                $('#audiojs').get(0).touchstart = true;
+                $('#audiojs').get(0).play();
+                return false;
+            }
+        );
+    }
+</script>
+<script>
+    var num = $('.notice_active').find('li').length;
+    if(num > 1){
+        var time=setInterval('timer(".notice_active")',3000);
+        $('.gg_more a').mousemove(function(){
+            clearInterval(time);
+        }).mouseout(function(){
+            time = setInterval('timer(".notice_active")',3000);
+        });
+    }
+
+    var container2 = $('#pageCon ul');
+    container2.imagesLoaded(function(){
+        container2.masonry({
+            itemSelector: '.picCon'
+        });
+    });
+</script>
+<script>
+
+    var audio=document.getElementsByTagName('audio')[0];
+    $('.icon-music').click(function () {
+        if(audio.paused){
+            audio.play();
+            $(this).addClass('active')
+        }else{
+            audio.pause();
+            $(this).removeClass('active')
+        }
+    })
+    $('.icon-mofabang').click(function(){
+        if($(this).hasClass('active')){
+            $(this).removeClass('active')
+            $('#leafContainer').hide()
+        }else{
+            $(this).addClass('active')
+            $('#leafContainer').show()
+        }
+    })
+
+
+
+    // 提示
+    function tips(txt){
+        $('.tips').html(txt).fadeIn()
+        setTimeout(function(){$('.tips').fadeOut()},1500);
+    }
+    var isvoter="{$isvoter}"||false;
+    function voting(id){
+        if ({$activity['voter_information']} == 2&&!isvoter) {
+            openSign2(id, self);
+        }else {
+            $.post(
+                "{php echo $this->createMobileUrl('index',['op'=>'voting'])}",
+                {
+                    'id': id,
+                    'activity_id': "{$_GPC['activity_id']}"
+                },
+                function (data) {
+                    tips(data.message);
+                    if (data.errno == 0) {
+                        $('.aht_times').html($('.aht_times').html() - 0 + 1)
+                    }
+                }, 'json'
+            )
+        }
+    }
+
+    //报名
+    function openSign(){
+        var kj_userinfo=JSON.parse(localStorage.getItem('bm_userinfo'))
+        if(!!kj_userinfo){
+            $($(".os_input").eq(0)).find('input').val(kj_userinfo.realname)
+            $($(".os_input").eq(1)).find('input').val(kj_userinfo.mobile)
+        }
+
+        $('.open_signup,.bg_fixed').fadeIn()
+    }
+    function openSign2(id){
+        var kj_userinfo=JSON.parse(localStorage.getItem('bm_userinfo'))
+        if(!!kj_userinfo){
+            $($(".os_input2").eq(0)).find('input').val(kj_userinfo.realname)
+            $($(".os_input2").eq(1)).find('input').val(kj_userinfo.mobile)
+        }
+        $('.open_signup2,.bg_fixed').fadeIn();
+        $('.open_signup2').attr('data_cutid',id);
+    }
+    var regional=true;
+    function map_click(lng,lat){
+        $.post(
+            "{php echo $this->createMobileUrl('index',['op'=>'regional'])}",
+            {
+                'lng': lng,
+                'lat': lat,
+                'activity_id':"{$activity_id}"
+            },
+            function (data) {
+                if(data.errno==1){
+                    tips(data.message,3000);
+                    regional=false;
+                }else{
+                    regional=true;
+                }
+            }, 'json'
+        );
+    }
+    console.log('$activity',{php echo json_encode($activity)})
+    console.log('$cut',{php echo json_encode($cut)})
+    console.log('$_share',{php echo json_encode($_share)})
+</script>
+
+{template 'footer'}

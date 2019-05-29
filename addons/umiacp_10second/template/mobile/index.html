@@ -1,0 +1,363 @@
+{template 'header'}
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'/>
+<link rel="stylesheet" href="{YOUMI_URL_APP}css/swiper.min.css">
+<link rel="stylesheet" href="{YOUMI_URL_APP}css/animate.min.css">
+<script src="{YOUMI_URL_APP}js/swiper.min.js"></script>
+<script src="{YOUMI_URL_APP}js/swiper.animate.min.js"></script>
+
+<style>
+    *{
+        margin:0;
+        padding:0;
+    }
+    html,body{
+        height:100%;
+    }
+    body{
+        font-family:"microsoft yahei";
+    }
+    .swiper-container {
+        /*  width: 320px;
+          height: 480px;*/
+        width: 100%;
+        height: 100%;
+        background:#000;
+
+
+    }
+
+    .swiper-slide{
+        width:100%;
+        height:100%;
+        /*background:url({YOUMI_URL_APP}images/bg.jpg) no-repeat left top;*/
+        background-size:100% 100%;
+
+    }
+    .swiper-slide1{
+        {if !empty($activity['bgimage'])}
+        background:url("{$activity['bgimage']}") no-repeat left top;
+        {else}
+        background:url("{YOUMI_URL_APP}images/1_bg.png") no-repeat left top;
+        {/if}
+        background-size: 100% 100%;
+    }
+    .swiper-slide2{
+        {if !empty($activity['bgimage2'])}
+        background:url("{$activity['bgimage2']}") no-repeat left top;
+        {else}
+        background:url("{YOUMI_URL_APP}images/2_bg_1.png") no-repeat left top;
+        {/if}
+        background-size: 100% 100%;
+    }
+    img{
+        display:block;
+    }
+    .swiper-pagination-bullet {
+        width: 6px;
+        height: 6px;
+        background: #fff;
+        opacity: .4;
+    }
+    .swiper-pagination-bullet-active {
+        opacity: 1;
+    }
+    @-webkit-keyframes start {
+        0%,30% {opacity: 0;-webkit-transform: translate(0,10px);}
+        60% {opacity: 1;-webkit-transform: translate(0,0);}
+        100% {opacity: 0;-webkit-transform: translate(0,-8px);}
+    }
+    @-moz-keyframes start {
+        0%,30% {opacity: 0;-moz-transform: translate(0,10px);}
+        60% {opacity: 1;-moz-transform: translate(0,0);}
+        100% {opacity: 0;-moz-transform: translate(0,-8px);}
+    }
+    @keyframes start {
+        0%,30% {opacity: 0;transform: translate(0,10px);}
+        60% {opacity: 1;transform: translate(0,0);}
+        100% {opacity: 0;transform: translate(0,-8px);}
+    }
+    @keyframes tm1 {
+        0% {transform: translateX(180%);}
+        100% {transform: translateX(-130%);}
+    }
+    @keyframes tm2 {
+        0% {transform: translateX(160%);}
+        100% {transform: translateX(-130%);}
+    }
+    .ani{
+        position:absolute;
+    }
+    .txt{
+        position:absolute;
+    }
+    #array{
+        position:absolute;z-index:999;-webkit-animation: start 1.5s infinite ease-in-out;
+        width: 8%;
+        bottom: 1%;
+        right:0;
+    }
+
+    /*音乐*/
+
+    @-webkit-keyframes change {
+        from {
+            transform: rotate(0deg)
+        }
+        to {
+            transform: rotate(360deg)
+        }
+    }
+    @-webkit-keyframes point {
+        from {
+            opacity: 0.2
+        }
+        to {
+            opacity: 1
+        }
+    }
+    .music{
+        position: fixed;
+        right: 20px;
+        top: 10%;
+        border:1px solid #fff;
+        z-index: 999999;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: url({YOUMI_URL_APP}images/aaa.png) no-repeat;
+        background-size: cover;
+        cursor: pointer;
+    }
+    .muc{
+        background: url({YOUMI_URL_APP}images/aaa.gif) no-repeat;
+        background-size: cover;
+        animation: change 1s linear 0s infinite;
+        -moz-animation: change 1s linear 0s infinite;
+        -webkit-animation: change 1s linear 0s infinite;
+        -o-animation: change 1s linear 0s infinite;
+    }
+    .tips{
+        width: 30%;
+        position: fixed;
+        top: 30%;
+        left: 35%;
+        padding: 10px;
+        background: #aaa;
+        color: #fff;
+        z-index: 999;
+        text-align: center;
+        border-radius: 10px;
+        display: none;
+    }
+    .text-center.footer{
+        display: none;
+    }
+    .logo{
+        width:100%;
+        left:0;
+        top:0;
+        z-index:3;
+    }
+    .title1{
+        width: 20%;
+        left: 20%;
+        top: 19%;
+        z-index: 3;
+    }
+    .title2{
+        width: 64%;
+        left: 18%;
+        top: 62%;
+        z-index: 3;
+    }
+    .title3{
+        width: 90%;
+        left: 5%;
+        bottom: 2%;
+        z-index: 3;
+    }
+    .btn2{
+        width: 68%;
+        left: 16%;
+        top: 82%;
+        z-index: 5;
+    }
+    .point{
+        width: 12%;
+        left: 60%;
+        top: 87%;
+        z-index: 3;
+        animation: point 0.5s linear 0.5s infinite;
+        -moz-animation: point 0.5s linear 0.5s infinite;
+        -webkit-animation: point 0.5s linear 0.5s infinite;
+        -o-animation: point 0.5s linear 0.5s infinite;
+    }
+    .zhong{
+        width: 60%;
+        left: 20%;
+    }
+
+    .fb_tip{
+        position: absolute;
+        left: 5%;
+        bottom: 1%;
+        width: 90%;
+    }
+    .fb_tip a{
+        font-size: 16px;
+    }
+</style>
+</head>
+
+<body>
+<div class="swiper-container">
+    <div id="music" class="music muc">
+        <audio id="audiojs" src="{$activity['music']}" autoplay loop></audio>
+    </div>
+    <div class="swiper-wrapper">
+        <!-------------slide1----------------->
+        <section class="swiper-slide swiper-slide1">
+            {if !empty($activity['logo'])}
+            <img src="{$activity['logo']}" class="ani resize logo" swiper-animate-effect="zoomIn" swiper-animate-duration="1s" swiper-animate-delay="0.5s"  >
+            {/if}
+            {if !empty($activity['titleimg'])}
+            <img src="{$activity['titleimg']}" class="ani resize title1" swiper-animate-effect="zoomIn" swiper-animate-duration="1s" swiper-animate-delay="1s"  >
+            {else}
+            <img src="{YOUMI_URL_APP}images/2_title1.png" class="ani resize title1" swiper-animate-effect="zoomIn" swiper-animate-duration="1s" swiper-animate-delay="1s"  >
+            {/if}
+            <img src="{YOUMI_URL_APP}images/1_arrow.png" id="array" class="resize">
+
+            {if $setting_activity&&$setting_activity['making_status2']==1}
+            <div style="position: absolute;bottom: 8%;margin: auto;text-align: center;width: 100%;">
+                <a href="{$_W['siteroot']}index.php?c=entry&i={$_W['uniacid']}&do=making&case_id={$activity_umi['case_id']}&m=umi_activitys&module={$_W['current_module']['name']}" style="color: #fff;border: 1px solid #fff;padding: 6px 16px;border-radius: 5px;text-decoration: none;">
+                    <span>我也要创建活动</span>
+                    <i class="iconfont icon-jiantou1" style="font-size: 12px"></i>
+                </a>
+            </div>
+            {/if}
+            {if $setting_activity&&$setting_activity['making_status']==1}
+            <div class="fb_tip flex flex_j_around flex_a_center ft16">
+                <div class="color_fff">{$setting_activity['copyright']}</div>
+                <a href="{$setting_activity['copyright_url']}">{if $setting_activity['copyright_buy']}{$setting_activity['copyright_buy']}{else}去购买{/if}</a>
+            </div>
+            {/if}
+        </section>
+        <!---------------slide2-------------->
+        <section class="swiper-slide swiper-slide2">
+            {if !empty($activity['title2'])}
+            <img src="{$activity['title2']}" class="ani resize zhong" swiper-animate-effect="zoomIn" swiper-animate-duration="1s" swiper-animate-delay="0" >
+            {/if}
+            {if !empty($activity['desc2'])}
+            <img src="{$activity['desc2']}" class="ani resize title2" swiper-animate-effect="zoomIn" swiper-animate-duration="1s" swiper-animate-delay="0.5s" >
+            {/if}
+            <img onclick="goGame()" src="{YOUMI_URL_APP}images/2_btn.png" class="ani resize btn2" swiper-animate-effect="zoomIn" swiper-animate-duration="1s" swiper-animate-delay="1s"  >
+            <img src="{YOUMI_URL_APP}images/2_point.png" class="ani resize point" swiper-animate-effect="zoomIn" swiper-animate-duration="1s" swiper-animate-delay="1s" >
+        </section>
+    </div>
+
+    <div class="swiper-pagination" style="display: none"></div>
+    <div class="tips"></div>
+</div>
+
+<script>
+
+    scaleW=window.innerWidth/320;
+    scaleH=window.innerHeight/480;
+    var resizes = document.querySelectorAll('.resize');
+
+    var mySwiper = new Swiper ('.swiper-container', {
+        direction : 'vertical',
+        pagination: '.swiper-pagination',
+        //virtualTranslate : true,
+        mousewheelControl : true,
+        onInit: function(swiper){
+            swiperAnimateCache(swiper);
+            swiperAnimate(swiper);
+        },
+        onSlideChangeEnd: function(swiper){
+            swiperAnimate(swiper);
+        },
+        onTransitionEnd: function(swiper){
+            swiperAnimate(swiper);
+        },
+
+
+        watchSlidesProgress: true,
+
+        onProgress: function(swiper){
+            for (var i = 0; i < swiper.slides.length; i++){
+                var slide = swiper.slides[i];
+                var progress = slide.progress;
+                var translate = progress*swiper.height/4;
+                scale = 1 - Math.min(Math.abs(progress * 0.5), 1);
+                var opacity = 1 - Math.min(Math.abs(progress/2),0.5);
+                slide.style.opacity = opacity;
+                es = slide.style;
+                es.webkitTransform = es.MsTransform = es.msTransform = es.MozTransform = es.OTransform = es.transform = 'translate3d(0,'+translate+'px,-'+translate+'px) scaleY(' + scale + ')';
+            }
+        },
+
+        onSetTransition: function(swiper, speed) {
+            for (var i = 0; i < swiper.slides.length; i++){
+                es = swiper.slides[i].style;
+                es.webkitTransitionDuration = es.MsTransitionDuration = es.msTransitionDuration = es.MozTransitionDuration = es.OTransitionDuration = es.transitionDuration = speed + 'ms';
+            }
+        },
+    })
+
+    document.addEventListener('DOUMIontentLoaded', function () {
+        function audioAutoPlay() {
+            var audio = document.getElementById('audiojs');
+            audio.play();
+            document.addEventListener("WeixinJSBridgeReady", function () {
+                audio.play();
+            }, false);
+        }
+        audioAutoPlay();
+    });
+    if (/i(Phone|P(o|a)d)/.test(navigator.userAgent)) {
+        $(document).one('touchstart',
+            function(e) {
+                $('#audiojs').get(0).touchstart = true;
+                $('#audiojs').get(0).play();
+                return false;
+            });
+    }
+    var audio = document.getElementById('audiojs');
+    $('#music').click(function(){
+        if(audio.paused){
+            audio.play();
+            $(this).attr('class','music muc')
+        }else{
+            audio.pause();
+            $(this).attr('class','music')
+        }
+    });
+    function goGame(){
+        location.href="{php echo $this->createMobileUrl('index',['op'=>'game','activity_id'=>$_GPC['activity_id']])}"
+    }
+    var regional=true;
+    function map_click(lng,lat){
+        $.post(
+            "{php echo $this->createMobileUrl('index',['op'=>'regional'])}",
+            {
+                'lng': lng,
+                'lat': lat,
+                'activity_id':"{$activity_id}"
+            },
+            function (data) {
+                if(data.errno==1){
+                    tips(data.message,3000);
+                    regional=false;
+                }else{
+                    regional=true;
+                }
+            }, 'json'
+        );
+    }
+
+    console.log('$activity',{php echo json_encode($activity)})
+    console.log('$activity_umi',{php echo json_encode($activity_umi)})
+
+</script>
+{template 'footer'}

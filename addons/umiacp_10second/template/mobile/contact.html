@@ -1,0 +1,54 @@
+<style>
+    .open_contact{
+        position: fixed;
+        border: 1px solid #aaaaaa;
+        border-radius: 10px;
+        top: 15%;
+        background: #fff;
+        color: #111;
+        padding: 5%;
+        width: 80%;
+        left: 10%;
+        z-index: 20;
+        display: none;
+    }
+    .open_contact .icon-Close{
+        position: absolute;
+        left: 44%;
+        bottom: -30%;
+        z-index: 20;
+        font-size: 40px;
+        color: #fff;
+    }
+    .open_contact h3{
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .open_contact div{
+        margin-bottom: 10px;
+    }
+</style>
+<div class="open_contact">
+    <div>
+        <h3>联系商家</h3>
+        <div class="oc_name">
+            <i class="iconfont icon-man"></i>
+            <span></span>
+        </div>
+        <div class="oc_mobile">
+            <i class="iconfont icon-dianhua"></i>
+            <a href=""></a>
+        </div>
+    </div>
+    <i class="iconfont icon-Close" onclick="$('.open_contact,.bg_fixed').fadeOut()"></i>
+</div>
+<script>
+    function openConcat(self){
+        $('.oc_name span').html($(self).attr('data-name'))
+        $('.oc_mobile a').html($(self).attr('data-mobile')).attr('href','tel:'+$(self).attr('data-mobile'))
+
+        $('.open_contact,.bg_fixed').fadeIn()
+    }
+
+    console.log({php echo json_encode($banner)})
+</script>

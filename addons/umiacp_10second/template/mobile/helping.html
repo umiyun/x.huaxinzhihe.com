@@ -1,0 +1,149 @@
+{template 'common/header'}
+<link rel="stylesheet" href="{YOUMI_URL_APP}css/animate.min.css" />
+<style>
+    .text-center.footer{
+        display: none;
+    }
+    body img{
+        position: absolute;
+        z-index: 5;
+        width: 100%;
+        left: 0;
+    }
+    .bg{
+        top: 0;
+        z-index: 2;
+        height: 100%;
+    }
+    .logo{
+        top: 0;
+        left: 0;
+        width: 100%;
+    }
+    .title3{
+        bottom: 1%;
+        animation-delay: 1s;
+        width: 90%;
+        left: 5%;
+    }
+    .btn2{
+        top: 77%;
+        width: 40%;
+        left: 30%;
+        animation-delay: 0.5s;
+    }
+    #tips{
+        width: 40%;
+        position: fixed;
+        top: 15%;
+        left: 30%;
+        padding: 10px 0;
+        background: #aaa;
+        color: #fff;
+        z-index: 999;
+        text-align: center;
+        border-radius: 10px;
+        display: none;
+    }
+    @-webkit-keyframes change {
+        from {
+            opacity: 1
+        }
+        to {
+            opacity: 0.5
+        }
+    }
+    .music{
+        position: fixed;
+        right: 20px;
+        top: 8%;
+        border:1px solid #fff;
+        z-index: 999999;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: url({YOUMI_URL_APP}images/aaa.png) no-repeat;
+        background-size: cover;
+        cursor: pointer;
+    }
+    .muc{
+        background: url({YOUMI_URL_APP}images/aaa.gif) no-repeat;
+        background-size: cover;
+        animation: change1 1s linear 0s infinite;
+        -moz-animation: change1 1s linear 0s infinite;
+        -webkit-animation: change1 1s linear 0s infinite;
+        -o-animation: change1 1s linear 0s infinite;
+    }
+    @-webkit-keyframes change1 {
+        from {
+            transform: rotate(0deg)
+        }
+        to {
+            transform: rotate(360deg)
+        }
+    }
+</style>
+<div id="tips"></div>
+<div id="music" class="music muc">
+    <audio id="audiojs" src="{$activity['music']}" autoplay loop></audio>
+</div>
+<img class="bg animated fadeIn" src="{$activity['bgimage_share']}" alt="">
+
+<img class="logo animated fadeIn" src="{$activity['logo']}" alt="">
+<!--<img class="title3 animated fadeIn" src="{YOUMI_URL_APP}images/1_title2.png" alt="">-->
+<img class="btn2 animated fadeIn goIndex" src="{YOUMI_URL_APP}images/h_btn_1.png" alt="">
+<script>
+    function tips(txt){
+        $('#tips').html(txt).slideDown();
+        setTimeout(function(){$('#tips').fadeOut()},2500);
+    }
+
+    $.ajax({
+        url: "{php echo $this->createMobileUrl('index',['op'=>'boost','activity_id'=>$_GPC['activity_id']])}",
+        type: "POST",
+        dataType: "json",
+        data: {'fopenid': "{$_GPC['fopenid']}",'part': "{$_GPC['part']}"},
+        async: false,
+        success: function (data) {
+            tips(data.message);
+        },
+        error: function () {
+            tips("系统繁忙，请稍后再试");
+        }
+    });
+
+    $('.goIndex').click(function(){
+        location.href="{php echo $this->createMobileUrl('index',['activity_id'=>$_GPC['activity_id']])}";
+    })
+
+    document.addEventListener('DOMContentLoaded', function () {
+        function audioAutoPlay() {
+            var audio = document.getElementById('audiojs');
+            audio.play();
+            document.addEventListener("WeixinJSBridgeReady", function () {
+                audio.play();
+            }, false);
+        }
+        audioAutoPlay();
+    });
+    if (/i(Phone|P(o|a)d)/.test(navigator.userAgent)) {
+        $(document).one('touchstart',
+            function(e) {
+                $('#audiojs').get(0).touchstart = true;
+                $('#audiojs').get(0).play();
+                return false;
+            });
+    }
+    var audio = document.getElementById('audiojs');
+    $('#music').click(function(){
+        if(audio.paused){
+            audio.play();
+            $(this).attr('class','music muc')
+        }else{
+            audio.pause();
+            $(this).attr('class','music')
+        }
+    });
+    console.log({php echo json_encode($activity)})
+</script>
+{template 'common/footer'}

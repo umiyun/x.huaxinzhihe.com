@@ -1,0 +1,210 @@
+{template 'common/header'}
+<ul class="nav nav-tabs">
+    <li data-class="#base" class="active">
+        <a href="javascript:;">基本设置</a>
+    </li>
+    <li data-class="#share">
+        <a href="javascript:;">分享设置</a>
+    </li>
+    <li data-class="#sms" style="display:none;">
+        <a href="javascript:;">短信设置</a>
+    </li>
+    <li data-class="#wxapp" style="display:none;">
+        <a href="javascript:;">小程序参数设置</a>
+    </li>
+</ul>
+<div class="panel panel-default">
+    <form class="form-horizontal" role="form" method="post" action="" name="submit">
+        <div id="base" class="panel-body base">
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">系统标题</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="set[base][title]" value="{$setting['title']}">
+                </div>
+            </div>
+
+            <!--<div class="form-group" style="display:none;">-->
+                <!--<label class="col-sm-2 control-label">参与人数</label>-->
+                <!--<div class="col-sm-8">-->
+                    <!--<input type="number" class="form-control" name="set[base][popularity]" value="{$setting['popularity']}">-->
+                    <!--<div class="help-block">显示参与人数=此设置人数+实际参与人数</div>-->
+                <!--</div>-->
+            <!--</div>-->
+
+            <!--<div class="form-group">-->
+                <!--<label class="col-sm-2 control-label">浏览量</label>-->
+                <!--<div class="col-sm-8">-->
+                    <!--<input type="number" disabled class="form-control" name="" value="{$num}">-->
+                <!--</div>-->
+            <!--</div>-->
+            <div class="form-group">
+                <label class="col-sm-2 control-label">炮灰域名</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="set[base][cannon_fodder]" value="{$setting['cannon_fodder']}">
+                    <div class="help-block">此域名为转发到朋友圈的域名，做粉丝点击跳转到炮灰域名用， <span style="color:red">需增加http://或者https://,结尾需加"/"</span> </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">中奖通知模板id</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="set[base][prize_temp_id]" value="{$setting['prize_temp_id']}">
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">apiclient_cert</label>
+                <div class="col-sm-8">
+                    <textarea type="text" name="apiclient_cert" rows="8" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">apiclient_key</label>
+                <div class="col-sm-8">
+                    <textarea type="text" name="apiclient_key" rows="8" class="form-control"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div id="share" style="display: none" class="panel-body share">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">分享标题</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="set[share][share_title]" value="{$setting['share_title']}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">分享描述</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="set[share][share_desc]" value="{$setting['share_desc']}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">分享图片</label>
+                <div class="col-sm-8">
+                    {php echo tpl_form_field_image('set[share][share_image]',$setting['share_image']);}
+                </div>
+            </div>
+        </div>
+
+        <div id="sms" style="display: none" class="panel-body sms">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">短信类型</label>
+                <div class="col-sm-9 col-xs-12">
+                    <label class='radio-inline'>
+                        <input type='radio' name='set[sms][sms_type]' value='1' onclick="$('#sms1').show();$('#sms2').hide();" {if $setting['sms_type'] == 1 || intval($setting['sms_type']) == 0}checked{/if} /> 聚合
+                    </label>
+                    <label class='radio-inline'>
+                        <input type='radio' name='set[sms][sms_type]' value='2' onclick="$('#sms2').show();$('#sms1').hide();" {if $setting['sms_type'] == 2}checked{/if} /> 阿里大鱼
+                    </label>
+                </div>
+            </div>
+
+            <div id="sms1" {if $setting['sms_type'] == 2}style="display:none;"{/if}>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">聚合短信模板id</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" name="set[sms][juhe_tpl_id]" value="{$setting['juhe_tpl_id']}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">聚合短信AppKey</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" name="set[sms][juhe_appkey]" value="{$setting['juhe_appkey']}">
+                    </div>
+                </div>
+            </div>
+
+            <div id="sms2" {if $setting['sms_type'] == 1 || intval($setting['sms_type']) == 0}style="display:none;"{/if}>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">阿里AccessKey ID</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" name="set[sms][ali_accesskey_id]" value="{$setting['ali_accesskey_id']}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">阿里Access Key Secret</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" name="set[sms][ali_accesskey_secret]" value="{$setting['ali_accesskey_secret']}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">阿里短信模版CODE</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" name="set[sms][ali_code]" value="{$setting['ali_code']}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">阿里短信签名</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" name="set[sms][ali_sign]" value="{$setting['ali_sign']}">
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div id="wxapp" style="display: none" class="panel-body wxapp">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">身份标识<br>(appId)</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="set[wxapp][wxapp_appid]" value="{$setting['wxapp_appid']}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">身份密钥<br>(appSecret)</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="set[wxapp][wxapp_secret]" value="{$setting['wxapp_secret']}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">微信支付商户号</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="set[wxapp][wxapp_mchid]" value="{$setting['wxapp_mchid']}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">微信支付秘钥</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="set[wxapp][wxapp_signkey]" value="{$setting['wxapp_signkey']}">
+                </div>
+                <span class="help-block">
+                    财付通商户权限密钥
+                </span>
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-8">
+                <input type="submit" name="submit" value="提交" class="btn btn-info col-lg-1"/>
+                <input type="hidden" name="token" value="{$_W['token']}"/>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    $('ul.nav').on('click', 'li', function () {
+        if ($(this).hasClass('active')) {
+            return false;
+        }
+        $('.nav li').removeClass('active');
+        $(this).addClass('active');
+        $('form>.panel-body').hide();
+        $($(this).data('class')).show();
+    })
+</script>
+
+{template 'common/footer'}
+

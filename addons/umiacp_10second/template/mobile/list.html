@@ -1,0 +1,407 @@
+{template 'header'}
+<link rel="stylesheet" href="{YOUMI_URL_APP}css/animate.min.css">
+<style>
+    .text-center.footer{
+        display: none;
+    }
+    .bg{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 1;
+    }
+    .bg1{
+        position: absolute;
+        width: 100%;
+        top: 0;
+        left: 0;
+        z-index: 1;
+    }
+    .bg2{
+        position: absolute;
+        width: 100%;
+        height: 60%;
+        top: 50%;
+        left: 0;
+        z-index: 1;
+    }
+    .title1{
+        position: absolute;
+        z-index: 2;
+        width: 40%;
+        top: 5%;
+        left: 30%;
+    }
+    .a_ranking1,.a_ranking2,.a_ranking3{
+        position: absolute;
+        z-index: 2;
+        width: 20%;
+        top: 18%;
+        left: 40%;
+    }
+    .a_ranking2{
+        left: 14%;
+        width: 17%;
+        top: 25%;
+    }
+    .a_ranking3{
+        left: 68%;
+        width: 17%;
+        top: 26%;
+    }
+    .a_ranking1 .top,.a_ranking2 .top,.a_ranking3 .top{
+        position: absolute;
+        width: 50%;
+        top: -20%;
+        left: 28%;
+    }
+    .a_ranking1 span,.a_ranking2 span,.a_ranking3 span{
+        height: 23px;
+        width: 23px;
+        display: block;
+        position: absolute;
+        background: #a2fcff;
+        text-align: center;
+        line-height: 23px;
+        border-radius: 50%;
+        left: 36%;
+        top: 77%;
+        z-index: 5;
+        color: #24519b;
+    }
+    .a_ranking2 span{
+        background: #fff;
+    }
+    .a_ranking3 span{
+        background: #faa333;
+        color: #fff;
+    }
+    .avatar1,.avatar2,.avatar3{
+        width: 100%;
+        border-radius: 50%;
+        border: 2px solid #a2fcff;
+        position: relative;
+        z-index: 1;
+    }
+    .avatar2{
+        border: 2px solid #fff;
+    }
+    .avatar3{
+        border: 2px solid #faa333;
+    }
+    .n_ranking1,.n_ranking2,.n_ranking3{
+        position: absolute;
+        z-index: 5;
+        color: #fff;
+        left: 9%;
+        top: 44%;
+        font-size: 0.5rem;
+        line-height: 0.9rem;
+        text-align: center;
+        width: 23%;
+    }
+    .n_ranking1{
+        left: 39%;
+        top: 39%;
+    }
+    .n_ranking3{
+        left: 68%;
+        top: 44%;
+    }
+
+    .list{
+        position: absolute;
+        z-index: 5;
+        top: 52%;
+        width: 80%;
+        left: 10%;
+        height: 34%;
+        overflow-y: auto;
+    }
+    .detail{
+        display: flex;
+        align-items: center;
+        color: #fff;
+        /*border-bottom: 1px solid #c2cbd9;*/
+        font-size: 12px;
+    }
+    .detail img{
+        width: 10%;
+        border-radius: 50%;
+        margin: 1% 4%;
+    }
+    .list_allnum{
+        position: absolute;
+        z-index: 5;
+        font-size: 10px;
+        color: #fff;
+        top: 86%;
+        right: 10%;
+    }
+    .list_btn{
+        position: absolute;
+        z-index: 5;
+        color: #fff;
+        top: 88%;
+        left: 32%;
+        width: 35%;
+    }
+    .music{
+        position: fixed;
+        right: 10%;
+        top: 5%;
+        border:1px solid #fff;
+        z-index: 999999;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: url({YOUMI_URL_APP}images/aaa.png) no-repeat;
+        background-size: cover;
+        cursor: pointer;
+    }
+    .muc{
+        background: url({YOUMI_URL_APP}images/aaa.gif) no-repeat;
+        background-size: cover;
+        animation: change1 1s linear 0s infinite;
+        -moz-animation: change1 1s linear 0s infinite;
+        -webkit-animation: change1 1s linear 0s infinite;
+        -o-animation: change1 1s linear 0s infinite;
+    }
+    @-webkit-keyframes change1 {
+        from {
+            transform: rotate(0deg)
+        }
+        to {
+            transform: rotate(360deg)
+        }
+    }
+
+
+    .c_results{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 20;
+        {if !empty($activity['bgimage_my'])}
+        background: url("{$activity['bgimage_my']}");
+        {else}
+        background: url("{YOUMI_URL_APP}images/3_bgr.png");
+        {/if}
+        background-size: 100% 100%;
+        text-align: center;
+        display: none;
+    }
+    .c_results>div{
+        background: rgba(62,132,181,0.25);
+        border-radius: 10px;
+        padding: 4%;
+        position: relative;
+        width: 80%;
+        margin-left: 10%;
+        margin-top: 0;
+        box-sizing: border-box;
+    }
+    .title3{
+        width: 80%;
+        margin-top: 5%;
+    }
+    p{
+        color: #fff;
+        margin-bottom: 3px;
+        font-size: 12px;
+        margin-top: 0;
+    }
+    .abg{
+        width: 45%;
+        background: url("{YOUMI_URL_APP}images/a_bg.png");
+        background-size: 100% 100%;
+    }
+    .avatar{
+        position: absolute;
+        top: 9%;
+        left: 38%;
+        width: 24%;
+        border-radius: 50%;
+        border: 2px solid #fff;
+    }
+    .goonbtn,.shareqbtn{
+        width: 50%;
+        margin-top: 2%;
+    }
+    .title4{
+        width: 80%;
+        margin: -2% 0;
+    }
+    .sharefbtn,.listbtn{
+        width: 35%;
+    }
+   .sharef_bg,.shareq_bg{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 25;
+        background: rgba(0,0,0,0.65);
+        display: none;
+    }
+    .sharef,.shareq{
+        position: absolute;
+        width: 15%;
+        right: 0;
+        z-index: 30;
+        display: none;
+    }
+</style>
+<div id="music" class="music muc">
+    <audio id="audiojs" src="{$activity['music']}" autoplay loop></audio>
+</div>
+{if !empty($activity['bgimage4'])}
+<img class="bg" src="{$activity['bgimage4']}" alt="">
+{else}
+<img class="bg" src="{YOUMI_URL_APP}images/5_bg_1.png" alt="">
+{/if}
+<img class="title1" src="{YOUMI_URL_APP}images/5_title1.png" alt="">
+{if $list[0]}
+<div class="a_ranking1">
+    <img class="avatar1" src="{$list[0]['avatar']}" alt="">
+    <img class="top" src="{YOUMI_URL_APP}images/5_ranking_top.png" alt="">
+    <span>1</span>
+</div>
+<div class="n_ranking1">
+    <div>{$list[0]['nickname']}</div>
+    <div>{$list[0]['good']}s</div>
+</div>
+{/if}
+{if $list[1]}
+<div class="a_ranking2">
+    <img class="avatar2" src="{$list[1]['avatar']}" alt="">
+    <span>2</span>
+</div>
+<div class="n_ranking2">
+    <div>{$list[1]['nickname']}</div>
+    <div>{$list[1]['good']}s</div>
+</div>
+{/if}
+{if $list[2]}
+<div class="a_ranking3">
+    <img class="avatar3" src="{$list[2]['avatar']}" alt="">
+    <span>3</span>
+</div>
+<div class="n_ranking3">
+    <div>{$list[2]['nickname']}</div>
+    <div>{$list[2]['good']}s</div>
+</div>
+{/if}
+
+{if $list[3]}
+<div class="list">
+    {loop $list $idx $lv}
+    {if $idx>2&&$idx<8}
+    <div class="detail">
+        <span>{php echo $idx+1}</span>
+        <img src="{$lv['avatar']}" alt="">
+        <span style="width: 20%">{$lv['nickname']}</span>
+        <span style="width: 25%">{$lv['good']}s</span>
+        <span>{$lv['reward_name']}</span>
+    </div>
+    <div style="height: 1px;background: rgba(255,255,255,0.2)"></div>
+    {/if}
+    {/loop}
+</div>
+{/if}
+
+<div class="list_allnum">·当前挑战人数:{$count}人</div>
+<img class="list_btn" src="{YOUMI_URL_APP}images/5_btn.png" alt="">
+
+<!--查看排名-->
+<div class="c_results">
+    <img class="title3" src="{YOUMI_URL_APP}images/3_title3.png" alt="">
+    <div>
+        <img class="abg" src="{YOUMI_URL_APP}images/a_bg.png" alt="">
+        <img class="avatar" src="{$_W['fans']['avatar']}" alt="">
+        <p style="font-size: 18px;margin-bottom: 2%">{$_W['fans']['nickname']}</p>
+        <p>获得的称号</p>
+        <p style="margin: -2%;"><img style="max-height: 40px;" class="r_honor" src="" alt=""></p>
+        <p>击败了全国<span class="r_r1"></span>%的选手</p>
+        <p>最好成绩: <span class="r_r2" style="color: #fffa65"></span>s</p>
+        <p>我的全球排名: <span class="r_r3" style="color: #7dffbd"></span></p>
+        <p>获得的奖品: {loop $prize_logs $pv}<span class="r_r4">{$pv['title']} </span>{/loop}</p>
+    </div>
+    <img onclick="goContin()" class="goonbtn" src="{YOUMI_URL_APP}images/3_goon_btn.png" alt="">
+    <img onclick="$('.shareq_bg,.shareq').fadeIn()" class="shareqbtn" style="margin-top: 0;" src="{YOUMI_URL_APP}images/3_shareq.png" alt="">
+    <img class="title4" src="{YOUMI_URL_APP}images/3_title4_1.png" alt="">
+    <img onclick="$('.sharef_bg,.sharef').fadeIn()" style="margin-right: 10%" class="sharefbtn" src="{YOUMI_URL_APP}images/3_sharef1.png" alt="">
+    <img onclick="$('.c_results').fadeOut()" class="listbtn" src="{YOUMI_URL_APP}images/3_list.png" alt="">
+</div>
+<!--分享-->
+<div onclick="$('.sharef_bg,.sharef').fadeOut()" class="sharef_bg"></div>
+<img onclick="$('.sharef_bg,.sharef').fadeOut()" class="sharef" src="{YOUMI_URL_APP}images/share_f.png" alt="">
+<div onclick="$('.shareq_bg,.shareq').fadeOut()" class="shareq_bg"></div>
+<img onclick="$('.shareq_bg,.shareq').fadeOut()" class="shareq" src="{YOUMI_URL_APP}images/share_q.png" alt="">
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        function audioAutoPlay() {
+            var audio = document.getElementById('audiojs');
+            audio.play();
+            document.addEventListener("WeixinJSBridgeReady", function () {
+                audio.play();
+            }, false);
+        }
+        audioAutoPlay();
+    });
+    if (/i(Phone|P(o|a)d)/.test(navigator.userAgent)) {
+        $(document).one('touchstart',
+            function(e) {
+                $('#audiojs').get(0).touchstart = true;
+                $('#audiojs').get(0).play();
+                return false;
+            });
+    }
+    var audio = document.getElementById('audiojs');
+    $('#music').click(function(){
+        if(audio.paused){
+            audio.play();
+            $(this).attr('class','music muc')
+        }else{
+            audio.pause();
+            $(this).attr('class','music')
+        }
+    });
+
+    $('.list_btn').click(function(){
+        $.post(
+            "{php echo $this->createMobileUrl('index',['op'=>'goods','activity_id'=>$_GPC['activity_id']])}",
+            function(data){
+                var timeg=Number(data.data.sj);
+                var imgn=1;
+                if(timeg>=9.98&&timeg<=10.02){
+                    imgn=7;
+                }else if(timeg>=9.9&&timeg<=10.1){
+                    imgn=6;
+                }else if(timeg>=9.8&&timeg<=10.2){
+                    imgn=5;
+                }else{
+                    imgn=Math.ceil(Math.random()*4);
+                }
+                $('.r_honor').attr('src','{YOUMI_URL_APP}images/honor'+imgn+'.png')
+                $('.r_r1').html(data.data.scale);
+                $('.r_r2').html(data.data.sj);
+                $('.r_r3').html(data.data.no);
+                $('.c_results').fadeIn()
+            },'json'
+        )
+    })
+    function goContin(){
+        location.href="{php echo $this->createMobileUrl('index',['op'=>'game','activity_id'=>$_GPC['activity_id']])}"
+    }
+    console.log({php echo json_encode($list)})
+    console.log({php echo json_encode($activity)})
+</script>
+{template 'common/footer'}

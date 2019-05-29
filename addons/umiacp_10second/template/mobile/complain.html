@@ -1,0 +1,83 @@
+<style>
+    #tem_complain{
+        position: fixed;
+        top:0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 20;
+        background: #f3f3f3;
+        display: none;
+    }
+    #tem_complain div.title{
+        padding: 2%;
+    }
+    #tem_complain textarea{
+        border: 1px solid transparent;
+    }
+    #tem_complain select,#tem_complain input{
+        background: #fff;
+        margin: 0;
+        text-align: left;
+    }
+</style>
+<div id="tem_complain">
+    <div class="title">请选择投诉原因:</div>
+    <select class="tc_reason">
+        <option value="网页包含欺诈信息(如假红包)">网页包含欺诈信息(如假红包)</option>
+        <option value="网页包含色情信息">网页包含色情信息</option>
+        <option value="网页包含暴力恐怖信息">网页包含暴力恐怖信息</option>
+        <option value="网页包含政治敏感信息">网页包含政治敏感信息</option>
+        <option value="网页在收集个人隐私信息(如:钓鱼链接)">网页在收集个人隐私信息(如:钓鱼链接)</option>
+        <option value="网页包含诱导分享/关注性质的内容">网页包含诱导分享/关注性质的内容</option>
+        <option value="网页可能包含谣言信息">网页可能包含谣言信息</option>
+    </select>
+    <div class="title" style="margin-top: 5%">请输入投诉描述:</div>
+    <textarea  class="tc_desc" rows="5" maxlength="200" placeholder="不得少于10字"></textarea>
+    <div class="title" style="margin-top: 5%">请输入您的联系方式，以便联系:</div>
+    <input type="tel" class="tc_mobile">
+    <a href="javascript:;" class="a_btn2 tc_btn">提交</a>
+    <a href="javascript:;" class="a_btn3" onclick="$('#tem_complain').slideUp()">取消</a>
+</div>
+<script>
+    $('.tc_btn').click(function(){
+        var reason=$('.tc_reason option:selected').val();
+        var desc=$('.tc_desc').val();
+        var mobile=$('.tc_mobile').val();
+        if(!desc){
+            tips('请输入投诉描述');
+            return false;
+        }
+        if(desc.length<10){
+            tips('投诉描述不得少于10个字');
+            return false;
+        }
+        if(!mobile){
+            tips('请填写您的联系方式');
+            return false;
+        }
+        var myreg = /^(((13[0-9]{1})|(14[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[0-9]{1})|(18[0-9]{1})|(19[0-9]{1}))+\d{8})$/;
+        if(!myreg.test(mobile))
+        {
+            tips('请输入有效的手机号码');
+            return false;
+        }
+        $.post(
+            "{php echo $this->createMobileUrl('index',['op'=>'complain'])}",
+            {
+                'activity_id':"{$_GPC['activity_id']}",
+                'reason':reason,
+                'desc':desc,
+                'mobile':mobile
+            },
+            function (data) {
+                tips(data.message)
+                if(data.errno==0){
+                    setTimeout(function(){
+                        location.reload()
+                    },2000)
+                }
+            },'json'
+        )
+    })
+</script>

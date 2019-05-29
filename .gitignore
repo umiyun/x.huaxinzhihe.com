@@ -1,7 +1,7 @@
 # Created by .ignore support plugin (hsz.mobi)
 *.png
 *.jpg
-*.jprg
+*.jpeg
 .idea
 *.log
 **/dist

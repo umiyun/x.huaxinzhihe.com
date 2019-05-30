@@ -27,14 +27,21 @@ if ($op == 'pay') {
     // 判断权限
     $order = $this->hasOrder($order_id);
 
-//    $setting = youmi_setting_get_list();
-//
-//    $appid = trim($setting["wxapp_appid"]);
-//    $mch_id = trim($setting["wxapp_mchid"]);
-//    $key = trim($setting["wxapp_signkey"]);
-//
-//    $weixinpay = new WeixinPay($appid, $openid, $mch_id, $key, $order['tid'], $order['title'], $order['price']);
-//    $return = $weixinpay->orderquery();
+    $activity = pdo_fetch("select * from " . tablename(YOUMI_NAME . '_' . 'activity') . " where `uniacid` = {$uniacid} and id = {$order['activity_id']} ");
+
+    if ($activity['success'] >= $activity['gnum']) {
+        youmi_result(1, '商品已抢光');
+    }
+    if ($activity['status'] == 2) {
+        youmi_result(1, '活动已下架');
+    }
+    if ($activity['status'] == 3) {
+        youmi_result(1, '活动未开始');
+    }
+
+    if ($activity['yprice'] <= 0) {
+        youmi_result(1, '金额错误');
+    }
 //    youmi_result($return['errno'], $order, $return);
 
     if ($order && $order['status'] == 1) {
@@ -47,23 +54,32 @@ if ($op == 'pay') {
             'user' => $order['mid'],            //付款用户, 付款的用户名(选填项)
         );
 
-        //调用pay方法
-        if ($this->user_type == 2) {
-            $this->pay($params);
+        global $_W;
+        load()->model('activity');
+        load()->model('module');
+        activity_coupon_type_init();
+        if (!$this->inMobile) {
+            youmi_result(1, '支付功能只能在手机上使用');
         }
-        if ($this->user_type == 3) {
 
-            $return = pay($order);
-//            if (is_error($return)) {
-                youmi_result(1, $return['err_code_des'], $return);
-//            }
-            youmi_result(0, '', $return);
+        $params['module'] = $this->module['name'];
+
+        $return = pay($order);
+        if (is_error($return)) {
+            youmi_result(1, $return['message'], $return);
         }
+        if ($return['return_code'] == 'FAIL') {
+            youmi_result(1, $return['return_msg']);
+        }
+        youmi_result(0, '', $return);
     } else {
-        if ($this->user_type == 3) {
-            youmi_result(1, '订单不存在或已支付');
+        if ($order['status'] == 4) {
+            youmi_result(1, '订单已取消');
         }
-        message('订单不存在或已支付');
+        if ($order['status'] == 2) {
+            youmi_result(1, '订单已支付');
+        }
+        youmi_result(1, '订单不存在或已支付');
     }
 }
 
@@ -76,14 +92,14 @@ function pay($order)
     if (empty($order) || !array_key_exists(YOUMI_NAME, $moduels)) {
         return error(1, '模块不存在');
     }
-    $moduleid = empty($order['mid']) ? '000000' : sprintf("%06d", $order['mid']);
-    $uniontid = date('YmdHis') . $moduleid . random(8, 1);
+
+    $uniontid = $order['tid'];
     $paylog = pdo_get('core_paylog', array('uniacid' => $_W['uniacid'], 'module' => YOUMI_NAME, 'tid' => $order['tid']));
     if (empty($paylog)) {
         $paylog = array(
             'uniacid' => $_W['uniacid'],
             'acid' => $_W['acid'],
-            'type' => 'wxapp',
+            'type' => 'wechat',
             'openid' => $_W['openid'],
             'module' => YOUMI_NAME,
             'tid' => $order['tid'],
@@ -156,13 +172,24 @@ if ($op == 'payResult') {
 }
 
 
-function wxapp_pay($order, $openid) {
+function wxapp_pay($order, $openid)
+{
+    global $_W, $_GPC;
+    load()->model('account');
+    $setting = uni_setting($_W['uniacid'], array('payment'));
+    if (is_array($setting['payment'])) {
+        $wechat = $setting['payment']['wechat'];
+        if (intval($wechat['switch']) == 3) {
+            $facilitator_setting = uni_setting($wechat['service'], array('payment'));
+            $wechat['signkey'] = $facilitator_setting['payment']['wechat_facilitator']['signkey'];
+        } else {
+            $wechat['signkey'] = ($wechat['version'] == 1) ? $wechat['key'] : $wechat['signkey'];
+        }
+    }
 
-    $setting = youmi_setting_get_list();
-
-    $appid = trim($setting["wxapp_appid"]);
-    $mch_id = trim($setting["wxapp_mchid"]);
-    $key = trim($setting["wxapp_signkey"]);
+    $appid = trim($_W['uniaccount']["key"]);
+    $mch_id = trim($wechat["mchid"]);
+    $key = trim($wechat["signkey"]);
 
     $weixinpay = new WeixinPay($appid, $openid, $mch_id, $key, $order['tid'], $order['title'], $order['price']);
     $return = $weixinpay->pay();

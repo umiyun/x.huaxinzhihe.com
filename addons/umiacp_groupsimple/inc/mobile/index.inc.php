@@ -52,11 +52,11 @@ if ($op == 'display') {
     if ($fmid == $this->mid) {
         $fmid = 0;
     }
-    $records = pdo_fetchall('select * from ' . tablename(YOUMI_NAME . '_cut') .' where uniacid = ' . $uniacid . ' and activity_id = ' . $activity_id .' and status in (2,3) order by createtime DESC limit 20 ');
-    $records2 = pdo_fetchall('select * from ' . tablename(YOUMI_NAME . '_cut') .' where uniacid = ' . $uniacid . ' and activity_id = ' . $activity_id .' and status in (2,3) order by createtime DESC');
-    $records_count=count($records2);
+    $records = pdo_fetchall('select * from ' . tablename(YOUMI_NAME . '_order') .' where uniacid = ' . $uniacid . ' and activity_id = ' . $activity_id .' and status in (2,3) order by createtime DESC');
+ $groups=   pdo_getall(YOUMI_NAME.'_group',['uniacid'=>$uniacid,'activity_id'=>$activity_id]);
+    $records_count=count($records);
     $fmember = $this->getMemberInfo($fmid);
-    $cut = pdo_get(YOUMI_NAME . '_cut', ['mid' => $this->mid, 'activity_id' => $activity_id,'status !='=>'4']);
+
 
     $activity = pdo_fetch('select * from ' . tablename(YOUMI_NAME . '_activity') . ' where uniacid = ' . $uniacid . ' and id = ' . $activity_id);
     if ($activity['status'] != 1 || $activity['endtime'] < time()||($records_count>=$activity['gnum'])) {
@@ -113,31 +113,17 @@ if ($op == 'display') {
     $activity['userinfo'] = unserialize($activity['userinfo']);
 
 
-    foreach ($records as &$record) {
-        $strlen = mb_strlen($record['realname'], 'utf-8');
-        $firstStr = mb_substr($record['realname'], 0, 1, 'utf-8');
-        $lastStr = mb_substr($record['realname'], -1, 1, 'utf-8');
-        if ($record['mid']!=-1){
+//    foreach ($records as &$record) {
+//        $strlen = mb_strlen($record['realname'], 'utf-8');
+//        $firstStr = mb_substr($record['realname'], 0, 1, 'utf-8');
+//        $lastStr = mb_substr($record['realname'], -1, 1, 'utf-8');
 
+//        $record['realname'] = $firstStr . str_repeat('*', 3) . $lastStr;
 
-        $record['avatar'] = $this->getMemberInfo($record['mid'])['avatar'];
-        }
-        $record['realname'] = $firstStr . str_repeat('*', 3) . $lastStr;
+//        $record['tips'] = $record['realname'] . ' 参团成功';
 
-        $record['tips'] = $record['realname'] . ' 参团成功';
-
-        unset($record);
-    }
-    foreach ($records2 as &$record) {
-        $strlen = mb_strlen($record['realname'], 'utf-8');
-        $firstStr = mb_substr($record['realname'], 0, 1, 'utf-8');
-        $lastStr = mb_substr($record['realname'], -1, 1, 'utf-8');
-
-        $record['realname'] = $firstStr . str_repeat('*', 3) . $lastStr;
-
-
-        unset($record);
-    }
+//        unset($record);
+//    }
 
     if ($activity['endtime'] < time()) {
         $update['status'] = 2;
@@ -160,30 +146,6 @@ if ($op == 'display') {
         $_share['link'] = $setting['cannon_fodder'] . "app/" . $this->createMobileUrl('index', array('fmid' => $this->mid, 'activity_id' => $activity_id));
     }
 
-
-    //    当前价格
-    if($records_count>=intval($activity['jieti']['num'][0])){
-        foreach ($activity['jieti']['num'] as $key => $jtem){
-            if($activity['jieti']['num'][$key]>0){
-                if(intval($activity['jieti']['num'][$key+1])<=0){
-                    if($records_count>=intval($activity['jieti']['num'][$key])){
-                        $activity['nprice']=$activity['jieti']['price'][$key];
-                        $activity['njieti']=$key;
-                        break;
-                    }
-                }else{
-                    if($records_count>=intval($activity['jieti']['num'][$key])&&$records_count<intval($activity['jieti']['num'][$key+1])){
-                        $activity['nprice']=$activity['jieti']['price'][$key];
-                        $activity['njieti']=$key;
-                        break;
-                    }
-                }
-            }
-        }
-    }else{
-        $activity['nprice']=$activity['oprice'];
-        $activity['njieti']=-1;
-    }
     include $this->template('index');
     exit();
 }

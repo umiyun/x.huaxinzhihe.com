@@ -63,6 +63,7 @@ if (!function_exists('youmi_save_activity')) {
         $data['music'] = $from['music'];
         $data['starttime'] = strtotime($from['starttime']);
         $data['endtime'] = strtotime($from['endtime']);
+        $data['cutting_pay'] = $from['cutting_pay'];
 //        $data['preferential_title'] = $from['preferential_title'];
         $data['preferential_val'] = serialize($from['preferential_val']);
 //        $data['desc_title'] = $from['desc_title'];

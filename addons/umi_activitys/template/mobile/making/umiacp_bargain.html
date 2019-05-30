@@ -558,6 +558,29 @@
                 <span>至</span>
                 <input type="text" id='datetime-picker2' value="{if $activity['starttime']}{php echo date('Y-m-d H:i',$activity['endtime'])}{/if}"/>
             </div>
+            <div class="flex flex_a_center">
+                <span class="word-break"><i class="iconfont icon-essential"></i>允许中途付款</span>
+                <div class="weui-cells weui-cells_radio flex" style="background: transparent">
+                    <label class="weui-cell weui-check__label" for="cutting_pay1">
+                        <div class="weui-cell__bd">
+                            <div class="word-break">允许</div>
+                        </div>
+                        <div class="weui-cell__ft">
+                            <input name="cutting_pay" type="radio" class="d_cutting_pay weui-check" id="cutting_pay1" value="1" {if $activity['cutting_pay']!='2'}checked{/if} />
+                            <span class="weui-icon-checked"></span>
+                        </div>
+                    </label>
+                    <label class="weui-cell weui-check__label" for="cutting_pay2">
+                        <div class="weui-cell__bd">
+                            <div class="word-break">不允许</div>
+                        </div>
+                        <div class="weui-cell__ft">
+                            <input name="cutting_pay" type="radio" class="d_cutting_pay weui-check" id="cutting_pay2" value="2" {if $activity['cutting_pay']=='2'}checked{/if}>
+                            <span class="weui-icon-checked"></span>
+                        </div>
+                    </label>
+                </div>
+            </div>
         </div>
 
         <div class="c_setting">
@@ -1189,8 +1212,9 @@
             datas['image']=$('.h_img').attr('src')//背景主图
             datas['titlebgimg']=$('.titlebgimg').attr('src');//标题背景图
             datas['bgimage']=$('.a_content').css('background-image').replace('url(','').replace(')','').replace('"','').replace('"','')//背景主图
-            datas['starttime']=$('#datetime-picker1').val()//开始时间
-            datas['endtime']=$('#datetime-picker2').val()//结束时间
+            datas['starttime']=$('#datetime-picker1').val();//开始时间
+            datas['endtime']=$('#datetime-picker2').val();//结束时间
+            datas['cutting_pay']=$('.d_cutting_pay:checked').val();//允许中途砍价
             // 商品信息
 
             if(!datas['title']){tips('请填写活动标题'); return false;}

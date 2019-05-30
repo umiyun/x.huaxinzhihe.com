@@ -295,7 +295,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">活动优惠内容</label>
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">砍价优惠</label>
                     <div class="col-sm-8">
                         <!--<textarea class="form-control" name="data[preferential_val]" >{$item['preferential_val']}</textarea>-->
                         <input style="margin-bottom: 5px" class="form-control" name="data[preferential_val][]" type="text" value="{$item['preferential_val'][0]}">
@@ -316,7 +316,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>活动描述内容</label>
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>活动说明</label>
                     <div class="col-sm-8">
                         {php echo tpl_ueditor('data[desc_val]', $item['desc_val']);}
                     </div>
@@ -329,7 +329,7 @@
                 </div>
 
 
-                <div class="form-group">
+                <div class="form-group" style="display: none">
                     <label class="col-xs-12 col-sm-3 col-md-2 control-label">活动规则内容</label>
                     <div class="col-sm-8">
                         {php echo tpl_ueditor('data[rule_val]', $item['rule_val']);}
@@ -366,7 +366,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">商家介绍内容</label>
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">机构介绍</label>
                     <div class="col-sm-8">
                         {php echo tpl_ueditor('data[shop_val]', $item['shop_val']);}
                     </div>

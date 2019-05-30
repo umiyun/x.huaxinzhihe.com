@@ -179,43 +179,43 @@
                 <div class="form-group">
                     <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>原价</label>
                     <div class="col-sm-8 col-xs-12">
-                        <input type="text" name="data[original_price]" class="form-control" value="{$item['original_price']}" />
+                        <input type="number" name="data[original_price]" class="form-control" value="{$item['original_price']}" step="0.01" min="0"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>开团价</label>
                     <div class="col-sm-8 col-xs-12">
-                        <input type="text" name="data[leader_price]" class="form-control" value="{$item['leader_price']}" />
+                        <input type="number" name="data[leader_price]" class="form-control" value="{$item['leader_price']}" step="0.01" min="0"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>团购价</label>
                     <div class="col-sm-8 col-xs-12">
-                        <input type="text" name="data[group_price]" class="form-control" value="{$item['group_price']}" />
+                        <input type="number" name="data[group_price]" class="form-control" value="{$item['group_price']}" step="0.01" min="0"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>单买价</label>
                     <div class="col-sm-8 col-xs-12">
-                        <input type="text" name="data[single_price]" class="form-control" value="{$item['single_price']}" />
+                        <input type="number" name="data[single_price]" class="form-control" value="{$item['single_price']}" step="0.01" min="0"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>库存</label>
                     <div class="col-sm-8 col-xs-12">
-                        <input type="text" name="data[gnum]" class="form-control" value="{$item['gnum']}" />
+                        <input type="number" name="data[gnum]" class="form-control" value="{$item['gnum']}"  min="0"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>成团人数</label>
                     <div class="col-sm-8 col-xs-12">
-                        <input type="number" name="data[group_num]" class="form-control" value="{$item['group_num']}" />
+                        <input type="number" name="data[group_num]" class="form-control" value="{$item['group_num']}" min="0" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>佣金</label>
                     <div class="col-sm-8 col-xs-12">
-                        <input type="text" name="data[commission]" class="form-control" value="{$item['commission']}" />
+                        <input type="number" name="data[commission]" class="form-control" value="{$item['commission']}" step="0.01" min="0"/>
                     </div>
                 </div>
 

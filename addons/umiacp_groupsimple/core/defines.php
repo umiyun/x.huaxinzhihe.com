@@ -12,7 +12,7 @@ if (!defined('IN_IA')) {
 
 define('YOUMI_DEBUG', TRUE);
 define('YOUMI_NAME', 'umiacp_groupsimple');
-
+define('UMI_NAME', 'umi_activitys');
 !defined('YOUMI_PATH') && define('YOUMI_PATH', IA_ROOT . '/addons/umiacp_groupsimple/');
 !defined('YOUMI_CORE') && define('YOUMI_CORE', YOUMI_PATH . 'core/');
 !defined('YOUMI_CERT') && define('YOUMI_CERT', YOUMI_PATH . 'cert/');

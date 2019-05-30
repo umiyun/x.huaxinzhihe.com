@@ -1,0 +1,373 @@
+{template 'common/header'}
+<ul class="nav nav-tabs">
+    <li data-class="#base" class="active">
+        <a href="javascript:;">订单通知</a>
+    </li>
+    <li data-class="#share">
+        <a href="javascript:;">核销通知</a>
+    </li>
+    <li data-class="#reward">
+        <a href="javascript:;">中奖通知</a>
+    </li>
+    <li data-class="#group">
+        <a href="javascript:;">拼团成功</a>
+    </li>
+    <li data-class="#bargain">
+        <a href="javascript:;">砍价成功</a>
+    </li>
+    <li data-class="#light">
+        <a href="javascript:;">助力成功</a>
+    </li>
+</ul>
+<div class="panel panel-default">
+    <form class="form-horizontal" role="form" method="post" action="" name="submit">
+        <div id="base" class="panel-body base">
+
+            <table class="table table-hover">
+                <thead class="navbar-inner">
+                <th class="text-center">编号</th>
+                <th class="text-center">标题</th>
+                <th class="text-center">一级行业</th>
+                <th class="text-center">二级行业</th>
+                </thead>
+                <tbody>
+
+                <tr>
+                    <td align="center">
+                        <div class="type-parent">OPENTM207351887</div>
+                    </td>
+                    <td align="center">
+                        <div class="type-parent">订单通知</div>
+                    </td>
+                    <td align="center">
+                        <div class="type-parent">IT科技</div>
+                    </td>
+                    <td align="center">
+                        <div class="type-parent">IT软件与服务</div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="form-group">
+
+                <label class="col-sm-2 control-label">内容示例</label>
+                <div class="col-sm-8">
+                    您已预订成功，请在24小时内完成支付。<br>
+                    产品名称：20134-0815<br>
+                    订单编号：A39393939331<br>
+                    通知内容：预订时间 2015-08-01 15:34<br>
+                    如有疑问，请拨打咨询热线<br>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">模板ID</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="set[order_tpl][order_id]"
+                           value="{$setting['order_id']}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">开头内容</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="set[order_tpl][order_first]"
+                           value="{$setting['order_first']}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">产品名称</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="set[order_tpl][order_keyword1]"
+                           value="{$setting['order_keyword1']}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">订单编号</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="set[order_tpl][order_keyword2]"
+                           value="{$setting['order_keyword2']}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">通知内容</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="set[order_tpl][order_keyword3]"
+                           value="{$setting['order_keyword3']}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">结尾内容</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="set[order_tpl][order_remark]"
+                           value="{$setting['order_remark']}">
+                </div>
+            </div>
+
+        </div>
+        <div id="share" class="panel-body share" style="display:none;">
+            <table class="table table-hover">
+                <thead class="navbar-inner">
+                <th class="text-center">编号</th>
+                <th class="text-center">标题</th>
+                <th class="text-center">一级行业</th>
+                <th class="text-center">二级行业</th>
+                </thead>
+                <tbody>
+
+                <tr>
+                    <td align="center">
+                        <div class="type-parent">OPENTM413557852</div>
+                    </td>
+                    <td align="center">
+                        <div class="type-parent">核销成功提醒</div>
+                    </td>
+                    <td align="center">
+                        <div class="type-parent">IT科技</div>
+                    </td>
+                    <td align="center">
+                        <div class="type-parent">IT软件与服务</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        <div class="type-parent">OPENTM412319459</div>
+                    </td>
+                    <td align="center">
+                        <div class="type-parent">核销成功通知</div>
+                    </td>
+                    <td align="center">
+                        <div class="type-parent">IT科技</div>
+                    </td>
+                    <td align="center">
+                        <div class="type-parent">互联网|电子商务</div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="form-group">
+
+                <label class="col-sm-2 control-label">内容示例</label>
+                <div class="col-sm-8">
+                    亲爱的小主，您的预售券已使用。<br>
+                    商品名称：99元中餐任性吃<br>
+                    商品金额：99元<br>
+                    商品数量：1<br>
+                    核销时间：2018年1月21日 18:36<br>
+                    更多信息可点击查看详情
+                </div>
+            </div>
+            <div class="form-group">
+
+                <label class="col-sm-2 control-label">内容示例</label>
+                <div class="col-sm-8">
+
+                    恭喜！成功核销使用抢购券！<br>
+                    核销项目：10元抢购价值100元核桃<br>
+                    核销类型：抢购<br>
+                    核销门店：青州热线体验店<br>
+                    核销时间：2014年7月21日 18:36<br>
+                    感谢你的使用。
+                </div>
+            </div>
+
+
+        </div>
+
+        <div id="reward" class="panel-body share" style="display:none;">
+            <table class="table table-hover">
+                <thead class="navbar-inner">
+                <th class="text-center">编号</th>
+                <th class="text-center">标题</th>
+                <th class="text-center">一级行业</th>
+                <th class="text-center">二级行业</th>
+                </thead>
+                <tbody>
+
+                <tr>
+                    <td align="center">
+                        <div class="type-parent">OPENTM412181311</div>
+                    </td>
+                    <td align="center">
+                        <div class="type-parent">抽奖结果通知</div>
+                    </td>
+                    <td align="center">
+                        <div class="type-parent">IT科技</div>
+                    </td>
+                    <td align="center">
+                        <div class="type-parent">互联网|电子商务</div>
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+
+            <div class="form-group">
+
+                <label class="col-sm-2 control-label">内容示例</label>
+                <div class="col-sm-8">
+                    恭喜你获得奖品<br>
+                    奖品名称：xx牌手机<br>
+                    中奖时间：2017-09-04<br>
+                    感谢你的使用。
+                </div>
+            </div>
+        </div>
+
+        <div id="group" class="panel-body share" style="display:none;">
+            <table class="table table-hover">
+                <thead class="navbar-inner">
+                <th class="text-center">编号</th>
+                <th class="text-center">标题</th>
+                <th class="text-center">一级行业</th>
+                <th class="text-center">二级行业</th>
+                </thead>
+                <tbody>
+
+                <tr>
+                    <td align="center">
+                        <div class="type-parent">OPENTM414768654</div>
+                    </td>
+                    <td align="center">
+                        <div class="type-parent">拼团结果提醒</div>
+                    </td>
+                    <td align="center">
+                        <div class="type-parent">IT科技</div>
+                    </td>
+                    <td align="center">
+                        <div class="type-parent">互联网|电子商务</div>
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+
+            <div class="form-group">
+
+                <label class="col-sm-2 control-label">内容示例</label>
+                <div class="col-sm-8">
+
+                    您有新的拼团订单已经组团成功<br>
+                    拼团状态：参团成功<br>
+                    商品明细：百香果10斤装<br>
+                    拼团价格：88元<br>
+                    剩余人数：3<br>
+                    时间：2014年7月21日 18:36<br>
+                    感觉您的惠顾，更多拼团请点击详情！
+                </div>
+            </div>
+        </div>
+
+        <div id="bargain" class="panel-body share" style="display:none;">
+            <table class="table table-hover">
+                <thead class="navbar-inner">
+                <th class="text-center">编号</th>
+                <th class="text-center">标题</th>
+                <th class="text-center">一级行业</th>
+                <th class="text-center">二级行业</th>
+                </thead>
+                <tbody>
+
+                <tr>
+                    <td align="center">
+                        <div class="type-parent">OPENTM414768654</div>
+                    </td>
+                    <td align="center">
+                        <div class="type-parent">拼团结果提醒</div>
+                    </td>
+                    <td align="center">
+                        <div class="type-parent">IT科技</div>
+                    </td>
+                    <td align="center">
+                        <div class="type-parent">互联网|电子商务</div>
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+
+            <div class="form-group">
+
+                <label class="col-sm-2 control-label">内容示例</label>
+                <div class="col-sm-8">
+
+                    您有新的拼团订单已经组团成功<br>
+                    拼团状态：参团成功<br>
+                    商品明细：百香果10斤装<br>
+                    拼团价格：88元<br>
+                    剩余人数：3<br>
+                    时间：2014年7月21日 18:36<br>
+                    感觉您的惠顾，更多拼团请点击详情！
+                </div>
+            </div>
+        </div>
+
+        <div id="light" class="panel-body share" style="display:none;">
+            <table class="table table-hover">
+                <thead class="navbar-inner">
+                <th class="text-center">编号</th>
+                <th class="text-center">标题</th>
+                <th class="text-center">一级行业</th>
+                <th class="text-center">二级行业</th>
+                </thead>
+                <tbody>
+
+                <tr>
+                    <td align="center">
+                        <div class="type-parent">OPENTM414768654</div>
+                    </td>
+                    <td align="center">
+                        <div class="type-parent">拼团结果提醒</div>
+                    </td>
+                    <td align="center">
+                        <div class="type-parent">IT科技</div>
+                    </td>
+                    <td align="center">
+                        <div class="type-parent">互联网|电子商务</div>
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+
+            <div class="form-group">
+
+                <label class="col-sm-2 control-label">内容示例</label>
+                <div class="col-sm-8">
+
+                    您有新的拼团订单已经组团成功<br>
+                    拼团状态：参团成功<br>
+                    商品明细：百香果10斤装<br>
+                    拼团价格：88元<br>
+                    剩余人数：3<br>
+                    时间：2014年7月21日 18:36<br>
+                    感觉您的惠顾，更多拼团请点击详情！
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-8">
+                <input type="submit" name="submit" value="提交" class="btn btn-info col-lg-1"/>
+                <input type="hidden" name="token" value="{$_W['token']}"/>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    $('ul.nav').on('click', 'li', function () {
+        if ($(this).hasClass('active')) {
+            return false;
+        }
+        $('.nav li').removeClass('active');
+        $(this).addClass('active');
+        $('form>.panel-body').hide();
+        $($(this).data('class')).show();
+    })
+</script>
+
+{template 'common/footer'}

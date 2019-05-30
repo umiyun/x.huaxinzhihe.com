@@ -14,3 +14,6 @@
 **/font
 **/js
 **/lib
+/data
+framework
+/web

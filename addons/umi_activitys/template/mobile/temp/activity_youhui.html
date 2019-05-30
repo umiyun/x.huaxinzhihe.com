@@ -32,9 +32,13 @@
 </style>
 <div class="ce_youhui p_relative">
     <div class="cey_title p_relative">
+        {if $_GPC['module']=='umiacp_bargainsimple'}
+        <img src="{YOUMI_URL_APP}img_template/bargainsimple/youhui.png" alt="">
+        {else}
         <img class="titlebgimg" src="{if $activity['titlebgimg']}{$activity['titlebgimg']}{else}{YOUMI_URL_APP}img/m_titlebg2.png{/if}" alt="">
         <input class="d_preferential_title" type="text" value="{if $activity['preferential_title']}{$activity['preferential_title']}{else}活动优惠{/if}">
         <span class="ft10 color777">小标题最多6个字</span>
+        {/if}
     </div>
     <div class="cey_content">
         <div class="csys_contents">
@@ -47,34 +51,34 @@
                     <textarea placeholder="优惠内容（最多50字）" maxlength="50" class="text_left d_preferential_val">{$apv}</textarea>
                     <div class="csycc_btns flex flex_a_center">
                         <div class="csyccb_down flex flex_a_center" {if ($apidx==count($activity['preferential_val']))||count($activity['preferential_val'])}style="display: none"{/if}>
-                        <i class="iconfont icon-shangchuanxiangshangjiantou"></i>
-                        <span class="word-break" onclick="downYouhui(this)">向下</span>
+                            <i class="iconfont icon-shangchuanxiangshangjiantou"></i>
+                            <span class="word-break" onclick="downYouhui(this)">向下</span>
+                            </div>
+                            <div class="csyccb_up flex flex_a_center" {if $apidx==0}style="display: none"{/if}>
+                            <i class="iconfont icon-xsaaa"></i>
+                            <span class="word-break" onclick="upYouhui(this)">向上</span>
+                        </div>
+                        <div class="flex flex_a_center" onclick="delYouhui(this)">
+                            <i class="iconfont icon-bianji1"></i>
+                            <span class="word-break">删除</span>
+                        </div>
                     </div>
-                    <div class="csyccb_up flex flex_a_center" {if $apidx==0}style="display: none"{/if}>
-                    <i class="iconfont icon-xsaaa"></i>
-                    <span class="word-break" onclick="upYouhui(this)">向上</span>
                 </div>
-                <div class="flex flex_a_center" onclick="delYouhui(this)">
-                    <i class="iconfont icon-bianji1"></i>
-                    <span class="word-break">删除</span>
-                </div>
+            </div>
+            {/loop}
+            {else}
+            {template 'temp/goods_youhui'}
+            {/if}
+        </div>
+        <div class="ceyc_btns">
+            <div>
+                <i class="iconfont icon-webicon308"></i>
+                <b>添加文字</b>
+                <span>(最多6个)</span>
             </div>
         </div>
     </div>
-    {/loop}
-    {else}
-    {template 'temp/goods_youhui'}
-    {/if}
-</div>
-<div class="ceyc_btns">
-    <div>
-        <i class="iconfont icon-webicon308"></i>
-        <b>添加文字</b>
-        <span>(最多6个)</span>
-    </div>
-</div>
-</div>
-<img class="iconPig" src="{YOUMI_URL_APP}img/pig.png" alt="">
+    <img class="iconPig" src="{YOUMI_URL_APP}img/pig.png" alt="">
 </div>
 <script>
     //添加文字（活动优惠）

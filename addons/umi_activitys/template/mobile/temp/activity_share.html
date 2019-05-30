@@ -12,10 +12,14 @@
         height: 100%;
     }
 </style>
-<div class="ce_common p_relative">
+<div class="ce_common p_relative ce_share">
     <div class="ceg_title p_relative">
+        {if $_GPC['module']=='umiacp_bargainsimple'}
+        <div class="title_txtshadow">分享设置</div>
+        {else}
         <img class="titlebgimg" src="{if $activity['titlebgimg']}{$activity['titlebgimg']}{else}{YOUMI_URL_APP}img/m_titlebg2.png{/if}" alt="">
         <input class="border_transparent" type="text" value="分享设置" readonly>
+        {/if}
     </div>
 
     <div class="s_price flex flex_wrap flex_j_between flex_a_center cel_content">

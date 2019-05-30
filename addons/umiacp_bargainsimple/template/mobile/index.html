@@ -191,7 +191,7 @@
     .ah_complain{
         left: inherit;
         right: 2%;
-        top: 15%;
+        top: 45%;
         line-height: 30px;
     }
     .ah_share{
@@ -388,7 +388,7 @@
         width: 80%;
         left: 10%;
         z-index: 20;
-        background: #D3441B;
+        background: #FE73BF;
         border-radius: 10px;
         display: none;
     }
@@ -552,6 +552,9 @@
     .a_head{
         overflow: hidden;
     }
+    .a_btn2{
+        background: #F2C52C;
+    }
 </style>
 <!--弹幕-->
 <style type="text/css">
@@ -615,6 +618,7 @@
         <a href="{php echo $this->createMobileUrl('user')}" class="p_absolute ah_user">个人中心</a>
         <div class="p_absolute ah_share" onclick="$('.open_share,.bg_fixed').fadeIn()">分享</div>
         <div class="p_absolute ah_contact" data-name="{$activity['shop_name']}" data-mobile="{$activity['shop_mobile']}" data-address="{$activity['shop_province']} {$activity['shop_city']} {$activity['shop_district']} {$activity['shop_address']}" data-code="{php echo tomedia($activity['shop_code'])}" onclick="openConcat(this)">联系商家</div>
+        <a href="javascript:;" class="p_absolute ah_complain" onclick="$('#tem_complain').slideDown()">投诉</a>
 
         <!--弹幕-->
         <div class="dm_content"></div>
@@ -646,7 +650,7 @@
                             <span class="sys_color">￥{$goods[0]['rprice']}</span>
                         </div>
                         <div class="gtd_progress p_relative">
-                            <div class="gdtp_tips ft10 p_absolute" style="{if $goods[0]['my_cut']}display: none{/if}left: 42%;top: -25px;">现价 <span class="color_red">{$goods[0]['my_cut']['nprice']}</span>元</div>
+                            <div class="gdtp_tips ft10 p_absolute" style="{if empty($goods[0]['my_cut'])}display: none{/if};left: 42%;top: -25px;">现价 <span class="color_red">{php echo floatval($goods[0]['my_cut']['nprice'])}</span>元</div>
                             <div class="gdtp_bg p_relative">
                                 <div class="p_absolute" style="width: {$goods[0]['my_cut']['schedule']}%"></div>
                                 <span class="p_absolute"
@@ -696,7 +700,7 @@
                     {else}
                     <div class="gt_detail flex1">
                         <div class="gtd_progress">
-                            <div class="gdtp_tips ft10" style="{if $goods[0]['cut']}display: none{/if};left: 42%;top: -25px;">现价 <span class="color_red">{$goods[0]['cut']['nprice']}</span>元</div>
+                            <div class="gdtp_tips ft10" style="{if empty($goods[0]['cut'])}display: none{/if};left: 42%;top: -25px;">现价 <span class="color_red">{php echo floatval($goods[0]['cut']['nprice'])}</span>元</div>
                             <div class="gdtp_bg p_relative">
                                 <div class="p_absolute" style="width: {$goods[0]['cut']['schedule']}%"></div>
                                 <span class="p_absolute"
@@ -863,7 +867,7 @@
     {template 'signup'}
     <!--砍价-->
     <div class="open_kjtips">
-        <img style="width: 100%;border-radius: 10px;" src="{YOUMI_URL_APP}img/kj_bg.png" alt="">
+        <img style="width: 100%;border-radius: 10px;" src="{YOUMI_URL_APP}img/kj_bg.jpg" alt="">
         <h4 class="text_center color_fff"></h4>
         <h1 class="text_center color_fff ok_price"></h1>
         <a href="javascript:;" class="a_btn2" onclick="$('.open_kjtips,.bg_fixed').fadeOut()">我知道了</a>

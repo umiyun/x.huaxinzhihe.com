@@ -77,7 +77,7 @@
         {loop $activity['userinfo'] $av}
         {if !empty($av['title'])}
         <div class="os_input2">
-            <input class="osi_input" type="text" data-name="{$av['title']}" data-required="{if $av['checked']}1{else}-1{/if}" value="" placeholder="请输入{$av['title']}{if $av['checked']}(必填){/if}">
+            <input class="osi_input" type="text" data-name="{$av['title']}" data-required="{if $av['checked']=='on'||$av['checked']=='true'}1{else}-1{/if}" value="" placeholder="请输入{$av['title']}{if $av['checked']=='on'||$av['checked']=='true'}(必填){/if}">
         </div>
         {/if}
         {/loop}

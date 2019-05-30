@@ -20,89 +20,80 @@ $op = trim($_GPC['op']) ? trim($_GPC['op']) : 'display';
 /**
  * 下单
  * do   :   order   op  :   create_order
- * goods_id     商品
- * num          购买数量
+ * cut_id     参团记录
  */
 if ($op == 'create_order') {
-    $goods_id = intval($_GPC['goods_id']);
+    $activity_id = intval($_GPC['activity_id']);
+    $group_id = intval($_GPC['group_id']);
+    $type = intval($_GPC['type']);
 
-    youmi_puv('create_order', $goods_id);
+//    youmi_puv('create_order', $activity_id);
 
-    if ($goods_id <= 0) {
-        youmi_result(1, '请选择商品');
+    if ($activity_id <= 0) {
+        youmi_result(1, '请先参团');
     }
-    $goods = pdo_fetch("select * from " . tablename(YOUMI_NAME . '_' . 'goods') . " where `uniacid` = {$uniacid} and id = {$goods_id} ");
+    //团状态
+    //团满了没
+    //重复参团
 
-    if ($goods['status'] == 3 || $goods['stock'] <= 0) {
+
+    $activity = pdo_fetch("select * from " . tablename(YOUMI_NAME . '_' . 'activity') . " where `uniacid` = {$uniacid} and id = {$activity_id} ");
+
+    if ($activity['success'] >= $activity['gnum']) {
         youmi_result(1, '商品已抢光');
     }
-    if ($goods['status'] == 2 || $goods['endtime'] <= TIMESTAMP) {
-        youmi_result(1, '商品已下架');
+    if ($activity['status'] == 2) {
+        youmi_result(1, '活动已下架');
+    }
+    if ($activity['status'] == 3) {
+        youmi_result(1, '活动未开始');
+    }
+$price=0;
+    switch ($type){
+        case 1:
+            //开团价
+            $price=$activity['leader_price'];
+            break;
+        case 2:
+            //团购价
+            $price=$activity['group_price'];
+            break;
+        case 3:
+            //单买价
+            $price=$activity['single_price'];
+            break;
     }
 
-    if ($goods['price'] <= 0) {
+    if ($price <= 0) {
         youmi_result(1, '金额错误');
     }
 
-    $batch_number = trim($goods['batch_number']);
-    if ($goods['goods_type'] == 1) {
-        if ($goods['batch_status'] == 1 && (intval($goods['batch_time']) + 15 * 60 > TIMESTAMP)) {
-            youmi_result(1, '商品被人下单还未付款哦，一会再来看看吧~~~');
-        }
-
-        $new = strtotime(date('Y-m-d'));
-        $orders = pdo_getall(YOUMI_NAME . '_' . 'order', ['uniacid' => $uniacid, 'mid' => $this->mid, 'goods_id' => $goods_id, 'status' => 4, 'createtime >' => $new]);
-        if (count($orders) >= 3) {
-            youmi_result(1, '亲，您今天3次下单都没有及时付款哦，明天再来吧，加油^_^');
-        }
-
-        $buy_day = intval($goods['buy_days']);
-        $buy_time = time() - $buy_day * 24 * 60 * 60;
-        $order = pdo_get(YOUMI_NAME . '_' . 'order', ['uniacid' => $uniacid, 'mid' => $this->mid, 'goods_id' => $goods_id, 'status in' => [2, 3], 'createtime >' => $buy_time]);
-        if ($order) {
-            youmi_result(1, '您最近已购买过' . $goods['title'] . '，' . date('m月d日', $order['createtime'] + $buy_day * 24 * 60 * 60) . '后可再次购买');
-        }
-
-        $goods['temp_price'] = floatval($goods['temp_price']) > 0 ? floatval($goods['temp_price']) : floatval($goods['price']);
-
-        if (!$batch_number) {
-            $batch_number = date('YmdHis') . $goods_id;
-            pdo_insert(YOUMI_NAME . '_' . 'batch', [
-                'uniacid' => $uniacid,
-                'goods_id' => $goods_id,
-                'batch_number' => $batch_number,
-                'status' => 1,
-                'createtime' => TIMESTAMP,
-            ]);
-            pdo_update(YOUMI_NAME . '_' . 'goods', ['batch_number' => $batch_number], ['id' => $goods_id]);
-        }
-
-        pdo_update(YOUMI_NAME . '_' . 'goods', ['batch_status' => 1, 'batch_time' => TIMESTAMP], ['id' => $goods_id]);
-
-        $order['num'] = 1;
-        $order['price'] = $goods['temp_price'];
-    } elseif ($goods['goods_type'] == 2) {
-        $order['num'] = intval($_GPC['num']) ? intval($_GPC['num']) : 1;
-        $order['price'] = floatval($goods['price']) * floatval($order['num']);
+    $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id,'group_id'=>$group_id, 'mid' => $this->mid, 'status' => [2,3]]);
+    if ($order) {
+        youmi_result(1, '请勿重复购买');
+    }
+    $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id,'group_id'=>$group_id, 'mid' => $this->mid, 'status' => 1]);
+    if ($order) {
+        $order['price'] =$price;
+        pdo_update(YOUMI_NAME . '_' . 'order', ['price' => floatval($order['price'])], ['id' => $order['id']]);
+        youmi_result(0, '下单成功', $order);
     }
 
-    $shop = pdo_get(YOUMI_NAME . '_' . 'shop', ['id' => $goods['shop_id']]);
 
-    $tid = date('YmdHis') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', rand(0, 99));
+    $moduleid = empty($_W['fans']['uid']) ? '000000' : sprintf("%06d", $_W['fans']['uid']);
+    $tid = date('YmdHis') . $moduleid . random(8, 1);
+
     $order['uniacid'] = $uniacid;
     $order['mid'] = $this->mid;
-    $order['goods_id'] = $goods_id;
-    $order['store_id'] = $goods['store_id'];
-    $order['manager_id'] = $shop['manager_id'];
-    $order['shop_id'] = $shop['id'];
-    $order['goods_type'] = $goods['goods_type'];
-    $order['title'] = $goods['small_title'];
-    $order['batch_number'] = $batch_number;
+    $order['group_id'] = getGroupId();
+
+    $order['activity_id'] = $activity_id;
+    $order['shop_id'] = $activity['shop_id'];
+    $order['title'] = $activity['title'];
     $order['ordersn'] = $tid;
     $order['tid'] = $tid;
     $order['status'] = 1;
     $order['createtime'] = TIMESTAMP;
-    $order['validtime'] = TIMESTAMP + intval($goods['valid_day']) * 24 * 60 * 60;
     $status = pdo_insert(YOUMI_NAME . '_' . 'order', $order);
     $order['id'] = pdo_insertid();
 
@@ -111,7 +102,42 @@ if ($op == 'create_order') {
     youmi_result($errno, '下单' . ($status ? '成功' : '失败'), $order);
 }
 
+function addZero($num, $len)
+{
+    while (strlen($num) < $len) {
+        $num = '0' . $num;
+    }
+    return $num;
+}
+function getGroupId()
+{
+    $today = date('Ymd');
+    $cacheNo = cache_load(YOUMI_NAME.'_GROUP_ID_NO_KEY');
+    $cacheDate =  cache_load(YOUMI_NAME.'_GROUP_ID_DATA_KEY');
+    if (empty($cacheNo)) {
+        $couponRule = pdo_fetch('select * from '.tablename(YOUMI_NAME. '_group').' order by id desc');
 
+        if ($couponRule) {
+            $dbDate = substr($couponRule['arrangeNo'], 2, 8);
+            $dbNo = (int)substr($couponRule['arrangeNo'], 10);
+            if ($today == $dbDate) {
+                $couponRuleNo = addZero(++$dbNo, 4);
+                $couponRuleDate = $today;
+                return ($couponRuleDate . $couponRuleNo) ;
+            }
+        }
+        $couponRuleNo = '0001';
+        $couponRuleDate = $today;
+        return  ($couponRuleDate . $couponRuleNo) ;
+    }
+    if ($today == $cacheDate) {
+        $couponRuleNo = addZero(++$cacheNo, 4);
+    } else {
+        $couponRuleNo = '0001';
+    }
+    $couponRuleDate = $today;
+    return  ($couponRuleDate . $couponRuleNo) ;
+}
 /**
  * 用户更新订单
  * do   :   order   op  :   update
@@ -158,7 +184,7 @@ if ($op == 'update') {
  * keyword              商品名
  * goods_type           商品类型
  */
-if ($op == 'list') {
+if ($op == 'display') {
 
     youmi_puv('order_list');
 
@@ -167,17 +193,9 @@ if ($op == 'list') {
     $psize = !empty($_GPC['psize']) ? $_GPC['psize'] : 10;
     $paras[':uniacid'] = $uniacid;
 
-    $goods_type = intval($_GPC['goods_type']) ? intval($_GPC['goods_type']) : 1;
-    if ($goods_type) {
-        $condition .= ' and goods_type = ' . $goods_type;
-    }
     $status = intval($_GPC['status']);
     if ($status) {
         $condition .= ' and status = ' . $status;
-    } else {
-        if ($goods_type != 2) {
-            $condition .= ' and status in (2,3) ';
-        }
     }
     $keyword = trim($_GPC['keyword']);
     if ($keyword) {
@@ -215,17 +233,15 @@ if ($op == 'list') {
                 break;
         }
         $item['saler_qrurl'] = $_W['siteroot'] . 'app/' . $this->createMobileUrl('saler', ['user_type' => 2, 'order_id' => $item['id']]);
-        $item['goods'] = pdo_get(YOUMI_NAME . '_' . 'goods', ['id' => $item['goods_id']]);
-        $item['goods']['image'] = tomedia($item['goods']['image']);
-        $item['store'] = pdo_get(YOUMI_NAME . '_' . 'store', ['id' => $item['goods']['store_id']]);
-        $item['comment'] = pdo_get(YOUMI_NAME . '_' . 'comment', ['order_id' => $item['id']]);
+        $item['goods'] = pdo_get(YOUMI_NAME . '_' . 'activity', ['id' => $item['activity_id']]);
+        $item['goods']['image']=tomedia($item['goods']['image']);
         unset($item);
     }
     $total = pdo_fetchcolumn('SELECT COUNT(*) FROM ' . tablename(YOUMI_NAME . '_' . 'order') . ' WHERE uniacid = :uniacid ' . $condition, $paras);
     $data['list'] = $list ? $list : [];
     $data['total'] = intval($total);
-
-    youmi_result(0, '订单列表', $data);
+    include $this->template('orders');
+    exit();
 
 }
 
@@ -428,7 +444,7 @@ if ($op == 'cancel') {
         youmi_result(1, '订单无法取消');
     }
     $res = pdo_update(YOUMI_NAME . '_' . 'order', ['status' => 4], ['id' => $order_id]);
-    $res = pdo_update(YOUMI_NAME . '_' . 'goods', ['batch_status' => 2], ['id' => $order['goods_id']]);
+    pdo_update(YOUMI_NAME . '_' . 'cut', ['status' => 4], ['id' => $order['cut_id']]);
     $errno = $res ? 0 : 1;
 
     youmi_result($errno, '订单取消' . ($res ? '成功' : '失败'));

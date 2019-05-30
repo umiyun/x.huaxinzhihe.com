@@ -31,11 +31,14 @@
 	<i onclick=" $('.a_hcimg,.bg_fixed').hide()" class="iconfont icon-Close"></i>
 </div>
 <script>
-    new QRCode(document.getElementById("qrcode"), location.href+'&fmid={$member["mid"]}');  // 设置要生成二维码的链接
+	setTimeout(function () {
+        new QRCode(document.getElementById("qrcode"), location.href+'&fmid={$member["mid"]}');  // 设置要生成二维码的链接
+    },1000)
+
 
     function hecheng(){
         $.post(
-            "{php echo $this->createMobileUrl('upload',['op'=>'image','save'=>1])}",
+            "{php echo $this->createMobileUrl('upload',['op'=>'image'])}",
             {
                 'file':$('#qrcode img').attr('src'),
                 'name':'code',

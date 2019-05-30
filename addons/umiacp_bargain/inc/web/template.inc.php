@@ -45,6 +45,8 @@ if ($op=='aa'){
 
 function sendOrderMsg($openid,$args,$setting,$url){
     $data = array(
+
+
         'first' => array(
             'value' => $setting['order_first'],
             'color' => '#ff510'

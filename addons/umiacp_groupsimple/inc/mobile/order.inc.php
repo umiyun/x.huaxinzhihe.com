@@ -26,6 +26,9 @@ if ($op == 'create_order') {
     $activity_id = intval($_GPC['activity_id']);
     $group_id = intval($_GPC['group_id']);
     $type = intval($_GPC['type']);
+    $realname = intval($_GPC['realname']);
+    $mobile = intval($_GPC['mobile']);
+    $userinfo = intval($_GPC['userinfo']);
 
 //    youmi_puv('create_order', $activity_id);
 
@@ -48,19 +51,19 @@ if ($op == 'create_order') {
     if ($activity['status'] == 3) {
         youmi_result(1, '活动未开始');
     }
-$price=0;
-    switch ($type){
+    $price = 0;
+    switch ($type) {
         case 1:
             //开团价
-            $price=$activity['leader_price'];
+            $price = $activity['leader_price'];
             break;
         case 2:
             //团购价
-            $price=$activity['group_price'];
+            $price = $activity['group_price'];
             break;
         case 3:
             //单买价
-            $price=$activity['single_price'];
+            $price = $activity['single_price'];
             break;
     }
 
@@ -68,13 +71,13 @@ $price=0;
         youmi_result(1, '金额错误');
     }
 
-    $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id,'group_id'=>$group_id, 'mid' => $this->mid, 'status' => [2,3]]);
+    $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id, 'group_id' => $group_id, 'mid' => $this->mid, 'status' => [2, 3]]);
     if ($order) {
         youmi_result(1, '请勿重复购买');
     }
-    $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id,'group_id'=>$group_id, 'mid' => $this->mid, 'status' => 1]);
+    $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id, 'group_id' => $group_id, 'mid' => $this->mid, 'status' => 1]);
     if ($order) {
-        $order['price'] =$price;
+        $order['price'] = $price;
         pdo_update(YOUMI_NAME . '_' . 'order', ['price' => floatval($order['price'])], ['id' => $order['id']]);
         youmi_result(0, '下单成功', $order);
     }
@@ -86,7 +89,6 @@ $price=0;
     $order['uniacid'] = $uniacid;
     $order['mid'] = $this->mid;
     $order['group_id'] = getGroupId();
-
     $order['activity_id'] = $activity_id;
     $order['shop_id'] = $activity['shop_id'];
     $order['title'] = $activity['title'];
@@ -94,6 +96,12 @@ $price=0;
     $order['tid'] = $tid;
     $order['status'] = 1;
     $order['createtime'] = TIMESTAMP;
+    $order['realname'] = $realname;
+    $order['mobile'] = $mobile;
+    $order['userinfo'] = $userinfo;
+
+
+
     $status = pdo_insert(YOUMI_NAME . '_' . 'order', $order);
     $order['id'] = pdo_insertid();
 
@@ -109,13 +117,14 @@ function addZero($num, $len)
     }
     return $num;
 }
+
 function getGroupId()
 {
     $today = date('Ymd');
-    $cacheNo = cache_load(YOUMI_NAME.'_GROUP_ID_NO_KEY');
-    $cacheDate =  cache_load(YOUMI_NAME.'_GROUP_ID_DATA_KEY');
+    $cacheNo = cache_load(YOUMI_NAME . '_GROUP_ID_NO_KEY');
+    $cacheDate = cache_load(YOUMI_NAME . '_GROUP_ID_DATA_KEY');
     if (empty($cacheNo)) {
-        $couponRule = pdo_fetch('select * from '.tablename(YOUMI_NAME. '_group').' order by id desc');
+        $couponRule = pdo_fetch('select * from ' . tablename(YOUMI_NAME . '_group') . ' order by id desc');
 
         if ($couponRule) {
             $dbDate = substr($couponRule['arrangeNo'], 2, 8);
@@ -123,12 +132,12 @@ function getGroupId()
             if ($today == $dbDate) {
                 $couponRuleNo = addZero(++$dbNo, 4);
                 $couponRuleDate = $today;
-                return ($couponRuleDate . $couponRuleNo) ;
+                return ($couponRuleDate . $couponRuleNo);
             }
         }
         $couponRuleNo = '0001';
         $couponRuleDate = $today;
-        return  ($couponRuleDate . $couponRuleNo) ;
+        return ($couponRuleDate . $couponRuleNo);
     }
     if ($today == $cacheDate) {
         $couponRuleNo = addZero(++$cacheNo, 4);
@@ -136,8 +145,9 @@ function getGroupId()
         $couponRuleNo = '0001';
     }
     $couponRuleDate = $today;
-    return  ($couponRuleDate . $couponRuleNo) ;
+    return ($couponRuleDate . $couponRuleNo);
 }
+
 /**
  * 用户更新订单
  * do   :   order   op  :   update
@@ -234,7 +244,7 @@ if ($op == 'display') {
         }
         $item['saler_qrurl'] = $_W['siteroot'] . 'app/' . $this->createMobileUrl('saler', ['user_type' => 2, 'order_id' => $item['id']]);
         $item['goods'] = pdo_get(YOUMI_NAME . '_' . 'activity', ['id' => $item['activity_id']]);
-        $item['goods']['image']=tomedia($item['goods']['image']);
+        $item['goods']['image'] = tomedia($item['goods']['image']);
         unset($item);
     }
     $total = pdo_fetchcolumn('SELECT COUNT(*) FROM ' . tablename(YOUMI_NAME . '_' . 'order') . ' WHERE uniacid = :uniacid ' . $condition, $paras);

@@ -251,8 +251,8 @@
         z-index: 5;
     }
     .acy_content{
-        background: #fff;
-        border-radius: 5px;
+        /*background: #fff;*/
+        /*border-radius: 5px;*/
         padding: 2%;
     }
 
@@ -682,7 +682,7 @@
     <div class="tips"></div>
     <!--头部-->
     <div class="a_head p_relative">
-        <img class="h_img" src="{$activity['image']}{YOUMI_URL_APP}img/m_headimg.jpg" alt="">
+        <img class="h_img" src="{$activity['image']}" alt="">
         <a href="{php echo $this->createMobileUrl('user')}" class="p_absolute ah_user">个人中心</a>
         <div class="p_absolute ah_share" onclick="$('.open_share,.bg_fixed').fadeIn()">分享</div>
         <!--弹幕-->
@@ -698,22 +698,22 @@
             <!--<div class="p_absolute">距离活动结束还有:<span class="act_day"></span>天<span class="act_hour"></span>时<span class="act_min"></span>分<span class="act_sec"></span>秒</div>-->
             <div class="flex flex_j_center">
                 <div>
-                    <span class="act_day">12</span>
+                    <span class="act_day"></span>
                     <p>DATS</p>
                 </div>
                 <div style="font-size: 32px;margin: 0 4px;position: relative;bottom: 3px"> : </div>
                 <div>
-                    <span class="act_hour">12</span>
+                    <span class="act_hour"></span>
                     <p>HOURSE</p>
                 </div>
                 <div style="font-size: 32px;margin: 0 4px;position: relative;bottom: 3px"> : </div>
                 <div>
-                    <span class="act_min">12</span>
+                    <span class="act_min"></span>
                     <p>MIN</p>
                 </div>
                 <div style="font-size: 32px;margin: 0 4px;position: relative;bottom: 3px"> : </div>
                 <div>
-                    <span class="act_sec">12</span>
+                    <span class="act_sec"></span>
                     <p>SEC</p>
                 </div>
             </div>
@@ -721,7 +721,7 @@
         </div>
         <!--参团人员头像-->
         <div class="members">
-            <div class="m_first">已有<span>5</span><span>8</span><span>7</span>人参加团购</div>
+            <div class="m_first">已有<span>{$activity['participate']}</span>人参加团购</div>
             <div class="notice_active ac_messages sys_color">
                 <ul>
                     <li class="notice_active_ch ft12">
@@ -775,7 +775,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="m_last">已有222团/浏览量:16666</div>
+            <div class="m_last">已有222团/浏览量:{$activity['pv']}</div>
         </div>
         <!--团列表-->
         <div class="groups">
@@ -784,18 +784,16 @@
                 <div onclick="$('.open_groups,.bg_fixed').fadeIn()" style="color: #aaa">查看更多<i class="iconfont icon-jiantouyou"></i></div>
             </div>
             <div class="g_list">
+                {loop $groups $gdx $gv}
+                {if $gdx<2}
                 <div class="g_detail flex flex_a_center">
-                    <img src="{$member['avatar']}" alt="">
-                    <span class="flex1">XXXXX</span>
-                    <div>还差 <span style="color: #FFC600;font-size: 12px">1人</span>拼成</div>
+                    <img src="{$gv['avatar']}" alt="">
+                    <span class="flex1">{$gv['nickname']}</span>
+                    <div>还差 <span style="color: #FFC600;font-size: 12px">{php echo $gv['total_num']-$gv['now_num']}人</span>拼成</div>
                     <a href="">去拼团</a>
                 </div>
-                <div class="g_detail flex flex_a_center">
-                    <img src="{$member['avatar']}" alt="">
-                    <span class="flex1">XXXXX</span>
-                    <div>还差 <span style="color: #FFC600;font-size: 12px">1人</span>拼成</div>
-                    <a href="">去拼团</a>
-                </div>
+                {/if}
+                {/loop}
             </div>
         </div>
         <!--拼团玩法-->
@@ -806,7 +804,7 @@
             <div class="acy_content">
                 <div class="acys_contents">
                     <!--内容-->
-                    {php echo htmlspecialchars_decode($activity['goods_val'])}
+                    {php echo htmlspecialchars_decode($activity['desc_val'])}
                 </div>
             </div>
             <img class="iconPig" src="{YOUMI_URL_APP}img/pig.png" alt="">
@@ -834,78 +832,14 @@
     <div class="open_groups">
         <h4>正在拼单</h4>
         <div class="og_list" style="padding: 10px">
+            {loop $groups $gdx $gv}
             <div class="g_detail flex flex_a_center">
-                <img src="{$member['avatar']}" alt="">
-                <span class="flex1">XXXXX</span>
-                <div>还差 <span style="color: #FFC600;font-size: 12px">1人</span>拼成</div>
+                <img src="{$gv['avatar']}" alt="">
+                <span class="flex1">{$gv['nickname']}</span>
+                <div>还差 <span style="color: #FFC600;font-size: 12px">{php echo $gv['total_num']-$gv['now_num']}人</span>拼成</div>
                 <a href="">去拼团</a>
             </div>
-            <div class="g_detail flex flex_a_center">
-                <img src="{$member['avatar']}" alt="">
-                <span class="flex1">XXXXX</span>
-                <div>还差 <span style="color: #FFC600;font-size: 12px">1人</span>拼成</div>
-                <a href="">去拼团</a>
-            </div>
-            <div class="g_detail flex flex_a_center">
-                <img src="{$member['avatar']}" alt="">
-                <span class="flex1">XXXXX</span>
-                <div>还差 <span style="color: #FFC600;font-size: 12px">1人</span>拼成</div>
-                <a href="">去拼团</a>
-            </div>
-            <div class="g_detail flex flex_a_center">
-                <img src="{$member['avatar']}" alt="">
-                <span class="flex1">XXXXX</span>
-                <div>还差 <span style="color: #FFC600;font-size: 12px">1人</span>拼成</div>
-                <a href="">去拼团</a>
-            </div>
-            <div class="g_detail flex flex_a_center">
-                <img src="{$member['avatar']}" alt="">
-                <span class="flex1">XXXXX</span>
-                <div>还差 <span style="color: #FFC600;font-size: 12px">1人</span>拼成</div>
-                <a href="">去拼团</a>
-            </div>
-            <div class="g_detail flex flex_a_center">
-                <img src="{$member['avatar']}" alt="">
-                <span class="flex1">XXXXX</span>
-                <div>还差 <span style="color: #FFC600;font-size: 12px">1人</span>拼成</div>
-                <a href="">去拼团</a>
-            </div>
-            <div class="g_detail flex flex_a_center">
-                <img src="{$member['avatar']}" alt="">
-                <span class="flex1">XXXXX</span>
-                <div>还差 <span style="color: #FFC600;font-size: 12px">1人</span>拼成</div>
-                <a href="">去拼团</a>
-            </div>
-            <div class="g_detail flex flex_a_center">
-                <img src="{$member['avatar']}" alt="">
-                <span class="flex1">XXXXX</span>
-                <div>还差 <span style="color: #FFC600;font-size: 12px">1人</span>拼成</div>
-                <a href="">去拼团</a>
-            </div>
-            <div class="g_detail flex flex_a_center">
-                <img src="{$member['avatar']}" alt="">
-                <span class="flex1">XXXXX</span>
-                <div>还差 <span style="color: #FFC600;font-size: 12px">1人</span>拼成</div>
-                <a href="">去拼团</a>
-            </div>
-            <div class="g_detail flex flex_a_center">
-                <img src="{$member['avatar']}" alt="">
-                <span class="flex1">XXXXX</span>
-                <div>还差 <span style="color: #FFC600;font-size: 12px">1人</span>拼成</div>
-                <a href="">去拼团</a>
-            </div>
-            <div class="g_detail flex flex_a_center">
-                <img src="{$member['avatar']}" alt="">
-                <span class="flex1">XXXXX</span>
-                <div>还差 <span style="color: #FFC600;font-size: 12px">1人</span>拼成</div>
-                <a href="">去拼团</a>
-            </div>
-            <div class="g_detail flex flex_a_center">
-                <img src="{$member['avatar']}" alt="">
-                <span class="flex1">XXXXX</span>
-                <div>还差 <span style="color: #FFC600;font-size: 12px">1人</span>拼成</div>
-                <a href="">去拼团</a>
-            </div>
+            {/loop}
         </div>
         <i onclick="$('.open_groups,.bg_fixed').fadeOut()" class="iconfont icon-Close"></i>
     </div>
@@ -936,11 +870,11 @@
             <p class="ft12">电话</p>
         </div>
         <div onclick="openSign()" class="buy_dan">
-            <div>￥<span>599.00</span></div>
+            <div>￥<span>{$activity['single_price']}</span></div>
             <div class="ft16">单人购买</div>
         </div>
         <div onclick="openSign()" class="buy_tuan">
-            <div>￥<span>199.00</span></div>
+            <div>￥<span>{$activity['group_price']}</span></div>
             <div class="ft16">我要开团</div>
         </div>
     </div>
@@ -1043,7 +977,7 @@
     })
 
 
-    // countDown({php echo intval($activity['endtime']-time())})//时间戳相减
+    countDown({php echo intval($activity['endtime']-time())})//时间戳相减
     //带天数的倒计时
     function countDown(times){
         var timer=null;
@@ -1181,12 +1115,12 @@
                 }
             }, 'json'
         );
-    })
+    });
 
 
     console.log('$activity',{php echo json_encode($activity)})
     console.log('$records',{php echo json_encode($records)})
-    console.log('$cut',{php echo json_encode($cut)})
+    console.log('$groups',{php echo json_encode($groups)})
 </script>
 <script type="text/javascript">
     var records={php echo json_encode($records)}||'';

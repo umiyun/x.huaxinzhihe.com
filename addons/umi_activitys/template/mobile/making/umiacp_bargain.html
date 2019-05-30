@@ -1226,7 +1226,9 @@
                 for (var j = 0; j < $('.basic_setting').length;j++) {
                     var goodDom=$($('.basic_setting')[j])
                     goods.push({
+                        {if $_GPC['cz']=='bj'}
                         id:goodDom.find('.good_id').val(),
+                        {/if}
                         image:goodDom.find('.good_logo').attr('src'),
                         title:goodDom.find('.d_title').val(),
                         oprice:goodDom.find('.d_oprice').val(),

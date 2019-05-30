@@ -38,7 +38,7 @@ if ($op == 'create_order') {
     //团状态
     //团满了没
     //重复参团
-
+//团长免单
 
     $activity = pdo_fetch("select * from " . tablename(YOUMI_NAME . '_' . 'activity') . " where `uniacid` = {$uniacid} and id = {$activity_id} ");
 
@@ -51,7 +51,7 @@ if ($op == 'create_order') {
     if ($activity['status'] == 3) {
         youmi_result(1, '活动未开始');
     }
-    $price = 0;
+    $price =-1;
     switch ($type) {
         case 1:
             //开团价
@@ -67,8 +67,11 @@ if ($op == 'create_order') {
             break;
     }
 
-    if ($price <= 0) {
+    if ($price < 0) {
         youmi_result(1, '金额错误');
+    }
+    if ($price==0){
+        youmi_result(2, '开团成功');
     }
 
     $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id, 'group_id' => $group_id, 'mid' => $this->mid, 'status' => [2, 3]]);
@@ -99,7 +102,7 @@ if ($op == 'create_order') {
     $order['realname'] = $realname;
     $order['mobile'] = $mobile;
     $order['userinfo'] = $userinfo;
-
+    $order['price']=$price;
 
 
     $status = pdo_insert(YOUMI_NAME . '_' . 'order', $order);

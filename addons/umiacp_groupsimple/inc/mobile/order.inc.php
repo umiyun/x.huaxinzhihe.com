@@ -70,15 +70,15 @@ if ($op == 'create_order') {
     if ($price < 0) {
         youmi_result(1, '金额错误');
     }
-    if ($price==0){
+    if ($price==0&&$type==1){
         youmi_result(2, '开团成功');
     }
 
-    $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id, 'group_id' => $group_id, 'mid' => $this->mid, 'status' => [2, 3]]);
+    $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id,  'mid' => $this->mid, 'status' => [2, 3]]);
     if ($order) {
         youmi_result(1, '请勿重复购买');
     }
-    $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id, 'group_id' => $group_id, 'mid' => $this->mid, 'status' => 1]);
+    $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id, 'mid' => $this->mid, 'status' => 1]);
     if ($order) {
         $order['price'] = $price;
         pdo_update(YOUMI_NAME . '_' . 'order', ['price' => floatval($order['price'])], ['id' => $order['id']]);
@@ -86,12 +86,14 @@ if ($op == 'create_order') {
     }
 
 
+
+
     $moduleid = empty($_W['fans']['uid']) ? '000000' : sprintf("%06d", $_W['fans']['uid']);
     $tid = date('YmdHis') . $moduleid . random(8, 1);
 
     $order['uniacid'] = $uniacid;
     $order['mid'] = $this->mid;
-    $order['group_id'] = getGroupId();
+
     $order['activity_id'] = $activity_id;
     $order['shop_id'] = $activity['shop_id'];
     $order['title'] = $activity['title'];
@@ -103,6 +105,18 @@ if ($op == 'create_order') {
     $order['mobile'] = $mobile;
     $order['userinfo'] = $userinfo;
     $order['price']=$price;
+
+
+    switch ($type) {
+        case 1:
+            //开团价
+            $order['group_id'] = getGroupId();
+            break;
+        case 2:
+            //团购价
+            $order['group_id'] = $group_id;
+            break;
+    }
 
 
     $status = pdo_insert(YOUMI_NAME . '_' . 'order', $order);

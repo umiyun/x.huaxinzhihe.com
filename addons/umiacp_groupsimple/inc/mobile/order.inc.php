@@ -51,7 +51,7 @@ if ($op == 'create_order') {
     if ($activity['status'] == 3) {
         youmi_result(1, '活动未开始');
     }
-    $price =-1;
+    $price = -1;
     switch ($type) {
         case 1:
             //开团价
@@ -70,11 +70,12 @@ if ($op == 'create_order') {
     if ($price < 0) {
         youmi_result(1, '金额错误');
     }
-    if ($price==0&&$type==1){
+    if ($price == 0 && $type == 1) {
         youmi_result(2, '开团成功');
     }
 
-    $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id,  'mid' => $this->mid, 'status' => [2, 3]]);
+
+    $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id, 'mid' => $this->mid, 'status' => [2, 3], 'pay_type' => 1]);
     if ($order) {
         youmi_result(1, '请勿重复购买');
     }
@@ -84,8 +85,6 @@ if ($op == 'create_order') {
         pdo_update(YOUMI_NAME . '_' . 'order', ['price' => floatval($order['price'])], ['id' => $order['id']]);
         youmi_result(0, '下单成功', $order);
     }
-
-
 
 
     $moduleid = empty($_W['fans']['uid']) ? '000000' : sprintf("%06d", $_W['fans']['uid']);
@@ -104,9 +103,10 @@ if ($op == 'create_order') {
     $order['realname'] = $realname;
     $order['mobile'] = $mobile;
     $order['userinfo'] = $userinfo;
-    $order['price']=$price;
+    $order['price'] = $price;
 
 
+    $order['pay_type'] = $type;
     switch ($type) {
         case 1:
             //开团价

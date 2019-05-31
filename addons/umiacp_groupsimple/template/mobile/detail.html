@@ -166,11 +166,9 @@
 
 
     .a_content{
-        /*padding: 4%;*/
-        /*box-sizing: border-box;*/
-        /*background: url("{$activity['bgimage']}") repeat 100%;*/
+        box-sizing: border-box;
+        background: url("{$activity['bgimage']}") repeat 100%;
         padding-bottom: 35%;
-        background: #FFC600;
     }
     .ac_title{
         font-weight: 700;
@@ -353,6 +351,8 @@
         z-index: 10;
         width: 100%;
         text-align: center;
+        height: 50px;
+
     }
     .a_footer a{
         font-size: 20px;
@@ -569,17 +569,20 @@
         background: #EDEDED;
         width: 20%;
         padding: 4px;
+        height: 50px;
     }
     .buy_dan{
         width: 40%;
         background: #FFC700;
         padding: 4px 0;
+        height: 50px;
     }
     .buy_tuan{
         width: 40%;
         color: #FFC700;
         background: #000;
         padding: 4px 0;
+        height: 50px;
     }
     .shop_detail .icon-dianhua{
         color: #7132BF;
@@ -622,6 +625,20 @@
         margin: 0;
         height: 40px;
         font-size: 20px;
+    }
+    .leader{
+        top: 0;
+        left: -10px;
+        font-size: 10px;
+        background: #FFC600;
+        padding: 0 4px;
+        border-radius: 20px;
+    }
+    .w_apace{
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        font-size: 10px;
     }
 </style>
 <!--公告，头像滚动-->
@@ -673,10 +690,12 @@
         overflow: hidden;
         display: flex;
         justify-content: space-around;
+        margin-bottom: 10px;
     }
     .notice_active li>div{
         width: 15%;
         text-align: center;
+        position: relative;
     }
     .notice_active img{
         width: 42px;
@@ -728,80 +747,29 @@
         </div>
         <!--参团人员头像-->
         <div class="members">
-            <div class="m_first">已有<span>{$activity['participate']}</span>人参加团购</div>
+            <div class="m_first">已有<span>{php echo count($members)}</span>人参加团购</div>
             <div class="notice_active ac_messages sys_color">
                 <ul>
+                    {loop $members $rdx $rv}
+                    {if ($rdx%6) == 0}
                     <li class="notice_active_ch ft12">
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
+                        <div>
+                            <img src="{$rv['avatar']}" alt="">
+                            <p class="w_apace">{$rv['nickname']}</p>
+                            {if $rv['leader']=='1'}
+                            <div class="p_absolute leader">团长</div>
+                            {/if}
+                        </div>
+                    {else}
+                    <div><img src="{$rv['avatar']}" alt=""><p class="w_apace">{$rv['nickname']}</p></div>
+                    {/if}
+                    {if (($rdx+1)%6) == 0}
                     </li>
-                    <li class="notice_active_ch ft12">
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
-                    </li>
-                    <li class="notice_active_ch ft12">
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
-                    </li>
-                    <li class="notice_active_ch ft12">
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
-                    </li>
-                    <li class="notice_active_ch ft12">
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
-                    </li>
-                    <li class="notice_active_ch ft12">
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
-                    </li>
-                    <li class="notice_active_ch ft12">
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
-                        <div><img src="{$member['avatar']}" alt=""><p>{$member['nickname']}</p></div>
-                    </li>
+                    {/if}
+                    {/loop}
                 </ul>
             </div>
-            <div class="m_last">已有222人</div>
-        </div>
-        <!--团列表-->
-        <div class="groups">
-            <div class="g_more flex">
-                <div class="flex1">26人在拼单，可直接参与</div>
-                <div onclick="$('.open_groups,.bg_fixed').fadeIn()" style="color: #aaa">查看更多<i class="iconfont icon-jiantouyou"></i></div>
-            </div>
-            <div class="g_list">
-                {loop $groups $gdx $gv}
-                {if $gdx<2}
-                <div class="g_detail flex flex_a_center">
-                    <img src="{$gv['avatar']}" alt="">
-                    <span class="flex1">{$gv['nickname']}</span>
-                    <div>还差 <span style="color: #FFC600;font-size: 12px">{php echo $gv['total_num']-$gv['now_num']}人</span>拼成</div>
-                    <a href="">去拼团</a>
-                </div>
-                {/if}
-                {/loop}
-            </div>
+            <div class="m_last"></div>
         </div>
         <!--拼团玩法-->
         <img style="width: 100%" src="{YOUMI_URL_APP}img/rule.png" alt="">
@@ -835,21 +803,6 @@
         <i class="iconfont icon-xiangshang active"></i>
         <div>顶部</div>
     </div>
-    <!--查看更多团-->
-    <div class="open_groups">
-        <h4>正在拼单</h4>
-        <div class="og_list" style="padding: 10px">
-            {loop $groups $gdx $gv}
-            <div class="g_detail flex flex_a_center">
-                <img src="{$gv['avatar']}" alt="">
-                <span class="flex1">{$gv['nickname']}</span>
-                <div>还差 <span style="color: #FFC600;font-size: 12px">{php echo $gv['total_num']-$gv['now_num']}人</span>拼成</div>
-                <a href="">去拼团</a>
-            </div>
-            {/loop}
-        </div>
-        <i onclick="$('.open_groups,.bg_fixed').fadeOut()" class="iconfont icon-Close"></i>
-    </div>
     <!--分享-->
     <div class="open_share">
         <img src="{YOUMI_URL_APP}img/m_share.png" alt="">
@@ -872,22 +825,19 @@
     {template 'signup'}
     <!--底部按钮-->
     <div class="a_footer flex flex_a_center">
-        <div onclick="openConcat()" class="shop_detail">
-            <i class="iconfont icon-dianhua"></i>
-            <p class="ft12">电话</p>
-        </div>
-        <div onclick="openSign()" class="buy_dan">
+        <a href="{php echo $this->createMobileUrl('index',['activity_id'=>$activity_id])}" class="shop_detail">
+            <i class="iconfont icon-Menu_Home" style="font-size: 20px"></i>
+            <p class="ft12">首页</p>
+        </a>
+        <div onclick="openSign(3,{$_GPC['id']})" class="buy_dan">
             <div>￥<span>{$activity['single_price']}</span></div>
             <div class="ft16">单人购买</div>
         </div>
-        <div onclick="openSign()" class="buy_tuan">
+        <div onclick="openSign(2,{$_GPC['id']})" class="buy_tuan">
             <div>￥<span>{$activity['group_price']}</span></div>
-            <div class="ft16">我要开团</div>
+            <div class="ft16">我要参团</div>
         </div>
     </div>
-
-
-
 </div>
 {template 'canvas_share'}
 <script>
@@ -1061,13 +1011,16 @@
     }
 
     //报名
-    function openSign(){
+    function openSign(type,id){
         var kj_userinfo=JSON.parse(localStorage.getItem('bm_userinfo'))
         if(!!kj_userinfo){
             $($(".os_input").eq(0)).find('input').val(kj_userinfo.realname)
             $($(".os_input").eq(1)).find('input').val(kj_userinfo.mobile)
         }
-        $('.open_signup,.bg_fixed_sign').fadeIn()
+        var clsname=".os_change[data-type='"+type+"']";
+        $(clsname).show();
+        $('.open_signup,.bg_fixed_sign').fadeIn();
+        $('.open_signup').attr('data-id',id).attr('data-type',type);
     }
 
     // 支付
@@ -1111,7 +1064,8 @@
                                         setTimeout(function () {
                                             location.reload();
                                         },2000)
-                                    });
+                                    }
+                                );
                             } else {
                                 tips(data.message)
                             }
@@ -1127,7 +1081,8 @@
 
     console.log('$activity',{php echo json_encode($activity)})
     console.log('$records',{php echo json_encode($records)})
-    console.log('$groups',{php echo json_encode($groups)})
+    console.log('$members',{php echo json_encode($members)})
+    console.log('$leader',{php echo json_encode($leader)})
 </script>
 <script type="text/javascript">
     var records={php echo json_encode($records)}||'';
@@ -1181,13 +1136,13 @@
     // 公告
     function timer(opj){
         $(opj).find('ul').animate({
-            marginTop : "-58px"
+            marginTop : "-65px"
         },500,function(){
             $(this).css({marginTop : "1px"}).find("li:first").appendTo(this);
         })
     }
     var num = $('.notice_active').find('li').length;
-    if(num > 1){
+    if(num > 5){
         var time=setInterval('timer(".notice_active")',2000);
         $('.gg_more a').mousemove(function(){
             clearInterval(time);

@@ -46,7 +46,7 @@
                 'type':'png'
             },
             function (data) {
-                $('#qrcode img').attr('src',data.message)
+                $('#qrcode img').attr('src',data.message);
                 var avatar=("{$_W['fans']['avatar']}");
                 if(avatar.slice(0,5)!='https'){
                     avatar=avatar.replace('http','https');

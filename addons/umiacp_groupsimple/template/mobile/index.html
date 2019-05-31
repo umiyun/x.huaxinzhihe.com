@@ -523,7 +523,7 @@
         border-radius: 50%;
         margin-right: 8px;
     }
-    .gt_detail>span{
+    .gt_detail>div.flex1{
         overflow: hidden;
         margin-right: 24px;
         text-overflow: ellipsis;
@@ -535,6 +535,10 @@
         display: inline-block;
         border-radius: 3px;
         margin-left: 8px;
+    }
+    .g_detail .go_detail{
+        background: #FFDC64;
+        color: #333;
     }
     .open_groups{
         position: fixed;
@@ -630,6 +634,12 @@
         padding: 0 4px;
         border-radius: 20px;
     }
+    .w_apace{
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        font-size: 10px;
+    }
 </style>
 <!--公告，头像滚动-->
 <style>
@@ -680,6 +690,7 @@
         overflow: hidden;
         display: flex;
         justify-content: space-around;
+        margin-bottom: 10px;
     }
     .notice_active li>div{
         width: 15%;
@@ -747,15 +758,14 @@
                         {if ($rdx%6) == 0}
                         <li class="notice_active_ch ft12">
                             <div>
-                                <img src="{$rv['avatar']}" alt="">
-                                <p>{$rv['nickname']}</p>
+                                <img src="{$rv['avatar']}" alt=""><p class="w_apace">{$rv['nickname']}</p>
                                 {if $rv['leader']=='1'}
                                 <div class="p_absolute leader">团长</div>
                                 {/if}
                             </div>
                         {else}
                         <div>
-                            <img src="{$rv['avatar']}" alt=""><p>{$rv['nickname']}</p>
+                            <img src="{$rv['avatar']}" alt=""><p class="w_apace">{$rv['nickname']}</p>
                             {if $rv['leader']=='1'}
                             <div class="p_absolute leader">团长</div>
                             {/if}
@@ -780,9 +790,12 @@
                 {if $gdx<2}
                 <div class="g_detail flex flex_a_center">
                     <img src="{$gv['avatar']}" alt="">
-                    <span class="flex1">{$gv['nickname']}</span>
-                    <div>还差 <span style="color: #FFC600;font-size: 12px">{php echo $gv['group_num']-$gv['now_num']}人</span>拼成</div>
-                    <a href="{php echo $this->createMobileurl('index',['activity_id'=>$activity_id,'fmid'=>$_GPC['fmid'],'op'=>'detail','id'=>$gv['id']])}">立即参团</a>
+                    <div class="flex1">
+                        <p>{$gv['nickname']}</p>
+                        <div class="ft10">还差 <span style="color: #FFC600;font-size: 12px">{php echo $gv['group_num']-$gv['now_num']}人</span>拼成</div>
+                    </div>
+                    <a class="go_detail" href="{php echo $this->createMobileurl('index',['activity_id'=>$activity_id,'fmid'=>$_GPC['fmid'],'op'=>'detail','id'=>$gv['id']])}">查看详情</a>
+                    <a href="javascript:;" onclick="openSign(2,{$gv['id']})">立即参团</a>
                 </div>
                 {/if}
                 {/loop}
@@ -827,9 +840,12 @@
             {loop $groups $gdx $gv}
             <div class="g_detail flex flex_a_center">
                 <img src="{$gv['avatar']}" alt="">
-                <span class="flex1">{$gv['nickname']}</span>
-                <div>还差 <span style="color: #FFC600;font-size: 12px">{php echo $gv['group_num']-$gv['now_num']}人</span>拼成</div>
-                <a href="{php echo $this->createMobileurl('index',['activity_id'=>$activity_id,'op'=>'detail','id'=>$gv['id']])}">立即参团</a>
+                <div class="flex1">
+                    <p>{$gv['nickname']}</p>
+                    <div class="ft10">还差 <span style="color: #FFC600;font-size: 12px">{php echo $gv['group_num']-$gv['now_num']}人</span>拼成</div>
+                </div>
+                <a class="go_detail" href="{php echo $this->createMobileurl('index',['activity_id'=>$activity_id,'fmid'=>$_GPC['fmid'],'op'=>'detail','id'=>$gv['id']])}">查看详情</a>
+                <a href="javascript:;"  onclick="openSign(2,{$gv['id']})">立即参团</a>
             </div>
             {/loop}
         </div>
@@ -863,7 +879,7 @@
             <i class="iconfont icon-dianhua"></i>
             <p class="ft12">电话</p>
         </div>
-        <div onclick="openSign(1)" class="buy_dan">
+        <div onclick="openSign(3)" class="buy_dan">
             <div>￥<span>{$activity['single_price']}</span></div>
             <div class="ft16">单人购买</div>
         </div>
@@ -1048,14 +1064,17 @@
     }
 
     //报名
-    function openSign(type){
+    function openSign(type,id){
+        $('.open_groups,.bg_fixed').fadeOut();
         var kj_userinfo=JSON.parse(localStorage.getItem('bm_userinfo'))
         if(!!kj_userinfo){
             $($(".os_input").eq(0)).find('input').val(kj_userinfo.realname)
             $($(".os_input").eq(1)).find('input').val(kj_userinfo.mobile)
         }
+        var clsname=".os_change[data-type='"+type+"']";
+        $(clsname).show();
         $('.open_signup,.bg_fixed_sign').fadeIn();
-        $('.open_signup').attr('data-type',type);
+        $('.open_signup').attr('data-id',id).attr('data-type',type);
     }
 
     console.log('$activity',{php echo json_encode($activity)})
@@ -1160,13 +1179,13 @@
     // 公告
     function timer(opj){
         $(opj).find('ul').animate({
-            marginTop : "-58px"
+            marginTop : "-65px"
         },500,function(){
             $(this).css({marginTop : "1px"}).find("li:first").appendTo(this);
         })
     }
     var num = $('.notice_active').find('li').length;
-    if(num > 1){
+    if(num > 5){
         var time=setInterval('timer(".notice_active")',2000);
         $('.gg_more a').mousemove(function(){
             clearInterval(time);

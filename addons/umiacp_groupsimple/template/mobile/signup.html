@@ -33,6 +33,7 @@
         border: 1px solid #000;
         border-radius: 50px;
         padding: 4px;
+        display: none;
     }
     .os_change.active{
         background: #000;
@@ -42,8 +43,9 @@
 <div class="open_signup">
     <h4>距离参加活动只剩一步啦!</h4>
     <div style="padding: 3%;">
-        <div data-type="3" class="os_change">单独购买价￥{$activity['single_price']}</div>
-        <div data-type="1" class="os_change active">我要开团·3人拼团价￥{$activity['leader_price']}</div>
+        <div data-type="3" class="os_change active">单独购买价￥{$activity['single_price']}</div>
+        <div data-type="1" class="os_change active">我要开团·{$activity['group_num']}人 拼团价￥{$activity['leader_price']}</div>
+        <div data-type="2" class="os_change active">我要参团·{$activity['group_num']}人 参团价￥{$activity['group_price']}</div>
         {loop $activity['userinfo'] $av}
         {if !empty($av['title'])}
         <div class="os_input">
@@ -86,7 +88,6 @@
         var userinfo='';
 
         var tip=false;
-        var type=$('.os_change.active').attr('data-type');
         if(realname==''){
             tips('请输入姓名');
             return false;
@@ -103,7 +104,6 @@
         }
         if($('.os_input input').length>2){
             for (var i=2;i<$('.os_input input').length;i++){
-
                 var i_val=$($('.os_input input')[i]).val()
                 var i_name=$($('.os_input input')[i]).attr('data-name')
                 userinfo+=i_name+':'+i_val+' ;'
@@ -126,8 +126,9 @@
                 'realname':realname,
                 'mobile':mobile,
                 'userinfo':userinfo,
-                'type':type,//1:开团 2:团购 3.:单买
-                'group_id':''
+                'type':$('.open_signup').attr('data-type'),//1:开团 2:团购 3.:单买
+                'group_id':$('.open_signup').attr('data-id'),
+                'fmid':"{$_GPC['fmid']}"
             },
             function (data) {
                 if(!!data.data.id) {
@@ -164,12 +165,17 @@
                                             location.reload();
                                         },2000)
                                     });
-                            } else {
+                            }else {
                                 tips(data.message)
                             }
                         }, 'json'
                     );
-                }else{
+                }else if(data.errno == 2){
+                    tips(data.message)
+                    setTimeout(function () {
+                        location.reload()
+                    },1500)
+                } else{
                     tips(data.message);
                 }
             }, 'json'

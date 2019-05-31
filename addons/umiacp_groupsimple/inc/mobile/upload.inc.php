@@ -28,15 +28,15 @@ $setting = youmi_setting_get_list();
  * message: 图片路径     生成缩略图错误        远程上传错误
  */
 if ($op == 'image') {
-
+    unset($file);
     $file['file'] = $_GPC['file'];
     $file['name'] = $_GPC['name'];
     $file['size'] = $_GPC['size'];
-    $file['type'] = $_GPC['type'];
+//    $file['type'] = $_GPC['type'];
     $file['error'] = 0;
-    $res = umi_uploadimg($file, 'image');
+    $res = umi_uploadimg($file, 'image','',intval($_GPC['save']));
 
-    youmi_result($res['errno'], $res['message']);
+    youmi_result($res['errno'], tomedia($res['message']));
 }
 
 /**

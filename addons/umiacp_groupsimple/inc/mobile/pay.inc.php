@@ -39,10 +39,10 @@ if ($op == 'pay') {
         youmi_result(1, '活动未开始');
     }
 
-    if ($activity['yprice'] <= 0) {
+    if ( $order['price'] <= 0) {
         youmi_result(1, '金额错误');
     }
-//    youmi_result($return['errno'], $order, $return);
+
 
     if ($order && $order['status'] == 1) {
         //构造支付请求中的参数

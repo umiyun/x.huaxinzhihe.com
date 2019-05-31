@@ -24,12 +24,15 @@ $op = trim($_GPC['op']) ? trim($_GPC['op']) : 'display';
  */
 if ($op == 'create_order') {
     $activity_id = intval($_GPC['activity_id']);
-    $group_id = intval($_GPC['group_id']);
-    $type = intval($_GPC['type']);
-    $realname = intval($_GPC['realname']);
-    $mobile = intval($_GPC['mobile']);
-    $userinfo = intval($_GPC['userinfo']);
 
+    $data['group_id'] = intval($_GPC['group_id']);
+    $type = intval($_GPC['type']);
+    $data['type'] = $type;
+    $data['realname'] = intval($_GPC['realname']);
+    $data['mobile'] = intval($_GPC['mobile']);
+    $data['userinfo'] = intval($_GPC['userinfo']);
+
+    $data['mid'] = $this->mid;
 //    youmi_puv('create_order', $activity_id);
 
     if ($activity_id <= 0) {
@@ -39,6 +42,8 @@ if ($op == 'create_order') {
     //团满了没
     //重复参团
 //团长免单
+
+
 
     $activity = pdo_fetch("select * from " . tablename(YOUMI_NAME . '_' . 'activity') . " where `uniacid` = {$uniacid} and id = {$activity_id} ");
 
@@ -66,58 +71,88 @@ if ($op == 'create_order') {
             $price = $activity['single_price'];
             break;
     }
-
+    $price = floatval($price);
+    $data['price'] = $price;
     if ($price < 0) {
         youmi_result(1, '金额错误');
     }
     if ($price == 0 && $type == 1) {
-        youmi_result(2, '开团成功');
+        $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id, 'mid' => $this->mid, 'status' => [2, 3], 'pay_type' => 1]);
+        if ($order) {
+            youmi_result(1, '请勿重复购买');
+        }
+        $data['group_id'] = getGroupId();
+        $data['leader'] = 1;
+        $data['member'] = $this->getMemberInfo($this->mid);
+        $group = getGroupData($data, $activity, $uniacid);
+        pdo_insert(YOUMI_NAME . '_' . 'group', $group);
+        $data['group_id'] = pdo_insertid();
+        unset($data['fmid']);
+        $order = getOrderData($data, $activity, $uniacid);
+
+        $order['status'] = 2;
+        $status = pdo_insert(YOUMI_NAME . '_' . 'order', $order);
+        $errno = $status ? 2 : 1;
+        youmi_result($errno, '开团' . ($status ? '成功' : '失败'));
     }
 
 
-    $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id, 'mid' => $this->mid, 'status' => [2, 3], 'pay_type' => 1]);
-    if ($order) {
-        youmi_result(1, '请勿重复购买');
-    }
-    $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id, 'mid' => $this->mid, 'status' => 1]);
-    if ($order) {
-        $order['price'] = $price;
-        pdo_update(YOUMI_NAME . '_' . 'order', ['price' => floatval($order['price'])], ['id' => $order['id']]);
-        youmi_result(0, '下单成功', $order);
-    }
 
 
-    $moduleid = empty($_W['fans']['uid']) ? '000000' : sprintf("%06d", $_W['fans']['uid']);
-    $tid = date('YmdHis') . $moduleid . random(8, 1);
 
-    $order['uniacid'] = $uniacid;
-    $order['mid'] = $this->mid;
-
-    $order['activity_id'] = $activity_id;
-    $order['shop_id'] = $activity['shop_id'];
-    $order['title'] = $activity['title'];
-    $order['ordersn'] = $tid;
-    $order['tid'] = $tid;
-    $order['status'] = 1;
-    $order['createtime'] = TIMESTAMP;
-    $order['realname'] = $realname;
-    $order['mobile'] = $mobile;
-    $order['userinfo'] = $userinfo;
-    $order['price'] = $price;
-
-
-    $order['pay_type'] = $type;
     switch ($type) {
         case 1:
-            //开团价
-            $order['group_id'] = getGroupId();
+            //开团
+            $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id, 'mid' => $this->mid, 'status' => [2, 3], 'pay_type' => 1]);
+            if ($order) {
+                youmi_result(1, '请勿重复购买');
+            }
+            $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id, 'mid' => $this->mid, 'status' => 1, 'pay_type' =>1]);
+            if ($order) {
+                $order['price'] = $price;
+                pdo_update(YOUMI_NAME . '_' . 'order', ['price' => floatval($order['price'])], ['id' => $order['id']]);
+                youmi_result(0, '下单成功', $order);
+            }
+            unset($data['fmid']);
+            $data['group_id'] = getGroupId();
+            $data['leader'] = 1;
+            $group = getGroupData($data, $activity, $uniacid);
+            pdo_insert(YOUMI_NAME . '_' . 'group', $group);
+            $data['group_id'] = pdo_insertid();
             break;
         case 2:
-            //团购价
-            $order['group_id'] = $group_id;
+            //团购
+            $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id, 'mid' => $this->mid, 'status' => [2, 3],'group_id'=>$data['group_id'] , 'pay_type' => 2]);
+            if ($order) {
+                youmi_result(1, '请勿重复购买');
+            }
+            $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id, 'mid' => $this->mid, 'status' => 1,'group_id'=>$data['group_id'], 'pay_type' => 2]);
+            if ($order) {
+                $order['price'] = $price;
+                pdo_update(YOUMI_NAME . '_' . 'order', ['price' => floatval($order['price'])], ['id' => $order['id']]);
+                youmi_result(0, '下单成功', $order);
+            }
+
+$data['fmid']=pdo_getcolumn(YOUMI_NAME . '_' . 'group',['id'=>$data['group_id']],'mid');
+            break;
+        case 3:
+            //单买
+            $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id, 'mid' => $this->mid, 'status' => 1, 'pay_type' => 3]);
+            if ($order) {
+                $order['price'] = $price;
+                pdo_update(YOUMI_NAME . '_' . 'order', ['price' => floatval($order['price'])], ['id' => $order['id']]);
+                youmi_result(0, '下单成功', $order);
+            }
             break;
     }
 
+
+
+
+
+    $data['member'] = $this->getMemberInfo($this->mid);
+
+    $order = getOrderData($data, $activity, $uniacid);
 
     $status = pdo_insert(YOUMI_NAME . '_' . 'order', $order);
     $order['id'] = pdo_insertid();
@@ -125,6 +160,51 @@ if ($op == 'create_order') {
     $errno = $status ? 0 : 1;
 
     youmi_result($errno, '下单' . ($status ? '成功' : '失败'), $order);
+}
+function getOrderData($data, $activity, $uniacid)
+{
+    $moduleid = empty($_W['fans']['uid']) ? '000000' : sprintf("%06d", $_W['fans']['uid']);
+    $tid = date('YmdHis') . $moduleid . random(8, 1);
+
+    $order['uniacid'] = $uniacid;
+    $order['mid'] = $data['mid'];
+    $order['activity_id'] = $activity['id'];
+    $order['shop_id'] = $activity['shop_id'];
+    $order['title'] = $activity['title'];
+    $order['ordersn'] = $tid;
+    $order['tid'] = $tid;
+    $order['status'] = 1;
+    $order['createtime'] = TIMESTAMP;
+    $order['realname'] = $data['realname'];
+    $order['mobile'] = $data['mobile'];
+    $order['userinfo'] = $data['userinfo'];
+    $order['price'] = $data['price'];
+    $order['pay_type'] = $data['type'];
+    $order['avatar'] = $data['member']['avatar'];
+    $order['nickname'] = $data['member']['nickname'];
+    $order['group_id'] = $data['group_id'];
+    $order['leader'] = $data['leader'];
+    $order['fmid'] = $data['fmid'];
+    return $order;
+}
+
+function getGroupData($data, $activity, $uniacid)
+{
+
+    $order['uniacid'] = $uniacid;
+    $order['mid'] = $data['mid'];
+    $order['activity_id'] = $activity['id'];
+    $order['shop_id'] = $activity['shop_id'];
+    $order['commission'] = $activity['commission'];
+    $order['createtime'] = time();
+    $order['group_id'] = $data['group_id'];
+    $order['group_num'] = $activity['group_num'];
+    $order['now_num'] = 1;
+
+    $order['nickname'] = $data['member']['nickname'];
+    $order['avatar'] = $data['member']['avatar'];
+
+    return $order;
 }
 
 function addZero($num, $len)
@@ -140,14 +220,17 @@ function getGroupId()
     $today = date('Ymd');
     $cacheNo = cache_load(YOUMI_NAME . '_GROUP_ID_NO_KEY');
     $cacheDate = cache_load(YOUMI_NAME . '_GROUP_ID_DATA_KEY');
+
     if (empty($cacheNo)) {
-        $couponRule = pdo_fetch('select * from ' . tablename(YOUMI_NAME . '_group') . ' order by id desc');
+        $couponRule = pdo_fetch('select group_id from ' . tablename(YOUMI_NAME . '_group') . ' order by id desc');
 
         if ($couponRule) {
-            $dbDate = substr($couponRule['arrangeNo'], 2, 8);
-            $dbNo = (int)substr($couponRule['arrangeNo'], 10);
+            $dbDate = substr($couponRule['group_id'], 0, 8);
+            $dbNo = (int)substr($couponRule['group_id'], 8);
+
             if ($today == $dbDate) {
                 $couponRuleNo = addZero(++$dbNo, 4);
+
                 $couponRuleDate = $today;
                 return ($couponRuleDate . $couponRuleNo);
             }

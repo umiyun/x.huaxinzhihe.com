@@ -77,7 +77,7 @@ class WeixinPay
             'out_trade_no' => $this->out_trade_no,                                  //商户订单号
             'total_fee' => $this->total_fee,                                        //总金额 单位 分
             'spbill_create_ip' => $_SERVER['REMOTE_ADDR'],                          //终端IP
-            'notify_url' => $_W['siteroot'] . 'payment/wechat/notify.php',          //通知地址  确保外网能正常访问
+            'notify_url' => $_W['siteroot'] .'addons/' . YOUMI_NAME. '/payresult.php',         //通知地址  确保外网能正常访问
             'openid' => $this->openid,                                              //用户id
             'trade_type' => 'JSAPI'                                                 //交易类型
         );

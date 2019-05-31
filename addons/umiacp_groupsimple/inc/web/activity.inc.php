@@ -53,6 +53,7 @@ if ($op == 'display') {
 if ($op == 'post') {
     $id = intval($_GPC['id']);
     $paras[':id'] = $id;
+    $item = pdo_fetch('select * from ' . tablename(YOUMI_NAME . '_' . 'activity') . ' where id = :id and shop_id = 0 limit 1 ', $paras);
 
     if (checksubmit('submit')) {
         $data = $_GPC['data'];
@@ -67,6 +68,11 @@ if ($op == 'post') {
         $data['shop_province'] = $_GPC['district']['province'];
         $data['shop_city'] = $_GPC['district']['city'];
         $data['shop_district'] = $_GPC['district']['district'];
+//todo 佣金不能大于团购价
+        if ($data['commission']>$data['group_price']){
+            itoast('修改活动失败：'  . '佣金不能大于团购价！', $this->createWebUrl('activity',['op'=>'post','id'=>$item['id']]), 'error');
+        }
+
 
         if (!empty($id)) {
 
@@ -82,7 +88,6 @@ if ($op == 'post') {
 
         itoast('温馨提示：' . $message . '活动成功！', $this->createWebUrl('activity'), 'success');
     }
-    $item = pdo_fetch('select * from ' . tablename(YOUMI_NAME . '_' . 'activity') . ' where id = :id and shop_id = 0 limit 1 ', $paras);
 
     $item['shop_imgs'] = unserialize($item['shop_imgs']);
     $item['effects_imgs'] = unserialize($item['effects_imgs']);
@@ -91,7 +96,7 @@ if ($op == 'post') {
     $district['province'] = $item['shop_province'];
     $district['city'] = $item['shop_city'];
     $district['district'] = $item['shop_district'];
-    
+
 
 
     include $this->template('activity');

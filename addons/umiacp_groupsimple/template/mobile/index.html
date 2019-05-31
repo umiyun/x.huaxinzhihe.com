@@ -234,14 +234,6 @@
         left: 0;
     }
 
-    .ac_youhui{
-        margin-top: 25px;
-    }
-    .acy_title{
-        width: 66%;
-        left: 17%;
-        margin-bottom: 8px;
-    }
     .acy_title input{
         width: 78%;
         top: 5px;
@@ -249,16 +241,7 @@
         position: absolute;
         z-index: 5;
     }
-    .acy_content{
-        /*background: #fff;*/
-        /*border-radius: 5px;*/
-        padding: 2%;
-    }
 
-    .acsc_list{
-        max-height: 200px;
-        overflow-y: auto;
-    }
     .acs_content .acsc_title,.acsc_list>div{
         display: flex;
         display: -webkit-flex;
@@ -572,17 +555,20 @@
         background: #EDEDED;
         width: 20%;
         padding: 4px;
+        height: 50px;
     }
     .buy_dan{
         width: 40%;
         background: #FFC700;
         padding: 4px 0;
+        height: 50px;
     }
     .buy_tuan{
         width: 40%;
         color: #FFC700;
         background: #000;
         padding: 4px 0;
+        height: 50px;
     }
     .shop_detail .icon-dianhua{
         color: #7132BF;
@@ -714,7 +700,6 @@
         <div class="p_absolute ah_share" onclick="$('.open_share,.bg_fixed').fadeIn()">分享</div>
         {if $activity['music']}<i id="music" class="iconfont icon-music active"><audio id="audiojs" src="{$activity['music']}" autoplay loop></audio></i>{/if}
         <a href="javascript:;" class="p_absolute ah_complain" onclick="$('#tem_complain').slideDown()">投诉</a>
-        <div class="p_absolute ah_contact" data-name="{$activity['shop_name']}" data-mobile="{$activity['shop_mobile']}" data-address="{$activity['shop_province']} {$activity['shop_city']} {$activity['shop_district']} {$activity['shop_address']}" data-code="{php echo tomedia($activity['shop_code'])}" onclick="openConcat(this)">联系商家</div>
         {if $activity['effects_imgs']}<i class="iconfont icon-mofabang active"></i>{/if}
         <!--弹幕-->
         <div class="dm_content"></div>
@@ -780,6 +765,7 @@
             <div class="m_last">已有{php echo count($groups)}团/浏览量:{$activity['pv']}</div>
         </div>
         <!--团列表-->
+        {if $activity['show_group']==1}
         <div class="groups">
             <div class="g_more flex">
                 <div class="flex1">{php echo count($groups)}人在拼单，可直接参与</div>
@@ -801,6 +787,7 @@
                 {/loop}
             </div>
         </div>
+        {/if}
         <!--拼团玩法-->
         <img style="width: 100%" src="{YOUMI_URL_APP}img/rule.png" alt="">
 
@@ -875,9 +862,9 @@
     {template 'complain'}
     <!--底部按钮-->
     <div class="a_footer flex flex_a_center">
-        <div onclick="openConcat()" class="shop_detail">
+        <div data-name="{$activity['shop_name']}" data-mobile="{$activity['shop_mobile']}" data-address="{$activity['shop_province']} {$activity['shop_city']} {$activity['shop_district']} {$activity['shop_address']}" data-code="{php echo tomedia($activity['shop_code'])}" onclick="openConcat(this)" class="shop_detail">
             <i class="iconfont icon-dianhua"></i>
-            <p class="ft12">电话</p>
+            <p class="ft12">商家</p>
         </div>
         <div onclick="openSign(3)" class="buy_dan">
             <div>￥<span>{$activity['single_price']}</span></div>

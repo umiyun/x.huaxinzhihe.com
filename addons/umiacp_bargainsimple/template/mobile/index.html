@@ -638,7 +638,7 @@
             </div>
             <div class="goods p_relative goods{$goods[0]['id']}">
                 {if $goods[0]['style']==1||$goods[0]['style']==6}
-                <h4 class="sys_color ft14 text_center">亲，您还为参加活动哦！</h4>
+                <h4 class="sys_color ft14 text_center">亲，您还未参加活动哦！</h4>
                 <div class="ft12 text_center">优惠数量有限，点击“我要报名”报名吧！</div>
                     <div class="ft12 text_center">活动真实有效，欢迎到店咨询。</div>
                 {/if}
@@ -739,6 +739,10 @@
                             href="javascript:;" class="a_btn kanjia_btn"
                     >砍一刀</a>
                     {/if}
+                    <a
+                            style="{if $goods[0]['style']==5||$goods[0]['style']==1||$goods[0]['style']==6}display: none;{/if}padding: 2%"
+                            href="{php echo $this->createMobileUrl('index',array('activity_id' =>$_GPC['activity_id']))}" class="a_btn kanjia_btn go_myactivity"
+                    >查看我的活动</a>
                     {/if}
                 </div>
                 {if !empty($activity['rule_val'])}
@@ -1074,22 +1078,23 @@
                 },
                 function (data) {
                     if(data.errno==0){
-                        var goods_clsname='.goods'+goods_id
-                        var bm_clsname='.bm_id'+goods_id
-                        var zr_clsname='.kj_id'+goods_id
-                        var kj_clsname='.kj_id'+goods_id
-                        $('.open_kjtips h4').html("成功帮{$fmember['nickname']}砍掉")
-                        $('.open_kjtips h1').html(data.data.price+'元')
+                        var goods_clsname='.goods'+goods_id;
+                        var bm_clsname='.bm_id'+goods_id;
+                        var zr_clsname='.kj_id'+goods_id;
+                        var kj_clsname='.kj_id'+goods_id;
+                        $('.open_kjtips h4').html("成功帮{$fmember['nickname']}砍掉");
+                        $('.open_kjtips h1').html(data.data.price+'元');
                         // if(!!my_cutid){
                         //     $(self).hide()
                         // }else{
 
                         if(gstyle==5) {
-                            $(self).hide()
-                            $(bm_clsname).show()
+                            $(self).hide();
+                            $(bm_clsname).show();
                         }
                         if(gstyle==7||gstyle==8||gstyle==9) {
-                            $(self).hide()
+                            $(self).hide();
+                            $('.go_myactivity').show();
                         }
                         $(goods_clsname).find('.gdtp_bg>div').css('width',data.data.schedule+'%')
                         $(goods_clsname).find('.gdtp_bg>span').css('left',(data.data.schedule>5?(data.data.schedule-5):0)+'%')
@@ -1178,7 +1183,7 @@
         }
     }
 
-    // console.log('$activity',{php echo json_encode($activity)})
+    console.log('$activity',{php echo json_encode($activity)})
     console.log('$goods',{php echo json_encode($goods)})
     // console.log('$member',{php echo json_encode($member)})
     console.log('$records',{php echo json_encode($records)})

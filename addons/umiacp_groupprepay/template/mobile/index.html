@@ -1123,31 +1123,76 @@
     console.log('$cut',{php echo json_encode($cut)})
 </script>
 <script type="text/javascript">
+    var time1=Date.parse(new Date()),time2=Date.parse(new Date()),time3=Date.parse(new Date()),time4=Date.parse(new Date());
     var records={php echo json_encode($records)}||'';
     for(var i=0;i<records.length;i++){
-        danmu(records[i]);
+        danmu(records[i],i);
     }
-    function danmu(records){
-
+    function danmu(records,i){
         var bullet = $("<div><img src='"+records['avatar']+"' alt=''><span>"+records['tips']+"</span></div>");
         //生成一条弹幕
         // bullet.text(txt);
         //将输入框内容放置到div中
         bullet.addClass("bullet");
+        var top=0;
+        switch (i)
+        {
+            case 1:case 5:case 9:case 13:case 17:case 21:case 25:
+            top=10;
+            break;
+            case 2:case 6:case 10:case 14:case 18:case 22:case 26:
+            top=45;
+            break;
+            case 3:case 7:case 11:case 15:case 19:case 23:case 27:
+            top=85;
+            break;
+            default:
+                top=120;
+                break;
+        }
         //为bullet这个div添加样式bullet
-        bullet.css("top",Math.round(Math.random()*($('.dm_content').height()-50)));
+        bullet.css("top",top+'px');
         //随机设置弹幕位置
         bullet.css("left","500px");
         // bullet.css("font-size",Math.round(Math.random()*60)+12+"px");
+        if(records['status']==2) {
+            bullet.css("color", "#FD6E4A");
+        }
         setTimeout(function () {
-            $(".dm_content").append(bullet);
+            switch (i)
+            {
+                case 1:case 5:case 9:case 13:case 17:case 21:case 25:
+                if(Date.parse(new Date())-time1>2000){
+                    $(".dm_content").append(bullet);
+                    time1= Date.parse(new Date())
+                };
+                break;
+                case 2:case 6:case 10:case 14:case 18:case 22:case 26:
+                if(Date.parse(new Date())-time2>2000){
+                    $(".dm_content").append(bullet);
+                    time2= Date.parse(new Date())
+                };
+                break;
+                case 3:case 7:case 11:case 15:case 19:case 23:case 27:
+                if(Date.parse(new Date())-time3>2000){
+                    $(".dm_content").append(bullet);
+                    time3= Date.parse(new Date())
+                };
+                break;
+                default:
+                    if(Date.parse(new Date())-time4>2000){
+                        $(".dm_content").append(bullet);
+                        time4= Date.parse(new Date())
+                    };
+                    break;
+            }
             bullet.animate({
-                left:-650//此处视为bug，应该随着弹幕的长短而变化
-            },20000,"linear", function(){
+                left:-900//此处视为bug，应该随着弹幕的长短而变化
+            },18000,"linear", function(){
                 bullet.remove();
-                danmu(records)
+                danmu(records,i)
             });
-        },Math.random()*30000)
+        },Math.random()*10000)
         //将弹幕添加到屏幕中
     }
     var regional=true;

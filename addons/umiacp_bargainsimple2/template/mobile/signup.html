@@ -1,0 +1,152 @@
+<style>
+    .open_signup{
+        position: fixed;
+        border: 1px solid #aaaaaa;
+        border-radius: 10px;
+        top: 8%;
+        background: #fff;
+        color: #111;
+        padding: 5%;
+        width: 80%;
+        left: 10%;
+        z-index: 20;
+        display: none;
+    }
+    .open_signup .icon-Close{
+        position: absolute;
+        left: 44%;
+        bottom: -15%;
+        z-index: 20;
+        font-size: 40px;
+        color: #fff;
+    }
+    .open_signup h4{
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    .open_signup div{
+        margin-bottom: 10px;
+    }
+    .os_input input{
+        border-bottom: 1px solid #ddd;
+        text-align: left;
+    }
+    .os_btn{
+        display: block;
+        color: #fff;
+        font-size: 18px;
+        padding: 3%;
+        margin-top: 20px;
+    }
+</style>
+<div class="open_signup">
+    <div>
+        <h4>距离参加活动只剩一步啦!</h4>
+        <div class="text_center ft12 color777" style="margin-bottom: 10px;">（所填信息不会公开，仅用于活动领奖）</div>
+        {loop $activity['userinfo'] $av}
+        {if !empty($av['title'])}
+        <div class="os_input">
+            <input class="osi_input" type="text" data-name="{$av['title']}" data-required="{if $av['checked']=='on'||$av['checked']=='true'}1{else}-1{/if}" value="" placeholder="请输入{$av['title']}{if $av['checked']=='on'||$av['checked']=='true'}(必填){/if}">
+        </div>
+        {/if}
+        {/loop}
+        <a href="javascript:;" class="os_btn a_btn">去报名</a>
+    </div>
+    <i class="iconfont icon-Close" onclick="$('.open_signup,.bg_fixed').fadeOut()"></i>
+</div>
+<script>
+    $('.os_btn').click(function () {
+        if(!regional){tips('您不在活动区域范围内');return false;}
+        var self=this;
+        var goods_id=$(self).attr('data-goods_id')
+        var cut_id=$(self).attr('data-cut_id')
+        var my_cutid=$(self).attr('data-my_cutid')
+        var realname=$($(".os_input").eq(0)).find('input').val();
+        var mobile=$($(".os_input").eq(1)).find('input').val();
+        var userinfo='';
+
+        var goods_clsname='.goods'+goods_id;
+        var bm_clsname='.bm_id'+goods_id;
+        var zr_clsname='.zr_id'+goods_id;
+        var kj_clsname='.kj_id'+goods_id;
+        var zf_clsname='.zf_id'+goods_id;
+
+        var tip=false;
+
+        if(realname==''){
+            tips('请输入姓名')
+            return false;
+        }
+        if(mobile==''){
+            tips('请输入手机号')
+            return false;
+        }
+        var myreg = /^(((13[0-9]{1})|(14[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[0-9]{1})|(18[0-9]{1})|(19[0-9]{1}))+\d{8})$/;
+        if(!myreg.test(mobile))
+        {
+            tips('请输入有效的手机号码');
+            return false;
+        }
+        if($('.os_input input').length>2){
+            for (var i=2;i<$('.os_input input').length;i++){
+
+                var i_val=$($('.os_input input')[i]).val()
+                var i_name=$($('.os_input input')[i]).attr('data-name')
+                userinfo+=i_name+':'+i_val+' ;'
+                if(i_val==''&&$($('.os_input input')[i]).attr('data-required')=='1'){
+                    tips('请输入'+i_name)
+                    tip=true;
+                    break;
+                    return false;
+                }
+            }
+        }
+        if(tip){
+            return false;
+        }
+        $.post(
+            "{php echo $this->createMobileUrl('index',array('op' =>'sign_up'))}",
+            {
+                'activity_id':"{$activity_id}",
+                'goods_id':goods_id,
+                'realname':realname,
+                'mobile':mobile,
+                'userinfo':userinfo,
+            },
+            function (data) {
+                if(data.errno==0){
+
+                    localStorage.setItem('kj_userinfo',JSON.stringify({'realname':realname,'mobile':mobile}))
+                    if(!!cut_id){
+                        $('.open_kjtips h4').html('成功帮{$fmember}砍掉')
+                    }else{
+                        $('.open_kjtips h4').html('成功砍掉')
+                    }
+                    $('.open_kjtips h1').html(data.data.price+'元')
+                    $(goods_clsname).find('.gdtp_bg>div').css('width',data.data.schedule+'%')
+                    $(goods_clsname).find('.gdtp_bg>span').css('left',(data.data.schedule>5?(data.data.schedule-5):0)+'%')
+                    $(goods_clsname).find('.gdtp_tips').show().find('span').html(data.data.nprice)
+
+                    $(bm_clsname).hide()
+                    if(data.data.schedule==100&&$('.os_btn').attr('data-datastyle')==1){
+                        $(zf_clsname).attr('data-my_cutid',data.data.cut_id).show()
+                    }else{
+                        $(zr_clsname).show()
+                    }
+
+                    $('.open_signup,.bg_fixed').hide()
+                    $('.open_kjtips,.bg_fixed').fadeIn();
+
+                    if($('.os_btn').attr('data-gstyle')==6||($('.os_btn').attr('data-gstyle')==1&&$('.os_btn').attr('data-datastyle')==2)){
+                        setTimeout(function () {
+                            location.href="{php echo $this->createMobileUrl('index', array('activity_id' => $activity_id))}";
+                        },2000)
+                    }
+
+                }else{
+                    tips(data.message);
+                }
+                },'json'
+            )
+    })
+</script>

@@ -28,9 +28,10 @@ if ($op == 'create_order') {
     $data['group_id'] = intval($_GPC['group_id']);
     $type = intval($_GPC['type']);
     $data['type'] = $type;
-    $data['realname'] = intval($_GPC['realname']);
-    $data['mobile'] = intval($_GPC['mobile']);
-    $data['userinfo'] = intval($_GPC['userinfo']);
+    $data['realname'] = ($_GPC['realname']);
+    $data['mobile'] = ($_GPC['mobile']);
+    $data['userinfo'] = ($_GPC['userinfo']);
+    $data['fmid'] = intval($_GPC['fmid']);
 
     $data['mid'] = $this->mid;
 //    youmi_puv('create_order', $activity_id);
@@ -77,14 +78,18 @@ if ($op == 'create_order') {
         youmi_result(1, '金额错误');
     }
     if ($price == 0 && $type == 1) {
-        $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id, 'mid' => $this->mid, 'status' => [2, 3], 'pay_type' => 1]);
-        if ($order) {
-            youmi_result(1, '请勿重复购买');
-        }
+//        $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id, 'mid' => $this->mid, 'status' => [2, 3], 'pay_type' => 1]);
+//        if ($order) {
+//            youmi_result(1, '请勿重复购买');
+//        }
+
+
         $data['group_id'] = getGroupId();
         $data['leader'] = 1;
         $data['member'] = $this->getMemberInfo($this->mid);
+
         $group = getGroupData($data, $activity, $uniacid);
+        $group['status']=3;
         pdo_insert(YOUMI_NAME . '_' . 'group', $group);
         $data['group_id'] = pdo_insertid();
         unset($data['fmid']);
@@ -122,18 +127,30 @@ if ($op == 'create_order') {
             break;
         case 2:
             //团购
+            $group = pdo_get(YOUMI_NAME . '_' . 'group', ['id'=>$data['group_id']]);
+            if ($group['mid']==$this->mid) {
+                youmi_result(1, '请勿参加自己的团');
+            }
+
+
             $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id, 'mid' => $this->mid, 'status' => [2, 3],'group_id'=>$data['group_id'] , 'pay_type' => 2]);
             if ($order) {
                 youmi_result(1, '请勿重复购买');
             }
+
+
             $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id, 'mid' => $this->mid, 'status' => 1,'group_id'=>$data['group_id'], 'pay_type' => 2]);
             if ($order) {
                 $order['price'] = $price;
                 pdo_update(YOUMI_NAME . '_' . 'order', ['price' => floatval($order['price'])], ['id' => $order['id']]);
                 youmi_result(0, '下单成功', $order);
             }
+            $successNum = pdo_fetchcolumn("select count(id) from " . tablename(YOUMI_NAME . '_order') . " where group_id = :group_id and status = :status", [':group_id' => $data['group_id'],'status' => [2, 3]]);
+            if ($successNum>=$activity['group_num']) {
+                youmi_result(1, '该团已满');
+            }
 
-$data['fmid']=pdo_getcolumn(YOUMI_NAME . '_' . 'group',['id'=>$data['group_id']],'mid');
+
             break;
         case 3:
             //单买

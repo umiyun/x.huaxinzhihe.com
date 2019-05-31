@@ -218,7 +218,17 @@
                         <input type="number" name="data[commission]" class="form-control" value="{$item['commission']}" step="0.01" min="0"/>
                     </div>
                 </div>
-
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>显示团列表</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <label class="radio radio-inline">
+                            <input type="radio" name="data[show_group]" value="1" {if intval($item['show_group']) == 1||!$item['show_group']}checked="checked"{/if}> 显示
+                        </label>
+                        <label class="radio radio-inline">
+                            <input type="radio" name="data[show_group]" value="2" {if intval($item['show_group']) == 2}checked="checked"{/if}> 不显示
+                        </label>
+                    </div>
+                </div>
 
 
                 <div class="form-group">
@@ -228,24 +238,7 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">商家介绍标题</label>
-                    <div class="col-sm-8 col-xs-12">
-                        <input maxlength="6" type="text" name="data[shop_title]" class="form-control" value="{$item['shop_title']}" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">商家介绍内容</label>
-                    <div class="col-sm-8">
-                        {php echo tpl_ueditor('data[shop_val]', $item['shop_val']);}
-                    </div>
-                </div>
-                <div class="form-group" style="display: none">
-                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">商家介绍图片</label>
-                    <div class="col-sm-8">
-                        {php echo tpl_form_field_multi_image('data[shop_imgs]', $item['shop_imgs'])}
-                    </div>
-                </div>
+
 
 
                 <div class="form-group">

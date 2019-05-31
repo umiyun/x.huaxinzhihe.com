@@ -25,7 +25,13 @@ if ($op == 'display') {
             youmi_setting_save($skey, $item);
             unset($item);
         }
+        if(!empty($_GPC['cert'])) {
+            file_put_contents(YOUMI_CERT . '/apiclient_cert.pem.'. $_W['uniacid'], trim($_GPC['cert']));
 
+        }
+        if(!empty($_GPC['key'])) {
+            file_put_contents(YOUMI_CERT .'/apiclient_key.pem.'. $_W['uniacid'], trim($_GPC['key']));
+        }
         itoast('温馨提示：修改成功', referer());
     }
     include $this->template('system');

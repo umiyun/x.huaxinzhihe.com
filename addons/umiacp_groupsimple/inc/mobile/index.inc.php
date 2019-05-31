@@ -33,10 +33,20 @@ if ($op == 'display') {
         $fmid = 0;
     }
     $records = pdo_fetchall('select * from ' . tablename(YOUMI_NAME . '_order') . ' where uniacid = ' . $uniacid . ' and activity_id = ' . $activity_id . ' and status in (2,3) order by createtime DESC');
-    $groups = pdo_getall(YOUMI_NAME . '_group', ['uniacid' => $uniacid, 'activity_id' => $activity_id]);
+    $groups = pdo_getall(YOUMI_NAME . '_group', ['uniacid' => $uniacid, 'activity_id' => $activity_id,'status'=>3]);
     $records_count = count($records);
-    $fmember = $this->getMemberInfo($fmid);
+//    $fmember = $this->getMemberInfo($fmid);
+    foreach ($records as &$record) {
+        if ($record['leader']==1){
+        $record['tips'] = $record['nickname'] . ' 开团成功';
 
+        }else{
+
+        $record['tips'] = $record['nickname'] . ' 参团成功';
+        }
+
+        unset($record);
+    }
 
     $activity = pdo_fetch('select * from ' . tablename(YOUMI_NAME . '_activity') . ' where uniacid = ' . $uniacid . ' and id = ' . $activity_id);
     if ($activity['status'] != 1 || $activity['endtime'] < time() || ($records_count >= $activity['gnum'])) {
@@ -285,7 +295,7 @@ if ($op == 'regional') {
 if ($op=='detail'){
     $group_id=$_GPC['id'];
     $activity_id=$_GPC['activity_id'];
-    $members=pdo_getall(YOUMI_NAME.'_order',['group_id'=>$group_id,'activity_id'=>$activity_id]);
+    $members=pdo_getall(YOUMI_NAME.'_order',['group_id'=>$group_id,'activity_id'=>$activity_id,'status'=>[2,3]],['avatar','nickname','leader']);
     $activity=pdo_get(YOUMI_NAME.'_activity',['id'=>$activity_id]);
 
 
@@ -326,13 +336,6 @@ if ($op=='detail'){
 //    $update['pv +='] = 1;
     pdo_update(YOUMI_NAME . '_activity', $update, ['id' => $activity_id]);
 
-    foreach ($members as &$member) {
-        if ($member['leader']==1){
-            $leader=$member;
-            unset($member);
-            break;
-        }
-    }
 
     include $this->template('detail');
     exit();

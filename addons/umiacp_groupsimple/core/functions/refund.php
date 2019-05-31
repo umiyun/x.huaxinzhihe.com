@@ -35,8 +35,8 @@ if (!function_exists('youmi_refund')) {
             $result['errno'] = 1;
             return $result;
         }
-        $certfile = YOUMI_CERT . $_W['uniacid'] . '/apiclient_cert.pem';
-        $keyfile = YOUMI_CERT . $_W['uniacid'] . '/apiclient_key.pem';
+        $certfile = YOUMI_CERT  . '/apiclient_cert.pem.'. $_W['uniacid'];
+        $keyfile = YOUMI_CERT . '/apiclient_key.pem.'. $_W['uniacid'];
 
         $setting = youmi_setting_get_list();
 
@@ -61,6 +61,7 @@ if (!function_exists('youmi_refund')) {
         $input->SetTotal_fee($refund_order['price'] * 100);
         $input->SetTransaction_id($refundid);
         $input->SetOut_refund_no($refund_order['ordersn']);
+
         $result = $WxPayApi->refund($input, 6, $certfile, $keyfile, $key);
 
         if (($result['return_code'] == 'SUCCESS') && ($result['result_code'] == 'SUCCESS')) {

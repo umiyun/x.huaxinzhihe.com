@@ -86,7 +86,7 @@ class WxPayApi
         curl_setopt($ch, CURLOPT_TIMEOUT, $second);
 
 //		//如果有配置代理这里就设置代理
-//		if(WxPayConfig::CURL_PROXY_HOST != "0.0.0.0" 
+//		if(WxPayConfig::CURL_PROXY_HOST != "0.0.0.0"
 //			&& WxPayConfig::CURL_PROXY_PORT != 0){
 //			curl_setopt($ch,CURLOPT_PROXY, WxPayConfig::CURL_PROXY_HOST);
 //			curl_setopt($ch,CURLOPT_PROXYPORT, WxPayConfig::CURL_PROXY_PORT);
@@ -113,15 +113,19 @@ class WxPayApi
         //运行curl
         $data = curl_exec($ch);
         //返回结果
+
         if ($data) {
             curl_close($ch);
             return $data;
         } else {
             $error = curl_errno($ch);
             curl_close($ch);
-            message("退款失败，CURL出错，错误码：" . $error);
-            exit;
-
+            echo $error;
+            die();
+//            message("退款失败，CURL出错，错误码：" . $error);
+//            exit;
+            youmi_internal_log('refund',"退款失败，CURL出错，错误码：" . $error);
+return $error;
 //			throw new WxPayException("curl出错，错误码:$error");
         }
     }

@@ -28,6 +28,10 @@ class Umiacp_groupsimpleModuleSite extends WeModuleSite
     {
         global $_GPC, $_W;
 
+            $this->checkActivityValid();
+
+
+
         $this->uniacid = intval($_W['uniacid']);
 
         if ($_W['user']) {
@@ -75,6 +79,37 @@ class Umiacp_groupsimpleModuleSite extends WeModuleSite
 
         }
 
+    }
+
+    public function checkActivityValid()
+    {
+
+        $ids = pdo_fetchall("SELECT o.id,a.id as aid FROM " . tablename(YOUMI_NAME . "_order") . " as o LEFT JOIN " . tablename(YOUMI_NAME . "_group") . " as g on g.id=o.group_id LEFT JOIN " . tablename(YOUMI_NAME . "_activity") . " as a on a.id=g.activity_id WHERE a.endtime < " . time() . " and a.refund=0 and (o.status=2 or o.status=7) and o.price>0");
+
+        if ($ids) {
+            $aids = [];
+            $oids = [];
+            foreach ($ids as $id) {
+                $aids[] = $id['aid'];
+                $oids[] = $id['id'];
+            }
+            $aids = array_unique($aids);
+            pdo_update(YOUMI_NAME . '_activity', ['refund' => 1], ['id' => $aids]);
+            foreach ($oids as $oid) {
+                $res = youmi_refund($oid);
+
+                if ($res['errno'] === 0) {
+
+                } else {
+                    pdo_update(YOUMI_NAME . '_' . 'order', ['status' => 7], ['id' => $oid]);
+                }
+            }
+
+
+        } else {
+//    die('没有过期活动');
+
+        }
     }
 
     public function doWxapp()
@@ -467,7 +502,7 @@ class Umiacp_groupsimpleModuleSite extends WeModuleSite
                 $order = pdo_get(YOUMI_NAME . '_' . 'order', ['uniacid' => $this->uniacid, 'ordersn' => $params['tid']]);
                 pdo_update(YOUMI_NAME . '_' . 'order', ['status' => 2, 'pay_time' => TIMESTAMP, 'transid' => $transaction_id], ['id' => $order['id']]);
                 pdo_update(YOUMI_NAME . '_' . 'goods', ['success +=' => 1], ['id' => $order['goods_id']]);
-                
+
 //                $shop = pdo_get(YOUMI_NAME . '_' . 'shop', ['mid' => $order['mid']]);
 //                $start = $shop['endtime'] > TIMESTAMP ? $shop['endtime'] : TIMESTAMP;
 //                $end = strtotime(date('Y-m-d H:i:s', $start) . ' +' . ($order['buy'] + $order['gift']) . ' month');

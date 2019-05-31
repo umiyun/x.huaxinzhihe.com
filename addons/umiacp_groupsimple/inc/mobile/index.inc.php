@@ -22,6 +22,7 @@ youmi_puv('index');
 
 if ($op == 'display') {
 
+
     $con = '';
     $activity_id = intval($_GPC['activity_id']);
     if (!$activity_id) {
@@ -279,4 +280,60 @@ if ($op == 'regional') {
         youmi_result(1, '您不在活动区域范围内', $arr);
     }
     // var_dump($arr);exit;
+}
+
+if ($op=='detail'){
+    $group_id=$_GPC['id'];
+    $activity_id=$_GPC['activity_id'];
+    $members=pdo_getall(YOUMI_NAME.'_order',['group_id'=>$group_id,'activity_id'=>$activity_id]);
+    $activity=pdo_get(YOUMI_NAME.'_activity',['id'=>$activity_id]);
+
+
+
+    if ($activity['shop_id'] > 0) {
+        $shop = pdo_get(UMI_NAME . '_shop', ['id' => $activity['shop_id']]);
+        if ($shop['endtime'] < time() && $shop['times'] > $setting['vip_times']) {
+            $activity['status2'] = 2;
+            pdo_update(UMI_NAME . '_activity', array('status' => 2), ['shop_id' => $activity['shop_id']]);
+            pdo_update(YOUMI_NAME . '_activity', array('status' => 2), ['id' => $activity['activity_id']]);
+        }
+        $activity_umi = pdo_get(UMI_NAME . '_activity', ['activity_id' => $activity['id'], 'module' => $_W['current_module']['name']]);
+    }
+    $_W['page']['title'] = $activity['title'] ? $activity['title'] : '活动宝活动团购';
+
+    $activity['image'] = tomedia($activity['image']);
+    $activity['bgimage'] = tomedia($activity['bgimage']);
+
+    $activity['preferential_val'] = unserialize($activity['preferential_val']);
+
+    $activity['shop_imgs'] = unserialize($activity['shop_imgs']);
+    $activity['effects_imgs'] = unserialize($activity['effects_imgs']);
+
+    foreach ($activity['shop_imgs'] as &$desc_img) {
+        $desc_img = tomedia($desc_img);
+        unset($desc_img);
+    }
+    foreach ($activity['effects_imgs'] as &$desc_img) {
+        $desc_img = tomedia($desc_img);
+        unset($desc_img);
+    }
+    $activity['userinfo'] = unserialize($activity['userinfo']);
+    if ($activity['endtime'] < time()) {
+        $update['status'] = 2;
+        $activity['status2'] = 2;
+    }
+
+//    $update['pv +='] = 1;
+    pdo_update(YOUMI_NAME . '_activity', $update, ['id' => $activity_id]);
+
+    foreach ($members as &$member) {
+        if ($member['leader']==1){
+            $leader=$member;
+            unset($member);
+            break;
+        }
+    }
+
+    include $this->template('detail');
+    exit();
 }

@@ -253,9 +253,9 @@ class WeixinPay
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_SSLCERTTYPE, 'PEM');
-        curl_setopt($ch, CURLOPT_SSLCERT, YOUMI_CERT . $_W['uniacid'] . '/apiclient_cert.pem');
+        curl_setopt($ch, CURLOPT_SSLCERT, YOUMI_CERT . '/apiclient_cert.pem.'. $_W['uniacid']);
         curl_setopt($ch, CURLOPT_SSLKEYTYPE, 'PEM');
-        curl_setopt($ch, CURLOPT_SSLKEY, YOUMI_CERT . $_W['uniacid'] . '/apiclient_key.pem');
+        curl_setopt($ch, CURLOPT_SSLKEY, YOUMI_CERT .  '/apiclient_key.pem.'.$_W['uniacid'] );
         if (count($aHeader) >= 1) {
             curl_setopt($ch, CURLOPT_HTTPHEADER, $aHeader);
         }
@@ -274,6 +274,6 @@ class WeixinPay
     }
 
 
-}		
-			
-		
+}
+
+

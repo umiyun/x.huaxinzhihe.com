@@ -30,6 +30,7 @@ if ($op == 'pay') {
     $activity = pdo_fetch("select * from " . tablename(YOUMI_NAME . '_' . 'activity') . " where `uniacid` = {$uniacid} and id = {$order['activity_id']} ");
 
     if ($activity['success'] >= $activity['gnum']) {
+
         youmi_result(1, '商品已抢光');
     }
     if ($activity['status'] == 2) {

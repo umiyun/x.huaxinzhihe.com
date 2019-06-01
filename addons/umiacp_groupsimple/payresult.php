@@ -9,6 +9,11 @@
 define('IN_MOBILE', true);
 require '../../framework/bootstrap.inc.php';
 require_once './core/defines.php';
+require_once IA_ROOT . '/addons/'.YOUMI_NAME.'/core/functions/setting.php';
+require_once IA_ROOT . '/addons/'.YOUMI_NAME.'/core/functions/wxpay.php';
+
+
+
 function insert_log($data, $path = 'wxPayResult')
 {
 //TODO 创建日志
@@ -130,8 +135,8 @@ if (is_array($setting['payment'])) {
                     if ($activity['gnum'] > $activity['success']) {
                         pdo_update(YOUMI_NAME . '_' . 'order', ['status' => 2, 'pay_time' => TIMESTAMP, 'transid' => $get['transaction_id']], ['id' => $order['id']]);
                         pdo_update(YOUMI_NAME . '_activity', ['success +=' => 1], ['id' => $order['activity_id']]);
-
                         if ($order['leader'] == 1) {
+
                             pdo_update(YOUMI_NAME . '_group', ['status' => 3], ['id' => $order['group_id']]);
                         } else {
 
@@ -139,6 +144,7 @@ if (is_array($setting['payment'])) {
                             sendCommission($order);
                             //判断团支付成功人数是否等于成团人数
                             $successNum = pdo_fetchcolumn("select count(id) from " . tablename(YOUMI_NAME . '_order') . " where group_id = :group_id and status = 2", [':group_id' => $order['group_id']]);
+
                             if ($successNum == $activity['group_num']) {
                                 pdo_update(YOUMI_NAME . '_group', ['status' => 1, 'success_time' => time()], ['id' => $order['group_id']]);
 
@@ -151,6 +157,7 @@ if (is_array($setting['payment'])) {
 
 
                         require_once IA_ROOT . '/addons/' . YOUMI_NAME . '/core/functions/order.php';
+
                         youmi_settlement_log($order, 1, $order['price'], YOUMI_NAME . '用户支付订单：订单ID：' . $order['id'] . '，支付时间：' . date('Y-m-d H:i:s'));
                     } else {
                         pdo_update(YOUMI_NAME . '_' . 'order', ['status' => 7, 'pay_time' => TIMESTAMP, 'transid' => $get['transaction_id']], ['id' => $order['id']]);
@@ -180,18 +187,23 @@ if ($isxml) {
 } else {
     exit('fail');
 }
-
 function sendCommission($order)
 {
+
+
     if (empty($order['fmid'])){
         return;
     }
-    $f_member = pdo_get(YOUMI_NAME . '_member', array('mid' => $order['fmid'], 'uniacid' => $order['uniacid']));
+    $f_member = pdo_get(YOUMI_NAME . '_member', array('mid' => $order['fmid'], 'uniacid' => $order['uniacid']),['openid','mid']);
     $group = pdo_get(YOUMI_NAME . '_group', ['id' => $order['group_id']]);
 
+    insert_log($f_member);
     $tid = 'groupsimple' . time() . $order['id'];
-    if ($order['price'] > $group['commission']) {
+    if ($order['price'] >= $group['commission']) {
+
         $res = youmi_finance($f_member['openid'], $tid, $group['commission'], '佣金');
+        insert_log($res);
+
         if ($res['result_code'] == 'SUCCESS') {
             pdo_update(YOUMI_NAME . '_order', array('send_status' => 1), array('id' => $order['id']));
         } else {
@@ -200,22 +212,25 @@ function sendCommission($order)
 
     }
 }
-function youmi_finance($openid = '', $item, $desc = '')
+function youmi_finance($openid = '', $tid,$money, $desc = '')
 {
 
+
+    $desc=  empty($desc) ? '商家提现' : $desc;
     $setting = youmi_setting_get_list();
-    $pay = new WeixinPay($setting['wxapp_appid'], $openid, $setting['wxapp_mchid'], $setting['wxapp_signkey'], $item['tid'], '商家提现', $item['withdraw']);
+
+    $pay = new WeixinPay($setting['wxapp_appid'], $openid, $setting['wxapp_mchid'], $setting['wxapp_signkey'], $tid, $desc,$money);
 
     if (empty($openid)) return error(-1, 'openid不能为空');
 
     $pars = array();
     $pars['mch_appid'] = $setting['wxapp_appid'];
     $pars['mchid'] = $setting['wxapp_mchid'];
-    $pars['partner_trade_no'] = $item['tid'];
+    $pars['partner_trade_no'] = $tid;
     $pars['openid'] = $openid;
     $pars['check_name'] = 'NO_CHECK';
-    $pars['amount'] = floatval($item['withdraw']) * 100;
-    $pars['desc'] = empty($desc) ? '商家提现' : $desc;
+    $pars['amount'] = floatval($money) * 100;
+    $pars['desc'] = $desc;
     $pars['spbill_create_ip'] = gethostbyname($_SERVER["HTTP_HOST"]);
     if (empty($pars['mch_appid']) || empty($pars['mchid'])) {
         $rearr['err_code'] = '请先在系统设置-小程序参数设置内设置微信商户号和秘钥';
@@ -227,3 +242,4 @@ function youmi_finance($openid = '', $item, $desc = '')
     return $rearr;
 
 }
+

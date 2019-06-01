@@ -148,7 +148,7 @@ if ($op == 'register') {
             if ($setting['vip_days']>0){
                 $curTime=time();
                 $data['starttime']=$curTime;
-                $data['endtime']=$curTime+3600*24*7;
+                $data['endtime']=$curTime+3600*24*intval($setting['vip_days']);
             }
         }
 

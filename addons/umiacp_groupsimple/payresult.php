@@ -140,16 +140,14 @@ if (is_array($setting['payment'])) {
                             pdo_update(YOUMI_NAME . '_group', ['status' => 3], ['id' => $order['group_id']]);
                         } else {
 
-                            //发放佣金
-                            sendCommission($order);
+
                             //判断团支付成功人数是否等于成团人数
                             $successNum = pdo_fetchcolumn("select count(id) from " . tablename(YOUMI_NAME . '_order') . " where group_id = :group_id and status = 2", [':group_id' => $order['group_id']]);
 
                             if ($successNum == $activity['group_num']) {
                                 pdo_update(YOUMI_NAME . '_group', ['status' => 1, 'success_time' => time()], ['id' => $order['group_id']]);
-
-
-
+                                //发放佣金
+                                sendCommission($order);
                             } else {
                                 pdo_update(YOUMI_NAME . '_group', ['now_num' => $successNum], ['id' => $order['group_id']]);
                             }

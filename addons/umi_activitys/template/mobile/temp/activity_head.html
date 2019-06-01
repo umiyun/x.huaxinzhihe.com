@@ -171,10 +171,10 @@
                 <span>上传图片</span>
                 <input class="select_goodimg" type="file" accept="" onchange="selectCateimg(this)">
             </a>
-            <div class="weui-cells weui-cells_checkbox" style="background: transparent">
+            <div class="weui-cells weui-cells_checkbox" style="background: transparent;display: none">
                 <label class="weui-cell weui-check__label" for="s_public" style="padding: 0;margin: 0">
                     <div class="weui-cell__hd">
-                        <input type="checkbox" class="weui-check" name="checkbox1" id="s_public" checked="checked">
+                        <input type="checkbox" class="weui-check" name="checkbox1" id="s_public">
                         <i class="weui-icon-checked"></i>
                     </div>
                     <div class="weui-cell__bd">
@@ -274,7 +274,7 @@
                     'file':reader.result,
                     'name':my,
                     'size':e.total,
-                    'public':$('#s_public')[0].checked?'1':'2',
+                    'public':2,
                     'imgcate_id':$('.ac_cates .active').attr('data-id'),
                     'module':"{$_GPC['module']}",
                     'activity_id':"{$activity_id}",

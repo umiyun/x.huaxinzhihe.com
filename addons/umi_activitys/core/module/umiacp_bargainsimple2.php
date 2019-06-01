@@ -10,7 +10,7 @@ if (!defined('IN_IA')) {
     exit('Access Denied');
 }
 
-define('UMIACP_NAME', 'umiacp_groupsimple');
+define('UMIACP_NAME', 'umiacp_bargainsimple2');
 
 /**
  * 获取活动数据
@@ -21,6 +21,7 @@ if (!function_exists('youmi_get_activity')) {
         $item = pdo_get(YOUMI_NAME . '_activity', ['id' => $activity_id]);
         $activity = pdo_get(UMIACP_NAME . '_activity', ['id' => $item['activity_id']]);
         $activity['desc_imgs'] = unserialize($activity['desc_imgs']);
+        $activity['shop_imgs'] = unserialize($activity['shop_imgs']);
         $activity['userinfo'] = unserialize($activity['userinfo']);
         $activity['preferential_val'] = unserialize($activity['preferential_val']);
         $activity['effects_imgs'] = unserialize($activity['effects_imgs']);
@@ -50,28 +51,32 @@ if (!function_exists('youmi_get_activity')) {
 if (!function_exists('youmi_save_activity')) {
     function youmi_save_activity($from,$shop_default,$shop)
     {
+
+
         $data['uniacid'] = $from['uniacid'];
         $data['shop_id'] = $from['shop_id'];
-//        $data['effects_id'] = $from['effects_id'];
-        $data['effects_imgs'] = serialize($from['effects_imgs']);
+        //        $data['effects_id'] = $from['effects_id'];
+//        $data['effects_imgs'] = serialize($from['effects_imgs']);
         $data['title'] = $from['title'];
         $data['image'] = $from['image'];
-        $data['bgimage'] = $from['bgimage'];
+//        $data['bgimage'] = $from['bgimage'];
         $data['music'] = $from['music'];
         $data['starttime'] = strtotime($from['starttime']);
         $data['endtime'] = strtotime($from['endtime']);
-        $data['preferential_title'] = $from['preferential_title'];
+        $data['cutting_pay'] = $from['cutting_pay'];
+//        $data['preferential_title'] = $from['preferential_title'];
         $data['preferential_val'] = serialize($from['preferential_val']);
+//        $data['desc_title'] = $from['desc_title'];
         $data['desc_val'] = $from['desc_val'];
-        $data['original_price'] = $from['original_price'];
-        $data['leader_price'] = $from['leader_price'];
-        $data['group_price'] = $from['group_price'];
-        $data['single_price'] = $from['single_price'];
-        $data['group_num'] = $from['group_num'];
-        $data['commission'] = $from['commission'];
-        $data['gnum'] = $from['gnum'];
-        $data['show_group'] = $from['show_group'];
-
+//        $data['desc_imgs'] = serialize($from['desc_imgs']);
+//        $data['rule_title'] = $from['rule_title'];
+//        $data['rule_val'] = $from['rule_val'];
+        $data['shop_title'] = $from['shop_title'];
+        $data['shop_val'] = $from['shop_val'];
+        $data['shop_imgs'] = serialize($from['shop_imgs']);
+//        $data['receive_time'] = $from['receive_time'];
+//        $data['receive_address'] = $from['receive_address'];
+//        $data['receive_mobile'] = $from['receive_mobile'];
         if($shop_default==1) {//默认商家信息
             $data['shop_name'] = $shop['realname'];
             $data['shop_mobile'] = $shop['mobile'];
@@ -89,8 +94,8 @@ if (!function_exists('youmi_save_activity')) {
             $data['shop_address'] = $from['shop_address'];
             $data['shop_code'] = $from['shop_code'];
         }
-
         $data['userinfo'] = serialize($from['userinfo']);
+        $data['titlebgimg'] = $from['titlebgimg'];
         $data['share_img'] = $from['share_img'];
         $data['share_title'] = $from['share_title'];
         $data['share_desc'] = $from['share_desc'];
@@ -101,9 +106,6 @@ if (!function_exists('youmi_save_activity')) {
 
         if ($from['activity_id']) {
             $item = pdo_get(YOUMI_NAME . '_activity', ['id' => $from['activity_id']]);
-            $activity=pdo_get(UMIACP_NAME . '_activity', ['id' => $item['activity_id']]);
-            $cutmember=pdo_get(UMIACP_NAME . '_cut', ['activity_id' => $item['activity_id']]);
-
             $res = pdo_update(UMIACP_NAME . '_activity', $data, ['id' => $item['activity_id']]);
             $activity_id = $item['activity_id'];
             pdo_update(YOUMI_NAME . '_activity', [
@@ -140,6 +142,24 @@ if (!function_exists('youmi_save_activity')) {
                 $errno = 1;
                 $message = '新增失败';
             }
+        }
+
+        foreach ($from['goods'] as &$good) {
+
+            if ($good['id']) {
+                $good_id = $good['id'];
+                unset($good['id']);
+                pdo_update(UMIACP_NAME . '_goods', $good, ['id' => $good_id]);
+            } else {
+                $good['uniacid'] = $from['uniacid'];
+                $good['activity_id'] = $activity_id;
+                $good['shop_id'] = $from['shop_id'];;
+                $good['status'] = 1;
+                $good['createtime'] = time();
+                unset($good['id']);
+                pdo_insert(UMIACP_NAME . '_goods', $good);
+            }
+            unset($good);
         }
         $data['id']=($from['activity_id']?$from['activity_id']:$a_id);
         return ['errno' => $errno, 'message' => $message, 'data' => $data];

@@ -37,6 +37,8 @@
     <div class="cem_title p_relative">
         {if $_GPC['module']=='umiacp_bargainsimple'}
         <img src="{YOUMI_URL_APP}img_template/bargainsimple/shuoming.png" alt="">
+        {elseif $_GPC['module']=='umiacp_bargainsimple2'}
+        <img src="{YOUMI_URL_APP}img_template/bargainsimple2/shuoming.png" alt="">
         {else}
         <img class="titlebgimg" src="{if $activity['titlebgimg']}{$activity['titlebgimg']}{else}{YOUMI_URL_APP}img/m_titlebg2.png{/if}" alt="">
         <input type="text" class="d_desc_title" value="{if $activity['desc_title']}{$activity['desc_title']}{else}活动描述{/if}" />

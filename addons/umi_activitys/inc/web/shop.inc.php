@@ -15,7 +15,7 @@ if ($op == 'display') {
     if ($status) {
         $condition .= ' and status = ' . $status;
     } else {
-        $condition .= ' and status > -1 ';
+        $condition .= ' and status >= -1 ';
     }
     $keyword = trim($_GPC['keyword']);
     if ($keyword) {
@@ -42,6 +42,9 @@ if ($op == 'display') {
                 break;
             case 3 :
                 $item['statusname'] = '拒绝入驻';
+                break;
+            case 4 :
+                $item['statusname'] = '黑名单';
                 break;
             default :
                 $item['statusname'] = '';
@@ -75,20 +78,15 @@ if ($op == 'post') {
         $data['district'] = $district['district'];
         if (!empty($id)) {
             $dbStatus = pdo_getcolumn(YOUMI_NAME . '_' . 'shop', array('id' => $id), 'status', 1);
-            youmi_internal_log('777',array($dbStatus,$data['status']) );
             if ($dbStatus == 1) {
-                youmi_internal_log('777', '未审核');
                 if ($data['status'] == 2) {
-                    youmi_internal_log('777', '已经审核');
                     if (intval($setting['vip_days'])  > 0) {
-                        youmi_internal_log('777', '会员天数');
                         $curTime = time();
                         $data['starttime'] = $curTime;
                         $data['endtime'] = $curTime + 3600 * 24 * $setting['vip_days'];
                     }
                 }
             }
-            youmi_internal_log('777', $data);
             pdo_update(YOUMI_NAME . '_' . 'shop', $data, array('id' => $id));
             $message = '修改';
         } else {
@@ -119,6 +117,16 @@ if ($op == 'del') {
     }
     pdo_update(YOUMI_NAME . '_' . 'shop', ['status' => -1], array('id' => $id));
     itoast('温馨提示：商家拉黑成功！', $this->createWebUrl('shop'), 'success');
+}
+if ($op == 'add') {
+    $id = intval($_GPC['id']);
+    $paras[':id'] = $id;
+    $item = pdo_fetch('SELECT * FROM ' . tablename(YOUMI_NAME . '_' . 'shop') . ' WHERE id = :id limit 1 ', $paras);
+    if ($item['status'] == -1) {
+        itoast('温馨提示：商家不存在或是已经被删除！', $this->createWebUrl('shop'), 'error');
+    }
+    pdo_update(YOUMI_NAME . '_' . 'shop', ['status' => 2], array('id' => $id));
+    itoast('温馨提示：商家移出黑屋成功！', $this->createWebUrl('shop'), 'success');
 }
 
 if ($op == 'search') {

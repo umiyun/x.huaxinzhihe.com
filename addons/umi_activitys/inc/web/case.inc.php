@@ -86,7 +86,7 @@ if ($op == 'post') {
     $templates = pdo_getall(YOUMI_NAME . '_' . 'template', ['uniacid' => $uniacid, 'status' => 1]);
 
     $module_data = array(
-        'umiacp_bargain', 'umiacp_apply','umiacp_groupprepay','umiacp_lighten','umiacp_vote','umiacp_10second','umiacp_eggfreny','umiacp_speeddial','umiacp_roulette','umiacp_leapcliff','umiacp_fission','umiacp_bargainsimple','umiacp_groupsimple'
+        'umiacp_bargain', 'umiacp_apply','umiacp_groupprepay','umiacp_lighten','umiacp_vote','umiacp_10second','umiacp_eggfreny','umiacp_speeddial','umiacp_roulette','umiacp_leapcliff','umiacp_fission','umiacp_bargainsimple','umiacp_groupsimple','umiacp_bargainsimple2'
     );
     $modules     = array();
     foreach ($module_data as $d) {

@@ -13,39 +13,13 @@
 	  <platform>
         <subscribes>
             <message type="text"></message>
-            <message type="image"></message>
-            <message type="voice"></message>
-            <message type="video"></message>
-            <message type="shortvideo"></message>
-            <message type="location"></message>
-            <message type="link"></message>
-            <message type="subscribe"></message>
-            <message type="unsubscribe"></message>
-            <message type="qr"></message>
-            <message type="trace"></message>
-            <message type="click"></message>
-            <message type="view"></message>
-            <message type="merchant_order"></message>
-            <message type="user_get_card"></message>
-            <message type="user_del_card"></message>
-            <message type="user_consume_card"></message>
         </subscribes>
         <handles>
             <message type="text"></message>
-            <message type="image"></message>
-            <message type="voice"></message>
-            <message type="video"></message>
-            <message type="shortvideo"></message>
-            <message type="location"></message>
-            <message type="link"></message>
             <message type="subscribe"></message>
             <message type="qr"></message>
             <message type="trace"></message>
             <message type="click"></message>
-            <message type="merchant_order"></message>
-            <message type="user_get_card"></message>
-            <message type="user_del_card"></message>
-            <message type="user_consume_card"></message>
         </handles>
         <supports>                              (在线安装或更新时会重新计算所有已购买的支持类型)
             <item type="app" ></item>                 (发布公众号必须填写)

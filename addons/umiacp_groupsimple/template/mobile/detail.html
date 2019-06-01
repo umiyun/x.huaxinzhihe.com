@@ -811,6 +811,7 @@
             <i class="iconfont icon-Menu_Home" style="font-size: 20px"></i>
             <p class="ft12">首页</p>
         </a>
+        {if $activity['status']==1}
         <div onclick="openSign(3,{$_GPC['id']})" class="buy_dan">
             <div>￥<span>{$activity['single_price']}</span></div>
             <div class="ft16">单人购买</div>
@@ -819,6 +820,17 @@
             <div>￥<span>{$activity['group_price']}</span></div>
             <div class="ft16">我要参团</div>
         </div>
+        {/if}
+        {if $activity['status']==2}
+        <div class="status_btn">
+            <div class="ft16">活动已结束</div>
+        </div>
+        {/if}
+        {if $activity['status']==3}
+        <div class="status_btn">
+            <div class="ft16">活动未开始</div>
+        </div>
+        {/if}
     </div>
 </div>
 {template 'canvas_share'}

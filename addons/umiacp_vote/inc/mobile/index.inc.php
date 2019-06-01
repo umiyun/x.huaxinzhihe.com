@@ -117,16 +117,16 @@ if ($op == 'display') {
     $activity['userinfo'] = unserialize($activity['userinfo']);
 
     $records = pdo_fetchall('select * from ' . tablename(YOUMI_NAME . '_cut') .' where uniacid = ' . $uniacid . ' and activity_id = ' . $activity_id .' and status =2 order by times DESC,createtime ASC');
-    foreach ($records as &$record) {
-        $strlen = mb_strlen($record['realname'], 'utf-8');
-        $firstStr = mb_substr($record['realname'], 0, 1, 'utf-8');
-        $lastStr = mb_substr($record['realname'], -1, 1, 'utf-8');
-        $record['realname'] = $firstStr . str_repeat('*', 3) . $lastStr;
-
-//        $record['tips'] = $record['realname'] . '  ' . date('Y-m-d H:i',$record['createtime']) .'报名成功';
-
-        unset($record);
-    }
+//    foreach ($records as &$record) {
+//        $strlen = mb_strlen($record['realname'], 'utf-8');
+//        $firstStr = mb_substr($record['realname'], 0, 1, 'utf-8');
+//        $lastStr = mb_substr($record['realname'], -1, 1, 'utf-8');
+//        $record['realname'] = $firstStr . str_repeat('*', 3) . $lastStr;
+//
+////        $record['tips'] = $record['realname'] . '  ' . date('Y-m-d H:i',$record['createtime']) .'报名成功';
+//
+//        unset($record);
+//    }
 
     if ($activity['endtime'] < time()) {
         $update['status'] = 2;

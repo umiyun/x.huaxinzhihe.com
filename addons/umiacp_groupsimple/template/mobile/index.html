@@ -573,6 +573,13 @@
     .shop_detail .icon-dianhua{
         color: #7132BF;
     }
+    .status_btn{
+        width: 80%;
+        background: #000;
+        height: 50px;
+        color: #FFC600;
+        line-height: 50px;
+    }
 </style>
 <style type="text/css">
 
@@ -742,14 +749,14 @@
                     {loop $records $rdx $rv}
                         {if ($rdx%6) == 0}
                         <li class="notice_active_ch ft12">
-                            <div>
+                            <div data-id="{$rv['id']}">
                                 <img src="{$rv['avatar']}" alt=""><p class="w_apace">{$rv['nickname']}</p>
                                 {if $rv['leader']=='1'}
                                 <div class="p_absolute leader">团长</div>
                                 {/if}
                             </div>
                         {else}
-                        <div>
+                        <div data-id="{$rv['id']}">
                             <img src="{$rv['avatar']}" alt=""><p class="w_apace">{$rv['nickname']}</p>
                             {if $rv['leader']=='1'}
                             <div class="p_absolute leader">团长</div>
@@ -866,6 +873,7 @@
             <i class="iconfont icon-dianhua"></i>
             <p class="ft12">商家</p>
         </div>
+        {if $activity['status']==1}
         <div onclick="openSign(3)" class="buy_dan">
             <div>￥<span>{$activity['single_price']}</span></div>
             <div class="ft16">单人购买</div>
@@ -874,6 +882,17 @@
             <div>￥<span>{$activity['leader_price']}</span></div>
             <div class="ft16">我要开团</div>
         </div>
+        {/if}
+        {if $activity['status']==2}
+        <div class="status_btn">
+            <div class="ft16">活动已结束</div>
+        </div>
+        {/if}
+        {if $activity['status']==3}
+        <div class="status_btn">
+            <div class="ft16">活动未开始</div>
+        </div>
+        {/if}
     </div>
 
 

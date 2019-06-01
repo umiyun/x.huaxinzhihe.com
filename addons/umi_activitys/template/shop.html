@@ -111,7 +111,11 @@
                             <div class="layui-table-cell">
                                 <a class="layui-btn layui-btn-sm" href="{php echo $this->createWebUrl('shop',array('op'=>'renew','id'=>$item['id']))}" title="续期"><i class="layui-icon layui-icon-engine"></i>手动续期</a>
                                 <a class="layui-btn layui-btn-sm layui-btn-normal" href="{php echo $this->createWebUrl('shop',array('op'=>'post','id'=>$item['id']))}" title="修改"><i class="layui-icon layui-icon-edit"></i>修改</a>
-                                <a class="layui-btn layui-btn-sm layui-btn-danger" href="{php echo $this->createWebUrl('shop',array('op'=>'del','id'=>$item['id']))}" onclick="return confirm('确认拉黑吗？');return false;" title="拉黑"><i class="layui-icon layui-icon-delete"></i>拉黑</a>
+                                {if $item[status]!=4}
+                                <a class="layui-btn layui-btn-sm layui-btn-danger" href="{php echo $this->createWebUrl('shop',array('op'=>'del','id'=>$item['id']))}" onclick="return confirm('确认拉黑吗？');return false;"><i class="layui-icon layui-icon-delete"></i>移入黑屋</a>
+                                {else}
+                                <a class="layui-btn layui-btn-sm layui-btn-primary" href="{php echo $this->createWebUrl('shop',array('op'=>'add','id'=>$item['id']))}" onclick="return confirm('确认移除黑名单吗？');return false;"><i class="layui-icon layui-icon-refresh"></i>移出黑屋</a>
+                                {/if}
                             </div>
                         </td>
                     </tr>

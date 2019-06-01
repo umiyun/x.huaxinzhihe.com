@@ -71,7 +71,6 @@ if (!function_exists('youmi_refund')) {
             $data['status'] = 5;
             pdo_update(YOUMI_NAME . '_' . 'order', $data, ['id' => $refund_order['id']]);
 
-            youmi_settlement_log($refund_order, 3, $refund_order['price'], '订单退款：订单ID：' . $refund_order['id'] . '，退款人：' . ($_W['user'] ? $_W['username'] : $_W['fans']['nickname']) . '，退款时间：' . date('Y-m-d H:i:s'));
 
             return ['errno' => 0];
         } else if (($result['return_code'] == 'FAIL') || ($result['result_code'] == 'FAIL')) {

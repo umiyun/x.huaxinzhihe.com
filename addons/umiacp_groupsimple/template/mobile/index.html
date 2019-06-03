@@ -769,7 +769,7 @@
                     {/loop}
                 </ul>
             </div>
-            <div class="m_last">已有{php echo count($groups)}团/浏览量:{$activity['pv']}</div>
+            <div class="m_last">共有{php echo count($groups)}团 / 已成团{php echo count($successNum)}个 / 浏览量:{$activity['pv']}</div>
         </div>
         <!--团列表-->
         {if $activity['show_group']==1}
@@ -788,7 +788,13 @@
                         <div class="ft10">还差 <span style="color: #FFC600;font-size: 12px">{php echo $gv['group_num']-$gv['now_num']}人</span>拼成</div>
                     </div>
                     <a class="go_detail" href="{php echo $this->createMobileurl('index',['activity_id'=>$activity_id,'fmid'=>$_GPC['fmid'],'op'=>'detail','id'=>$gv['id']])}">查看详情</a>
+                    {if $gv['status']=='3'}
                     <a href="javascript:;" onclick="openSign(2,{$gv['id']})">立即参团</a>
+                    {elseif $gv['status']=='1'}
+                    <a href="javascript:;" style="background: #FD73C0;color: #fff;">拼团成功</a>
+                    {elseif $gv['status']=='2'}
+                    <a href="javascript:;" style="background: #aaa;color: #fff;">拼团失败</a>
+                    {/if}
                 </div>
                 {/if}
                 {/loop}
@@ -839,7 +845,13 @@
                     <div class="ft10">还差 <span style="color: #FFC600;font-size: 12px">{php echo $gv['group_num']-$gv['now_num']}人</span>拼成</div>
                 </div>
                 <a class="go_detail" href="{php echo $this->createMobileurl('index',['activity_id'=>$activity_id,'fmid'=>$_GPC['fmid'],'op'=>'detail','id'=>$gv['id']])}">查看详情</a>
-                <a href="javascript:;"  onclick="openSign(2,{$gv['id']})">立即参团</a>
+                {if $gv['status']=='3'}
+                <a href="javascript:;" onclick="openSign(2,{$gv['id']})">立即参团</a>
+                {elseif $gv['status']=='1'}
+                <a href="javascript:;" style="background: #FD73C0;color: #fff;">拼团成功</a>
+                {elseif $gv['status']=='2'}
+                <a href="javascript:;" style="background: #aaa;color: #fff;">拼团失败</a>
+                {/if}
             </div>
             {/loop}
         </div>

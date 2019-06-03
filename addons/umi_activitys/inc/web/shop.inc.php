@@ -115,7 +115,7 @@ if ($op == 'del') {
     if ($item['status'] == -1) {
         itoast('温馨提示：商家不存在或是已经被删除！', $this->createWebUrl('shop'), 'error');
     }
-    pdo_update(YOUMI_NAME . '_' . 'shop', ['status' => -1], array('id' => $id));
+    pdo_update(YOUMI_NAME . '_' . 'shop', ['status' => 4], array('id' => $id));
     itoast('温馨提示：商家拉黑成功！', $this->createWebUrl('shop'), 'success');
 }
 if ($op == 'add') {

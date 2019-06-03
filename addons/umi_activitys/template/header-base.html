@@ -5,9 +5,9 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="referrer" content="never">
-	<title>{php if(isset($title)) $_W['page']['title'] = $title}{if !empty($_W['page']['title'])}{$_W['page']['title']}{/if}{if empty($_W['page']['copyright']['sitename'])}{if IMS_FAMILY != 'x'}{if !empty($_W['page']['title'])} - {/if}微擎 - 公众平台自助引擎 -  Powered by WE7.CC{/if}{else}{if !empty($_W['page']['title'])} - {/if}{$_W['page']['copyright']['sitename']}{/if}</title>
-	<meta name="keywords" content="{if empty($_W['page']['copyright']['keywords'])}{if IMS_FAMILY != 'x'}微擎,微信,微信公众平台,we7.cc{/if}{else}{$_W['page']['copyright']['keywords']}{/if}" />
-	<meta name="description" content="{if empty($_W['page']['copyright']['description'])}{if IMS_FAMILY != 'x'}公众平台自助引擎（www.we7.cc），简称微擎，微擎是一款免费开源的微信公众平台管理系统，是国内最完善移动网站及移动互联网技术解决方案。{/if}{else}{$_W['page']['copyright']['description']}{/if}" />
+	<title>{php if(isset($title)) $_W['page']['title'] = $title}{if !empty($_W['page']['title'])}{$_W['page']['title']}{/if}{if empty($_W['page']['copyright']['sitename'])}{if IMS_FAMILY != 'x'}{if !empty($_W['page']['title'])} - {/if}{/if}{else}{if !empty($_W['page']['title'])} - {/if}{$_W['page']['copyright']['sitename']}{/if}</title>
+	<meta name="keywords" content="{if empty($_W['page']['copyright']['keywords'])}{if IMS_FAMILY != 'x'}微信公众平台{/if}{else}{$_W['page']['copyright']['keywords']}{/if}" />
+	<meta name="description" content="{if empty($_W['page']['copyright']['description'])}{if IMS_FAMILY != 'x'}{/if}{else}{$_W['page']['copyright']['description']}{/if}" />
 	<link rel="shortcut icon" href="{if !empty($_W['setting']['copyright']['icon'])}{$_W['attachurl']}{$_W['setting']['copyright']['icon']}{else}./resource/images/favicon.ico{/if}" />
 	<link href="./resource/css/bootstrap.min.css?v=20170426" rel="stylesheet">
 	<link href="./resource/css/common.css?v=20170426" rel="stylesheet">

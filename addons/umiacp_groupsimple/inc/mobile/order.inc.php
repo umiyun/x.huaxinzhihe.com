@@ -49,6 +49,7 @@ if ($op == 'create_order') {
     $activity = pdo_fetch("select * from " . tablename(YOUMI_NAME . '_' . 'activity') . " where `uniacid` = {$uniacid} and id = {$activity_id} ");
 
     if ($activity['success'] >= $activity['gnum']) {
+
         youmi_result(1, '商品已抢光');
     }
     if ($activity['status'] == 2) {
@@ -78,10 +79,10 @@ if ($op == 'create_order') {
         youmi_result(1, '金额错误');
     }
     if ($price == 0 && $type == 1) {
-//        $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id, 'mid' => $this->mid, 'status' => [2, 3], 'pay_type' => 1]);
-//        if ($order) {
-//            youmi_result(1, '请勿重复购买');
-//        }
+        $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id, 'mid' => $this->mid, 'status' => [2, 3], 'pay_type' => 1]);
+        if ($order) {
+            youmi_result(1, '请勿重复开团');
+        }
 
 
         $data['group_id'] = getGroupId();

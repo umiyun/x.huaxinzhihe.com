@@ -120,8 +120,7 @@ class WxPayApi
         } else {
             $error = curl_errno($ch);
             curl_close($ch);
-            echo $error;
-            die();
+
 //            message("退款失败，CURL出错，错误码：" . $error);
 //            exit;
             youmi_internal_log('refund',"退款失败，CURL出错，错误码：" . $error);

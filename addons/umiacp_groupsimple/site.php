@@ -13,6 +13,8 @@ if (!defined('IN_IA')) {
 require_once IA_ROOT . '/addons/umiacp_groupsimple/core/defines.php';
 require_once IA_ROOT . '/addons/umiacp_groupsimple/core/loader.php';
 
+
+
 class Umiacp_groupsimpleModuleSite extends WeModuleSite
 {
 
@@ -23,6 +25,7 @@ class Umiacp_groupsimpleModuleSite extends WeModuleSite
     public $username;
     public $member;
     public $umi_member;
+
 
     public function __construct()
     {
@@ -361,106 +364,6 @@ class Umiacp_groupsimpleModuleSite extends WeModuleSite
             }
         }
     }
-
-    protected function pay($params = array(), $mine = array())
-    {
-        global $_W;
-        load()->model('activity');
-        load()->model('module');
-        activity_coupon_type_init();
-        if (!$this->inMobile) {
-            message('支付功能只能在手机上使用', '', '');
-        }
-
-        $order = $this->hasOrder($params['tid'], 2);
-        if ($order['status'] == 4) {
-            message('订单已取消', '', 'info');
-        }
-        if ($order['status'] == 3) {
-            message('订单已核销', '', 'info');
-        }
-        if ($order['status'] == 2) {
-            message('订单已支付', '', 'info');
-        }
-
-        $params['module'] = $this->module['name'];
-        if ($params['fee'] <= 0) {
-            $pars = array();
-            $pars['from'] = 'return';
-            $pars['result'] = 'success';
-            $pars['type'] = '';
-            $pars['tid'] = $params['tid'];
-            $site = WeUtility::createModuleSite($params['module']);
-            $method = 'payResult';
-            if (method_exists($site, $method)) {
-                exit($site->$method($pars));
-            }
-        }
-        $log = pdo_get('core_paylog', array('uniacid' => $_W['uniacid'], 'module' => $params['module'], 'tid' => $params['tid']));
-        if (empty($log)) {
-            $log = array(
-                'uniacid' => $_W['uniacid'],
-                'acid' => $_W['acid'],
-                'openid' => $_W['member']['uid'],
-                'module' => $this->module['name'],
-                'tid' => $params['tid'],
-                'fee' => $params['fee'],
-                'card_fee' => $params['fee'],
-                'status' => '0',
-                'is_usecard' => '0',
-            );
-            pdo_insert('core_paylog', $log);
-        }
-        if ($log['status'] == '1') {
-            message('这个订单已经支付成功, 不需要重复支付.', '', 'info');
-        }
-        $setting = uni_setting($_W['uniacid'], array('payment', 'creditbehaviors'));
-        if (!is_array($setting['payment'])) {
-            message('没有有效的支付方式, 请联系网站管理员.', '', 'error');
-        }
-        $pay = $setting['payment'];
-        $we7_coupon_info = module_fetch('we7_coupon');
-        if (!empty($we7_coupon_info)) {
-            $cards = activity_paycenter_coupon_available();
-            if (!empty($cards)) {
-                foreach ($cards as $key => &$val) {
-                    if ($val['type'] == '1') {
-                        $val['discount_cn'] = sprintf("%.2f", $params['fee'] * (1 - $val['extra']['discount'] * 0.01));
-                        $coupon[$key] = $val;
-                    } else {
-                        $val['discount_cn'] = sprintf("%.2f", $val['extra']['reduce_cost'] * 0.01);
-                        $token[$key] = $val;
-                        if ($log['fee'] < $val['extra']['least_cost'] * 0.01) {
-                            unset($token[$key]);
-                        }
-                    }
-                    unset($val['icon']);
-                    unset($val['description']);
-                }
-            }
-            $cards_str = json_encode($cards);
-        }
-        foreach ($pay as &$value) {
-            $value['switch'] = $value['pay_switch'];
-        }
-        unset($value);
-        if (empty($_W['member']['uid'])) {
-            $pay['credit']['switch'] = false;
-        }
-        if ($params['module'] == 'paycenter') {
-            $pay['delivery']['switch'] = false;
-            $pay['line']['switch'] = false;
-        }
-        if (!empty($pay['credit']['switch'])) {
-            $credtis = mc_credit_fetch($_W['member']['uid']);
-            $credit_pay_setting = mc_fetch($_W['member']['uid'], array('pay_password'));
-            $credit_pay_setting = $credit_pay_setting['pay_password'];
-        }
-        $you = 0;
-        include $this->template('paycenter');
-    }
-
-
     /**
      * 判断当前用户有没这个订单
      * @param $order_id
@@ -477,46 +380,6 @@ class Umiacp_groupsimpleModuleSite extends WeModuleSite
             return false;
         }
         return $order;
-    }
-
-    /**
-     * 获取支付结果.
-     */
-    public function payResult($params)
-    {
-
-        youmi_internal_log('payresult', $params);
-
-        //根据参数params中的result来判断支付是否成功
-        if ($params['result'] == 'success' && $params['from'] == 'notify') {
-
-        }
-        if ($params['from'] == 'return') {
-
-            //订单
-            $paylog = pdo_get('core_paylog', array('uniacid' => $this->uniacid, 'module' => YOUMI_NAME, 'tid' => $params['tid']));
-            $tag = unserialize($paylog['tag']);
-            $transaction_id = $tag['transaction_id'];
-            $status = intval($paylog['status']) === 1;
-            if ($status) {
-                $order = pdo_get(YOUMI_NAME . '_' . 'order', ['uniacid' => $this->uniacid, 'ordersn' => $params['tid']]);
-                pdo_update(YOUMI_NAME . '_' . 'order', ['status' => 2, 'pay_time' => TIMESTAMP, 'transid' => $transaction_id], ['id' => $order['id']]);
-                pdo_update(YOUMI_NAME . '_' . 'goods', ['success +=' => 1], ['id' => $order['goods_id']]);
-
-//                $shop = pdo_get(YOUMI_NAME . '_' . 'shop', ['mid' => $order['mid']]);
-//                $start = $shop['endtime'] > TIMESTAMP ? $shop['endtime'] : TIMESTAMP;
-//                $end = strtotime(date('Y-m-d H:i:s', $start) . ' +' . ($order['buy'] + $order['gift']) . ' month');
-//                pdo_update(YOUMI_NAME . '_' . 'shop', ['starttime' => $start, 'endtime' => $end], ['mid' => $order['mid']]);
-            }
-
-            if ($params['result'] == 'success') {
-                if ($params['result'] == 'success') {
-                    message('支付成功！', $this->createMobileUrl('order', ['op' => 'detail']), 'success');
-                } else {
-                    message('支付失败！', $this->createMobileUrl('goods'), 'error');
-                }
-            }
-        }
     }
 
 }

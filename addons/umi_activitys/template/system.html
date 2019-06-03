@@ -15,6 +15,7 @@
         <li style="display: none">短信设置</li>
         <li>参数设置</li>
         <li>首页模板</li>
+        <li>邮件设置</li>
     </ul>
     <form class="panel panel-default form-horizontal layui-tab-content" role="form" method="post" action="" name="submit">
         <div class="panel-body base layui-tab-item layui-show">
@@ -333,42 +334,86 @@
                     <!--</div>-->
 
         </div>
-        <div style="display: none" class="panel-body layui-tab-item wxapp">
-            <div class="form-group">
-                <label class="col-xs-12 col-sm-3 col-md-2 control-label">模板风格选择</label>
-                <div class="col-sm-8 col-xs-12">
-                    <label class='radio-inline'>
-                        <input type='radio' name='set[base][template]' value='1' {if intval($setting['template']) == '1'||empty($setting['template'])}checked{/if} /> 模板一
-                    </label>
-                    <label class='radio-inline'>
-                        <input type='radio' name='set[base][template]' value='2' {if intval($setting['template']) == '2'}checked{/if} /> 模板二
-                    </label>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label"></label>
-                <div class="col-sm-8 temp_imgs">
-                    <div {if intval($setting['template']) == '1'||empty($setting['template'])}style="display:block;"{/if}  class="temp_img1">
-                        <img src="{YOUMI_URL_TEMP}imgs/temp_img1.png" alt="">
-                    </div>
-                    <div {if intval($setting['template']) == '2'}style="display:block;"{/if} class="temp_img2">
-                        <img src="{YOUMI_URL_TEMP}imgs/temp_img2.png" alt="">
-                        <div class="form-group">
-                            <label class="col-xs-12 col-sm-1 col-md-1 control-label">布局方式</label>
-                            <div class="col-sm-8 col-xs-12">
-                                <label class='radio-inline'>
-                                    <input type='radio' name='set[base][template_col]' value='3' {if intval($setting['template_col']) == '3'||empty($setting['template_col'])}checked{/if} /> 一行三列
-                                </label>
-                                <label class='radio-inline'>
-                                    <input type='radio' name='set[base][template_col]' value='2' {if intval($setting['template_col']) == '2'}checked{/if} /> 一行两列
-                                </label>
-                                <div class="help-block">首页和活动列表页面布局选择，一行三列：一行显示三个案例</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
+
+<div style="display: none" class="panel-body layui-tab-item">
+    <div class="form-group">
+        <label class="col-xs-12 col-sm-3 col-md-2 control-label">模板风格选择</label>
+        <div class="col-sm-8 col-xs-12">
+            <label class='radio-inline'>
+                <input type='radio' name='set[base][template]' value='1' {if intval($setting['template']) == '1'||empty($setting['template'])}checked{/if} /> 模板一
+            </label>
+            <label class='radio-inline'>
+                <input type='radio' name='set[base][template]' value='2' {if intval($setting['template']) == '2'}checked{/if} /> 模板二
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label"></label>
+        <div class="col-sm-8 temp_imgs">
+            <div {if intval($setting['template']) == '1'||empty($setting['template'])}style="display:block;"{/if}  class="temp_img1">
+            <img src="{YOUMI_URL_TEMP}imgs/temp_img1.png" alt="">
+        </div>
+        <div {if intval($setting['template']) == '2'}style="display:block;"{/if} class="temp_img2">
+        <img src="{YOUMI_URL_TEMP}imgs/temp_img2.png" alt="">
+        <div class="form-group">
+            <label class="col-xs-12 col-sm-1 col-md-1 control-label">布局方式</label>
+            <div class="col-sm-8 col-xs-12">
+                <label class='radio-inline'>
+                    <input type='radio' name='set[base][template_col]' value='3' {if intval($setting['template_col']) == '3'||empty($setting['template_col'])}checked{/if} /> 一行三列
+                </label>
+                <label class='radio-inline'>
+                    <input type='radio' name='set[base][template_col]' value='2' {if intval($setting['template_col']) == '2'}checked{/if} /> 一行两列
+                </label>
+                <div class="help-block">首页和活动列表页面布局选择，一行三列：一行显示三个案例</div>
             </div>
         </div>
+    </div>
+</div>
+</div>
+</div>
+
+
+<div style="display: none" class="panel-body layui-tab-item">
+    <div class="form-group">
+        <label class="col-sm-2 control-label">SMTP服务器</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" name="set[smtp][server]" value="{$setting['server']}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">SMTP服务器端口</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" name="set[smtp][server_port]" value="{$setting['server_port']}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">用户名</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" name="set[smtp][username]" value="{$setting['username']}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">密码</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" name="set[smtp][password]" value="{$setting['password']}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">加密方式</label>
+        <div class="col-sm-8">
+            <label class='radio-inline'>
+                <input type='radio' name='set[smtp][encryption]' value='ssl' {if ($setting['encryption']) == 'ssl'||empty($setting['encryption'])}checked{/if} /> ssl
+            </label>
+            <label class='radio-inline'>
+                <input type='radio' name='set[smtp][encryption]' value='TLS' {if ($setting['encryption']) == 'TLS'}checked{/if} /> TLS
+            </label>
+        </div>
+    </div>
+
+</div>
+
+
 
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-8">

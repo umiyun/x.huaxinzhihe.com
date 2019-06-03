@@ -118,7 +118,7 @@
                 <span>立即支付</span>
             </a>
             {/if}
-            {if $lv['status']=='2'}
+            {if $lv['status']=='2' && $lv['group_status']==1}
             <a href="javascript:;" onclick="qrcode('{$lv['saler_qrurl']}')" style="margin-left: 10%">
                 <i class="iconfont icon-saoyisao"></i>
                 <span>立即核销</span>

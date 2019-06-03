@@ -125,6 +125,7 @@ if ($op=='download'){
 
     $module=$_GPC['module'];
     $activity_id = $_GPC['activity_id'];
+    $email = $_GPC['email'];
     $paras[':uniacid'] = $uniacid;
 
     $condition = '';
@@ -160,9 +161,9 @@ if ($op=='download'){
         ['createtime', 200, 'date'],
     ];
 
-    download('报名记录', $list, $header, $types);
+    download('报名记录', $list, $header, $types,$email);
 }
- function download($name, $list, $header, $types)
+ function download($name, $list, $header, $types,$email)
 {
     $html = "\xEF\xBB\xBF";
     $html .= "<table><tr style=\"text-align: center\" style=\"border: 1px solid\">";
@@ -203,30 +204,31 @@ if ($op=='download'){
 //    exit($html);
     $path= YOUMI_PATH.$filename;
     file_put_contents($path , $html);
-sendExcelEmail($path,$filename);
+sendExcelEmail($path,$filename,$email);
 
 }
-function sendExcelEmail($path,$filename){
+function sendExcelEmail($path,$filename,$email){
     require_once  YOUMI_PATH . 'mailer/Exception.php';
     require  YOUMI_PATH . 'mailer/PHPMailer.php';
     require  YOUMI_PATH . 'mailer/SMTP.php';
     $mail = new PHPMailer(true);
 
     try {
+        $setting = youmi_setting_get_list();
         //Server settings
 //        $mail->SMTPDebug = 2;                                       // Enable verbose debug output
         $mail->isSMTP();                                            // Set mailer to use SMTP
-        $mail->Host       = 'smtp.qq.com';  // Specify main and backup SMTP servers
+        $mail->Host       = $setting['server'];  // Specify main and backup SMTP servers
         $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
-        $mail->Username   = '1295200771@qq.com';                     // SMTP username
-        $mail->Password   = 'ldywhubnermqgcfc';                               // SMTP password
-        $mail->SMTPSecure = 'ssl';                                  // Enable TLS encryption, `ssl` also accepted
-        $mail->Port       = 465;                                    // TCP port to connect to
+        $mail->Username   = $setting['username'];                     // SMTP username
+        $mail->Password   = $setting['password'];                               // SMTP password
+        $mail->SMTPSecure = $setting['encryption'];                                  // Enable TLS encryption, `ssl` also accepted
+        $mail->Port       = $setting['server_port'];                                    // TCP port to connect to
 
         //Recipients
-        $mail->setFrom('1295200771@qq.com', 'Mailer');
+        $mail->setFrom( $setting['username']);
 //        $mail->addAddress('joe@example.net', 'Joe User');     // Add a recipient
-        $mail->addAddress('1295200771@qq.com');               // Name is optional
+        $mail->addAddress($email);               // Name is optional
 //        $mail->addReplyTo('info@example.com', 'Information');
 //        $mail->addCC('cc@example.com');
 //        $mail->addBCC('bcc@example.com');

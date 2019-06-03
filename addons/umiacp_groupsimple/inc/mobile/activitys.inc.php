@@ -24,7 +24,7 @@ youmi_puv('index');
 
 if ($op == 'display') {
 
-    $activity = pdo_fetchall('select * from ' . tablename(YOUMI_NAME . '_activity') . ' where uniacid = ' . $uniacid . ' and id in (select activity_id from ' . tablename(YOUMI_NAME . '_cut') . ' where uniacid = ' . $uniacid . ' and mid = ' . $this->mid . ' group by activity_id )');
+    $activity = pdo_fetchall('select * from ' . tablename(YOUMI_NAME . '_activity') . ' where uniacid = ' . $uniacid . ' and id in (select activity_id from ' . tablename(YOUMI_NAME . '_order') . ' where uniacid = ' . $uniacid . ' and mid = ' . $this->mid . ' group by activity_id )');
     foreach ($activity as &$item) {
         $item['image'] = tomedia($item['image']);
         unset($item);

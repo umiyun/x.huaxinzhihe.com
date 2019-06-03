@@ -323,19 +323,21 @@ if ($op == 'display') {
 
     $status = intval($_GPC['status']);
     if ($status) {
-        $condition .= ' and status = ' . $status;
+        $condition .= ' and o.status = ' . $status;
     }
-    $keyword = trim($_GPC['keyword']);
-    if ($keyword) {
-        $condition .= " and title like '%{$keyword}%' ";
-    }
+//    $keyword = trim($_GPC['keyword']);
+//    if ($keyword) {
+//        $condition .= " and title like '%{$keyword}%' ";
+//    }
     if ($this->mid) {
-        $condition .= ' and mid = ' . $this->mid;
+        $condition .= ' and o.mid = ' . $this->mid;
     }
     $orderby = ' order by ';
 
-    $orderby .= ' createtime desc ';
-    $list = pdo_fetchall('SELECT * FROM ' . tablename(YOUMI_NAME . '_' . 'order') . ' where uniacid = :uniacid ' . $condition . $orderby . ' LIMIT ' . ($pindex - 1) * $psize . ',' . $psize, $paras);
+    $orderby .= ' o.createtime desc ';
+    $list = pdo_fetchall('SELECT o.*,g.status as group_status FROM ' . tablename(YOUMI_NAME . '_' . 'order') . ' as o left join '.tablename(YOUMI_NAME . '_' . 'group').' as g on o.group_id=g.id where o.uniacid = :uniacid ' . $condition . $orderby . ' LIMIT ' . ($pindex - 1) * $psize . ',' . $psize, $paras);
+//    pdo_debug();
+//    die();
     foreach ($list as &$item) {
         switch ($item['status']) {
             case 1 :

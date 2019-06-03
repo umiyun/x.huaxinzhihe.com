@@ -1,0 +1,1219 @@
+{template 'header'}
+<link rel="stylesheet" href="{YOUMI_URL_APP}css/animate.min.css">
+
+<style>
+    .moneybox{width: 100%;height: 100%;}
+
+    #leafContainer {
+        /*position: absolute;*/
+        /*width: 100%;*/
+        /*height: 100%;*/
+        overflow: hidden;
+    }
+
+    #leafContainer > div {
+        position: fixed;
+        z-index: 10;
+        width: 25px;
+        /*height: 150px;*/
+        -webkit-animation-iteration-count: infinite, infinite;
+        -webkit-animation-direction: normal, normal;
+        -webkit-animation-timing-function: linear, ease-in;
+    }
+    #leafContainer > div > img {
+        position: absolute;
+        width: 25px;
+        -webkit-animation-iteration-count: infinite;
+        -webkit-animation-direction: alternate;
+        -webkit-animation-timing-function: ease-in-out;
+        -webkit-transform-origin: 50% -100%;
+    }
+    @-webkit-keyframes fade {
+        0% {
+            opacity: 1;
+        }
+        95% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0;
+        }
+    }
+    @-webkit-keyframes drop {
+        0% {
+            -webkit-transform: translate(0px, -50px);
+        }
+        100% {
+            -webkit-transform: translate(0px, 650px);
+        }
+    }
+    @-webkit-keyframes clockwiseSpin {
+        0% {
+            -webkit-transform: rotate(-50deg);
+        }
+        100% {
+            -webkit-transform: rotate(50deg);
+        }
+    }
+    @-webkit-keyframes counterclockwiseSpinAndFlip {
+        0% {
+            -webkit-transform: scale(-1, 1) rotate(50deg);
+        }
+        100% {
+            -webkit-transform: scale(-1, 1) rotate(-50deg);
+        }
+    }
+
+</style>
+<style>
+    .color_red{
+        color: #ED5F43
+    }
+    img{
+        width: 100%;
+    }
+    input[type=color], input[type=date], input[type=datetime-local], input[type=datetime], input[type=email], input[type=month], input[type=number], input[type=password], input[type=search], input[type=tel], input[type=text], input[type=time], input[type=url], input[type=week], select{
+        border: 1px solid transparent;
+        text-align: center;
+        margin: 0 2%;
+        height: 30px;
+        padding: 5px;
+        background: transparent;
+    }
+    .bg_fixed{
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 15;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        display: none;
+    }
+
+    .h_img{
+        width: 100%;
+    }
+    .ah_top{
+        background: rgba(0,0,0,0.7);
+        color: #aaa;
+        display: inline-flex;
+        padding: 0 6px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 5;
+    }
+    .ah_top span{
+        color: #fff;
+        font-weight: 700;
+    }
+    .a_head .iconfont{
+        position: fixed;
+        z-index: 5;
+        color: #fff;
+        font-size: 28px;
+        border-radius: 50%;
+        border: 1px solid #fff;
+        background: rgba(0,0,0,0.4);
+        left: 5%;
+        width: 35px;
+        height: 35px;
+        text-align: center;
+        line-height: 33px;
+    }
+    .icon-music{
+        top: 5%;
+    }
+    .icon-music.active,.icon-mofabang.active{
+        -webkit-animation: zhuan 2s linear infinite;
+    }
+    .icon-mofabang{
+        top: 15%;
+        font-size: 24px!important;
+    }
+    .ah_user,.ah_contact,.ah_complain,.ah_share{
+        top: 25%;
+        left: 5%;
+        width: 42px;
+        height: 42px;
+        background: #333;
+        color: #fff;
+        text-align: center;
+        padding: 6px;
+        line-height: 14px;
+        border-radius: 50%;
+        position: fixed;
+        z-index: 10;
+    }
+    .ah_complain{
+        left: inherit;
+        right: 5%;
+        top: 15%;
+        line-height: 30px;
+    }
+    .ah_share{
+        left: inherit;
+        right: 5%;
+        top: 5%;
+        line-height: 30px;
+    }
+    .ah_contact{
+        left: inherit;
+        right: 5%;
+        -webkit-animation: zhuan2 1.5s ease-in infinite;
+    }
+
+
+    .a_content{
+        padding: 4%;
+        box-sizing: border-box;
+        background: url("{$activity['bgimage']}") repeat 100%;
+        padding-bottom: 35%;
+    }
+    .ac_title{
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+    .ac_time{
+
+    }
+    .ac_time>div{
+        width: 100%;
+        text-align: center;
+        left: 0;
+        top: 28%;
+    }
+    .ac_time span{
+        color: #111;
+        background: #ED5F43;
+        border-radius: 50%;
+        padding: 2px;
+        margin: 0 2px;
+        display: inline-block;
+        /*width: 20px;*/
+        height: 20px;
+        text-align: center;
+        line-height: 16px;
+    }
+
+    .ac_messages{
+        margin: 5% 0;
+        text-align: center;
+        background: #FEF4DC;
+        width: 84%;
+        left: 8%;
+        position: relative;
+        border-radius: 10px;
+    }
+    .notice_active {
+        height: 3rem;
+        padding: 0;
+        overflow: hidden;
+        position: relative;
+    }
+    .notice_active ul{
+        padding: 0 6px;
+    }
+    .notice_active li{
+        list-style-type:none;line-height: 2.6rem;overflow: hidden;
+        text-align: center;
+    }
+
+
+    .ac_goods{
+        background: #fff;
+        border-radius: 5px;
+        padding: 2%;
+        margin-top: 20px;
+    }
+    .goods{
+        border: 1px solid #111;
+        border-radius: 5px;
+        padding: 12% 2% 2% 2%;
+        margin-top: 50px;
+    }
+    .goods .gt_logo{
+        width: 100px;
+        height: 100px;
+        margin-right: 3%;
+    }
+    .gt_detail>div{
+        margin: 10px 0;
+    }
+    .g_title{
+        width: 70%;
+        position: absolute;
+        top: -25px;
+        left: 15%;
+    }
+    .g_title>div{
+        position: absolute;
+        top: 5px;
+        width: 100%;
+        text-align: center;
+        left: 0;
+    }
+
+    .ac_youhui{
+        margin-top: 25px;
+    }
+    .acy_title{
+        width: 66%;
+        left: 17%;
+        margin-bottom: 8px;
+    }
+    .acy_title input{
+        width: 78%;
+        top: 5px;
+        left: 8%;
+        position: absolute;
+        z-index: 5;
+    }
+    .acy_content{
+        background: #fff;
+        border-radius: 5px;
+        padding: 2%;
+    }
+
+    .acsc_list{
+        max-height: 200px;
+        overflow-y: auto;
+    }
+    .acs_content .acsc_title,.acsc_list>div{
+        display: flex;
+        display: -webkit-flex;
+        justify-content: space-around;
+        -webkit-justify-content: space-around;
+    }
+    .acs_content span{
+        width: 20%;
+        text-align: center;
+        margin-top: 5px;
+    }
+    .acsc_tip{
+        padding-top: 18px;
+        text-align: center;
+    }
+
+
+    .go_top{
+        position: fixed;
+        bottom: 15%;
+        right: 5%;
+        width: 50px;
+        height: 50px;
+        z-index: 10;
+        color: #fff;
+        border-radius: 50%;
+        background: rgba(0,0,0,0.6);
+        text-align: center;
+        line-height: 18px;
+        padding: 6px;
+        display: none;
+    }
+    .open_share{
+        position: fixed;
+        top: 8%;
+        width: 60%;
+        left: 20%;
+        z-index: 20;
+        color: #fff;
+        display: none;
+    }
+    .os_btns img{
+        background: #fff;
+        border-radius: 50%;
+        padding: 8px;
+        width: 50px;
+    }
+    .osb_cancel{
+        position: fixed;
+        bottom: 5%;
+        padding: 2px;
+        border-bottom: 1px solid #fff;
+    }
+
+
+    .kanjia_btn{
+        -webkit-animation: kanjia 1s ease-in infinite;
+        margin-left: 5%;
+        min-width: 70px;
+    }
+    .open_kjtips{
+        position: fixed;
+        top: 10%;
+        width: 80%;
+        left: 10%;
+        z-index: 20;
+        background: #D3441B;
+        border-radius: 10px;
+        display: none;
+    }
+    .a_btn2{
+        width: 96%;
+        margin: 4% 2%;
+        display: block;
+        box-sizing: border-box;
+        padding: 2%;
+        font-size: 18px;
+    }
+    .a_btn3{
+        display: block;
+        width: 96%;
+        margin: 0 auto;
+    }
+    .ok_price{
+        margin: 4% 2% 8% 2%;
+    }
+    .a_footer{
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        padding: 4%;
+        background: rgba(0,0,0,0.7);
+        z-index: 10;
+        width: 100%;
+        text-align: center;
+    }
+    .a_footer a{
+        font-size: 20px;
+    }
+    .gdtp_bg{
+        width: 100%;
+        height: 10px;
+        background: #ddd;
+        border-radius: 10px;
+        margin: 5px 0;
+    }
+    .gdtp_bg>div{
+        background: #ED5F43;
+        border-radius: 20px;
+        height: 10px;
+    }
+    .gdtp_bg>span{
+        background: #fff;
+        width: 16px;
+        border-radius: 50%;
+        height: 16px;
+        border: 3px solid #ED5F43;
+        top: -3px;
+    }
+
+    @-webkit-keyframes zhuan {
+        0%{transform: rotate(0deg)}
+        100%{transform: rotate(360deg)}
+    }
+    @-webkit-keyframes zhuan2 {
+        0%{transform: rotate(0deg)}
+        45%{transform: rotate(-30deg)}
+        90%{transform: rotate(30deg)}
+        100%{transform: rotate(0deg)}
+    }
+    @-webkit-keyframes kanjia {
+        10%{
+            transform: rotate(-3deg) scale(0.9);
+        }
+        35%{
+            transform: rotate(3deg) scale(1.1);
+        }
+        45%{
+            transform: rotate(-3deg);
+        }
+        55%{
+            transform: rotate(3deg);
+        }
+        65%{
+            transform: rotate(-3deg);
+        }
+        90%{
+            transform: rotate(0) scale(1);
+        }
+    }
+
+    .acs_navbar{
+        border-bottom: 1px solid #ddd;
+    }
+    .acs_navbar>div{
+        padding: 2% 0;
+        border-bottom: 2px solid transparent;
+    }
+    .acs_navbar>div.active{
+        border-bottom: 2px solid #ED5F43;
+        color: #ED5F43;
+    }
+    .acysc_detail{
+        border: 2px solid #FD6E4A;
+        margin-bottom: 10px;
+    }
+    .acysc_detail span{
+        background: #FD6E4A;
+        width: 25px;
+        text-align: center;
+        color: #fff;
+        margin: 10px;
+        display: block;
+        border-radius: 50%;
+        height: 25px;
+        line-height: 25px;
+    }
+
+    .pt_contents{
+        border-bottom: 1px solid #ddd;
+        padding: 15px 0;
+    }
+    .ptc_step{
+        align-items: flex-end;
+        -webkit-align-items: flex-end;
+    }
+    .ptc_step img{
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        border: 1px solid #F00C0A;
+    }
+    .ptc_step2>div{
+        width: 30%;
+    }
+    .ptc_step2 span{
+        width: 20px;
+        height: 20px;
+        background: #aaa;
+        text-align: center;
+        line-height: 20px;
+        border-radius: 50%;
+        font-size: 12px;
+    }
+    .ptc_num{
+        background: #FFD200;
+        top: 0;
+        right: 0;
+        padding: 4px 10px;
+        font-size: 12px;
+    }
+    .ptc_jieti{
+        margin-top: 10px;
+    }
+    .ptc_jieti>div{
+        width: 30%;
+        margin-bottom:10px;
+    }
+    .ptcj_detail{
+
+    }
+    .ptcj_detail>div{
+        text-align: center;
+        left: 0;
+        top: 8px;
+        width: 100%;
+        color: #fff!important;
+    }
+    .ptcj_detail b{
+        display: block;
+    }
+
+    .fb_tip{
+        padding: 1% 0;
+        margin-bottom: -15px;
+        margin-top: 10px;
+        position: relative;
+    }
+    .fb_tip a{
+        font-size: 16px;
+    }
+    .fb_tip .iconfont{
+        color: #fff;
+        position: absolute;
+        right: -10px;
+        top: 5px;
+    }
+</style>
+<style type="text/css">
+
+    .dm_content{
+        position: absolute;
+        overflow: hidden;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 2;
+        height: 60%;
+    }
+
+    .bullet{
+        display: flex;
+        align-items: center;
+        position: absolute;
+        flex-wrap: nowrap;
+        word-break: keep-all;
+        background: rgba(0,0,0,0.7);
+        color: #fff;
+        padding: 4px 5px;
+        border-radius: 25px;
+        min-width: 160px;
+    }
+    .bullet img{
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        margin-right: 5px;
+    }
+
+</style>
+<div>
+
+    <div class="tips"></div>
+    {if $activity['effects_imgs']}<div class="moneybox" id="leafContainer"></div>{/if}
+    <!--头部-->
+    <div class="a_head p_relative">
+        <img class="h_img" src="{$activity['image']}" alt="">
+        <div class="flex flex_a_center ah_top">
+            <span>{$activity['pv']}</span>人查看<span>{$activity['share']}</span>人分享<span>{$activity['participate']}</span>人参团
+        </div>
+        {if $activity['music']}<i id="music" class="iconfont icon-music active"><audio id="audiojs" src="{$activity['music']}" autoplay loop></audio></i>{/if}
+        {if $activity['effects_imgs']}<i class="iconfont icon-mofabang active"></i>{/if}
+        <a href="{php echo $this->createMobileUrl('user')}" class="p_absolute ah_user">个人中心</a>
+        <a href="javascript:;" class="p_absolute ah_complain" onclick="$('#tem_complain').slideDown()">投诉</a>
+        <div class="p_absolute ah_share" onclick="$('.open_share,.bg_fixed').fadeIn()">分享</div>
+        <div class="p_absolute ah_contact" data-name="{$activity['shop_name']}" data-mobile="{$activity['shop_mobile']}" data-address="{$activity['shop_province']} {$activity['shop_city']} {$activity['shop_district']} {$activity['shop_address']}" data-code="{php echo tomedia($activity['shop_code'])}" onclick="openConcat(this)">联系商家</div>
+
+        <!--弹幕-->
+        <div class="dm_content"></div>
+
+    </div>
+    <!--下部分，背景图片 background->repeat-->
+    <div class="a_content">
+
+        <h4 class="ac_title text_center sys_color">{$activity['title']}</h4>
+        <!--倒计时-->
+        {if $activity['status']=='1'&&$activity['status2']!=2}
+        <div class="ac_time p_relative sys_color">
+            <img style="width: 100%" src="{YOUMI_URL_APP}img/time_bg.png" alt="">
+            <div class="p_absolute">距离活动结束还有:<span class="act_day"></span>天<span class="act_hour"></span>时<span class="act_min"></span>分<span class="act_sec"></span>秒</div>
+        </div>
+        {/if}
+        <!--公告-->
+        {if !empty($records)}
+        <div class="notice_active ac_messages sys_color" style="display: none">
+            <ul>
+                {loop $records $rv}
+                <li class="notice_active_ch ft12">{$rv['tips']}</li>
+                {/loop}
+            </ul>
+        </div>
+        {/if}
+        <!--拼团说明-->
+        <div class="ac_youhui p_relative">
+            <div class="acy_title p_relative">
+                <img style="height: 40px" src="{YOUMI_URL_APP}img/m_titlebg3.png" alt="">
+                <input type="text" value="拼团玩法" readonly>
+            </div>
+            <div class="acy_content">
+                <div class="acys_contents text-center pt_contents">
+                    <div class="flex flex_j_around ptc_step">
+                        <img src="{YOUMI_URL_APP}img/pt_s1.jpg" alt="">
+                        <i class="sys_color iconfont icon-wanjiantou"></i>
+                        <img src="{YOUMI_URL_APP}img/pt_s2.jpg" alt="">
+                        <i class="sys_color iconfont icon-wanjiantou"></i>
+                        <img src="{YOUMI_URL_APP}img/pt_s3.jpg" alt="">
+                    </div>
+                    <div class="flex flex_j_around ptc_step2">
+                        <div class="flex flex_a_center sys_color">
+                            <span>1</span>
+                            <div class="ft10" style="line-height: 12px">我要参团支付预付款</div>
+                        </div>
+                        <div class="flex flex_a_center sys_color">
+                            <span>2</span>
+                            <div class="ft10" style="line-height: 12px">邀请好友支付参团</div>
+                        </div>
+                        <div class="flex flex_a_center sys_color">
+                            <span>3</span>
+                            <div class="ft10" style="line-height: 12px">达到人数团购成功</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="acys_contents text-center pt_contents p_relative" style="padding: 10px 5px">
+                    <div>原价: <span class="sys_color">{$activity['oprice']}</span>元</div>
+                    <!--<div>当前价价格: <b class="sys_color ft16">{$activity['nprice']}</b>元</div>-->
+                    <div>参团需预付: <span class="sys_color ft16">{$activity['yprice']}</span>元</div>
+                    <b class="sys_color">(到店支付尾款)</b>
+                    <div class="flex flex_wrap flex_j_between ptc_jieti">
+                        {loop $activity['jieti']['num'] $jdx $jv}
+                        {if !empty($activity['jieti']['num'][$jdx])}
+                        <div class="p_relative ptcj_detail">
+                            {if $activity['njieti']==$jdx}
+                            <img src="{YOUMI_URL_APP}img/pt_jt6.png" alt="">
+                            {else}
+                            <img src="{YOUMI_URL_APP}img/pt_jt0.png" alt="">
+                            {/if}
+                            <div class="p_absolute">
+                                满{$activity['jieti']['num'][$jdx]}人
+                                <b class="ft16">{$activity['jieti']['price'][$jdx]}</b>
+                                元
+                            </div>
+                        </div>
+                        {/if}
+                        {/loop}
+                    </div>
+                    <div class="p_absolute ptc_num">
+                        <span class="sys_color ft14">{$activity['participate']}</span>人已参团,剩<span class="sys_color ft14">{php echo ($activity['gnum']-$activity['participate'])}</span>份
+                    </div>
+                </div>
+                <!--活动进行时-->
+                <div class="acys_contents">
+                    <div class="ft12 color777" style="margin-bottom: 15px">以下小伙伴已加入团购，人多更优惠，等你哦</div>
+                    <div class="acsc_list">
+                        {loop $records2 $rv}
+                        <div>
+                            <span class="ft12">{$rv['realname']}</span>
+                            <span class="ft12" style="width: 50%">{php echo date('Y-m-d H:i',$rv['createtime'])}参团</span>
+                            <span class="ft12">当前价格 {$activity['nprice']}元</span>
+                        </div>
+                        {/loop}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--活动优惠-->
+        {if !empty($activity['preferential_val'])}
+        <div class="ac_youhui p_relative">
+            <div class="acy_title p_relative">
+                <img style="height: 40px" src="{if $activity['titlebgimg']}{$activity['titlebgimg']}{else}{YOUMI_URL_APP}img/m_titlebg2.png{/if}" alt="">
+                <input type="text" value="{$activity['preferential_title']}" readonly>
+            </div>
+            <div class="acy_content">
+                <div class="acys_contents">
+                    <!--内容-->
+                    {loop $activity['preferential_val'] $apidx $apv}
+                    {if !empty($apv)}
+                    <div class="acysc_detail flex flex_a_center">
+                        <div style="width: 16%"><span>{php echo ($apidx+1)}</span></div>
+                        <div style="width: 84%;word-break: break-all">{$apv}</div>
+                    </div>
+                    {/if}
+                    {/loop}
+                </div>
+            </div>
+            <img class="iconPig" src="{YOUMI_URL_APP}img/pig.png" alt="">
+        </div>
+        {/if}
+        <!--商品描述-->
+        <div class="ac_youhui p_relative">
+            <div class="acy_title p_relative">
+                <img style="height: 40px" src="{if $activity['titlebgimg']}{$activity['titlebgimg']}{else}{YOUMI_URL_APP}img/m_titlebg2.png{/if}" alt="">
+                <input type="text" value="商品描述" readonly>
+            </div>
+            <div class="acy_content">
+                <div class="acys_contents">
+                    <!--内容-->
+                    {php echo htmlspecialchars_decode($activity['goods_val'])}
+                    {loop $activity['goods_imgs'] $adv}
+                    <img style="width: 100%;margin: 3px 0" src="{$adv}" alt="">
+                    {/loop}
+                </div>
+            </div>
+            <img class="iconPig" src="{YOUMI_URL_APP}img/pig.png" alt="">
+        </div>
+
+        <!--活动描述-->
+        {if !empty($activity['desc_val'])}
+        <div class="ac_youhui p_relative">
+            <div class="acy_title p_relative">
+                <img style="height: 40px" src="{if $activity['titlebgimg']}{$activity['titlebgimg']}{else}{YOUMI_URL_APP}img/m_titlebg2.png{/if}" alt="">
+                <input type="text" value="活动介绍" readonly>
+            </div>
+            <div class="acy_content">
+                <div class="acys_contents">
+                    <!--内容-->
+                    {php echo htmlspecialchars_decode($activity['desc_val'])}
+                    {loop $activity['desc_imgs'] $adv}
+                    <img style="width: 100%;margin: 3px 0" src="{$adv}" alt="">
+                    {/loop}
+                </div>
+            </div>
+            <img class="iconPig" src="{YOUMI_URL_APP}img/pig.png" alt="">
+        </div>
+        {/if}
+        <!--活动信息-->
+        {if !empty($activity['receive_time'])}
+        <div class="ac_youhui p_relative">
+            <div class="acy_title p_relative">
+                <img style="height: 40px" src="{if $activity['titlebgimg']}{$activity['titlebgimg']}{else}{YOUMI_URL_APP}img/m_titlebg2.png{/if}" alt="">
+                <input type="text" value="领取信息" readonly>
+            </div>
+            <div class="acy_content">
+                <div class="acys_contents">
+                    <!--内容-->
+                    <div>领取时间: {$activity['receive_time']}</div>
+                    <div>领取地址: {$activity['receive_address']}</div>
+                    <div>联系方式: {$activity['receive_mobile']}</div>
+                </div>
+            </div>
+            <img class="iconPig" src="{YOUMI_URL_APP}img/pig.png" alt="">
+        </div>
+        {/if}
+        <!--主办方资料-->
+        {if !empty($activity['shop_val'])}
+        <div class="ac_youhui p_relative">
+            <div class="acy_title p_relative">
+                <img style="height: 40px" src="{if $activity['titlebgimg']}{$activity['titlebgimg']}{else}{YOUMI_URL_APP}img/m_titlebg2.png{/if}" alt="">
+                <input type="text" value="{$activity['shop_title']}">
+            </div>
+            <div class="acy_content">
+                <div class="acys_contents">
+                    <!--内容-->
+                    {php echo htmlspecialchars_decode($activity['shop_val'])}
+                    {loop $activity['shop_imgs'] $sv}
+                    <img style="width: 100%;margin-bottom: 2px" src="{$sv}" alt="">
+                    {/loop}
+                </div>
+            </div>
+            <img class="iconPig" src="{YOUMI_URL_APP}img/pig.png" alt="">
+        </div>
+        {/if}
+
+        <!--活动规则-->
+        {if !empty($activity['rule_val'])}
+        <div class="ac_youhui p_relative">
+            <div class="acy_title p_relative">
+                <img style="height: 40px" src="{if $activity['titlebgimg']}{$activity['titlebgimg']}{else}{YOUMI_URL_APP}img/m_titlebg2.png{/if}" alt="">
+                <input type="text" value="{$activity['rule_title']}" readonly>
+            </div>
+            <div class="acy_content">
+                <div class="acys_contents">
+                    <!--内容-->
+                    {php echo htmlspecialchars_decode($activity['rule_val'])}
+                </div>
+            </div>
+            <img class="iconPig" src="{YOUMI_URL_APP}img/pig.png" alt="">
+        </div>
+        {/if}
+
+        {if $setting_activity&&$setting_activity['making_status2']==1}
+        <div style="text-align: center;margin: 40px 0 0 0;">
+            <a href="{$_W['siteroot']}index.php?c=entry&i={$_W['uniacid']}&do=making&case_id={$activity_umi['case_id']}&m=umi_activitys&module={$_W['current_module']['name']}" style="color:#000;border: 1px solid #000;padding: 6px 16px;border-radius: 5px;text-decoration: none;">
+                <span>我也要创建活动</span>
+                <i class="iconfont icon-jiantou1" style="font-size: 12px"></i>
+            </a>
+        </div>
+        {/if}
+
+    </div>
+
+
+    <div class="bg_fixed"></div>
+    <!--返回顶部-->
+    <div class="go_top">
+        <i class="iconfont icon-xiangshang active"></i>
+        <div>顶部</div>
+    </div>
+    <!--分享-->
+    <div class="open_share">
+        <img src="{YOUMI_URL_APP}img/m_share.png" alt="">
+        <div class="text_center" style="margin-bottom: 10px">————分享方式————</div>
+        <div class="os_btns flex flex_a_center flex_j_around">
+            <div class="text_center" onclick="tips('点击右上角分享给微信好友')">
+                <img src="{YOUMI_URL_APP}img/m_weixin.png" alt="">
+                <div>微信好友</div>
+            </div>
+            <div class="text_center" onclick="hecheng();">
+                <img src="{YOUMI_URL_APP}img/m_pyq.png" alt="">
+                <div>朋友圈</div>
+            </div>
+            <div class="osb_cancel" onclick="$('.open_share,.bg_fixed').fadeOut()">取消</div>
+        </div>
+    </div>
+    <!--联系商家-->
+    {template 'contact'}
+    <!--提交信息-->
+    {template 'signup'}
+    <!--砍价-->
+    <div class="open_kjtips">
+        <img style="width: 100%;border-radius: 10px;" src="{YOUMI_URL_APP}img/kj_bg.png" alt="">
+        <h4 class="text-center color_fff"></h4>
+        <h1 class="text-center color_fff ok_price"></h1>
+        <a href="javascript:;" class="a_btn2" onclick="$('.open_kjtips,.bg_fixed').fadeOut()">我知道了</a>
+    </div>
+    <!--投诉-->
+    {template 'complain'}
+    <!--底部按钮-->
+
+    <div class="a_footer">
+        {if $activity['status2']=='2'}
+        <a class="a_btn" href="javascript:;">活动已结束</a>
+        {/if}
+        {if $activity['status2']=='4'}
+        <a onclick="openSign()" class="a_btn" href="javascript:;">我要参团</a>
+        {/if}
+        {if $activity['status2']=='5'}
+        <a class="a_btn pay_btn" href="javascript:;">立即支付</a>
+        {/if}
+        {if $activity['status2']=='6'}
+        <a onclick="$('.open_userinfo,.bg_fixed').fadeIn()" class="a_btn" href="javascript:;">参团信息</a>
+        {/if}
+        {if $setting_activity&&$setting_activity['making_status']==1}
+        <div class="fb_tip flex flex_j_around flex_a_center ft16">
+            <div class="color_fff">{$setting_activity['copyright']}</div>
+            <a href="{$setting_activity['copyright_url']}">{if $setting_activity['copyright_buy']}{$setting_activity['copyright_buy']}{else}去购买{/if}</a>
+            <i class="iconfont icon-Close" onclick="$('.fb_tip').hide()"></i>
+        </div>
+        {/if}
+    </div>
+
+
+
+</div>
+{template 'canvas_share'}
+<script>
+    const NUMBER_OF_LEAVES = 10;
+    const width=window.screen.width;
+    function init(){
+        var container = document.getElementById('leafContainer');
+        for (var i = 0; i < NUMBER_OF_LEAVES; i++)
+        {
+            container.appendChild(createALeaf());
+        }
+
+    }
+    function randomInteger(low, high)
+    {
+        return low + Math.floor(Math.random() * (high - low));
+    }
+    function randomFloat(low, high)
+    {
+        return low + Math.random() * (high - low);
+    }
+    function pixelValue(value)
+    {
+        return value + 'px';
+    }
+
+    function durationValue(value)
+    {
+        return value + 's';
+    }
+    function createALeaf()
+    {
+        var effects_imgs= {php echo json_encode($activity['effects_imgs'])};
+        var leafDiv = document.createElement('div');
+        var image = document.createElement('img');
+        image.src = effects_imgs[randomInteger(0, 4)];
+        leafDiv.style.top = "0";
+        leafDiv.style.left = pixelValue(randomInteger(0, width));
+        var spinAnimationName = (Math.random() < 1.5) ? 'clockwiseSpin' : 'counterclockwiseSpinAndFlip';
+        leafDiv.style.webkitAnimationName = 'fade, drop';
+        image.style.webkitAnimationName = spinAnimationName;
+        var fadeAndDropDuration = durationValue(randomFloat(13, 39));
+        var spinDuration = durationValue(randomFloat(3, 7));
+        leafDiv.style.webkitAnimationDuration = fadeAndDropDuration + ', ' + fadeAndDropDuration;
+        var leafDelay = durationValue(randomFloat(0, 0));
+        leafDiv.style.webkitAnimationDelay = leafDelay + ', ' + leafDelay;
+        image.style.webkitAnimationDuration = spinDuration;
+        leafDiv.appendChild(image);
+        return leafDiv;
+    }
+    window.addEventListener('load', init, false);
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        function audioAutoPlay() {
+            var audio = document.getElementById('audiojs');
+            audio.play();
+            document.addEventListener("WeixinJSBridgeReady", function () {
+                audio.play();
+            }, false);
+        }
+        audioAutoPlay();
+    });
+    if (/i(Phone|P(o|a)d)/.test(navigator.userAgent)) {
+        $(document).one('touchstart',
+            function(e) {
+                $('#audiojs').get(0).touchstart = true;
+                $('#audiojs').get(0).play();
+                return false;
+            }
+        );
+    }
+    var goods={php echo json_encode($goods)};
+    var audio=document.getElementsByTagName('audio')[0];
+</script>
+<script>
+    $('.icon-music').click(function () {
+        if(audio.paused){
+            audio.play();
+            $(this).addClass('active')
+        }else{
+            audio.pause();
+            $(this).removeClass('active')
+        }
+    })
+    $('.icon-mofabang').click(function(){
+        if($(this).hasClass('active')){
+            $(this).removeClass('active')
+            $('#leafContainer').hide()
+        }else{
+            $(this).addClass('active')
+            $('#leafContainer').show()
+        }
+    })
+
+
+    countDown({php echo intval($activity['endtime']-time())})//时间戳相减
+    //带天数的倒计时
+    function countDown(times){
+        var timer=null;
+        timer=setInterval(function(){
+            var day=0,
+                hour=0,
+                minute=0,
+                second=0;//时间默认值
+            if(times > 0){
+                day = Math.floor(times / (60 * 60 * 24));
+                hour = Math.floor(times / (60 * 60)) - (day * 24);
+                minute = Math.floor(times / 60) - (day * 24 * 60) - (hour * 60);
+                second = Math.floor(times) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
+            }
+            if (day <= 9) day = '0' + day;
+            if (hour <= 9) hour = '0' + hour;
+            if (minute <= 9) minute = '0' + minute;
+            if (second <= 9) second = '0' + second;
+            //
+            $('.act_day').html(day)
+            $('.act_hour').html(hour)
+            $('.act_min').html(minute)
+            $('.act_sec').html(second)
+            // console.log(day+"天:"+hour+"小时："+minute+"分钟："+second+"秒");
+            times--;
+        },1000);
+        if(times<=0){
+            clearInterval(timer);
+        }
+    }
+
+    // 公告
+    function timer(opj){
+        $(opj).find('ul').animate({
+            marginTop : "-2.1rem"
+        },500,function(){
+            $(this).css({marginTop : "0.3rem"}).find("li:first").appendTo(this);
+        })
+    }
+    $(function(){
+        var num = $('.notice_active').find('li').length;
+        if(num > 1){
+            var time=setInterval('timer(".notice_active")',3000);
+            $('.gg_more a').mousemove(function(){
+                clearInterval(time);
+            }).mouseout(function(){
+                time = setInterval('timer(".notice_active")',3000);
+            });
+        }
+    });
+    var startX,startY;
+    // 返回顶部
+    // $("body").on("touchstart", function(e) {
+    //     e.preventDefault();
+    //     startX = e.originalEvent.changedTouches[0].pageX;
+    //     startY = e.originalEvent.changedTouches[0].pageY;
+    // });
+    // $("body").on("touchmove", function(e) {
+    //     e.preventDefault();
+    //     moveEndX = e.originalEvent.changedTouches[0].pageX,
+    //     moveEndY = e.originalEvent.changedTouches[0].pageY,
+    //     X = moveEndX - startX,
+    //     Y = moveEndY - startY;
+    //
+    //     if(document.documentElement.scrollTop>100){
+    //         $('.go_top').fadeIn()
+    //     }else{
+    //         $('.go_top').fadeOut()
+    //     }
+    //     if(Y>20||Y<-20){
+    //         $('.a_footer').fadeOut()
+    //         setTimeout(function () {
+    //             $('.a_footer').fadeIn()
+    //         },300)
+    //     }
+    //
+    //     var scrollTop = document.documentElement.scrollTop;
+    //     var scrollHeight = $(document).height();
+    //     var windowHeight = $('body').height();
+    //     if(scrollTop + windowHeight == scrollHeight){
+    //         // alert("已经到最底部了！");
+    //     }
+    // });
+    $('.go_top').click(function(){
+        $(window).scrollTop(0);
+        $('.go_top').fadeOut()
+    })
+
+    // 提示
+    function tips(txt){
+        $('.tips').html(txt).fadeIn()
+        setTimeout(function(){$('.tips').fadeOut()},1500);
+    }
+
+    //砍价
+    function openSign(){
+        var kj_userinfo=JSON.parse(localStorage.getItem('bm_userinfo'))
+        if(!!kj_userinfo){
+            $($(".os_input").eq(0)).find('input').val(kj_userinfo.realname)
+            $($(".os_input").eq(1)).find('input').val(kj_userinfo.mobile)
+        }
+        $('.open_signup,.bg_fixed').fadeIn()
+    }
+
+    // 支付
+    $('.pay_btn').click(function(){
+        $.post(
+            "{php echo $this->createMobileUrl('order',['op'=>'create_order'])}",
+            {
+                'cut_id': "{$cut['id']}"
+            },
+            function (data) {
+                if (!!data.data.id) {
+                    var order_id=data.data.id;
+                    $.post(
+                        "{php echo $this->createMobileUrl('pay')}",
+                        {
+                            'order_id': data.data.id
+                        },
+                        function (data) {
+                            if (data.errno == 0) {
+                                console.log(data)
+                                WeixinJSBridge.invoke(
+                                    'getBrandWCPayRequest', {
+                                        "appId":data.data.appId,     //公众号名称，由商户传入
+                                        "timeStamp":data.data.timeStamp,         //时间戳，自1970年以来的秒数
+                                        "nonceStr":data.data.nonceStr, //随机串
+                                        "package":data.data.package,
+                                        "signType":data.data.signType,         //微信签名方式：
+                                        "paySign":data.data.paySign //微信签名
+                                    },
+                                    function(res){
+                                        if(res.err_msg == "get_brand_wcpay_request:ok"){
+
+                                        }else{
+                                            $.post(
+                                                "{php echo $this->createMobileUrl('order',['op'=>'cancel'])}",
+                                                {
+                                                    'order_id': order_id
+                                                },
+                                            )
+                                        }
+                                        setTimeout(function () {
+                                            location.reload();
+                                        },2000)
+                                    });
+                            } else {
+                                tips(data.message)
+                            }
+                        }, 'json'
+                    )
+                } else {
+                    tips(data.message);
+                }
+            }, 'json'
+        );
+    })
+
+
+    console.log('$activity',{php echo json_encode($activity)})
+    console.log('$records',{php echo json_encode($records)})
+    console.log('$cut',{php echo json_encode($cut)})
+</script>
+<script type="text/javascript">
+    var time1=Date.parse(new Date()),time2=Date.parse(new Date()),time3=Date.parse(new Date()),time4=Date.parse(new Date());
+    var records={php echo json_encode($records)}||'';
+    for(var i=0;i<records.length;i++){
+        danmu(records[i],i);
+    }
+    function danmu(records,i){
+        var bullet = $("<div><img src='"+records['avatar']+"' alt=''><span>"+records['tips']+"</span></div>");
+        //生成一条弹幕
+        // bullet.text(txt);
+        //将输入框内容放置到div中
+        bullet.addClass("bullet");
+        var top=0;
+        switch (i)
+        {
+            case 1:case 5:case 9:case 13:case 17:case 21:case 25:
+            top=10;
+            break;
+            case 2:case 6:case 10:case 14:case 18:case 22:case 26:
+            top=45;
+            break;
+            case 3:case 7:case 11:case 15:case 19:case 23:case 27:
+            top=85;
+            break;
+            default:
+                top=120;
+                break;
+        }
+        //为bullet这个div添加样式bullet
+        bullet.css("top",top+'px');
+        //随机设置弹幕位置
+        bullet.css("left","500px");
+        // bullet.css("font-size",Math.round(Math.random()*60)+12+"px");
+        if(records['status']==2) {
+            bullet.css("color", "#FD6E4A");
+        }
+        setTimeout(function () {
+            switch (i)
+            {
+                case 1:case 5:case 9:case 13:case 17:case 21:case 25:
+                if(Date.parse(new Date())-time1>2000){
+                    $(".dm_content").append(bullet);
+                    time1= Date.parse(new Date())
+                };
+                break;
+                case 2:case 6:case 10:case 14:case 18:case 22:case 26:
+                if(Date.parse(new Date())-time2>2000){
+                    $(".dm_content").append(bullet);
+                    time2= Date.parse(new Date())
+                };
+                break;
+                case 3:case 7:case 11:case 15:case 19:case 23:case 27:
+                if(Date.parse(new Date())-time3>2000){
+                    $(".dm_content").append(bullet);
+                    time3= Date.parse(new Date())
+                };
+                break;
+                default:
+                    if(Date.parse(new Date())-time4>2000){
+                        $(".dm_content").append(bullet);
+                        time4= Date.parse(new Date())
+                    };
+                    break;
+            }
+            bullet.animate({
+                left:-900//此处视为bug，应该随着弹幕的长短而变化
+            },18000,"linear", function(){
+                bullet.remove();
+                danmu(records,i)
+            });
+        },Math.random()*10000)
+        //将弹幕添加到屏幕中
+    }
+    var regional=true;
+    function map_click(lng,lat){
+        $.post(
+            "{php echo $this->createMobileUrl('index',['op'=>'regional'])}",
+            {
+                'lng': lng,
+                'lat': lat,
+                'activity_id':"{$activity_id}"
+            },
+            function (data) {
+                if(data.errno==1){
+                    tips(data.message,3000);
+                    regional=false;
+                }else{
+                    regional=true;
+                }
+            }, 'json'
+        );
+    }
+</script>
+
+{template 'footer'}

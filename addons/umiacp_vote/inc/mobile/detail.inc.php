@@ -99,10 +99,6 @@ if ($op == 'display') {
 
     $records = pdo_fetchall('select * from ' . tablename(YOUMI_NAME . '_cut') .' where uniacid = ' . $uniacid . ' and activity_id = ' . $activity_id .' and status =2 order by times DESC,createtime ASC');
 
-    if ($activity['endtime'] < time()) {
-        $update['status'] = 0;
-        $activity['status'] = 0;
-    }
     $update['pv +='] = 1;
     pdo_update(YOUMI_NAME . '_cut', $update, ['id' => $cut_id]);
 

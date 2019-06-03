@@ -1,0 +1,81 @@
+{template 'common/header'}
+<style>
+    .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+        vertical-align: middle;
+    }
+</style>
+
+<ul class="nav nav-tabs">
+    <li>
+        <a href="{php echo $this->createWebUrl('group')}">团列表</a>
+    </li>
+    {if $group_id}
+    <li class="active">
+    <a href="{php echo $this->createWebUrl('group_member',array('id'=>$group_id))}">团员信息</a>
+    </li>
+    {/if}
+</ul>
+{if $op == 'display' || $op == ''}
+<div class="panel panel-default">
+
+    {if $list}
+    <div class="panel-body">
+        <form action="" method="post" class="form-horizontal form">
+
+            <div class="table-responsive panel-body">
+                <table class="table table-hover">
+                    <thead class="navbar-inner">
+                        <th class="text-center">团单号</th>
+                        <th class="text-center">头像</th>
+                        <th class="text-center">姓名</th>
+                        <th class="text-center">支付状态</th>
+                        <th class="text-center">参团时间</th>
+<!--                        <th style="text-align:right;">操作</th>-->
+                    </thead>
+                    <tbody id="level-list">
+                    {loop $list $index $item}
+                    <tr>
+                        <td align="center">
+                            <div class="type-parent">{$item['group_no']}</div>
+                        </td>
+
+                        <td align="center">
+                            <div class="type-parent"><img style="width: 50px;height: 50px;border-radius: 50%" src="{$item['avatar']}" alt=""></div>
+                        </td>
+
+
+                        <td align="center">
+                            <div class="type-parent">{$item['realname']} </div>
+                        </td>
+
+
+                        <td align="center">
+                            <div class="type-parent">{$item['status']}</div>
+                        </td>
+
+                        <td align="center">
+                            <div class="type-parent">{if $item['createtime']}{php echo date('Y-m-d H:i' , $item['createtime'])}{else}{/if}</div>
+                        </td>
+
+                    </tr>
+                    {/loop}
+                    <tr>
+                        <td colspan="7" align="right">共计{$total}条数据</td>
+                    </tr>
+                    {if $pager}
+                    <tr>
+                        <td colspan="7" align="right">{$pager}</td>
+                    </tr>
+                    {/if}
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    </div>
+    {else}
+    <div style="text-align: center;padding: 90px 0;" class="panel panel-default">暂无数据~</div>
+    {/if}
+</div>
+{/if}
+
+{template 'common/footer'}

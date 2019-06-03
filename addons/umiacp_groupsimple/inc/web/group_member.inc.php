@@ -21,6 +21,7 @@ if ($op == 'display') {
     $psize = !empty($_GPC['psize']) ? $_GPC['psize'] : 10;
 
     $group_id= intval($_GPC['id']);
+    $group_no= intval($_GPC['group_id']);
 
     $orderby = ' order by ';
 
@@ -29,6 +30,7 @@ if ($op == 'display') {
     $total = pdo_fetchcolumn('SELECT COUNT(id) FROM ' . tablename(YOUMI_NAME . '_' . 'order') .' where group_id='.$group_id);
     //状态:1,待付款;2,已付款;3,已核销;4,已取消;5,已退款;6,已失效;7,退款失败;
     foreach ($list as &$item) {
+        $item['group_no']=$group_no;
         switch ($item['status']){
             case 1:
                 $item['status']='待付款';

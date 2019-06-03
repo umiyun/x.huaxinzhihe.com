@@ -21,7 +21,7 @@ if ($op == 'display') {
 
     $keyword = trim($_GPC['keyword']);
     if ($keyword) {
-        $condition .= " and (a.title like '%{$keyword}%' or c.realname like '%{$keyword}%' ) ";
+        $condition .= " and (a.title like '%{$keyword}%' or c.nickname like '%{$keyword}%' or c.group_id like '%{$keyword}%' ) ";
     }
     $orderby = ' order by ';
 

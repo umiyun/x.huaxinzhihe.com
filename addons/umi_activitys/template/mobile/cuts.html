@@ -66,6 +66,15 @@
         color: #fff;
         display: inline-block;
     }
+    .daochu input{
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-right: 0;
+    }
+    .daochu button{
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
 </style>
 {if empty($list)}
 <div style="padding: 22% 0 30% 0;text-align: center;">
@@ -74,6 +83,10 @@
 </div>
 {else}
 
+<div class="daochu flex" style="margin: 10px;">
+    <input class="email" type="email" placeholder="请输入邮箱地址">
+    <button class="download">导出名单</button>
+</div>
 <div class="list">
     <div class="detail">
         <div class="d_title flex">
@@ -162,6 +175,24 @@
             urls: urls // 需要预览的图片http链接列表
         });
     }
+
+    $('.download').click(function () {
+        var email=$('.email').val();
+        if(!email){
+            tips('请填写邮箱地址')
+        }
+        tips('发送中,请等待...');
+        $.post(
+            "{php echo $this->createMobileUrl('cuts',['op'=>'download','activity_id'=>$_GPC['activity_id'],'module'=>$_GPC['module']])}",
+            {
+                'email':email,
+                'module':"{$_GPC['module']}"
+            },
+            function (data) {
+                tips(data.message);
+            },'json'
+        )
+    })
 
     console.log('$list',{php echo json_encode($list)})
     console.log('$activity',{php echo json_encode($activity)})

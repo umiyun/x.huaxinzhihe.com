@@ -4,7 +4,18 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>{$_W['page']['title']}</title>
+    <title>
+        {php if(isset($title)) $_W['page']['title'] = $title}
+        {if !empty($_W['page']['title'])}{$_W['page']['title']}{/if}
+        {if empty($_W['page']['copyright']['sitename'])}
+            {if IMS_FAMILY != 'x'}
+                {if !empty($_W['page']['title'])} - {/if}
+            {/if}
+        {else}
+        {if !empty($_W['page']['title'])} - {/if}
+        {$_W['page']['copyright']['sitename']}
+        {/if}
+    </title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -223,6 +234,7 @@
             return false
         }
     }
+    console.log({php echo json_encode($_W)})
 </script>
 <style>
     body .layui-side-menu,.layadmin-pagetabs .layui-tab-title li:after,body .layadmin-pagetabs .layui-tab-title li.layui-this:after,body .layui-layer-admin .layui-layer-title,body .layadmin-side-shrink .layui-side-menu .layui-nav>.layui-nav-item>.layui-nav-child{background-color:#20222A !important;}

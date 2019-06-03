@@ -3,15 +3,14 @@
     <li data-class="#base" class="active">
         <a href="javascript:;">基本设置</a>
     </li>
-    <li data-class="#share">
+    <li data-class="#share" style="display:none;">
         <a href="javascript:;">分享设置</a>
     </li>
     <li data-class="#sms" style="display: none">
         <a href="javascript:;">短信设置</a>
     </li>
-
-    <li data-class="#wxapp" >
-        <a href="javascript:;">参数设置</a>
+    <li data-class="#wxapp" style="display: none">
+        <a href="javascript:;">小程序参数设置</a>
     </li>
 </ul>
 <div class="panel panel-default">
@@ -19,16 +18,28 @@
         <div id="base" class="panel-body base">
 
             <div class="form-group">
-                <label class="col-sm-2 control-label">系统标题</label>
+                <label class="col-sm-2 control-label">炮灰域名</label>
                 <div class="col-sm-8">
-                    <input type="text" class="form-control" name="set[base][title]" value="{$setting['title']}">
+                    <input type="text" class="form-control" name="set[base][cannon_fodder]" value="{$setting['cannon_fodder']}">
+                    <div class="help-block">此域名为转发到朋友圈的域名，做粉丝点击跳转到炮灰域名用， <span style="color:red">需增加http://或者https://,结尾需加"/"</span> </div>
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="col-sm-2 control-label">logo</label>
+                <label class="col-sm-2 control-label">关注二维码</label>
                 <div class="col-sm-8">
                     {php echo tpl_form_field_image('set[base][logo]',$setting['logo']);}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label">是否开启强制关注</label>
+                <div class="col-sm-8 col-xs-12">
+                    <label class='radio-inline'>
+                        <input type='radio' name='set[base][attention]' value='1' {if intval($setting['attention']) == 1}checked{/if} /> 开启
+                    </label>
+                    <label class='radio-inline'>
+                        <input type='radio' name='set[base][attention]' value='2' {if intval($setting['attention']) == 2}checked{/if} /> 关闭
+                    </label>
                 </div>
             </div>
 
@@ -40,21 +51,21 @@
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" style="display:none;">
                 <label class="col-sm-2 control-label">客服电话</label>
                 <div class="col-sm-8">
                     <input type="text" class="form-control" name="set[base][hotline]" value="{$setting['hotline']}">
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" style="display:none;">
                 <label class="col-sm-2 control-label">版权信息</label>
                 <div class="col-sm-8">
                     <input type="text" class="form-control" name="set[base][copyright]" value="{$setting['copyright']}">
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" style="display:none;">
                 <label class="col-sm-2 control-label">地址</label>
                 <div class="col-sm-8">
                     <input type="text" class="form-control" name="set[base][address]" value="{$setting['address']}">
@@ -168,7 +179,7 @@
 
         </div>
 
-        <div id="wxapp"  class="panel-body wxapp">
+        <div id="wxapp" style="display: none" class="panel-body wxapp">
             <div class="form-group">
                 <label class="col-sm-2 control-label">身份标识<br>(appId)</label>
                 <div class="col-sm-8">
@@ -198,21 +209,6 @@
                 <span class="help-block">
                     财付通商户权限密钥
                 </span>
-            </div>
-
-            <div class="form-group">
-                <label class="col-xs-12 col-sm-3 col-md-2 control-label">商户支付证书</label>
-                <div class="col-sm-8">
-                    <textarea class="form-control" name="cert" rows="8" placeholder="为保证安全性, 不显示证书内容. 若要修改, 请直接输入"></textarea>
-                    <span class="help-block">从商户平台上下载支付证书, 解压并取得其中的 <mark>apiclient_cert.pem</mark> 用记事本打开并复制文件内容, 填至此处</span>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-xs-12 col-sm-3 col-md-2 control-label">支付证书私钥</label>
-                <div class="col-sm-8">
-                    <textarea class="form-control" name="key" rows="8" placeholder="为保证安全性, 不显示证书内容. 若要修改, 请直接输入"></textarea>
-                    <span class="help-block">从商户平台上下载支付证书, 解压并取得其中的 <mark>apiclient_key.pem</mark> 用记事本打开并复制文件内容, 填至此处</span>
-                </div>
             </div>
 
         </div>

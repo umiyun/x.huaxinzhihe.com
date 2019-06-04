@@ -37,43 +37,46 @@ if ($op == 'pay') {
         youmi_result(1, '商品已下架');
     }
 
-    if ($order && $order['status'] == 1) {
-        //构造支付请求中的参数
-        $params = array(
-            'tid' => $order['tid'],             //模块中的订单号，此号码用于业务模块中区分订单，交易的识别码
-            'ordersn' => $order['ordersn'],     //收银台中显示的订单号
-            'title' => $order['title'],         //收银台中显示的标题
-            'fee' => $order['price'],           //收银台中显示需要支付的金额,只能大于 0
-            'user' => $order['mid'],            //付款用户, 付款的用户名(选填项)
-        );
+    require_once IA_ROOT . '/addons/umiacp_common/core/commonLoader.php';
+    _pay($order,$_W,$this);
 
-        global $_W;
-        load()->model('activity');
-        load()->model('module');
-        activity_coupon_type_init();
-        if (!$this->inMobile) {
-            youmi_result(1, '支付功能只能在手机上使用');
-        }
-
-        $params['module'] = $this->module['name'];
-
-        $return = pay($order);
-        if (is_error($return)) {
-            youmi_result(1, $return['message'], $return);
-        }
-        if ($return['return_code'] == 'FAIL') {
-            youmi_result(1, $return['return_msg']);
-        }
-        youmi_result(0, '', $return);
-    } else {
-        if ($order['status'] == 4) {
-            youmi_result(1, '订单已取消');
-        }
-        if ($order['status'] == 2) {
-            youmi_result(1, '订单已支付');
-        }
-        youmi_result(1, '订单不存在或已支付');
-    }
+//    if ($order && $order['status'] == 1) {
+//        //构造支付请求中的参数
+//        $params = array(
+//            'tid' => $order['tid'],             //模块中的订单号，此号码用于业务模块中区分订单，交易的识别码
+//            'ordersn' => $order['ordersn'],     //收银台中显示的订单号
+//            'title' => $order['title'],         //收银台中显示的标题
+//            'fee' => $order['price'],           //收银台中显示需要支付的金额,只能大于 0
+//            'user' => $order['mid'],            //付款用户, 付款的用户名(选填项)
+//        );
+//
+//        global $_W;
+//        load()->model('activity');
+//        load()->model('module');
+//        activity_coupon_type_init();
+//        if (!$this->inMobile) {
+//            youmi_result(1, '支付功能只能在手机上使用');
+//        }
+//
+//        $params['module'] = $this->module['name'];
+//
+//        $return = pay($order);
+//        if (is_error($return)) {
+//            youmi_result(1, $return['message'], $return);
+//        }
+//        if ($return['return_code'] == 'FAIL') {
+//            youmi_result(1, $return['return_msg']);
+//        }
+//        youmi_result(0, '', $return);
+//    } else {
+//        if ($order['status'] == 4) {
+//            youmi_result(1, '订单已取消');
+//        }
+//        if ($order['status'] == 2) {
+//            youmi_result(1, '订单已支付');
+//        }
+//        youmi_result(1, '订单不存在或已支付');
+//    }
 }
 
 function pay($order)

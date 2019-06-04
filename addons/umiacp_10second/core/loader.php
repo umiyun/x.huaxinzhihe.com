@@ -11,7 +11,7 @@ if (!defined('IN_IA')) {
 }
 
 require_once IA_ROOT . '/addons/umiacp_10second/core/defines.php';
-require_once IA_ROOT . '/addons/umiacp_10second/core/functions/common.php';
+//require_once IA_ROOT . '/addons/umiacp_10second/core/functions/common.php';
 require_once IA_ROOT . '/addons/umiacp_10second/core/functions/setting.php';
 require_once IA_ROOT . '/addons/umiacp_10second/core/functions/logs.php';
 require_once IA_ROOT . '/addons/umiacp_10second/core/functions/puv.php';

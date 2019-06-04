@@ -8,8 +8,6 @@ $op = !empty($_GPC['op']) ? $_GPC['op'] : 'display';
 $shop_id = intval($_GPC['shop_id']);
 
 if ($op == 'display') {
-
-
     $condition = '';
     $pindex = max(1, intval($_GPC['page']));
     $psize = !empty($_GPC['psize']) ? $_GPC['psize'] : 10;
@@ -48,7 +46,6 @@ if ($op == 'display') {
     }
     $total = pdo_fetchcolumn('SELECT COUNT(*) FROM ' . tablename(YOUMI_NAME . '_' . 'activity') . ' WHERE uniacid = :uniacid and shop_id = ' . $shop_id . $condition, $paras);
     $pager = pagination($total, $pindex, $psize);
-
     include $this->template('activity');
 }
 
@@ -62,15 +59,14 @@ if ($op == 'post') {
 
         $data['starttime'] = strtotime($data['starttime']);
         $data['endtime'] = strtotime($data['endtime']);
-        $data['r_address']=serialize($_GPC['re_address']);
+        $data['share_img'] = tomedia($data['share_img']);
+
+        $data['effects_imgs'] = serialize($data['effects_imgs']);
+
         $data['userinfo'] = serialize($data['userinfo']);
 
-        $data['shop_province'] = $_GPC['district']['province'];
-        $data['shop_city'] = $_GPC['district']['city'];
-        $data['shop_district'] = $_GPC['district']['district'];
 
         if (!empty($id)) {
-
             pdo_update(YOUMI_NAME . '_' . 'activity', $data, array('id' => $id));
             $message = '修改';
         } else {
@@ -83,17 +79,11 @@ if ($op == 'post') {
         itoast('温馨提示：' . $message . '活动成功！', $this->createWebUrl('activity'), 'success');
     }
     $item = pdo_fetch('select * from ' . tablename(YOUMI_NAME . '_' . 'activity') . ' where id = :id and shop_id = 0 limit 1 ', $paras);
-    $item['desc_imgs'] = unserialize($item['desc_imgs']);
-    $item['shop_imgs'] = unserialize($item['shop_imgs']);
+
     $item['effects_imgs'] = unserialize($item['effects_imgs']);
-    $item['sponsor_imgs'] = unserialize($item['sponsor_imgs']);
-    $item['preferential_val'] = unserialize($item['preferential_val']);
-    $item['r_address'] = unserialize($item['r_address']);
+
     $item['userinfo'] = unserialize($item['userinfo']);
-    $district['province'] = $item['shop_province'];
-    $district['city'] = $item['shop_city'];
-    $district['district'] = $item['shop_district'];
-    $goods = pdo_getall(YOUMI_NAME . '_goods', ['uniacid' => $uniacid, 'activity_id' => $item['id'], 'status' => 1]);
+
 
     include $this->template('activity');
 }

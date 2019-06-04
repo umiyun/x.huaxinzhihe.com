@@ -33,7 +33,13 @@ if ($op == 'display') {
         $fmid = 0;
     }
     $records = pdo_fetchall('select * from ' . tablename(YOUMI_NAME . '_order') . ' where uniacid = ' . $uniacid . ' and activity_id = ' . $activity_id . ' and status in (2,3) order by createtime DESC');
-    $groups = pdo_getall(YOUMI_NAME . '_group', ['uniacid' => $uniacid, 'activity_id' => $activity_id,'status'=>3]);
+    $groups = pdo_getall(YOUMI_NAME . '_group', ['uniacid' => $uniacid, 'activity_id' => $activity_id]);
+    $successNum=0;
+    foreach ($groups as $group) {
+        if ($group['status']==1){
+            $successNum++;
+        }
+    }
     $records_count = count($records);
 //    $fmember = $this->getMemberInfo($fmid);
     foreach ($records as &$record) {

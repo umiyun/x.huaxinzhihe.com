@@ -6,35 +6,38 @@
 </style>
 <ul class="nav nav-tabs">
     <li {if $op == '' || $op == 'display'}class="active"{/if}>
-        <a href="{php echo $this->createWebUrl('member')}">用户管理列表</a>
+        <a href="{php echo $this->createWebUrl('cuts')}">投票人员列表</a>
     </li>
 </ul>
 {if $op == 'display' || $op == ''}
 <div class="panel panel-default">
-    <div class="panel-default" style="display:none;">
+    <div class="panel-default" style="display: none">
         <div class="panel-heading">查询</div>
         <div class="panel-body">
             <form action="./index.php" method="get" class="form-horizontal" role="form" id="form1">
                 <input type="hidden" name="c" value="site">
                 <input type="hidden" name="a" value="entry">
                 <input type="hidden" name="m" value="{YOUMI_NAME}">
-                <input type="hidden" name="do" value="member">
+                <input type="hidden" name="do" value="cuts">
+                <input type="hidden" name="id" value="{$activity_id}">
 
                 <div class="form-group">
                     <label class="col-md-1 col-lg-1 control-label">状态</label>
                     <div class="col-md-3">
                         <select name="status" class="form-control">
                             <option value="">--所有--</option>
-                            <option {if $_GPC['status'] == 1}selected{/if} value='1'></option>
-                            <option {if $_GPC['status'] == 2}selected{/if} value='2'></option>
+                            <option {if $_GPC['status'] == 1}selected{/if} value='1'>审核中</option>
+                            <option {if $_GPC['status'] == 2}selected{/if} value='2'>已通过</option>
+                            <option {if $_GPC['status'] == 3}selected{/if} value='3'>已拒绝</option>
                         </select>
                     </div>
                     <label class="col-md-4 col-lg-1 control-label">关键词</label>
                     <div class="col-md-4">
-                        <input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}" placeholder="可模糊查询">
+                        <input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}" placeholder="可模糊查询活动名/用户姓名电话">
                     </div>
-                    <div class="col-md-1">
+                    <div class="col-md-2">
                         <button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+                        <a class="btn btn-default" href="{php echo $this->createWebUrl('cuts',['op'=>'download', 'id' => $_GPC['id'], 'status' => $_GPC['status'], 'keyword' => $_GPC['keyword']])}"><i class="fa fa-download"></i> 导出</a>
                     </div>
                 </div>
             </form>
@@ -47,38 +50,40 @@
             <div class="table-responsive panel-body">
                 <table class="table table-hover">
                     <thead class="navbar-inner">
-                        <th class="text-left">用户</th>
-                        <th class="text-center">姓名</th>
-                        <th class="text-center">手机号</th>
-                        <th class="text-center">注册时间</th>
+                        <th class="text-center">活动</th>
+                        <th class="text-center">用户昵称</th>
+                        <th class="text-center">用户信息</th>
+                        <th class="text-center">投票数量</th>
+
                     </thead>
                     <tbody id="level-list">
                     {loop $list $index $item}
                     <tr>
-                        <td align="left">
+                        <td align="center">
+                            <div class="type-parent">{$item['activitytitle']}</div>
+                        </td>
+
+                        <td align="center">
                             <div class="type-parent"><img style="width: 50px;height: 50px;border-radius: 50%" src="{$item['avatar']}" alt="">{$item['nickname']}</div>
                         </td>
 
                         <td align="center">
-                            <div class="type-parent">{$item['realname']}</div>
+                            <div class="type-parent">{$item['realname']} <br>{$item['mobile']} <br>{$item['userinfo']}</div>
                         </td>
 
                         <td align="center">
-                            <div class="type-parent">{$item['mobile']}</div>
+                            <div class="type-parent">{$item['times']}</div>
                         </td>
 
-                        <td align="center">
-                            <div class="type-parent">{if $item['createtime']}{php echo date('Y-m-d H:i' , $item['createtime'])}{else}{/if}</div>
-                        </td>
 
                     </tr>
                     {/loop}
                     <tr>
-                        <td colspan="5" align="right">共计{$total}条数据</td>
+                        <td colspan="9" align="right">共计{$total}条数据</td>
                     </tr>
                     {if $pager}
                     <tr>
-                        <td colspan="5" align="right">{$pager}</td>
+                        <td colspan="9" align="right">{$pager}</td>
                     </tr>
                     {/if}
                     </tbody>

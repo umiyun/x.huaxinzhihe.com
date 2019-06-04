@@ -11,7 +11,7 @@ if (!defined('IN_IA')) {
 }
 
 require_once IA_ROOT . '/addons/umiacp_10second/core/defines.php';
-require_once IA_ROOT . '/addons/umiacp_10second/core/loader.php';
+require_once IA_ROOT . '/addons/umiacp_common/core/commonLoader.php';
 
 class Umiacp_10secondModuleSite extends WeModuleSite
 {

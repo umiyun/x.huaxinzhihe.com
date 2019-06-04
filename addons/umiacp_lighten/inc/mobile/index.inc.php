@@ -130,7 +130,7 @@ if ($op == 'display') {
     foreach ($records as &$record) {
 
         $record['realname'] =handleAnonymous(  $record['realname']);
-        
+
         unset($record);
     }
 
@@ -217,6 +217,7 @@ if ($op == 'sign_up') {
     $cut['avatar'] = $member['avatar'];
     $cut['mobile'] = trim($_GPC['mobile']);
     $cut['userinfo'] = $_GPC['userinfo'];
+    $cut['nickname'] = $member['nickname'];
 
     $cut['createtime'] = time();
     pdo_insert(YOUMI_NAME . '_cut', $cut);
@@ -288,7 +289,13 @@ if ($op == 'complain') {
 if ($op == 'cheating') {
     $cut_id = intval($_GPC['cut_id']);
     $activity_id = intval($_GPC['activity_id']);
+  $isLight=  pdo_getcolumn(YOUMI_NAME . '_record',['id' => $_GPC['id']],'openid');
+  if ($isLight){
+      youmi_result(1, '该位置已被点亮~');
+  }
     $member_helping = pdo_get(YOUMI_NAME . '_record', ['cut_id' => $cut_id,'openid'=>$openid]);
+    youmi_internal_log('777',$openid);
+    youmi_internal_log('777',$member_helping);
     $activity = pdo_get(YOUMI_NAME . '_activity', ['id' => $activity_id]);
     $all_helping = pdo_getall(YOUMI_NAME . '_record', ['cut_id' => $cut_id,'openid !='=>'']);
     if(count($all_helping)>=$activity['lnum'])
@@ -306,12 +313,15 @@ if ($op == 'cheating') {
             'createtime'=>time()
         );
         $status=pdo_update(YOUMI_NAME . '_record',$data,['id' => $_GPC['id']]);
+        youmi_internal_log('777',$status);
         if($status){
-            $dltotal=pdo_getcolumn(YOUMI_NAME . '_cut', ['id'=>$cut_id,'uniacid'=>$uniacid],'dltotal',1);
-            $status=pdo_update(YOUMI_NAME . '_cut',['dltotal'=>(intval($dltotal)+1),'dltime'=>time()],['id' => $cut_id,'uniacid' => $uniacid]);
-        }
+//            $dltotal=pdo_getcolumn(YOUMI_NAME . '_cut', ['id'=>$cut_id,'uniacid'=>$uniacid],'dltotal',1);
+            $status=pdo_update(YOUMI_NAME . '_cut',['dltotal +='=>1,'dltime'=>time()],['id' => $cut_id,'uniacid' => $uniacid]);
         $data['d_time']=date('y-m-d H:i',time());
         youmi_result(0,'助力成功',$data);
+        }else{
+            youmi_result(1,'助力失败');
+        }
     }
 }
 //区域限制

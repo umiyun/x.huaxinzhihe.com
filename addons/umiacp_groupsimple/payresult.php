@@ -9,9 +9,8 @@
 define('IN_MOBILE', true);
 require '../../framework/bootstrap.inc.php';
 require_once './core/defines.php';
-require_once IA_ROOT . '/addons/'.YOUMI_NAME.'/core/functions/setting.php';
-require_once IA_ROOT . '/addons/'.YOUMI_NAME.'/core/functions/wxpay.php';
-
+require_once IA_ROOT . '/addons/' . YOUMI_NAME . '/core/functions/setting.php';
+require_once IA_ROOT . '/addons/' . YOUMI_NAME . '/core/functions/wxpay.php';
 
 
 function insert_log($data, $path = 'wxPayResult')
@@ -145,9 +144,24 @@ if (is_array($setting['payment'])) {
                             $successNum = pdo_fetchcolumn("select count(id) from " . tablename(YOUMI_NAME . '_order') . " where group_id = :group_id and status = 2", [':group_id' => $order['group_id']]);
 
                             if ($successNum == $activity['group_num']) {
-                                pdo_update(YOUMI_NAME . '_group', ['status' => 1, 'success_time' => time()], ['id' => $order['group_id']]);
+                                pdo_update(YOUMI_NAME . '_group', ['status' => 1, 'success_time' => time(), 'now_num' => $successNum], ['id' => $order['group_id']]);
+
                                 //发放佣金
-                                sendCommission($order);
+                                $orders = pdo_getall(YOUMI_NAME . '_' . 'order', ['group_id' => $order['group_id'], 'status' => 2, 'fmid !=' => 0], ['id', 'price', 'fmid', 'uniacid']);
+                                $commission = $group = pdo_getcolumn(YOUMI_NAME . '_group', ['id' => $order['group_id']], 'commission');
+
+                                $forders = [];
+                                $fmids = [];
+                                foreach ($orders as $order) {
+                                    if (!in_array($order['fmid'], $fmids)) {
+                                        $fmids[] = $order['fmid'];
+                                        $forders[] = $order;
+                                    }
+                                }
+                                foreach ($forders as $order) {
+                                    sendCommission($order, $commission);
+                                }
+
                             } else {
                                 pdo_update(YOUMI_NAME . '_group', ['now_num' => $successNum], ['id' => $order['group_id']]);
                             }
@@ -185,21 +199,19 @@ if ($isxml) {
 } else {
     exit('fail');
 }
-function sendCommission($order)
+function sendCommission($order, $commission)
 {
 
-
-    if (empty($order['fmid'])){
-        return;
-    }
-    $f_member = pdo_get(YOUMI_NAME . '_member', array('mid' => $order['fmid'], 'uniacid' => $order['uniacid']),['openid','mid']);
-    $group = pdo_get(YOUMI_NAME . '_group', ['id' => $order['group_id']]);
+//    if (empty($order['fmid'])) {
+//        return;
+//    }
+    $f_member = pdo_get(YOUMI_NAME . '_member', array('mid' => $order['fmid'], 'uniacid' => $order['uniacid']), ['openid', 'mid']);
 
     insert_log($f_member);
     $tid = 'groupsimple' . time() . $order['id'];
-    if ($order['price'] >= $group['commission']) {
+    if ($order['price'] >= $commission) {
 
-        $res = youmi_finance($f_member['openid'], $tid, $group['commission'], '佣金');
+        $res = youmi_finance($f_member['openid'], $tid, $commission, '佣金');
         insert_log($res);
 
         if ($res['result_code'] == 'SUCCESS') {
@@ -210,14 +222,15 @@ function sendCommission($order)
 
     }
 }
-function youmi_finance($openid = '', $tid,$money, $desc = '')
+
+function youmi_finance($openid = '', $tid, $money, $desc = '')
 {
 
 
-    $desc=  empty($desc) ? '商家提现' : $desc;
+    $desc = empty($desc) ? '商家提现' : $desc;
     $setting = youmi_setting_get_list();
 
-    $pay = new WeixinPay($setting['wxapp_appid'], $openid, $setting['wxapp_mchid'], $setting['wxapp_signkey'], $tid, $desc,$money);
+    $pay = new WeixinPay($setting['wxapp_appid'], $openid, $setting['wxapp_mchid'], $setting['wxapp_signkey'], $tid, $desc, $money);
 
     if (empty($openid)) return error(-1, 'openid不能为空');
 

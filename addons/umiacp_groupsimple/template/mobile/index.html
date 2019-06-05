@@ -801,6 +801,42 @@
             </div>
         </div>
         {/if}
+
+<!--佣金排行榜-->
+        {if $ranks}
+        <div class="groups">
+            <div class="g_more flex">
+                <p>佣金排行榜</p>
+
+            </div>
+            <div class="g_list">
+            <img class="acy_title p_relative" src="{YOUMI_URL_APP}img/paiming.png" alt="">
+
+            <div class="acy_content">
+                <div class="acs_content">
+                    <div class="acsc_title">
+                        <span>排名</span>
+                        <span>姓名</span>
+                        <span>佣金</span>
+                    </div>
+                    <div class="acsc_list g_detail">
+                        {loop $ranks $gcidx $gcv}
+                        <div>
+                            <span>{php echo intval($gcidx+1)}</span>
+                            <span>{$gcv['nickname']}</span>
+                            <span>{$gcv['commission']}</span>
+                        </div>
+                        {/loop}
+                    </div>
+                </div>
+                <!--<div class="acsc_tip">已经到底了</div>-->
+            </div>
+
+            <img class="iconPig" src="{YOUMI_URL_APP}img/pig.png" alt="">
+        </div>
+        </div>
+        {/if}
+
         <!--拼团玩法-->
         <img style="width: 100%" src="{YOUMI_URL_APP}img/rule.png" alt="">
 

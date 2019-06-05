@@ -33,6 +33,7 @@ if ($op == 'display') {
         $fmid = 0;
     }
     $records = pdo_fetchall('select * from ' . tablename(YOUMI_NAME . '_order') . ' where uniacid = ' . $uniacid . ' and activity_id = ' . $activity_id . ' and status in (2,3) order by createtime DESC');
+    $ranks = pdo_fetchall('select * from ' . tablename(YOUMI_NAME . '_order') . ' where uniacid = ' . $uniacid . ' and activity_id = ' . $activity_id . ' and commission >0 order by commission DESC');
     $groups = pdo_getall(YOUMI_NAME . '_group', ['uniacid' => $uniacid, 'activity_id' => $activity_id]);
     $successNum=0;
     foreach ($groups as $group) {

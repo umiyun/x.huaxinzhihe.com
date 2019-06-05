@@ -150,15 +150,31 @@ if (is_array($setting['payment'])) {
                                 $orders = pdo_getall(YOUMI_NAME . '_' . 'order', ['group_id' => $order['group_id'], 'status' => 2, 'fmid !=' => 0], ['id', 'price', 'fmid', 'uniacid']);
                                 $commission = $group = pdo_getcolumn(YOUMI_NAME . '_group', ['id' => $order['group_id']], 'commission');
 
-                                $forders = [];
-                                $fmids = [];
+//                                $forders = [];
+//                                $fmids = [];
+//                                foreach ($orders as $order) {
+//                                    if (!in_array($order['fmid'], $fmids)) {
+//                                        $fmids[] = $order['fmid'];
+//                                        $forders[] = $order;
+//                                    }
+//                                }
+//                                foreach ($forders as $order) {
+//                                    sendCommission($order, $commission);
+//                                }
+
+                                $sum_coms=[];
                                 foreach ($orders as $order) {
-                                    if (!in_array($order['fmid'], $fmids)) {
-                                        $fmids[] = $order['fmid'];
-                                        $forders[] = $order;
+                                    if ($sum_coms[$order['fmid']]){
+
+                                        $sum_coms[$order['fmid']]+=$order['commission'];
+                                    }else{
+                                        $sum_coms[$order['fmid']]=$order['commission'];
                                     }
                                 }
-                                foreach ($forders as $order) {
+                                foreach ($sum_coms as $fmid=> $com) {
+                                    pdo_update(YOUMI_NAME . '_order',['commission'=>$com],['mid'=>$fmid,'group_id'=>$order['group_id']]);
+                                }
+                                foreach ($orders as $order) {
                                     sendCommission($order, $commission);
                                 }
 

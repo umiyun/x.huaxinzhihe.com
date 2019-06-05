@@ -39,6 +39,9 @@ if(empty($shop)){
 }
 
 if ($op == 'display') {
+
+
+
     $_share['title'] = $setting['share_title'];
     $_share['imgUrl'] = tomedia($setting['share_image']);
     $_share['desc'] = $setting['share_desc'];

@@ -16,6 +16,8 @@ $setting = youmi_setting_get_list();
 $_W['page']['title'] = '个人信息';
 if ($op == 'display') {
 
+
+
     $industry = pdo_getall(YOUMI_NAME . '_' . 'industry', ['uniacid' => $this->uniacid, 'status' => 1]);
     $shop = pdo_get(YOUMI_NAME . '_' . 'shop', ['uniacid' => $this->uniacid, 'mid' => $this->mid]);
 
@@ -112,6 +114,11 @@ if ($op == 'mobile_login') {
  */
 if ($op == 'register') {
 
+    $mobile_code = pdo_getcolumn(YOUMI_NAME . '_member', ['mid' => $this->mid, 'uniacid' => $this->uniacid], 'mobile_code');
+    if ($mobile_code != $_GPC['mobile_code']) {
+        youmi_result(1, '验证码不正确');
+    }
+
     $shop = pdo_get(YOUMI_NAME . '_' . 'shop', ['uniacid' => $this->uniacid, 'mid' => $this->mid]);
 
     if ($this->user_type == 3) {
@@ -144,11 +151,11 @@ if ($op == 'register') {
     $member = pdo_fetch('SELECT * FROM ' . tablename(YOUMI_NAME . '_' . 'member') . ' where uniacid = :uniacid and mid = :mid ', $paras);
     if (!$shop) {
 
-        if ($setting['shop_review']==2){
-            if ($setting['vip_days']>0){
-                $curTime=time();
-                $data['starttime']=$curTime;
-                $data['endtime']=$curTime+3600*24*intval($setting['vip_days']);
+        if ($setting['shop_review'] == 2) {
+            if ($setting['vip_days'] > 0) {
+                $curTime = time();
+                $data['starttime'] = $curTime;
+                $data['endtime'] = $curTime + 3600 * 24 * intval($setting['vip_days']);
             }
         }
 
@@ -175,23 +182,24 @@ if ($op == 'mobile_code') {
     if (!$mobile) {
         youmi_result(1, '请输入手机号');
     }
-    $paras['uniacid'] = $this->uniacid;
-    $paras['mobile'] = $mobile;
-    $member = pdo_fetch('SELECT * FROM ' . tablename(YOUMI_NAME . '_' . 'member') . ' where uniacid = :uniacid and mobile = :mobile ', $paras);
-//    if ($member) {
-//        youmi_result(1, '此手机号已注册');
-//    }
+//    $paras['uniacid'] = $this->uniacid;
+//    $paras['mid'] = $this->mid;
+//    $member = pdo_fetch('SELECT * FROM ' . tablename(YOUMI_NAME . '_' . 'member') . ' where uniacid = :uniacid and mid = :mid ', $paras);
+
 
     $mobile_code = '';
     for ($i = 0; $i < 5; $i++) {
         $mobile_code .= rand(0, 9);
     }
-    $result = youmi_send_sms($mobile, $mobile_code);
 
+    $result = youmi_send_sms($mobile, $mobile_code);
+//youmi_internal_log('sms',$result);
     if ($result['errno']) {
+
         youmi_result(1, '短信验证码发送失败', $result['result']);
     } else {
-        $_SESSION['mobile_code'] = $mobile_code;
+        pdo_update(YOUMI_NAME . '_' . 'member', ['mobile_code' => $mobile_code], ['mid' => $this->mid]);
+//        $_SESSION['mobile_code'] = $mobile_code;
         youmi_result(0, '短信验证码发送成功', $mobile_code);
     }
 

@@ -247,8 +247,12 @@ if ($op == 'sign_up') {
 //        $status = pdo_insert(YOUMI_NAME . '_' . 'order', $order);
 //        $order['id'] = pdo_insertid();
 
+
+
+
     youmi_result(0, '提交成功', $data);
 }
+
 
 if ($op == 'complain') {
 

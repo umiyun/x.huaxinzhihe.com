@@ -1,50 +1,60 @@
 {template 'header'}
 
 <style>
-    .head_top{
+    .head_top {
         padding: 10% 5%;
         font-size: 20px;
         text-align: center;
         background: #B0B0B0;
         position: relative;
     }
-    .head_top img{
+
+    .head_top img {
         width: 25%;
         border-radius: 50%;
         position: relative;
         z-index: 5;
     }
-    .head_top div{
+
+    .head_top div {
         font-size: 18px;
         position: relative;
         z-index: 5;
     }
-    input[type=color], input[type=date], input[type=datetime-local], input[type=datetime], input[type=email], input[type=month], input[type=number], input[type=password], input[type=search], input[type=tel], input[type=text], input[type=time], input[type=url], input[type=week], select, textarea{
+
+    input[type=color], input[type=date], input[type=datetime-local], input[type=datetime], input[type=email], input[type=month], input[type=number], input[type=password], input[type=search], input[type=tel], input[type=text], input[type=time], input[type=url], input[type=week], select, textarea {
         margin-bottom: 0;
         border: 1px solid transparent;
     }
-    .weui-cells{
+
+    .weui-cells {
         margin-top: 0;
     }
-    .tj_btn{
+
+    .tj_btn {
         margin: 5%;
         font-size: 16px;
     }
-    .weui-label{
+
+    .weui-label {
         color: #777;
         width: 80px;
     }
-    .iconfont{
+
+    .iconfont {
         color: #F8A40D;
     }
-    .weui-btn_plain-default{
+
+    .weui-btn_plain-default {
         color: #F8A40D;
         border: 1px solid #F8A40D;;
     }
-    .container-fill{
+
+    .container-fill {
         overflow: hidden;
     }
-    .select_codeimg,.qrcode,.icon-tupiantianjia{
+
+    .select_codeimg, .qrcode, .icon-tupiantianjia {
         position: absolute;
         right: 15px;
         top: 5px;
@@ -52,14 +62,17 @@
         height: 50px;
         z-index: 5;
     }
-    .select_codeimg{
+
+    .select_codeimg {
         opacity: 0;
     }
-    .qrcode{
+
+    .qrcode {
         z-index: 2;
         right: 65px;
     }
-    .icon-tupiantianjia{
+
+    .icon-tupiantianjia {
         z-index: 3;
         font-size: 35px;
         color: #555;
@@ -74,6 +87,7 @@
         width: 100%;
         height: 100%;
     }
+
     .bg-bubbles li {
         position: absolute;
         bottom: -160px;
@@ -85,73 +99,73 @@
         transition-timing-function: linear;
     }
 
-   .bg-bubbles li:nth-child(1) {
-       left: 10%;
-   }
+    .bg-bubbles li:nth-child(1) {
+        left: 10%;
+    }
 
     .bg-bubbles li:nth-child(2) {
-         left: 20%;
-         width: 90px;
-         height: 90px;
-         animation-delay: 2s;
-         animation-duration: 35s;
-     }
+        left: 20%;
+        width: 90px;
+        height: 90px;
+        animation-delay: 2s;
+        animation-duration: 35s;
+    }
 
     .bg-bubbles li:nth-child(3) {
-         left: 25%;
-         animation-delay: 4s;
-     }
+        left: 25%;
+        animation-delay: 4s;
+    }
 
     .bg-bubbles li:nth-child(4) {
-         left: 40%;
-         width: 60px;
-         height: 60px;
-         animation-duration: 30s;
-         background-color: rgba(255, 255, 255, 0.3);
-     }
+        left: 40%;
+        width: 60px;
+        height: 60px;
+        animation-duration: 30s;
+        background-color: rgba(255, 255, 255, 0.3);
+    }
 
     .bg-bubbles li:nth-child(5) {
-         left: 70%;
-     }
+        left: 70%;
+    }
 
     .bg-bubbles li:nth-child(6) {
-         left: 80%;
-         width: 120px;
-         height: 120px;
-         animation-delay: 3s;
-         background-color: rgba(255, 255, 255, 0.2);
-     }
+        left: 80%;
+        width: 120px;
+        height: 120px;
+        animation-delay: 3s;
+        background-color: rgba(255, 255, 255, 0.2);
+    }
 
     .bg-bubbles li:nth-child(7) {
-         left: 32%;
-         width: 160px;
-         height: 160px;
-         animation-delay: 2s;
-     }
+        left: 32%;
+        width: 160px;
+        height: 160px;
+        animation-delay: 2s;
+    }
 
     .bg-bubbles li:nth-child(8) {
-         left: 55%;
-         width: 20px;
-         height: 20px;
-         animation-delay: 4s;
-         animation-duration: 45s;
-     }
+        left: 55%;
+        width: 20px;
+        height: 20px;
+        animation-delay: 4s;
+        animation-duration: 45s;
+    }
 
     .bg-bubbles li:nth-child(9) {
-         left: 25%;
-         width: 10px;
-         height: 10px;
-         animation-delay: 2s;
-         animation-duration: 22s;
-         background-color: rgba(255, 255, 255, 0.3);
-     }
+        left: 25%;
+        width: 10px;
+        height: 10px;
+        animation-delay: 2s;
+        animation-duration: 22s;
+        background-color: rgba(255, 255, 255, 0.3);
+    }
 
     .bg-bubbles li:nth-child(10) {
-         left: 85%;
-         width: 160px;
-         height: 160px;
-         animation-delay: 5s;
-     }
+        left: 85%;
+        width: 160px;
+        height: 160px;
+        animation-delay: 5s;
+    }
 
 
     @keyframes square {
@@ -172,7 +186,16 @@
 <div>
     <div class="head_top">
         <ul class="bg-bubbles">
-            <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
         </ul>
         <img src="{$_W['fans']['avatar']}" alt="">
         <div>{$_W['fans']['nickname']}</div>
@@ -199,7 +222,7 @@
                 </label>
             </div>
             <div class="weui-cell__bd">
-                <input class="weui-input realname" type="text" placeholder="请输入真实姓名"value="{$shop['realname']}">
+                <input class="weui-input realname" type="text" placeholder="请输入真实姓名" value="{$shop['realname']}">
             </div>
         </div>
         <div class="weui-cell">
@@ -210,9 +233,19 @@
                 </label>
             </div>
             <div class="weui-cell__bd">
-                <input class="weui-input mobile" type="tel" maxlength="11" placeholder="请输入手机号码" value="{$shop['mobile']}">
+                <input id="mobile" class="weui-input mobile" type="tel" maxlength="11" placeholder="请输入手机号码"
+                       value="{$shop['mobile']}">
             </div>
         </div>
+
+        {if !$shop['id']}
+        <div class="weui-cell">
+            <div class="weui-cell__bd flex">
+                <input id="mobile_code" class="weui-input" type="tel" maxlength="6" placeholder="请输入验证码">
+                <button onclick="time(this)">获取验证码</button>
+            </div>
+        </div>
+        {/if}
         <div class="weui-cell">
             <div class="weui-cell__hd">
                 <label class="weui-label">
@@ -237,7 +270,8 @@
                 </label>
             </div>
             <div class="weui-cell__bd">
-                <input type="text" id='city-picker' placeholder="请选择所在城市" value="{if $shop['province']}{$shop['province']} {$shop['city']} {$shop['district']}{/if}"/>
+                <input type="text" id='city-picker' placeholder="请选择所在城市"
+                       value="{if $shop['province']}{$shop['province']} {$shop['city']} {$shop['district']}{/if}"/>
             </div>
         </div>
         <div class="weui-cell">
@@ -275,47 +309,99 @@
 
 
 <script>
+    var sys_code;
+    var wait = 60;
+
+    function time(obj) {
+        var mobile = $('.mobile').val()
+        if (mobile == '') {
+            tips('请输入手机号')
+            return false;
+        }
+        var myreg = /^(((13[0-9]{1})|(14[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[0-9]{1})|(18[0-9]{1})|(19[0-9]{1}))+\d{8})$/;
+        if (!myreg.test(mobile)) {
+            tips('请输入有效的手机号码');
+            return false;
+        }
+        if (wait == 60) {
+            $.post(
+                "{php echo $this->createMobileUrl('login',['op'=>'mobile_code'])}",
+                {
+                    'mobile': mobile,
+                },
+                function (data) {
+                    console.log(data);
+                    tips(data.message)
+                    if (data.errno == 0) {
+                        sys_code = data.data;
+                    }
+                }, 'json'
+            )
+        }
+        if (wait == 0) {
+            obj.removeAttribute("disabled");
+            obj.innerHTML = "获取验证码";
+            wait = 60;
+        } else {
+            obj.setAttribute("disabled", true);
+            obj.innerHTML = wait + "秒后重新发送";
+            wait--;
+            setTimeout(function () {
+                    time(obj)
+                },
+                1000)
+        }
+    }
+
+
     $("#city-picker").cityPicker({
         title: "请选择所在城市"
     });
 
     $('.tj_btn').click(function () {
-        for (var key in $('input.weui-input')){
-            if($('input.weui-input')[key].value==''){
-                $.toast($($('input.weui-input')[key]).attr('placeholder'),'cancel');
+        for (var key in $('input.weui-input')) {
+            if ($('input.weui-input')[key].value == '') {
+                $.toast($($('input.weui-input')[key]).attr('placeholder'), 'cancel');
                 return false;
             }
         }
-        var realname=$('.realname').val();
-        if(realname==''){
-            $.toast("请填写真实姓名",'cancel');
+        var realname = $('.realname').val();
+        if (realname == '') {
+            $.toast("请填写真实姓名", 'cancel');
             return false;
         }
         var mobile = $('.mobile').val();
-        if(!(/^1(3|4|5|7|8)\d{9}$/.test(mobile))){
-            $.toast("手机号码有误",'cancel');
+        if (!(/^1(3|4|5|7|8)\d{9}$/.test(mobile))) {
+            $.toast("手机号码有误", 'cancel');
             return false;
         }
-        var industry_id=$('.industry option:selected').val();
-        if(industry_id==0){
-            $.toast("请选择所在行业",'cancel');
+        var industry_id = $('.industry option:selected').val();
+        if (industry_id == 0) {
+            $.toast("请选择所在行业", 'cancel');
             return false;
         }
-        var address=$('#city-picker').val();
-        if(address==''){
-            $.toast("请选择所在城市",'cancel');
+        var address = $('#city-picker').val();
+        if (address == '') {
+            $.toast("请选择所在城市", 'cancel');
             return false;
         }
-        var address2=$('.address').val();
-        if(address2==''){
-            $.toast("请填写详细地址",'cancel');
+        var address2 = $('.address').val();
+        if (address2 == '') {
+            $.toast("请填写详细地址", 'cancel');
             return false;
         }
-        var qrcode=$('.qrcode').attr('src');
-        if(qrcode==''){
+        var qrcode = $('.qrcode').attr('src');
+        if (qrcode == '') {
             tips("请上传一个二维码，以便创建活动的时候用户能联系到您");
             return false;
         }
+
+        var mb = $('#mobile_code').val();
+        if (mb == '') {
+            $.toast("请输入验证码", 'cancel');
+            return false;
+        }
+
 
         $.post(
             "{php echo $this->createMobileUrl('login',['op'=>'register'])}",
@@ -330,41 +416,47 @@
                 'realname': realname,
                 'address': address2,
                 'qrcode': qrcode,
+                'mobile_code': mb,
             },
             function (data) {
-                $.toast(data.message,'text');
+                $.toast(data.message, 'text');
                 if (data.errno == 0) {
                     setTimeout(function () {
-                        location.href="{php echo $this->createMobileUrl('user')}";
-                    },1000)
+                        location.href = "{php echo $this->createMobileUrl('user')}";
+                    }, 1000)
                 }
             }, 'json'
         )
     })
 
     function selectCodeimg(self) {
-        var reader=new FileReader();
-        var arr=$(self).val().split('\\');
-        arr=arr[arr.length-1].split('/');
-        var my=arr[arr.length-1];//这就是要取得的图片名称
-        reader.onload=function(e){
+        var reader = new FileReader();
+        var arr = $(self).val().split('\\');
+        arr = arr[arr.length - 1].split('/');
+        var my = arr[arr.length - 1];//这就是要取得的图片名称
+        reader.onload = function (e) {
             $.post(
                 "{php echo $this->createMobileUrl('upload',['op'=>'image'])}",
                 {
-                    'file':reader.result,
-                    'name':my,
-                    'size':e.total
+                    'file': reader.result,
+                    'name': my,
+                    'size': e.total
                 },
                 function (data) {
-                    $(self).next().attr('src',data.message)
-                },'json'
+                    if (data.errno === 0) {
+                        $(self).next().attr('src', data.message)
+                    } else {
+                        tips("图片上传失败:" + data.message);
+                    }
+
+                }, 'json'
             )
         }
         reader.readAsDataURL(self.files[0])
     }
 
-    function preview(self){
-        var urls=[];
+    function preview(self) {
+        var urls = [];
         urls.push($(self).attr('src'));
         wx.previewImage({
             current: $(self).attr('src'), // 当前显示图片的http链接

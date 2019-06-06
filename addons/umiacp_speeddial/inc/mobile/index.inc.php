@@ -290,12 +290,12 @@ if ($op == 'games') {
     $prize_count = pdo_getall(YOUMI_NAME . '_prize_log', array('uniacid' => $uniacid, 'openid' => $openid,'activity_id' => $activity_id, 'status' => 1));
 //    pdo_debug();
 //    die(json_encode(count($prize_count)));
-    $res = lottery($activity_id, $member, $reward,(count($prize_count)>=$activity['allnum']?true:false));
+    $res = lottery($activity_id, $member, $reward,(count($prize_count)>=$activity['allnum']?true:false),$_W);
     die(json_encode($res));
 
 }
 
-function lottery($activity_id, $member, $reward,$prize_allnum)
+function lottery($activity_id, $member, $reward,$prize_allnum,$_W)
 {
 
     $prizes = pdo_getall(YOUMI_NAME . '_' . 'activity_prize', array('uniacid' => $member['uniacid'], 'activity_id' => $activity_id, 'status >' => -1), '', '', 'createtime desc', '8');
@@ -325,10 +325,48 @@ function lottery($activity_id, $member, $reward,$prize_allnum)
     if($item['status']==1) {
         $update3['success +='] = 1;
         pdo_update(YOUMI_NAME . '_activity', $update3, ['id' => $activity_id]);
+
+        //发送中奖通知
+        $url=$_W['siteroot'] . "app/" .$this->createMobileUrl('index', array( 'activity_id' => $activity_id));
+        $res=     handleRewardMsg($_W['openid'],$item['title'],$url);
     }
     return ['errno' => 0, 'message' => $item['message'], 'log' => $log];
 }
+function handleRewardMsg($openid,$k1,$url){
 
+    $args=[
+        'keyword1'=>$k1,
+        'keyword2'=>date('Y-m-d H:i:s'),
+
+    ];
+    return sendRewardMsg($openid,$args,$url);
+}
+function sendRewardMsg($openid,$args,$url){
+
+    $setting=  youmi_setting_get_list();
+    $data = array(
+        'first' => array(
+            'value' => $setting['reward_first'],
+            'color' => '#ff510'
+        ),
+        'keyword1' => array(
+            'value' => $args['keyword1'],
+            'color' => '#ff510'
+        ),
+        'keyword2' => array(
+            'value' => $args['keyword2'],
+            'color' => '#ff510'
+        ),
+        'remark' => array(
+            'value' => $setting['reward_remark'],
+            'color' => '#ff510'
+        ),
+    );
+
+    $account_api = WeAccount::create();
+
+    return $account_api->sendTplNotice($openid, $setting['reward_id'], $data,$url);
+}
 function probability($prize_num,$prize_allnum)
 {
 

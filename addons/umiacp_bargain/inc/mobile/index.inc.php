@@ -423,10 +423,59 @@ if ($op == 'cut') {
 
     $data['schedule'] = (1 - number_format((floatval($cut['nprice']) - floatval($cut['rprice'])) / (floatval($cut['oprice']) - floatval($cut['rprice'])), 2)) * 100;
 
+  $good=  pdo_get(YOUMI_NAME.'_goods',['id'=>$goods_id]);
+
+    //发送砍价通知
+    $url=$_W['siteroot'] . "app/" .$this->createMobileUrl('index', array( 'activity_id' => $activity_id));
+    $res=     handleCutMsg($_W['openid'],$good['title'],$data['nprice'],$url);
+
     youmi_result(0, '砍价成功', $data);
 
 }
+function handleCutMsg($openid,$k1,$k2,$url){
 
+    $args=[
+        'keyword1'=>$k1,
+        'keyword2'=>$k2,
+        'keyword3'=>date('Y-m-d H:i:s'),
+        'keyword4'=>'多商品砍价',
+    ];
+    return sendCutMsg($openid,$args,$url);
+}
+function sendCutMsg($openid,$args,$url){
+
+    $setting=  youmi_setting_get_list();
+    $data = array(
+        'first' => array(
+            'value' => $setting['cut_first'],
+            'color' => '#ff510'
+        ),
+        'keyword1' => array(
+            'value' => $args['keyword1'],
+            'color' => '#ff510'
+        ),
+        'keyword2' => array(
+            'value' => $args['keyword2'],
+            'color' => '#ff510'
+        ),
+        'keyword3' => array(
+            'value' => $args['keyword3'],
+            'color' => '#ff510'
+        ),
+        'keyword4' => array(
+            'value' => $args['keyword4'],
+            'color' => '#ff510'
+        ),
+        'remark' => array(
+            'value' => $setting['cut_remark'],
+            'color' => '#ff510'
+        ),
+    );
+
+    $account_api = WeAccount::create();
+
+    return $account_api->sendTplNotice($openid, $setting['cut_id'], $data,$url);
+}
 if ($op == 'complain') {
 
     $activity_id = intval($_GPC['activity_id']);

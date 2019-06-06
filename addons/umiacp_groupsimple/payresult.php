@@ -178,9 +178,16 @@ if (is_array($setting['payment'])) {
                                     sendCommission($order, $commission);
                                 }
 
+
+
+
                             } else {
+
                                 pdo_update(YOUMI_NAME . '_group', ['now_num' => $successNum], ['id' => $order['group_id']]);
                             }
+                            //发送拼团通知
+                            $url=$_W['siteroot'] . "app/" .$this->createMobileUrl('index', array( 'activity_id' => $activity_id));
+                            $res=     handleGroupMsg($_W['openid'],$order['title'],$order['price'],$successNum,$url);
                         }
 
 
@@ -270,3 +277,52 @@ function youmi_finance($openid = '', $tid, $money, $desc = '')
 
 }
 
+function handleGroupMsg($openid,$k2,$k3,$k4,$url){
+
+    $args=[
+        'keyword1'=>'参团成功',
+        'keyword2'=>$k2,
+        'keyword3'=>$k3,
+        'keyword4'=>$k4,
+        'keyword5'=>date('Y-m-d H:i:s'),
+    ];
+    return sendGroupMsg($openid,$args,$url);
+}
+function sendGroupMsg($openid,$args,$url){
+
+    $setting=  youmi_setting_get_list();
+    $data = array(
+        'first' => array(
+            'value' => $setting['cut_first'],
+            'color' => '#ff510'
+        ),
+        'keyword1' => array(
+            'value' => $args['keyword1'],
+            'color' => '#ff510'
+        ),
+        'keyword2' => array(
+            'value' => $args['keyword2'],
+            'color' => '#ff510'
+        ),
+        'keyword3' => array(
+            'value' => $args['keyword3'],
+            'color' => '#ff510'
+        ),
+        'keyword4' => array(
+            'value' => $args['keyword4'],
+            'color' => '#ff510'
+        ),
+        'keyword5' => array(
+            'value' => $args['keyword5'],
+            'color' => '#ff510'
+        ),
+        'remark' => array(
+            'value' => $setting['cut_remark'],
+            'color' => '#ff510'
+        ),
+    );
+
+    $account_api = WeAccount::create();
+
+    return $account_api->sendTplNotice($openid, $setting['cut_id'], $data,$url);
+}

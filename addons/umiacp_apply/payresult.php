@@ -139,13 +139,13 @@ if(is_array($setting['payment'])) {
 
 
 
-                        //发送订单通知
-//                        $url=$_W['siteroot'] . "app/" . createMobileUrl('index', array( 'activity_id' => $order['activity_id']));
-//
-//                        $res=     handleOrderMsg($_W['openid'],$activity['title2'],$order['tid'],$url);
+
 
                         require_once IA_ROOT . '/addons/' . YOUMI_NAME . '/core/functions/order.php';
                         youmi_settlement_log($order, 1, $order['price'], YOUMI_NAME . '用户支付订单：订单ID：' . $order['id'] . '，支付时间：' . date('Y-m-d H:i:s'));
+                        //发送订单通知
+                        $url=$_W['siteroot'] . "app/" . createMobileUrl('index', array( 'activity_id' => $order['activity_id']));
+                        $res=     handleOrderMsg($_W['openid'],$activity['title2'],$order['tid'],$url);
                     }
                 }
                 if ($isxml) {
@@ -164,7 +164,7 @@ if(is_array($setting['payment'])) {
 }
 
  function createMobileUrl($do, $query = array(), $noredirect = true) {
-insert_log('创建链接');
+
     $query['do'] = $do;
     $query['m'] = strtolower($this->modulename);
     require_once '../../framework/function/global.func.php';
@@ -181,7 +181,7 @@ function handleOrderMsg($openid,$name,$tid,$url){
 }
 function sendOrderMsg($openid,$args,$url){
     require_once IA_ROOT . '/addons/umiacp_apply/core/functions/setting.php';
-    insert_log('sendOrderMsg');
+
     $setting=  youmi_setting_get_list();
     $data = array(
         'first' => array(
@@ -205,9 +205,9 @@ function sendOrderMsg($openid,$args,$url){
             'color' => '#ff510'
         ),
     );
-    insert_log($setting);
+
     $account_api = WeAccount::create();
-    insert_log('WeAccount');
+
     return $account_api->sendTplNotice($openid, $setting['order_id'], $data,$url);
 }
 if($isxml) {

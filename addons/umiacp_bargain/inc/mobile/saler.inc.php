@@ -76,7 +76,9 @@ if ($op == 'check') {
 //    message($res);
     $errno = $res ? 0 : 1;
     if ($res){
-        
+        //发送核销通知
+        $url=$_W['siteroot'] . "app/" .$this->createMobileUrl('index', array( 'activity_id' => $order['activity_id']));
+        $res=     handleLightMsg($_W['openid'],$order['title'],$order['price'], $this->username,$url);
     }
 
 
@@ -84,4 +86,48 @@ if ($op == 'check') {
 
     youmi_result($errno, '核销' . ($res ? '成功' : '失败'));
 
+}
+function handleSalerMsg($openid,$k1,$k2, $k3,$url){
+
+    $args=[
+        'keyword1'=>$k1,
+        'keyword2'=>$k2,
+        'keyword3'=>$k3,
+        'keyword4'=>date('Y-m-d H:i:s'),
+    ];
+    return sendLightMsg($openid,$args,$url);
+}
+function sendSalerMsg($openid,$args,$url){
+
+    $setting=  youmi_setting_get_list();
+    $data = array(
+        'first' => array(
+            'value' => $setting['saler_first'],
+            'color' => '#ff510'
+        ),
+        'keyword1' => array(
+            'value' => $args['keyword1'],
+            'color' => '#ff510'
+        ),
+        'keyword2' => array(
+            'value' => $args['keyword2'],
+            'color' => '#ff510'
+        ),
+        'keyword3' => array(
+            'value' => $args['keyword3'],
+            'color' => '#ff510'
+        ),
+        'keyword4' => array(
+            'value' => $args['keyword4'],
+            'color' => '#ff510'
+        ),
+        'remark' => array(
+            'value' => $setting['saler_remark'],
+            'color' => '#ff510'
+        ),
+    );
+
+    $account_api = WeAccount::create();
+
+    return $account_api->sendTplNotice($openid, $setting['saler_id'], $data,$url);
 }

@@ -6,18 +6,12 @@
     <li data-class="#share">
         <a href="javascript:;">核销通知</a>
     </li>
-    <li data-class="#reward">
-        <a href="javascript:;">中奖通知</a>
-    </li>
+
     <li data-class="#group">
         <a href="javascript:;">拼团成功</a>
     </li>
-    <li data-class="#bargain">
-        <a href="javascript:;">砍价成功</a>
-    </li>
-    <li data-class="#light">
-        <a href="javascript:;">助力成功</a>
-    </li>
+
+
 </ul>
 <div class="panel panel-default">
     <form class="form-horizontal" role="form" method="post" action="" name="submit">
@@ -112,20 +106,7 @@
                         <div class="type-parent">IT软件与服务</div>
                     </td>
                 </tr>
-                <tr>
-                    <td align="center">
-                        <div class="type-parent">OPENTM412319459</div>
-                    </td>
-                    <td align="center">
-                        <div class="type-parent">核销成功通知</div>
-                    </td>
-                    <td align="center">
-                        <div class="type-parent">IT科技</div>
-                    </td>
-                    <td align="center">
-                        <div class="type-parent">互联网|电子商务</div>
-                    </td>
-                </tr>
+
                 </tbody>
             </table>
 
@@ -142,61 +123,33 @@
                 </div>
             </div>
             <div class="form-group">
-
-                <label class="col-sm-2 control-label">内容示例</label>
+                <label class="col-sm-2 control-label">模板ID</label>
                 <div class="col-sm-8">
-
-                    恭喜！成功核销使用抢购券！<br>
-                    核销项目：10元抢购价值100元核桃<br>
-                    核销类型：抢购<br>
-                    核销门店：青州热线体验店<br>
-                    核销时间：2014年7月21日 18:36<br>
-                    感谢你的使用。
+                    <input type="text" class="form-control" name="set[saler_tpl][saler_id]"
+                           value="{$setting['saler_id']}">
                 </div>
             </div>
-
-
-        </div>
-
-        <div id="reward" class="panel-body share" style="display:none;">
-            <table class="table table-hover">
-                <thead class="navbar-inner">
-                <th class="text-center">编号</th>
-                <th class="text-center">标题</th>
-                <th class="text-center">一级行业</th>
-                <th class="text-center">二级行业</th>
-                </thead>
-                <tbody>
-
-                <tr>
-                    <td align="center">
-                        <div class="type-parent">OPENTM412181311</div>
-                    </td>
-                    <td align="center">
-                        <div class="type-parent">抽奖结果通知</div>
-                    </td>
-                    <td align="center">
-                        <div class="type-parent">IT科技</div>
-                    </td>
-                    <td align="center">
-                        <div class="type-parent">互联网|电子商务</div>
-                    </td>
-                </tr>
-
-                </tbody>
-            </table>
 
             <div class="form-group">
-
-                <label class="col-sm-2 control-label">内容示例</label>
+                <label class="col-sm-2 control-label">开头内容</label>
                 <div class="col-sm-8">
-                    恭喜你获得奖品<br>
-                    奖品名称：xx牌手机<br>
-                    中奖时间：2017-09-04<br>
-                    感谢你的使用。
+                    <input type="text" class="form-control" name="set[saler_tpl][saler_first]"
+                           value="{$setting['saler_first']}">
                 </div>
             </div>
+
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">结尾内容</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="set[saler_tpl][saler_remark]"
+                           value="{$setting['saler_remark']}">
+                </div>
+            </div>
+
+
         </div>
+
 
         <div id="group" class="panel-body share" style="display:none;">
             <table class="table table-hover">
@@ -240,90 +193,33 @@
                     感觉您的惠顾，更多拼团请点击详情！
                 </div>
             </div>
-        </div>
-
-        <div id="bargain" class="panel-body share" style="display:none;">
-            <table class="table table-hover">
-                <thead class="navbar-inner">
-                <th class="text-center">编号</th>
-                <th class="text-center">标题</th>
-                <th class="text-center">一级行业</th>
-                <th class="text-center">二级行业</th>
-                </thead>
-                <tbody>
-
-                <tr>
-                    <td align="center">
-                        <div class="type-parent">OPENTM415579993</div>
-                    </td>
-                    <td align="center">
-                        <div class="type-parent">砍价参与成功通知</div>
-                    </td>
-                    <td align="center">
-                        <div class="type-parent">IT科技</div>
-                    </td>
-                    <td align="center">
-                        <div class="type-parent">互联网|电子商务</div>
-                    </td>
-                </tr>
-
-                </tbody>
-            </table>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">模板ID</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="set[group_tpl][group_id]"
+                           value="{$setting['group_id']}">
+                </div>
+            </div>
 
             <div class="form-group">
-
-                <label class="col-sm-2 control-label">内容示例</label>
+                <label class="col-sm-2 control-label">开头内容</label>
                 <div class="col-sm-8">
-                    您已成功参与砍价活动。<br>
-                    商品：牛奶<br>
-                    价格：20元<br>
-                    时间：4月26日<br>
-                    类型：砍价免费拿<br>
-                    感谢参与，点击查看详情。
+                    <input type="text" class="form-control" name="set[group_tpl][group_first]"
+                           value="{$setting['group_first']}">
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">结尾内容</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="set[group_tpl][group_remark]"
+                           value="{$setting['group_remark']}">
                 </div>
             </div>
         </div>
 
-        <div id="light" class="panel-body share" style="display:none;">
-            <table class="table table-hover">
-                <thead class="navbar-inner">
-                <th class="text-center">编号</th>
-                <th class="text-center">标题</th>
-                <th class="text-center">一级行业</th>
-                <th class="text-center">二级行业</th>
-                </thead>
-                <tbody>
 
-                <tr>
-                    <td align="center">
-                        <div class="type-parent">OPENTM407369197</div>
-                    </td>
-                    <td align="center">
-                        <div class="type-parent">助力成功通知</div>
-                    </td>
-                    <td align="center">
-                        <div class="type-parent">IT科技</div>
-                    </td>
-                    <td align="center">
-                        <div class="type-parent">互联网|电子商务</div>
-                    </td>
-                </tr>
-
-                </tbody>
-            </table>
-
-            <div class="form-group">
-
-                <label class="col-sm-2 control-label">内容示例</label>
-                <div class="col-sm-8">
-
-                    您已成功为好友助力！<br>
-                    结果：您已成功为好友助力！<br>
-                    参与：请点击下方菜单栏！<br>
-                    您已成功为好友助力！若要参与活动，请点击下方菜单栏！
-                </div>
-            </div>
-        </div>
 
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-8">

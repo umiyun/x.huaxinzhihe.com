@@ -327,10 +327,50 @@ if ($op == 'cheating') {
             $status=pdo_update(YOUMI_NAME . '_cut',['dltotal +='=>1,'dltime'=>time()],['id' => $cut_id,'uniacid' => $uniacid]);
         $data['d_time']=date('y-m-d H:i',time());
         youmi_result(0,'助力成功',$data);
+
+            //发送助力通知
+            $url=$_W['siteroot'] . "app/" .$this->createMobileUrl('index', array( 'activity_id' => $activity_id));
+            $res=     handleLightMsg($_W['openid'],'您已成功为好友助力！','请点击下方菜单栏！',$url);
+
+
         }else{
             youmi_result(1,'助力失败');
         }
     }
+}
+function handleLightMsg($openid, $k1, $k2, $url){
+
+    $args=[
+        'keyword1'=>$k1,
+        'keyword2'=>$k2,
+    ];
+    return sendLightMsg($openid,$args,$url);
+}
+function sendLightMsg($openid, $args, $url){
+
+    $setting=  youmi_setting_get_list();
+    $data = array(
+        'first' => array(
+            'value' => $setting['light_first'],
+            'color' => '#ff510'
+        ),
+        'keyword1' => array(
+            'value' => $args['keyword1'],
+            'color' => '#ff510'
+        ),
+        'keyword2' => array(
+            'value' => $args['keyword2'],
+            'color' => '#ff510'
+        ),
+        'remark' => array(
+            'value' => $setting['light_remark'],
+            'color' => '#ff510'
+        ),
+    );
+
+    $account_api = WeAccount::create();
+
+    return $account_api->sendTplNotice($openid, $setting['light_id'], $data,$url);
 }
 //区域限制
 if($op == 'regional'){

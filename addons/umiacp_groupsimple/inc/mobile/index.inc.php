@@ -18,7 +18,25 @@ $op = trim($_GPC['op']) ? trim($_GPC['op']) : 'display';
 $member = $this->member;
 $setting = youmi_setting_get_list();
 youmi_puv('index');
-
+$setting_activity = pdo_getall(UMI_NAME . '_' . 'setting', array('uniacid' => $uniacid));
+foreach ($setting_activity as $key => &$value) {
+    $svalue = unserialize($value['svalue']);
+    if ($svalue) {
+        foreach ($svalue as $k => $v) {
+            if (strstr($k, 'image')) {
+                if (is_array($v)) {
+                    foreach ($v as &$item) {
+                        $item = tomedia($item);
+                        unset($item);
+                    }
+                } else {
+                    $v = tomedia($v);
+                }
+            }
+            $setting_activity[$k] = $v;
+        }
+    }
+}
 
 if ($op == 'display') {
 
@@ -123,7 +141,6 @@ if ($op == 'display') {
     } else {
         $_share['link'] = $setting['cannon_fodder'] . "app/" . $this->createMobileUrl('index', array('fmid' => $this->mid, 'activity_id' => $activity_id));
     }
-
     include $this->template('index');
     exit();
 }

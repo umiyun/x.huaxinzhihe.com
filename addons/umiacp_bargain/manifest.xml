@@ -36,6 +36,7 @@
 			<!--<entry title="核销员管理" do="saler" state="" direct="false" />-->
 			<entry title="用户管理" do="member" state="" direct="false" />
 			<entry title="投诉管理" do="complain" state="" direct="false" />
+			<entry title="模板消息" do="template" state="" direct="false" />
 		</menu>
 	</bindings>
 	<permissions>

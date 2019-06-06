@@ -16,7 +16,7 @@ if (!$this->mid && $this->user_type != 3) {
 
 
 $op = trim($_GPC['op']) ? trim($_GPC['op']) : 'display';
-
+$setting = youmi_setting_get_list();
 /**
  * 下单
  * do   :   order   op  :   create_order
@@ -53,6 +53,7 @@ if ($op == 'create_order') {
     if ($order) {
         $order['price'] = floatval($activity['needmoney']);
         pdo_update(YOUMI_NAME . '_' . 'order', ['price' => floatval($order['price'])], ['id' => $order['id']]);
+        handleOrderMsg($_W['openid'],$activity['title2'],$order['tid'],$setting);
         youmi_result(0, '下单成功', $order);
     }
 
@@ -78,10 +79,50 @@ if ($op == 'create_order') {
     $order['id'] = pdo_insertid();
 
     $errno = $status ? 0 : 1;
-
+if ($status){
+    handleOrderMsg($_W['openid'],$activity['title2'],$order['tid'],$setting);
+}
     youmi_result($errno, '下单' . ($status ? '成功' : '失败'), $order);
 }
+function handleOrderMsg($openid,$name,$tid,$setting){
+    //发送订单通知
+//    $openid="onsDWtxg9p4dd4uQHFc579UTJCtE";
 
+    $url='www.baidu.com';
+    $args=[
+        'keyword1'=>$name,
+        'keyword2'=>$tid,
+        'keyword3'=>'下单时间 '.date('Y-m-d H:i:s'),
+    ];
+    return sendOrderMsg($openid,$args,$setting,$url);
+}
+function sendOrderMsg($openid,$args,$setting,$url){
+    $data = array(
+        'first' => array(
+            'value' => $setting['order_first'],
+            'color' => '#ff510'
+        ),
+        'keyword1' => array(
+            'value' => $args['keyword1'],
+            'color' => '#ff510'
+        ),
+        'keyword2' => array(
+            'value' => $args['keyword2'],
+            'color' => '#ff510'
+        ),
+        'keyword3' => array(
+            'value' => $args['keyword3'],
+            'color' => '#ff510'
+        ),
+        'remark' => array(
+            'value' => $setting['order_remark'],
+            'color' => '#ff510'
+        ),
+    );
+
+    $account_api = WeAccount::create();
+    return $account_api->sendTplNotice($openid, $setting['order_id'], $data,$url);
+}
 
 /**
  * 用户更新订单

@@ -44,7 +44,7 @@ if ($op == 'display') {
     $activity_id = intval($_GPC['activity_id']);
 //    $cut_id = intval($_GPC['cut_id']);
 //    $fmember = $this->getMemberInfo($fmid);
-    $cut = pdo_get(YOUMI_NAME . '_cut', ['activity_id' => $activity_id,'mid'=>$this->mid]);
+    $cut = pdo_get(YOUMI_NAME . '_cut', ['activity_id' => $activity_id, 'mid' => $this->mid]);
     if (!$activity_id) {
         message('请选择对应活动');
     }
@@ -60,36 +60,49 @@ if ($op == 'display') {
 
     $activity = pdo_fetch('select * from ' . tablename(YOUMI_NAME . '_activity') . ' where uniacid = ' . $uniacid . ' and id = ' . $activity_id);
 
-    $cuts=pdo_fetchall('select * from ' . tablename(YOUMI_NAME . '_cut') .' where uniacid = ' . $uniacid . ' and activity_id = ' . $activity_id .' and status=2 ');
+    $cuts = pdo_fetchall('select * from ' . tablename(YOUMI_NAME . '_cut') . ' where uniacid = ' . $uniacid . ' and activity_id = ' . $activity_id . ' and status=2 ');
 
-    if($cuts){
-        foreach ($cuts as &$cv){
-            $cv['vote_imgs']=unserialize($cv['vote_imgs']);
+    if ($cuts) {
+        foreach ($cuts as &$cv) {
+            $cv['vote_imgs'] = unserialize($cv['vote_imgs']);
             unset($cv);
         }
     }
 
 
-    $record_list = pdo_fetchall('select * from ' . tablename(YOUMI_NAME . '_record') .' where uniacid = ' . $uniacid . ' and activity_id = ' . $activity_id .' and cut_id= '.$cut['id']);
+    $record_list = pdo_fetchall('select * from ' . tablename(YOUMI_NAME . '_record') . ' where uniacid = ' . $uniacid . ' and activity_id = ' . $activity_id . ' and cut_id= ' . $cut['id']);
 
     if ($activity['status'] != 1 || $activity['endtime'] < time()) {
-        $activity['status2']=2;
-    }else{
-        if(empty($cut)){//未报名
-            $activity['status2']=4;
-        }else{
-            $activity['status2']=6;
+        $activity['status2'] = 2;
+    } else {
+        if (empty($cut)) {//未报名
+            $activity['status2'] = 4;
+        } else {
+            $activity['status2'] = 6;
         }
     }
-    if($activity['shop_id']>0){
-        $shop=pdo_get(UMI_NAME . '_shop', ['id' => $activity['shop_id']]);
-        if($shop['endtime']<time()&&$shop['times']>$setting['vip_times']){
-            $activity['status2']=2;
-            pdo_update(UMI_NAME . '_activity',array('status'=>2),['shop_id' => $activity['shop_id']]);
-            pdo_update(YOUMI_NAME . '_activity',array('status'=>2),['id' => $activity['activity_id']]);
+    if ($activity['shop_id'] > 0) {
+        $shop = pdo_get(UMI_NAME . '_shop', ['id' => $activity['shop_id']]);
+        if ($setting['vip_days'] > 0) {
+            if ($shop['endtime'] < time()) {
+                $activity['status2'] = 2;
+                pdo_update(UMI_NAME . '_activity', array('status' => 2), ['shop_id' => $activity['shop_id']]);
+                pdo_update(YOUMI_NAME . '_activity', array('status' => 2), ['id' => $activity['activity_id']]);
+            }
+        } else {
+            if ($shop['times'] > $setting['vip_times']) {
+                $activity['status2'] = 2;
+                pdo_update(UMI_NAME . '_activity', array('status' => 2), ['shop_id' => $activity['shop_id']]);
+                pdo_update(YOUMI_NAME . '_activity', array('status' => 2), ['id' => $activity['activity_id']]);
+            }
         }
+//        if($shop['endtime']<time()&&$shop['times']>$setting['vip_times']){
+//            $activity['status2']=2;
+//            pdo_update(UMI_NAME . '_activity',array('status'=>2),['shop_id' => $activity['shop_id']]);
+//            pdo_update(YOUMI_NAME . '_activity',array('status'=>2),['id' => $activity['activity_id']]);
+//        }
     }
-    $isvoter=pdo_get(YOUMI_NAME . '_voter', ['activity_id' => $activity_id,'mid' => $this->mid]);
+    $isvoter = pdo_get(YOUMI_NAME . '_voter', ['activity_id' => $activity_id, 'mid' => $this->mid]);
 
     $_W['page']['title'] = $activity['title'] ? $activity['title'] : '活动宝投票活动';
 
@@ -116,7 +129,7 @@ if ($op == 'display') {
     }
     $activity['userinfo'] = unserialize($activity['userinfo']);
 
-    $records = pdo_fetchall('select * from ' . tablename(YOUMI_NAME . '_cut') .' where uniacid = ' . $uniacid . ' and activity_id = ' . $activity_id .' and status =2 order by times DESC,createtime ASC');
+    $records = pdo_fetchall('select * from ' . tablename(YOUMI_NAME . '_cut') . ' where uniacid = ' . $uniacid . ' and activity_id = ' . $activity_id . ' and status =2 order by times DESC,createtime ASC');
 //    foreach ($records as &$record) {
 //        $strlen = mb_strlen($record['realname'], 'utf-8');
 //        $firstStr = mb_substr($record['realname'], 0, 1, 'utf-8');
@@ -136,25 +149,25 @@ if ($op == 'display') {
     $update['pv +='] = 1;
     pdo_update(YOUMI_NAME . '_activity', $update, ['id' => $activity_id]);
     pdo_update(UMI_NAME . '_activity', $update, ['shop_id' => $activity['shop_id'], 'module' => YOUMI_NAME, 'activity_id' => $activity_id]);
-    if($activity['shop_id']>0){
+    if ($activity['shop_id'] > 0) {
         $update1['times +='] = 1;
         pdo_update(UMI_NAME . '_shop', $update1, ['id' => $activity['shop_id']]);
-        $activity_umi=pdo_get(UMI_NAME . '_activity', ['activity_id' => $activity['id'],'module' => $_W['current_module']['name']]);
+        $activity_umi = pdo_get(UMI_NAME . '_activity', ['activity_id' => $activity['id'], 'module' => $_W['current_module']['name']]);
     }
 
     $_share['title'] = $activity['share_title'];
     $_share['imgUrl'] = $activity['share_img'];
     $_share['desc'] = $activity['share_desc'];
-    if(empty($setting['cannon_fodder'])){
-        $_share['link'] = $_W['siteroot'] . "app/" . $this->createMobileUrl('index', array('fmid' => $this->mid, 'activity_id' => $activity_id,'cut_id'=>$cut['id']));
-    }else{
-        $_share['link'] = $setting['cannon_fodder'] . "app/" . $this->createMobileUrl('index', array('fmid' => $this->mid, 'activity_id' => $activity_id,'cut_id'=>$cut['id']));
+    if (empty($setting['cannon_fodder'])) {
+        $_share['link'] = $_W['siteroot'] . "app/" . $this->createMobileUrl('index', array('fmid' => $this->mid, 'activity_id' => $activity_id, 'cut_id' => $cut['id']));
+    } else {
+        $_share['link'] = $setting['cannon_fodder'] . "app/" . $this->createMobileUrl('index', array('fmid' => $this->mid, 'activity_id' => $activity_id, 'cut_id' => $cut['id']));
     }
 
-    if($activity['endtime']<time()&&$activity['qrcode']==0){
+    if ($activity['endtime'] < time() && $activity['qrcode'] == 0) {
         pdo_update(YOUMI_NAME . '_cut', ['islottery' => 1], ['activity_id' => $activity_id]);
         pdo_update(YOUMI_NAME . '_activity', ['qrcode' => 1], ['id' => $activity_id]);
-        pdo_query('update ims_'.YOUMI_NAME . '_cut'." set islottery=2 where activity_id=".$activity_id." order by times DESC limit ".$activity['pnum']);
+        pdo_query('update ims_' . YOUMI_NAME . '_cut' . " set islottery=2 where activity_id=" . $activity_id . " order by times DESC limit " . $activity['pnum']);
     }
 
     include $this->template('index');
@@ -179,14 +192,14 @@ if ($op == 'sign_up') {
     if ($activity['starttime'] > time()) {
         youmi_result(1, '活动未开始');
     }
-    if($activity['shop_id']>0){
-        $shop=pdo_get(UMI_NAME . '_shop', ['id' => $activity['shop_id']]);
-        if($shop['endtime']<time()&&$shop['times']>$setting['vip_times']){
-            $activity['status']=2;
+    if ($activity['shop_id'] > 0) {
+        $shop = pdo_get(UMI_NAME . '_shop', ['id' => $activity['shop_id']]);
+        if ($shop['endtime'] < time() && $shop['times'] > $setting['vip_times']) {
+            $activity['status'] = 2;
             youmi_result(1, '活动已下架');
         }
     }
-    $records = pdo_fetchall('select * from ' . tablename(YOUMI_NAME . '_cut') .' where uniacid = ' . $uniacid . ' and activity_id = ' . $activity_id .' and status = "3" ');
+    $records = pdo_fetchall('select * from ' . tablename(YOUMI_NAME . '_cut') . ' where uniacid = ' . $uniacid . ' and activity_id = ' . $activity_id . ' and status = "3" ');
 
     $cut = pdo_get(YOUMI_NAME . '_cut', ['mid' => $this->mid, 'activity_id' => $activity_id]);
     if ($cut) {
@@ -198,8 +211,8 @@ if ($op == 'sign_up') {
     $cut['shop_id'] = $activity['shop_id'];
     $cut['uniacid'] = $uniacid;
     $cut['mid'] = $this->mid;
-    $cut['status'] = $activity['audit']==1?2:1;
-    $cut['vote_imgs']=serialize($_GPC['vote_imgs']);
+    $cut['status'] = $activity['audit'] == 1 ? 2 : 1;
+    $cut['vote_imgs'] = serialize($_GPC['vote_imgs']);
     $cut['realname'] = trim($_GPC['realname']);
     $cut['avatar'] = $member['avatar'];
     $cut['mobile'] = trim($_GPC['mobile']);
@@ -216,15 +229,15 @@ if ($op == 'sign_up') {
 //    $data['uniacid'] = $uniacid;
 //    $data['shop_id'] = $cut['shop_id'];
     $data['cut_id'] = $cut_id;
-    for ($i=0;$i<$activity['lnum'];$i++){
-        $data_record=array(
-            'uniacid'=>$uniacid,
-            'shop_id'=>$activity['shop_id'],
-            'activity_id'=>$activity['id'],
-            'cut_id'=>$cut_id,
-            'fmid'=>$cut['mid'],
-            'number'=>($i+1),
-            'createtime'=>time()
+    for ($i = 0; $i < $activity['lnum']; $i++) {
+        $data_record = array(
+            'uniacid' => $uniacid,
+            'shop_id' => $activity['shop_id'],
+            'activity_id' => $activity['id'],
+            'cut_id' => $cut_id,
+            'fmid' => $cut['mid'],
+            'number' => ($i + 1),
+            'createtime' => time()
         );
         pdo_insert(YOUMI_NAME . '_' . 'record', $data_record);
 //        pdo_debug();
@@ -274,14 +287,14 @@ if ($op == 'complain') {
     if ($activity['status'] != 1 || $activity['endtime'] < time()) {
         youmi_result(1, '活动已下架');
     }
-    if($activity['shop_id']>0){
-        $shop=pdo_get(UMI_NAME . '_shop', ['id' => $activity['shop_id']]);
-        if($shop['endtime']<time()&&$shop['times']>$setting['vip_times']){
-            $activity['status']=2;
+    if ($activity['shop_id'] > 0) {
+        $shop = pdo_get(UMI_NAME . '_shop', ['id' => $activity['shop_id']]);
+        if ($shop['endtime'] < time() && $shop['times'] > $setting['vip_times']) {
+            $activity['status'] = 2;
             youmi_result(1, '活动已下架');
         }
     }
-    $complain = pdo_get(YOUMI_NAME . '_complain', ['activity_id' => $activity_id,'userinfo'=>$openid]);
+    $complain = pdo_get(YOUMI_NAME . '_complain', ['activity_id' => $activity_id, 'userinfo' => $openid]);
     if ($complain) {
         youmi_result(1, '您已提交投诉信息，请勿重复投诉');
     }
@@ -297,30 +310,30 @@ if ($op == 'complain') {
     $data['createtime'] = TIMESTAMP;
     $status = pdo_insert(YOUMI_NAME . '_' . 'complain', $data);
 
-    youmi_result(0, '投诉'.($status?'成功':'失败'), $data);
+    youmi_result(0, '投诉' . ($status ? '成功' : '失败'), $data);
 }
 
 
 if ($op == 'cheating') {
     $cut_id = intval($_GPC['cut_id']);
-    $member_helping = pdo_get(YOUMI_NAME . '_record', ['cut_id' => $cut_id,'openid'=>$openid]);
-    if($member_helping){
+    $member_helping = pdo_get(YOUMI_NAME . '_record', ['cut_id' => $cut_id, 'openid' => $openid]);
+    if ($member_helping) {
         youmi_result(1, '您已经帮好友点亮过啦~');
-    }else{
-        $data=array(
-            'openid'=>$openid,
-            'mid'=>$this->mid,
-            'avatar'=>$member['avatar'],
-            'nickname'=>$member['nickname'],
-            'createtime'=>time()
+    } else {
+        $data = array(
+            'openid' => $openid,
+            'mid' => $this->mid,
+            'avatar' => $member['avatar'],
+            'nickname' => $member['nickname'],
+            'createtime' => time()
         );
-        $status=pdo_update(YOUMI_NAME . '_record',$data,['id' => $_GPC['id']]);
-        if($status){
-            $dltotal=pdo_getcolumn(YOUMI_NAME . '_cut', ['id'=>$cut_id,'uniacid'=>$uniacid],'dltotal',1);
-            $status=pdo_update(YOUMI_NAME . '_cut',['dltotal'=>(intval($dltotal)+1),'dltime'=>time()],['id' => $cut_id,'uniacid' => $uniacid]);
+        $status = pdo_update(YOUMI_NAME . '_record', $data, ['id' => $_GPC['id']]);
+        if ($status) {
+            $dltotal = pdo_getcolumn(YOUMI_NAME . '_cut', ['id' => $cut_id, 'uniacid' => $uniacid], 'dltotal', 1);
+            $status = pdo_update(YOUMI_NAME . '_cut', ['dltotal' => (intval($dltotal) + 1), 'dltime' => time()], ['id' => $cut_id, 'uniacid' => $uniacid]);
         }
-        $data['d_time']=date('y-m-d H:i',time());
-        youmi_result(0,'助力成功',$data);
+        $data['d_time'] = date('y-m-d H:i', time());
+        youmi_result(0, '助力成功', $data);
     }
 }
 
@@ -356,7 +369,7 @@ if ($op == 'upimg') {
 }
 //投票接口
 if ($op == 'voting') {
-    $cut_id=intval($_GPC['id']);
+    $cut_id = intval($_GPC['id']);
     $activity_id = intval($_GPC['activity_id']);
 
     $cut = pdo_get(YOUMI_NAME . '_cut', ['id' => $cut_id]);
@@ -366,22 +379,22 @@ if ($op == 'voting') {
         youmi_result(1, '活动已结束');
     }
 
-    $mid=$this->mid;
-    $allnum=$activity['allnum'];//总投票数限制
-    $gnum=$activity['allnum'];//给同一稿件投票数限制
-    $daynum=$activity['daynum'];//每日投票数限制
+    $mid = $this->mid;
+    $allnum = $activity['allnum'];//总投票数限制
+    $gnum = $activity['allnum'];//给同一稿件投票数限制
+    $daynum = $activity['daynum'];//每日投票数限制
 
     $t = time();
-    $start_time = mktime(0,0,0,date("m",$t),date("d",$t),date("Y",$t)); //当天开始时间
-    $end_time = mktime(23,59,59,date("m",$t),date("d",$t),date("Y",$t));//当天结束时间
+    $start_time = mktime(0, 0, 0, date("m", $t), date("d", $t), date("Y", $t)); //当天开始时间
+    $end_time = mktime(23, 59, 59, date("m", $t), date("d", $t), date("Y", $t));//当天结束时间
 
-    $allnum_now=pdo_fetchcolumn("SELECT COUNT(*) FROM ".tablename(YOUMI_NAME.'_record').' where activity_id='.$activity_id.' and mid='.$mid);//当前总投票数
-    $gnum_now=pdo_fetchcolumn("SELECT COUNT(*) FROM ".tablename(YOUMI_NAME.'_record').' where activity_id='.$activity_id.' and cut_id= '.$cut_id.' and mid='.$mid);//当前给同一稿件投票数
-    $daynum_now=pdo_fetchcolumn("SELECT COUNT(*) FROM ".tablename(YOUMI_NAME.'_record').' where activity_id='.$activity_id.'and mid='.$mid.' and createtime>= '.$start_time.' and createtime<='.$end_time);//当天投票数
+    $allnum_now = pdo_fetchcolumn("SELECT COUNT(*) FROM " . tablename(YOUMI_NAME . '_record') . ' where activity_id=' . $activity_id . ' and mid=' . $mid);//当前总投票数
+    $gnum_now = pdo_fetchcolumn("SELECT COUNT(*) FROM " . tablename(YOUMI_NAME . '_record') . ' where activity_id=' . $activity_id . ' and cut_id= ' . $cut_id . ' and mid=' . $mid);//当前给同一稿件投票数
+    $daynum_now = pdo_fetchcolumn("SELECT COUNT(*) FROM " . tablename(YOUMI_NAME . '_record') . ' where activity_id=' . $activity_id . 'and mid=' . $mid . ' and createtime>= ' . $start_time . ' and createtime<=' . $end_time);//当天投票数
 
-    if($activity['allnum']>0&&($allnum_now>=$activity['allnum'])) {
+    if ($activity['allnum'] > 0 && ($allnum_now >= $activity['allnum'])) {
         youmi_result(1, '投票失败，您的总投票数已达' . $allnum_now . '票');
-    }else{
+    } else {
         if ($activity['daynum'] > 0 && ($daynum_now >= $activity['daynum'])) {
             youmi_result(1, '投票失败，今日投票数已达' . $daynum_now . '票，明天再来吧');
         }
@@ -398,31 +411,31 @@ if ($op == 'voting') {
     $data['status'] = 1;
     $data['createtime'] = time();
     $res = pdo_insert(YOUMI_NAME . '_record', $data);
-    pdo_update(YOUMI_NAME . '_activity',array('voter'=>($activity['voter']+1)),['id' => $activity['id']]);
-    pdo_update(YOUMI_NAME . '_cut',array('times'=>($cut['times']+1)),['id' => $cut_id]);
+    pdo_update(YOUMI_NAME . '_activity', array('voter' => ($activity['voter'] + 1)), ['id' => $activity['id']]);
+    pdo_update(YOUMI_NAME . '_cut', array('times' => ($cut['times'] + 1)), ['id' => $cut_id]);
 
 //投票人信息
 
-  $vt=  pdo_get(YOUMI_NAME . '_voter',['mid'=>$mid]);
-if ($vt){
-    pdo_update(YOUMI_NAME . '_voter',['times +='=>1],['mid'=>$mid]);
-}else{
+    $vt = pdo_get(YOUMI_NAME . '_voter', ['mid' => $mid]);
+    if ($vt) {
+        pdo_update(YOUMI_NAME . '_voter', ['times +=' => 1], ['mid' => $mid]);
+    } else {
 
-    $voter['activity_id'] = $activity_id;
-    $voter['uniacid'] = $uniacid;
-    $voter['mid'] = $this->mid;
-    $voter['status'] = 1;
-    $voter['realname'] = trim($_GPC['realname']);
-    $voter['avatar'] = $member['avatar'];
-    $voter['nickname'] = $member['nickname'];
+        $voter['activity_id'] = $activity_id;
+        $voter['uniacid'] = $uniacid;
+        $voter['mid'] = $this->mid;
+        $voter['status'] = 1;
+        $voter['realname'] = trim($_GPC['realname']);
+        $voter['avatar'] = $member['avatar'];
+        $voter['nickname'] = $member['nickname'];
 //    $voter['cut_id'] =$cut_id;
-    $voter['mobile'] = trim($_GPC['mobile']);
-    $voter['userinfo'] = $_GPC['userinfo'];
-    $voter['createtime'] = time();
+        $voter['mobile'] = trim($_GPC['mobile']);
+        $voter['userinfo'] = $_GPC['userinfo'];
+        $voter['createtime'] = time();
 
 
-    pdo_insert(YOUMI_NAME . '_voter', $voter);
-}
+        pdo_insert(YOUMI_NAME . '_voter', $voter);
+    }
 
 
     if ($res) {
@@ -431,22 +444,22 @@ if ($vt){
 
 }
 //区域限制
-if($op == 'regional'){
+if ($op == 'regional') {
 
     $activity_id = intval($_GPC['activity_id']);
     if (!$activity_id) {
         message('请选择对应活动');
     }
     $activity = pdo_fetch('select * from ' . tablename(YOUMI_NAME . '_activity') . ' where uniacid = ' . $uniacid . ' and id = ' . $activity_id);
-    if(empty($activity['ak'])&&$activity['regional']==2){
+    if (empty($activity['ak']) && $activity['regional'] == 2) {
         youmi_result(1, '未填写密钥', []);
     }
     load()->func('communication');
     $lng = $_GPC['lng'];
     $lat = $_GPC['lat'];
-    $url = 'http://api.map.baidu.com/geocoder/v2/?location='.$lat.','.$lng.'&output=json&pois=1&ak='.$activity['ak'];
+    $url = 'http://api.map.baidu.com/geocoder/v2/?location=' . $lat . ',' . $lng . '&output=json&pois=1&ak=' . $activity['ak'];
     $result = ihttp_get($url);
-    $result = json_decode($result['content'],true);
+    $result = json_decode($result['content'], true);
     // var_dump($result);exit;
     $arr = array();
 //    $arr['uniacid'] = $_W['uniacid'];
@@ -462,11 +475,11 @@ if($op == 'regional'){
     $arr['district'] = $result['result']['addressComponent']['district'];
     $arr['address'] = $result['result']['formatted_address'];
     $arr['business'] = $result['result']['business'];
-    $arr['r_address']=unserialize($activity['r_address']);
+    $arr['r_address'] = unserialize($activity['r_address']);
 
-    if(strpos($activity['r_address'],$arr['district']) !== false){//包含
+    if (strpos($activity['r_address'], $arr['district']) !== false) {//包含
         youmi_result(0, '区域限制，可以报名', $arr);
-    }else{//不包含
+    } else {//不包含
         youmi_result(1, '您不在活动区域范围内', $arr);
     }
     // var_dump($arr);exit;

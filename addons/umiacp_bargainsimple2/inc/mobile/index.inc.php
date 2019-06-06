@@ -60,10 +60,18 @@ if ($op == 'display') {
     }
     if ($activity['shop_id'] > 0) {
         $shop = pdo_get(UMI_NAME . '_shop', ['id' => $activity['shop_id']]);
-        if ($shop['endtime'] < time() && $shop['times'] > $setting['vip_times']) {
-            $activity['status'] = 2;
-            pdo_update(UMI_NAME . '_activity', array('status' => 2), ['shop_id' => $activity['shop_id']]);
-            pdo_update(YOUMI_NAME . '_activity', array('status' => 2), ['id' => $activity['activity_id']]);
+        if ($setting['vip_days'] > 0) {
+            if ($shop['endtime'] < time()) {
+                $activity['status2'] = 2;
+                pdo_update(UMI_NAME . '_activity', array('status' => 2), ['shop_id' => $activity['shop_id']]);
+                pdo_update(YOUMI_NAME . '_activity', array('status' => 2), ['id' => $activity['activity_id']]);
+            }
+        } else {
+            if ($shop['times'] > $setting['vip_times']) {
+                $activity['status2'] = 2;
+                pdo_update(UMI_NAME . '_activity', array('status' => 2), ['shop_id' => $activity['shop_id']]);
+                pdo_update(YOUMI_NAME . '_activity', array('status' => 2), ['id' => $activity['activity_id']]);
+            }
         }
         $activity_umi = pdo_get(UMI_NAME . '_activity', ['activity_id' => $activity['id'], 'module' => $_W['current_module']['name']]);
     }
@@ -208,7 +216,7 @@ if ($op == 'display') {
     }
 
     $records = pdo_fetchall('select r.*,c.realname,c.avatar from ' . tablename(YOUMI_NAME . '_record') . ' as r left join ' . tablename(YOUMI_NAME . '_cut') . ' as c on r.cut_id = c.id where c.activity_id = :activity_id order by id DESC limit 15 ', [':activity_id' => $activity_id]);
-  
+
     foreach ($records as &$record) {
         $strlen = mb_strlen($record['realname'], 'utf-8');
         $firstStr = mb_substr($record['realname'], 0, 1, 'utf-8');

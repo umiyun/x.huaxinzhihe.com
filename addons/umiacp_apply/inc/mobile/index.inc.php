@@ -162,9 +162,18 @@ if ($op == 'sign_up') {
     }
     if($activity['shop_id']>0){
         $shop=pdo_get(UMI_NAME . '_shop', ['id' => $activity['shop_id']]);
-        if($shop['endtime']<time()&&$shop['times']>$setting['vip_times']){
-            $activity['status']=2;
-            youmi_result(1, '活动已下架');
+        if ($setting['vip_days'] > 0) {
+            if ($shop['endtime'] < time()) {
+                $activity['status2'] = 2;
+                pdo_update(UMI_NAME . '_activity', array('status' => 2), ['shop_id' => $activity['shop_id']]);
+                pdo_update(YOUMI_NAME . '_activity', array('status' => 2), ['id' => $activity['activity_id']]);
+            }
+        } else {
+            if ($shop['times'] > $setting['vip_times']) {
+                $activity['status2'] = 2;
+                pdo_update(UMI_NAME . '_activity', array('status' => 2), ['shop_id' => $activity['shop_id']]);
+                pdo_update(YOUMI_NAME . '_activity', array('status' => 2), ['id' => $activity['activity_id']]);
+            }
         }
     }
     $records = pdo_fetchall('select * from ' . tablename(YOUMI_NAME . '_cut') .' where uniacid = ' . $uniacid . ' and activity_id = ' . $activity_id .' and status = "3" ');

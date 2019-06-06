@@ -75,7 +75,13 @@ if ($op == 'check') {
     }
 //    message($res);
     $errno = $res ? 0 : 1;
+    if ($res){
+        
+    }
+
+
     message('核销' . ($res ? '成功' : '失败'), '', $res ? 'success' : 'error');
+
     youmi_result($errno, '核销' . ($res ? '成功' : '失败'));
 
 }

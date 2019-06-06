@@ -8,6 +8,7 @@ $op = !empty($_GPC['op']) ? $_GPC['op'] : 'display';
 $shop_id = intval($_GPC['shop_id']);
 
 if ($op == 'display') {
+
     $condition = '';
     $pindex = max(1, intval($_GPC['page']));
     $psize = !empty($_GPC['psize']) ? $_GPC['psize'] : 10;

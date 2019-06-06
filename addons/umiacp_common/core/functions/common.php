@@ -189,7 +189,7 @@ if(!function_exists('data_uri')) {
 }
 
 if(!function_exists('umi_uploadimg')) {
-    function umi_uploadimg($file, $type, $dest_dir = '')
+    function umi_uploadimg($file, $type, $dest_dir = '', $nosave = 0)
     {
         global $_GPC, $_W;
         load()->func('file');
@@ -239,7 +239,7 @@ if(!function_exists('umi_uploadimg')) {
         if ($file['file']) {
             //匹配出图片的格式
             if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $file['file'], $result)) {
-                $filename .= $result[2];
+//                $filename .= $result[2];
                 file_put_contents(ATTACHMENT_ROOT . '/' . $setting['folder'] . $filename, base64_decode(str_replace($result[1], '', $file['file'])));
                 $pathname = $setting['folder'] . $filename;
             }
@@ -306,15 +306,17 @@ if(!function_exists('umi_uploadimg')) {
                 $info['url'] = tomedia($pathname);
             }
         }
-        pdo_insert('core_attachment', array(
-            'uniacid' => $uniacid,
-            'uid' => $_W['uid'],
-            'filename' => $originname,
-            'attachment' => $pathname,
-            'type' => $type == 'image' ? 1 : ($type == 'audio' || $type == 'voice' ? 2 : ($type == 'qrcode' ? 4 : 3)),
-            'createtime' => TIMESTAMP
-        ));
-        $result['message'] = $info['filename'];
+        if (!$nosave) {
+            pdo_insert('core_attachment', array(
+                'uniacid' => $uniacid,
+                'uid' => $_W['uid'],
+                'filename' => $originname,
+                'attachment' => $pathname,
+                'type' => $type == 'image' ? 1 : ($type == 'audio' || $type == 'voice' ? 2 : ($type == 'qrcode' ? 4 : 3)),
+                'createtime' => TIMESTAMP
+            ));
+        }
+        $result['message'] = tomedia($info['filename']);
         $result['errno'] = 0;
         return $result;
     }

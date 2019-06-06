@@ -615,7 +615,7 @@
         <div class="ac_member flex flex_a_center flex_j_end">
             <img src="{$cut['avatar']}" alt="">
             <div class="acm_detail">
-                <b style="color: #111">{$cut['realname']}</b>
+                <b style="color: #111">{$cut['nickname']}</b>
                 <div>已经点亮了 <b class="acd_num" style="color: #111">{php echo intval($cut['dltotal'])}</b> 个</div>
                 <div>继续点亮会有惊喜哦</div>
             </div>
@@ -1064,11 +1064,11 @@
         }
     }
 
-    // console.log('$activity',{php echo json_encode($activity)})
-    // console.log('$records',{php echo json_encode($records)})
-    // console.log('$record_list',{php echo json_encode($record_list)})
-    // console.log('$cut',{php echo json_encode($cut)})
-    // console.log('$cut_my',{php echo json_encode($cut_my)})
+    console.log('$activity',{php echo json_encode($activity)})
+    console.log('$records',{php echo json_encode($records)})
+    console.log('$record_list',{php echo json_encode($record_list)})
+    console.log('$cut',{php echo json_encode($cut)})
+    console.log('$cut_my',{php echo json_encode($cut_my)})
 </script>
 <script>
     var regional=true;

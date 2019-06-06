@@ -8,6 +8,8 @@ $op = !empty($_GPC['op']) ? $_GPC['op'] : 'display';
 $shop_id = intval($_GPC['shop_id']);
 
 if ($op == 'display') {
+
+
     $condition = '';
     $pindex = max(1, intval($_GPC['page']));
     $psize = !empty($_GPC['psize']) ? $_GPC['psize'] : 10;
@@ -46,6 +48,7 @@ if ($op == 'display') {
     }
     $total = pdo_fetchcolumn('SELECT COUNT(*) FROM ' . tablename(YOUMI_NAME . '_' . 'activity') . ' WHERE uniacid = :uniacid and shop_id = ' . $shop_id . $condition, $paras);
     $pager = pagination($total, $pindex, $psize);
+
     include $this->template('activity');
 }
 
@@ -117,4 +120,3 @@ if ($op == 'search') {
     die(json_encode(['status' => $ds ? 1 : 0, 'ds' => $ds]));
 
 }
-        

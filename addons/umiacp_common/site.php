@@ -10,10 +10,10 @@ if (!defined('IN_IA')) {
     exit('Access Denied');
 }
 
-require_once IA_ROOT . '/addons/umiacp_10second/core/defines.php';
-require_once IA_ROOT . '/addons/umiacp_common/core/commonLoader.php';
+require_once IA_ROOT . '/addons/umiacp_common/core/defines.php';
+require_once IA_ROOT . '/addons/umiacp_common/core/loader.php';
 
-class Umiacp_10secondModuleSite extends WeModuleSite
+class Umiacp_commonModuleSite extends WeModuleSite
 {
 
     public $uid;
@@ -46,11 +46,20 @@ class Umiacp_10secondModuleSite extends WeModuleSite
 
             if (in_array($this->user_type, [2, 3])) {
 
+                if ($this->user_type == 2) {
+                    checkauth();
+                }
+
                 $this->openid = $_W['openid'] ? $_W['openid'] : ($_W['fans']['openid'] ? $_W['fans']['openid'] : $_GPC['openid']);
                 if (!$this->member && $this->openid) {
                     $this->member = $this->getMemberInfo($this->openid);
                     $this->mid = $this->member['mid'];
                 }
+
+//                $shop = pdo_get(YOUMI_NAME . '_shop', ['uniacid' => $this->uniacid, 'mid' => $this->mid]);
+//                if (!$shop && in_array($_GPC['do'], ['user', 'buying'])) {
+//                    header('Location: ' . $_W['siteroot'] . "app/index.php?i={$this->uniacid}&c=entry&do=login&m=" . YOUMI_NAME);
+//                }
 
                 $this->uid = $this->member['uid'];
                 $this->username = $this->member['nickname'];
@@ -318,7 +327,6 @@ class Umiacp_10secondModuleSite extends WeModuleSite
         }
     }
 
-
     protected function pay($params = array(), $mine = array())
     {
         global $_W;
@@ -332,6 +340,9 @@ class Umiacp_10secondModuleSite extends WeModuleSite
         $order = $this->hasOrder($params['tid'], 2);
         if ($order['status'] == 4) {
             message('订单已取消', '', 'info');
+        }
+        if ($order['status'] == 3) {
+            message('订单已核销', '', 'info');
         }
         if ($order['status'] == 2) {
             message('订单已支付', '', 'info');
@@ -438,8 +449,6 @@ class Umiacp_10secondModuleSite extends WeModuleSite
      */
     public function payResult($params)
     {
-        global $_GPC;
-        global $_W;
 
         youmi_internal_log('payresult', $params);
 
@@ -457,162 +466,22 @@ class Umiacp_10secondModuleSite extends WeModuleSite
             if ($status) {
                 $order = pdo_get(YOUMI_NAME . '_' . 'order', ['uniacid' => $this->uniacid, 'ordersn' => $params['tid']]);
                 pdo_update(YOUMI_NAME . '_' . 'order', ['status' => 2, 'pay_time' => TIMESTAMP, 'transid' => $transaction_id], ['id' => $order['id']]);
-                pdo_update(YOUMI_NAME . '_goods', ['success +=' => 1], ['id' => $order['goods_id']]);
-                pdo_update(YOUMI_NAME . '_activity', ['success +=' => 1], ['id' => $order['activity_id']]);
-                pdo_update(YOUMI_NAME . '_cut', ['status' => 3], ['id' => $order['cut_id']]);
-
-                youmi_settlement_log($order, 1, $order['price'], '用户支付订单：订单ID：' . $order['id'] . '，用户：' . $this->username . '，支付时间：' . date('Y-m-d H:i:s'));
-
+                pdo_update(YOUMI_NAME . '_' . 'goods', ['success +=' => 1], ['id' => $order['goods_id']]);
+                
 //                $shop = pdo_get(YOUMI_NAME . '_' . 'shop', ['mid' => $order['mid']]);
 //                $start = $shop['endtime'] > TIMESTAMP ? $shop['endtime'] : TIMESTAMP;
 //                $end = strtotime(date('Y-m-d H:i:s', $start) . ' +' . ($order['buy'] + $order['gift']) . ' month');
 //                pdo_update(YOUMI_NAME . '_' . 'shop', ['starttime' => $start, 'endtime' => $end], ['mid' => $order['mid']]);
             }
 
-            $order = pdo_get(YOUMI_NAME . '_' . 'order', ['uniacid' => $this->uniacid, 'ordersn' => $params['tid']]);
             if ($params['result'] == 'success') {
                 if ($params['result'] == 'success') {
-                    message('支付成功！', $this->createMobileUrl('order'), 'success');
+                    message('支付成功！', $this->createMobileUrl('order', ['op' => 'detail']), 'success');
                 } else {
-                    message('支付失败！', $this->createMobileUrl('index', ['activity_id' => $order['activity_id']]), 'error');
+                    message('支付失败！', $this->createMobileUrl('goods'), 'error');
                 }
             }
         }
-    }
-
-
-    public function download($name, $list, $header, $types)
-    {
-
-        ob_end_clean();//清除缓冲区,避免乱码
-        $filename = urlencode($name) . '_' . date('Y-m-dHis');
-        header('Content-type: text/html; charset=GB2312');
-        header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="' . $filename . '.xls"');
-        header('Cache-Control: max-age=0');
-
-        $html = "\xEF\xBB\xBF";
-        $html .= '<table><tr style=\'text-align: center\' style=\'border: 1px solid\'>';
-        foreach ($header as $th) {
-            $html .= '<th>' . $th . "</th>";
-        }
-        $html .= '</tr>';
-
-        if ($list) {
-            foreach ($list as $item) {
-
-                $html .= '<tr style=\'text-align: center\' style=\'border: 1px solid\'>';
-
-                foreach ($types as $it) {
-                    switch ($it[2]) {
-                        case 'date' :
-                            $html .= '<td width=\'' . ($it[1] ? $it[1] : 100) . '\'>' . htmlspecialchars(trim(($item[$it[0]] ? date('Y-m-d H:i', $item[$it[0]]) : ''))) . '</td>';
-                            break;
-                        default :
-                            $html .= '<td width=\'' . ($it[1] ? $it[1] : 100) . '\'>' . htmlspecialchars(trim($item[$it[0]])) . '</td>';
-                            break;
-                    }
-                    unset($it);
-                }
-
-                $html .= '</tr>';
-            }
-        }
-        $html .= '</table>';
-
-        exit($html);
-
-    }
-
-
-    /*
-   * @param $wechat
-   *$wechat = array(
-   'appid' => '', appid
-   'mchid' => '', mchid
-   'apikey' => '',apikey
-   'certs' => array(
-   'cert'=>'',证书内容
-   'key'=>'',证书内容
-   'root'=>'' 证书内容
-   )
-   );
-   * @return array|bool
-   */
-    public function sendredpack($params)
-    {
-        global $_W;
-
-        $setting = uni_setting($_W['uniacid'], array('payment'));
-
-        if (!(is_array($setting['payment']))) {
-            return error(1, '没有设定支付参数');
-        }
-
-        $wechat = $setting['payment']['wechat'];
-        $sql = 'SELECT `key`,`secret` FROM ' . tablename('account_wechats') . ' WHERE `uniacid`=:uniacid limit 1';
-        $row = pdo_fetch($sql, array(':uniacid' => $_W['uniacid']));
-        $payment['sub_appid'] = $row['key'];
-        $payment['sub_mch_id'] = $wechat['mchid'];
-        $payment['apikey'] = $wechat['apikey'];
-
-        $package = array();
-        $package['wxappid'] = $payment['sub_appid'];
-        $package['mch_id'] = $payment['sub_mch_id'];
-        $package['mch_billno'] = $params['tid'];
-        $package['send_name'] = $params['send_name'];
-        $package['nonce_str'] = random(32);
-        $package['re_openid'] = $params['openid'];
-        $package['total_amount'] = $params['money'] * 100;
-        $package['total_num'] = 1;
-        $package['wishing'] = ((isset($params['wishing']) ? $params['wishing'] : '恭喜发财,大吉大利'));
-        $package['client_ip'] = CLIENT_IP;
-        $package['act_name'] = $params['act_name'];
-        $package['remark'] = ((isset($params['remark']) ? $params['remark'] : '暂无备注'));
-        $package['scene_id'] = ((isset($params['scene_id']) ? $params['scene_id'] : 'PRODUCT_3'));
-        $url = 'https://api.mch.weixin.qq.com/mmpaymkttransfers/sendredpack';
-        ksort($package, SORT_STRING);
-        $string1 = '';
-
-        foreach ($package as $k => $v) {
-            $string1 .= $k . '=' . $v . '&';
-        }
-
-        $string1 .= 'key=' . $payment['apikey'];
-        $package['sign'] = strtoupper(md5($string1));
-        $xml = array2xml($package);
-        $extras = array();
-        $errmsg = '未上传完整的微信支付证书，请到【系统设置】->【支付方式】中上传!';
-
-        $extras['CURLOPT_SSLCERT'] = IA_ROOT . '/addons/' . YOUMI_NAME . '/cert//apiclient_cert.pem.'.$_W['uniacid'];
-        $extras['CURLOPT_SSLKEY'] = IA_ROOT . '/addons/' . YOUMI_NAME . '/cert//apiclient_key.pem.'.$_W['uniacid'];
-
-        load()->func('communication');
-        $resp = ihttp_request($url, $xml, $extras);
-//        @unlink($extras['CURLOPT_SSLCERT']);
-//        @unlink($extras['CURLOPT_SSLKEY']);
-
-        if (is_error($resp)) {
-            return error(-2, $resp['message']);
-        }
-
-        if (empty($resp['content'])) {
-            return error(-2, '网络错误');
-        }
-
-        $arr = json_decode(json_encode(simplexml_load_string($resp['content'], 'SimpleXMLElement', LIBXML_NOCDATA)), true);
-
-        if (($arr['return_code'] == 'SUCCESS') && ($arr['result_code'] == 'SUCCESS')) {
-            return true;
-        }
-
-        if ($arr['return_msg'] == $arr['err_code_des']) {
-            $error = $arr['return_msg'];
-        } else {
-            $error = $arr['return_msg'] . ' | ' . $arr['err_code_des'];
-        }
-
-        return error(-2, $error);
     }
 
 }

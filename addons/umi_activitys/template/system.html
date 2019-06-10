@@ -66,6 +66,12 @@
                     {php echo tpl_ueditor('set[base][meal_buy_info]', $setting['meal_buy_info']);}
                 </div>
             </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label">个人中心提示语</label>
+                <div class="col-sm-8">
+                    {php echo tpl_ueditor('set[base][user_tips]', $setting['user_tips']);}
+                </div>
+            </div>
             <div class="form-group" >
                 <label class="col-sm-2 control-label">非VIP允许最大浏览量</label>
                 <div class="col-sm-8">
@@ -168,7 +174,6 @@
                     {php echo tpl_form_field_image('set[base][titlebgimg]',$setting['titlebgimg']);}
                     <div class="help-block">建议尺寸 228x40,此设置针对所有模块有效</div>
                 </div>
-
             </div>
 
             <div class="form-group">
@@ -176,7 +181,18 @@
                 <div class="col-sm-8">
                     {php echo tpl_form_field_image('set[base][kefu]',$setting['kefu']);}
                 </div>
-
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">是否开启“咨询客服”</label>
+                <div class="col-sm-8">
+                    <label class='radio-inline'>
+                        <input type='radio' name='set[base][a_service]' value='1' {if intval($setting['a_service']) == '1'}checked{/if} /> 开启
+                    </label>
+                    <label class='radio-inline'>
+                        <input type='radio' name='set[base][a_service]' value='2' {if intval($setting['a_service']) == '2'}checked{/if} /> 关闭
+                    </label>
+                    <div class="help-block">此开关针对活动页有效</div>
+                </div>
             </div>
 
             <div class="form-group">
@@ -223,7 +239,7 @@
                     <label class='radio-inline'>
                         <input type='radio' name='set[sms][sms_type]' value='1' onclick="$('#sms1').show();$('#sms2').hide();" {if $setting['sms_type'] == 1 || intval($setting['sms_type']) == 0}checked{/if} /> 聚合
                     </label>
-                    <label class='radio-inline'>
+                    <label class='radio-inline' style="display: none">
                         <input type='radio' name='set[sms][sms_type]' value='2' onclick="$('#sms2').show();$('#sms1').hide();" {if $setting['sms_type'] == 2}checked{/if} /> 阿里大鱼
                     </label>
                 </div>

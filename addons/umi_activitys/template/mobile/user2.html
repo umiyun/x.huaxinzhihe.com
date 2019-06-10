@@ -43,6 +43,7 @@
 </style>
 
 <div>
+    <div>{php echo htmlspecialchars_decode($setting['user_tips'])}</div>
     <div class="weui-cells" style="margin-top: 0;padding: 10px 0">
         <a class="weui-cell weui-cell_access" href="{php echo $this->createMobileUrl('login')}">
             <div class="weui-cell__hd">

@@ -106,6 +106,31 @@
         padding: 4% 10%;
 
     }
+    .service{
+        position: fixed;
+        bottom: 70px;
+        right: 5px;
+        z-index: 40;
+        text-align: center;
+    }
+    .service .iconfont{
+        font-size: 30px;
+        color: #fff;
+        background: #00C800;
+        border-radius: 50%;
+        padding: 6px;
+    }
+    .bg_fixed{
+        z-index: 605;
+    }
+    .kefu{
+        position: fixed;
+        top: 20%;
+        left: 20%;
+        width: 60%;
+        z-index: 610;
+        display: none;
+    }
 </style>
 <div class="navs">
     <div class="grids flex">
@@ -154,7 +179,15 @@
             <!--</div>-->
         <!--</div>-->
     </div>
-
+    <!--咨询客服-->
+    {if $setting['a_service']==1}
+    <div class="service" onclick="$('.bg_fixed,.kefu').fadeIn()">
+        <i class="iconfont icon-weixin"></i>
+        <div class="ft10">咨询客服</div>
+    </div>
+    <div class="bg_fixed" onclick="$('.bg_fixed,.kefu').fadeOut()"></div>
+    <img class="kefu" src="{php echo tomedia($setting['kefu'])}" alt="">
+    {/if}
     <!--商户须知-->
     <div class="explain">
         <h4>商户须知</h4>

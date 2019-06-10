@@ -407,11 +407,11 @@
             <span style="margin-right: 6px">支持者：</span>
             {loop $m_avatar $mdx $mv}
             {if $mdx<8}
-            <img style="margin-left:2px;margin-bottom:4px;width: 40px;height: 40px;border-radius: 50%;" src="{$mv['avatar']}" alt="">
+            <img style="margin-left:2%;margin-bottom:2%;width: 10%;border-radius: 5px;" src="{$mv['avatar']}" alt="">
             {/if}
-            {if $mdx==8}
-            <i onclick="$('.bg_fixed,.avatars').fadeIn()" class="iconfont icon-gengduo" style="font-size: 37px;margin-left: 2px;"></i>
-            {/if}
+            <!--{if $mdx==8}-->
+            <!--<i onclick="$('.bg_fixed,.avatars').fadeIn()" class="iconfont icon-gengduo" style="font-size: 37px;margin-left: 2px;"></i>-->
+            <!--{/if}-->
             {/loop}
         </div>
     </div>

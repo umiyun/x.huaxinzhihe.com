@@ -113,13 +113,14 @@ if ($op == 'mobile_login') {
  * password     密码
  */
 if ($op == 'register') {
-
-    $mobile_code = pdo_getcolumn(YOUMI_NAME . '_member', ['mid' => $this->mid, 'uniacid' => $this->uniacid], 'mobile_code');
-    if ($mobile_code != $_GPC['mobile_code']) {
-        youmi_result(1, '验证码不正确');
-    }
-
     $shop = pdo_get(YOUMI_NAME . '_' . 'shop', ['uniacid' => $this->uniacid, 'mid' => $this->mid]);
+
+    if($setting['sign_code']==1&&!$shop) {
+        $mobile_code = pdo_getcolumn(YOUMI_NAME . '_member', ['mid' => $this->mid, 'uniacid' => $this->uniacid], 'mobile_code');
+        if ($mobile_code != $_GPC['mobile_code']) {
+            youmi_result(1, '验证码不正确');
+        }
+    }
 
     if ($this->user_type == 3) {
         $data['wxopenid'] = trim($this->openid);

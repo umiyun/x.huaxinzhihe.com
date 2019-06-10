@@ -89,6 +89,7 @@ if ($op == 'display') {
         $case['template']['bgimage']=tomedia($case['template']['bgimage']);
         $case['template']['image']=tomedia($case['template']['image']);
         $case['template']['titlebgimg']=tomedia($case['template']['titlebgimg']);
+        $activity['titlebgimg']=$case['template']['titlebgimg'];
     }else{
         $case['template']=$template[0];
         $case['template']['bgimage']=tomedia($case['template']['bgimage']);

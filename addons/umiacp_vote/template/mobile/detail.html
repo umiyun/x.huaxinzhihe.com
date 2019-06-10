@@ -340,6 +340,27 @@
     .ac_detail .iconfont{
         margin-right: 3px;
     }
+    .avatars{
+        position: fixed;
+        width: 90%;
+        left: 5%;
+        z-index: 20;
+        top: 10%;
+        background: #fff;
+        padding: 2%;
+        border-radius: 10px;
+        max-height: 70%;
+        overflow-y: auto;
+        background: url("{$activity['bgimage']}") repeat 100%;
+        display: none;
+    }
+    .avatars .icon-Close{
+        position: fixed;
+        top: 8%;
+        color: #fff;
+        font-size: 35px;
+        right: 1%;
+    }
 </style>
 <div>
     <div class="tips"></div>
@@ -383,9 +404,14 @@
         </div>
         <div class="ac_detail flex flex_a_center flex_wrap">
             <i class="iconfont icon-tangniaobingleixing"></i>
-            <span style="margin-right: 15px">支持者：</span>
-            {loop $m_avatar $mv}
-            <img class="" style="margin-left:-8px;width: 40px;height: 40px;border-radius: 50%;" src="{$mv['avatar']}" alt="">
+            <span style="margin-right: 6px">支持者：</span>
+            {loop $m_avatar $mdx $mv}
+            {if $mdx<8}
+            <img style="margin-left:2px;margin-bottom:4px;width: 40px;height: 40px;border-radius: 50%;" src="{$mv['avatar']}" alt="">
+            {/if}
+            {if $mdx==8}
+            <i onclick="$('.bg_fixed,.avatars').fadeIn()" class="iconfont icon-gengduo" style="font-size: 37px;margin-left: 2px;"></i>
+            {/if}
             {/loop}
         </div>
     </div>
@@ -417,7 +443,12 @@
         {/if}
         <a onclick="$('.open_share,.bg_fixed').fadeIn()" class="a_btn" href="javascript:;">帮Ta拉票</a>
     </div>
-
+</div>
+<div class="avatars">
+    {loop $m_avatar $mdx $mv}
+    <img style="margin-left:2px;margin-bottom:4px;width: 40px;height: 40px;border-radius: 50%;" src="{$mv['avatar']}" alt="">
+    {/loop}
+    <i class="iconfont icon-Close"  onclick="$('.avatars,.bg_fixed').fadeOut()"></i>
 </div>
 {template 'canvas_share'}
 <script>

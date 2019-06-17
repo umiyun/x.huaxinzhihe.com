@@ -77,6 +77,34 @@
         font-size: 35px;
         color: #555;
     }
+    .weui-cells_checkbox .weui-check:checked+.weui-icon-checked:before{
+        color: #F8A40D;
+    }
+    .explain{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: #fff;
+        z-index: 20;
+        height: 93%;
+        display: none;
+        overflow-y: auto;
+    }
+    .explain>h4{
+        text-align: center;
+        margin: 4%;
+        color: #F8A40D;
+    }
+    .explain .a_btn{
+        font-size: 16px;
+        padding: 2% 10%;
+        position: fixed;
+        bottom: 5px;
+        width: 50%;
+        left: 25%;
+
+    }
 </style>
 <!--头像背景方块冒泡样式-->
 <style>
@@ -298,6 +326,18 @@
                 <img onclick="preview(this)" class="qrcode" src="{php echo tomedia($shop['qrcode'])}" alt="">
             </div>
         </div>
+        <div class="weui-cells weui-cells_checkbox flex flex_a_center">
+            <label class="weui-cell weui-check__label" for="s11" style="padding-right: 0;">
+                <div class="weui-cell__hd">
+                    <input type="checkbox" class="weui-check" name="checkbox1" id="s11" {if $shop['id']}checked="checked"{/if}>
+                    <i class="weui-icon-checked"></i>
+                </div>
+                <div class="weui-cell__bd">
+                    <p>阅读并接受</p>
+                </div>
+            </label>
+            <div style="color: #F8A40D;" onclick="$('.explain,.bg_fixed').fadeIn()">《注册协议》</div>
+        </div>
     </div>
     {if $shop['id']&&$setting['user_change']==2}
     <div style="text-align: center;margin-top: 20px;color: #F8A40D;">如需修改，请联系客服~</div>
@@ -305,6 +345,15 @@
     <a href="javascript:;" class="weui-btn weui-btn_plain-default tj_btn">保存</a>
     {/if}
     <div style="height: 40px"></div>
+
+    <!--注册协议-->
+    <div class="explain">
+        <h4>注册协议</h4>
+        <div style="margin: 4%">
+            {php echo htmlspecialchars_decode($setting['notice2'])}
+        </div>
+        <div class="text_center" style="margin: 8%"><a onclick="noticeChecked()" href="javascript:;" class="a_btn">阅读并接受</a></div>
+    </div>
 </div>
 
 
@@ -401,7 +450,10 @@
             $.toast("请输入验证码", 'cancel');
             return false;
         }
-
+        if(!$('#s11')[0].checked){
+            $.toast("您未同意注册协议", 'cancel');
+            return false;
+        }
 
         $.post(
             "{php echo $this->createMobileUrl('login',['op'=>'register'])}",
@@ -462,6 +514,13 @@
             current: $(self).attr('src'), // 当前显示图片的http链接
             urls: urls // 需要预览的图片http链接列表
         });
+    }
+
+    function noticeChecked(){
+        $('.explain,.bg_fixed').fadeOut();
+        if(!$('#s11')[0].checked){
+            $('#s11').click()
+        }
     }
 
     console.log({php echo json_encode($shop)})

@@ -78,7 +78,7 @@ if ($op == 'check') {
         if (!$shop['mid']) {
             itoast('该商家未绑定微信号', $this->createWebUrl('withdraw'), 'error');
         }
-        $member = $this->getMemberInfo($shop['mid'], 3);
+        $member = $this->getMemberInfo($shop['mid'], 2);
         $item['withdraw'] = floatval($item['apply']) - floatval($item['commission']);
         $result = youmi_finance($member['openid'], $item);
 

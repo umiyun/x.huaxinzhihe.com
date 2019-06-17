@@ -122,6 +122,7 @@ if ($op == 'withdraw') {
     youmi_puv(YOUMI_NAME . '_' .'withdraw', $shop_id, $money);
 
 
+
     $shop = pdo_fetch('SELECT * FROM ' . tablename(YOUMI_NAME . '_' . 'shop') . ' where uniacid = :uniacid and id = ' . $shop_id, [':uniacid' => $uniacid]);
     if (!$account || !$shop) {
         youmi_result(1, '商家不存在');
@@ -153,7 +154,7 @@ if ($op == 'withdraw') {
     if ($res) {
 
         $result = youmi_settlement_log($withdraw, 3, $money, '商家申请提现：申请人：' . ($_W['user'] ? $_W['username'] : $_W['fans']['nickname']) . '，申请时间：' . date('Y-m-d H:i:s'));
-        pdo_update(YOUMI_NAME . '_' . 'account', ['settled -=' => $money, 'apply' => $money, 'status' => 1], ['uniacid' => $uniacid, 'shop_id' => $shop_id]);
+//        pdo_update(YOUMI_NAME . '_' . 'account', ['settled -=' => $money, 'apply' => $money, 'status' => 1], ['uniacid' => $uniacid, 'shop_id' => $shop_id]);
     }
     youmi_result($res ? 0 : 1, '申请' . ($res ? '成功' : '失败'));
 

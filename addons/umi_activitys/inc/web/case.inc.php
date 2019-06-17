@@ -86,9 +86,9 @@ if ($op == 'post') {
     $templates = pdo_getall(YOUMI_NAME . '_' . 'template', ['uniacid' => $uniacid, 'status' => 1]);
 
     $module_data = array(
-        'umiacp_bargain', 'umiacp_apply','umiacp_groupprepay','umiacp_lighten','umiacp_vote','umiacp_10second','umiacp_eggfreny','umiacp_speeddial','umiacp_roulette','umiacp_leapcliff','umiacp_fission','umiacp_bargainsimple','umiacp_groupsimple','umiacp_bargainsimple2'
+        'umiacp_bargain', 'umiacp_apply','umiacp_groupprepay','umiacp_lighten','umiacp_vote','umiacp_10second','umiacp_eggfreny','umiacp_speeddial','umiacp_roulette','umiacp_leapcliff','umiacp_fission','umiacp_bargainsimple','umiacp_groupsimple','umiacp_bargainsimple2','umiacp_groupprepay2'
     );
-    $modules     = array();
+    $modules = array();
     foreach ($module_data as $d) {
         $modu = pdo_get('modules', array('name' => $d));
         $act_modu = pdo_get(YOUMI_NAME . '_' . 'module', array('module' => $d,'uniacid'=>$uniacid));
@@ -103,7 +103,6 @@ if ($op == 'post') {
             }
             $modules[]=$temp;
         }
-
     }
 //    $modules = pdo_getall(YOUMI_NAME . '_' . 'module', ['uniacid' => $uniacid]);
 
@@ -119,7 +118,7 @@ if ($op == 'post') {
             $data['createtime'] = TIMESTAMP;
             $data['uniacid']    = $uniacid;
             pdo_insert(YOUMI_NAME . '_' . 'case', $data);
-            $id      = pdo_insertid();
+            $id = pdo_insertid();
             $message = '新增';
         }
         itoast('温馨提示：' . $message . '案例成功！', $this->createWebUrl('case'), 'success');

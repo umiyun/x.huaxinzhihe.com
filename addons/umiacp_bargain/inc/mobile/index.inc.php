@@ -508,6 +508,13 @@ if ($op == 'complain') {
 
     youmi_result(0, '投诉' . ($status ? '成功' : '失败'), $data);
 }
+if ($op == 'page_complain') {
+    $_W['page']['title'] = '投诉';
+    $activity_id = intval($_GPC['activity_id']);
+
+    include $this->template('complain');
+    exit();
+}
 //区域限制
 if ($op == 'regional') {
 

@@ -500,7 +500,7 @@
         {if $activity['music']}<i id="music" class="iconfont icon-music active"><audio id="audiojs" src="{$activity['music']}" autoplay loop></audio></i>{/if}
         {if $activity['effects_imgs']}<i class="iconfont icon-mofabang active"></i>{/if}
         <a href="{php echo $this->createMobileUrl('user')}" class="p_absolute ah_user">个人中心</a>
-        <a href="javascript:;" class="p_absolute ah_complain" onclick="$('#tem_complain').slideDown()">投诉</a>
+        <a href="{php echo $this->createMobileUrl('index',['op'=>'page_complain','activity_id'=>$activity['id']])}" class="p_absolute ah_complain">投诉</a>
         <div class="p_absolute ah_share" onclick="$('.open_share,.bg_fixed').fadeIn()">分享</div>
         <div class="p_absolute ah_contact" data-name="{$activity['shop_name']}" data-mobile="{$activity['shop_mobile']}" data-address="{$activity['shop_province']} {$activity['shop_city']} {$activity['shop_district']} {$activity['shop_address']}" data-code="{php echo tomedia($activity['shop_code'])}" onclick="openConcat(this)">联系商家</div>
 
@@ -692,8 +692,6 @@
     {template 'contact'}
     <!--提交信息-->
     {template 'signup'}
-    <!--投诉-->
-    {template 'complain'}
     <!--底部按钮-->
     {if $activity['status2']=='2'}
     <div class="a_footer">

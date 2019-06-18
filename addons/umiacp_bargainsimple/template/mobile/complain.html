@@ -1,3 +1,4 @@
+{template 'header'}
 <style>
     #tem_complain{
         position: fixed;
@@ -7,10 +8,12 @@
         height: 100%;
         z-index: 20;
         background: #f3f3f3;
-        display: none;
     }
-    #tem_complain div.title{
-        padding: 2%;
+    .title{
+        margin-top: 15px;
+        margin-left: 15px;
+        color: #777;
+        margin-bottom: 4px;
     }
     #tem_complain textarea{
         border: 1px solid transparent;
@@ -20,24 +23,145 @@
         margin: 0;
         text-align: left;
     }
+    .list{
+        background: #fff;
+        border-top: 1px solid #eee;
+        border-bottom: 1px solid #eee;
+    }
+    .list>div{
+        height: 52px;
+        line-height: 52px;
+        margin-left: 15px;
+        border-bottom: 1px solid #f3f3f3;
+        display: flex;
+        align-items: center;
+    }
+    .list .icon-you{
+        color: #aaa;
+        margin-right: 15px;
+    }
+    .notice{
+        color: #596983;
+        position: fixed;
+        bottom: 6%;
+        left: 25%;
+        width: 50%;
+        display: block;
+        text-align: center;
+        z-index: 30;
+    }
+    .open_complain{
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #f3f3f3;
+        z-index: 25;
+    }
+    .open_result{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 40;
+        background: #f3f3f3;
+        display: none;
+    }
+    .open_result>div{
+        background: #fff;
+        padding: 30px 10px;
+        text-align: center;
+    }
+    .open_result .icon-dui{
+        font-size: 60px;
+        margin-bottom: 15%;
+        display: block;
+        margin-top: 10%;
+        color: #06C35F;
+    }
+    .closebtn{
+        background: #06C35F;
+        color: #fff;
+        padding: 10px;
+        width: 50%;
+        margin: 0 auto;
+        border-radius: 5px;
+    }
 </style>
 <div id="tem_complain">
-    <div class="title">请选择投诉原因:</div>
-    <select class="tc_reason">
-        <option value="网页包含欺诈信息(如假红包)">网页包含欺诈信息(如假红包)</option>
-        <option value="网页包含色情信息">网页包含色情信息</option>
-        <option value="网页包含暴力恐怖信息">网页包含暴力恐怖信息</option>
-        <option value="网页包含政治敏感信息">网页包含政治敏感信息</option>
-        <option value="网页在收集个人隐私信息(如:钓鱼链接)">网页在收集个人隐私信息(如:钓鱼链接)</option>
-        <option value="网页包含诱导分享/关注性质的内容">网页包含诱导分享/关注性质的内容</option>
-        <option value="网页可能包含谣言信息">网页可能包含谣言信息</option>
-    </select>
-    <div class="title" style="margin-top: 5%">请输入投诉描述:</div>
-    <textarea  class="tc_desc" rows="5" maxlength="200" placeholder="不得少于10字"></textarea>
-    <div class="title" style="margin-top: 5%">请输入您的联系方式，以便联系:</div>
-    <input type="tel" class="tc_mobile">
-    <a href="javascript:;" class="a_btn2 tc_btn">提交</a>
-    <a href="javascript:;" class="a_btn3" onclick="$('#tem_complain').slideUp()">取消</a>
+    <div class="title ft12">请选择投诉该网页的原因:</div>
+    <div class="list">
+        <div class="detail">
+            <div class="flex1">网页包含欺诈信息（如: 假红包）</div>
+            <i class="iconfont icon-you"></i>
+        </div>
+        <div class="detail">
+            <div class="flex1">网页包含色情信息</div>
+            <i class="iconfont icon-you"></i>
+        </div>
+        <div class="detail">
+            <div class="flex1">网页包含暴力恐怖信息</div>
+            <i class="iconfont icon-you"></i>
+        </div>
+        <div class="detail">
+            <div class="flex1">网页包含政治敏感信息</div>
+            <i class="iconfont icon-you"></i>
+        </div>
+        <div class="detail">
+            <div class="flex1">网页在收集个人隐私信息（如:钓鱼链接）</div>
+            <i class="iconfont icon-you"></i>
+        </div>
+        <div class="detail">
+            <div class="flex1">网页包含诱导分享/关注性质的内容</div>
+            <i class="iconfont icon-you"></i>
+        </div>
+        <div class="detail">
+            <div class="flex1">网页可能包含谣言信息</div>
+            <i class="iconfont icon-you"></i>
+        </div>
+        <div class="detail" style="border-bottom: 0;">
+            <div class="flex1">网页可能包含赌博信息</div>
+            <i class="iconfont icon-you"></i>
+        </div>
+    </div>
+    <a href="https://mp.weixin.qq.com/s/TbX1CcZhQNReneXVc3At9Q" class="title ft12" style="margin-top: 4px;color:#596983">遇到网页流量被劫持怎么办</a>
+
+    <!--<select class="tc_reason">-->
+        <!--<option value="网页包含欺诈信息(如: 假红包)">网页包含欺诈信息(如: 假红包)</option>-->
+        <!--<option value="网页包含色情信息">网页包含色情信息</option>-->
+        <!--<option value="网页包含暴力恐怖信息">网页包含暴力恐怖信息</option>-->
+        <!--<option value="网页包含政治敏感信息">网页包含政治敏感信息</option>-->
+        <!--<option value="网页在收集个人隐私信息(如:钓鱼链接)">网页在收集个人隐私信息(如:钓鱼链接)</option>-->
+        <!--<option value="网页包含诱导分享/关注性质的内容">网页包含诱导分享/关注性质的内容</option>-->
+        <!--<option value="网页可能包含谣言信息">网页可能包含谣言信息</option>-->
+    <!--</select>-->
+    <!--<div class="title" style="margin-top: 5%">请输入投诉描述:</div>-->
+    <!--<textarea  class="tc_desc" rows="5" maxlength="200" placeholder="不得少于10字"></textarea>-->
+    <!--<div class="title" style="margin-top: 5%">请输入您的联系方式，以便联系:</div>-->
+    <!--<input type="tel" class="tc_mobile">-->
+    <!--<a href="javascript:;" class="a_btn2 tc_btn">提交</a>-->
+    <!--<a href="javascript:;" class="a_btn3" onclick="$('#tem_complain').slideUp()">取消</a>-->
+</div>
+<a class="notice" href="javascript:;" onclick="window.history.go(-1)">取消投诉</a>
+<div class="open_complain">
+    <div class="title ft12">你可以:</div>
+    <div class="list">
+        <div class="detail" onclick="$('.open_result').show()">
+            <div class="flex1">提交给微信团队审核</div>
+            <i class="iconfont icon-you"></i>
+        </div>
+    </div>
+</div>
+<div class="open_result">
+    <div>
+        <i class="iconfont icon-dui"></i>
+        <h3>投诉已提交</h3>
+        <div style="margin: 20px 0;">微信团队会尽快核实，并通过“微信团队”通知你审核结果。感谢你的支持。</div>
+        <div onclick="window.history.go(-1)" class="closebtn">关闭</div>
+    </div>
 </div>
 <script>
     $('.tc_btn').click(function(){
@@ -79,5 +203,9 @@
                 }
             },'json'
         )
+    });
+    $('.list').on('click','.detail',function () {
+        $('.open_complain').show();
     })
 </script>
+{template 'header'}

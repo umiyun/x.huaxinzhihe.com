@@ -1,0 +1,894 @@
+{template 'header_making'}
+<link rel="stylesheet" type="text/css" href="{YOUMI_URL_APP}hui/hui.css" />
+<script type="text/javascript" src="{YOUMI_URL_APP}hui/hui.js" charset="utf-8"></script>
+<script type="text/javascript" src="{YOUMI_URL_APP}hui/hui-picker.js" charset="utf-8"></script>
+<script type="text/javascript" src="{YOUMI_URL_APP}hui/cities.js" charset="utf-8"></script>
+<style>
+    *{box-sizing: inherit;}
+    div{
+        font-size: 12px;
+    }
+
+    .a_content{
+        padding: 4%;
+        box-sizing: border-box;
+        {if $activity['bgimage']}
+        background: url("{$activity['bgimage']}") repeat 100%;
+        {else}
+        background: url("{$case['template']['bgimage']}") repeat 100%;
+        {/if}
+
+        padding-bottom: 35%;
+    }
+
+    input[type=color], input[type=date], input[type=datetime-local], input[type=datetime], input[type=email], input[type=month], input[type=number], input[type=password], input[type=search], input[type=tel], input[type=text], input[type=time], input[type=url], input[type=week], select{
+        border: 1px dashed #F9292A;
+        text-align: center;
+        margin: 0 2%;
+        height: 30px;
+        padding: 5px;
+        background: transparent;
+    }
+    .basic_setting{
+        background: #E4FCFA;
+        border: 1px solid #111;
+        border-radius: 10px;
+        padding: 2%;
+        padding-top: 25px;
+        margin-top: 35px;
+    }
+
+    .p_gimg{
+        text-align: center;
+        border: 1px solid #aaa;
+        width: 110px;
+        height: 110px;
+        overflow: hidden;
+        background: #fff;
+    }
+    .p_gimg>span{
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: #F7DA79;
+        z-index: 8;
+    }
+    .p_price{
+        margin-left: 4%;
+    }
+    input.select_goodimg,input.select_good2img{
+        opacity: 0;
+    }
+    .p_gimg .select_goodimg,.p_gimg .good_logo,.select_good2img,.ac_btns .select_goodimg{
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+    .p_gimg .good_logo{
+        z-index: 5;
+    }
+    .p_price input{
+        width: 80%;
+    }
+    .s_nums{
+        margin-top: 2%;
+    }
+    .s_goodimg{
+        border: 1px dashed #F9292A;
+        margin: 4% 0;
+        text-align: center;
+        border-radius: 3px;
+        width: 100%;
+        min-height: 100px;
+    }
+    .s_goodimg>div{
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        z-index: 2;
+    }
+    .s_goodimg>img.good_logo{
+        position: relative;
+        top: 0;
+        width: 100%;
+        left: 0;
+        z-index: 5;
+    }
+
+    .c_addbtn{
+        text-align: center;
+    }
+    .c_addbtn>div{
+        display: inline-block;
+        border: 1px solid #98C1EC;
+        margin: 5%;
+        padding: 2% 6%;
+        border-radius: 4px;
+    }
+    .c_addbtn i.iconfont{
+        color: #98C1EC;
+        font-size: 20px;
+    }
+    .s_intro{
+        position: absolute;
+        top: -25px;
+        width: 70%;
+        left: 15%;
+    }
+    .s_intro img{
+        position: absolute;
+        width: 100%;
+        height: 40px;
+        left: 0;
+        top: 0;
+        z-index: 3;
+    }
+    .s_intro input{
+        position: absolute;
+        width: 100%;
+        top: 0;
+        left: 0;
+        z-index: 5;
+    }
+    .iconfont.icon-essential{
+        color: red;
+        font-size: 12px;
+    }
+    .s_close{
+        position: absolute;
+        top: -33px;
+        right: 0px;
+        z-index: 10;
+        font-size: 40px;
+        color: red;
+    }
+
+    .s_detail .weui-cells:after, .weui-cells:before,.s_detail .weui-cell:before{
+        display: none;
+    }
+    .s_detail label.weui-cell{
+        padding: 0 10px;
+    }
+    .weui-cells_checkbox .weui-icon-checked:before{
+        font-size: 20px;
+    }
+
+    .ceg_title,.cer_title{
+        text-align: center;
+        margin-bottom: 5%;
+    }
+    .ceg_title>img,.cer_title>img,.cem_title>img{
+        width: 100% !important;
+        height: auto!important;
+    }
+    .ceg_title>span,.cer_title>span{
+        position: absolute;
+        bottom: -14px;
+        right: 0;
+        width: 100%;
+    }
+
+
+    .ce_common,.ce_lingqu,.ce_rule{
+        margin-top: 25px;
+    }
+    .ce_common input,.ce_lingqu .cegt_input,.cer_title input{
+        /*border: 1px solid transparent;*/
+        width: 38%;
+        top: 10%;
+        left: 29%;
+        position: absolute;
+        z-index: 5;
+    }
+    .ceg_content,.ces_content,.cel_content,.cer_content{
+        background: #fff;
+        border-radius: 5px;
+        padding: 2%;
+    }
+    .csys_content,.csms_content,.csgs_content{
+        margin-bottom: 12%;
+    }
+    .csycc_num{
+        padding: 2%;
+        background: #D8D8D8;
+        margin: 1%;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        text-align: center;
+    }
+    .csycc_btns,.csmcc_btns,.common_btns{
+        position: absolute;
+        right: 0;
+        bottom: -20px;
+        z-index: 5;
+    }
+    .csmcc_btns{
+        bottom: -14px;
+    }
+    .csycc_btns div,.csmcc_btns div,.common_btns div{
+        background: #aaa;
+        padding: 0 4%;
+        border-left: 1px solid #fff;
+        word-break: break-all;
+        color: #fff;
+        text-align: center;
+        width: 60px;
+    }
+    .ceyc_btns{
+        margin-top: 20%;
+    }
+    .ceyc_btns i.iconfont{
+        color: #98C1EC;
+    }
+    .ceyc_btns>div{
+        display: inline-block;
+        border: 1px solid #98C1EC;
+        padding: 1% 4%;
+        background: #D6E9FC;
+    }
+
+    /*.p_gimg{*/
+        /*width: 100%;*/
+    /*}*/
+
+    .ces_btns{
+        padding: 2%;
+    }
+    .ces_btns i{
+        font-size: 30px;
+        color: #98C1EC;
+    }
+    .ces_btns .ft16{
+        margin-top: -10px;
+    }
+
+    .cess_content,.cess_content2{
+        margin-bottom: 40px;
+    }
+    .cess_content .common_btns,.cess_content2 .common_btns{
+        bottom: -25px;
+    }
+
+    .cel_content>div{
+        margin-bottom: 10px;
+    }
+    .ce_common .cel_content input{
+        position: inherit;
+        flex: 1;
+        margin: 0 6%;
+    }
+
+    .cel_content input.weui-check{
+        display: none!important;
+    }
+    .cel_content .weui-cell.weui-check__label{
+        margin: 0;
+    }
+    .cel_content .weui-cells:after{
+        display: none;
+    }
+    .weui-cells{
+        margin-top: 0;
+    }
+    .icon-suo{
+        color: red;
+        position: relative;
+        left: 20%;
+    }
+
+    .bg_fixed{
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 15;
+        width: 100%;
+        height: 100%;
+        display: none;
+    }
+    .footer_btns{
+        position: fixed;
+        z-index: 15;
+        bottom: 0;
+        width: 100%;
+        left: 0;
+        color: #fff;
+    }
+    .fb_btns{
+        background: #fff;
+    }
+    .fb_btns>div{
+        width: 50%;
+        font-size: 20px;
+        text-align: center;
+        padding: 8px;
+    }
+    .fb_tip{
+        padding: 1% 5%;
+        background: rgba(0,0,0,0.7);
+    }
+    .go_top{
+        position: fixed;
+        bottom: 20%;
+        right: 5%;
+        width: 40px;
+        height: 40px;
+        z-index: 20;
+        color: #fff;
+        border-radius: 50%;
+        background: rgba(0,0,0,0.6);
+        text-align: center;
+        line-height: 18px;
+        padding: 6px;
+        display: none;
+    }
+    .a_changeimg .weui-cells:after{
+        display: none;
+    }
+    .weui-check__label:active {
+        background-color: transparent;
+    }
+    .a_changeimg .weui-cells_checkbox .weui-check:checked+.weui-icon-checked:before{
+        color: #E18F3D;
+    }
+
+    .d_receive_name,.d_receive_time,.d_receive_mobile,.d_receive_address{
+        display: block;
+        width: 96%!important;
+        margin-bottom: 6px!important;
+    }
+
+    .s_jieti>div{
+        background: #FEDCEA;
+        margin: 2% 0;
+    }
+    .a_addbtn>div{
+        display: inline-block;
+        padding: 0 20px;
+        border: 1px solid #f9292a;
+        color: #f9292a;
+        margin: 4px;
+    }
+    .sj_del{
+        right: 5px;
+        top: -6px;
+        font-size: 25px;
+        color: #f9292a;
+    }
+    .title_txtshadow{
+        font-weight: 900;
+        font-size: 18px;
+        color: #FA3F40;
+        text-shadow: 1px 1px 1px #FA3F40;
+    }
+</style>
+
+<div>
+    <!--头部-->
+    {template 'temp/activity_head'}
+    <!--下部分，背景图片 background->repeat-->
+    <div class="a_content">
+        <!--活动标题,时间-->
+        {template 'temp/activity_title'}
+
+        <div class="c_setting">
+            <!--规则设置-->
+            <div class="ce_rule">
+                <div class="cer_content">
+                    <div class="s_detail">
+                        <div class="flex flex_a_center">
+                            <span class="word-break"><i class="iconfont icon-essential"></i>商品原价</span>
+                            <input type="number" class="d_oprice" value="{$activity['oprice']}"/>
+                            <span>元</span>
+                        </div>
+                        <div class="ft10 color777" style="margin-bottom: 10px">如有报名者，不可修改</div>
+                    </div>
+                    <div class="s_detail">
+                        <div class="flex flex_a_center">
+                            <span class="word-break"><i class="iconfont icon-essential"></i>参团预付</span>
+                            <input type="number" class="d_yprice" value="{$activity['yprice']}"/>
+                            <span>元</span>
+                        </div>
+                        <div class="ft10 color777" style="margin-bottom: 10px">如有参团者，不可修改，建议不多于50元，因提现需扣除1.5%手续费。活动结束，如拼团失败，自动退款</div>
+                    </div>
+                    <div class="s_detail">
+                        <div class="flex flex_a_center">
+                            <span class="word-break"><i class="iconfont icon-essential"></i>商品库存</span>
+                            <input type="number" class="d_gnum" value="{$activity['gnum']}"/>
+                            <span>份</span>
+                        </div>
+                        <div class="ft10 color777" style="padding-bottom: 10px;border-bottom: 1px solid #ddd">如有报名者，数量只能增不能减</div>
+                    </div>
+                    <div class="s_detail s_jieti">
+                        {if $activity['jieti']}
+                        {loop $activity['jieti']['num'] $adx $av}
+                        <div class="flex flex_a_center p_relative">
+                            <span class="word-break"><i class="iconfont icon-essential"></i>参团人数</span>
+                            <input type="number" class="d_snum" value="{$activity['jieti']['num'][$adx]}"/>
+                            <span>人</span>
+                            <span class="word-break"><i class="iconfont icon-essential"></i>价格</span>
+                            <input type="number" class="d_price" value="{$activity['jieti']['price'][$adx]}"/>
+                            <span class="word-break" style="margin-right: 40px;width: 90%">元/人</span>
+                            {if $adx>0}<i onclick="delJiet(this)" class="p_absolute iconfont icon-delete-s sj_del"></i>{/if}
+                        </div>
+                        {/loop}
+                        {else}
+                        <div class="flex flex_a_center p_relative">
+                            <span class="word-break"><i class="iconfont icon-essential"></i>参团人数</span>
+                            <input type="number" class="d_snum" value="{$activity['num']}"/>
+                            <span>人</span>
+                            <span class="word-break"><i class="iconfont icon-essential"></i>价格</span>
+                            <input type="number" class="d_price" value="{$activity['price']}"/>
+                            <span class="word-break" style="margin-right: 40px;width: 90%">元/人</span>
+                            <!--<i onclick="delJiet(this)" class="p_absolute iconfont icon-delete-s sj_del"></i>-->
+                        </div>
+                        {/if}
+                    </div>
+                    <div class="s_detail text_center a_addbtn">
+                        <div>
+                            <i class="iconfont icon-webicon308"></i>
+                            <b>添加</b>
+                        </div>
+                    </div>
+                    <div class="ft10 color777" style="padding-bottom: 10px;border-bottom: 1px solid #ddd">你可以设置多档位参团，最多设置六个档，从上到下，人数逐渐增多，价格逐渐减少，达到某一档参团人数，即可使用该档位价格购买商品。有人参团后信息不可修改</div>
+                </div>
+            </div>
+
+            <!--活动介绍-->
+            {template 'temp/activity_miaoshu'}
+
+            <!--商家介绍-->
+            {template 'temp/activity_shop'}
+
+            {if $setting['shop_default']!=1}
+            <!--联系方式-->
+            {template 'temp/activity_receive'}
+            {/if}
+
+            <!--信息收集-->
+            {template 'temp/activity_userinfo'}
+            <!--分享设置-->
+            {template 'temp/activity_share'}
+            <!--区域限制设置-->
+            {template 'temp/activity_regional'}
+
+        </div>
+    </div>
+
+    <!--白色蒙层-->
+    <div class="bg_fixed"></div>
+
+    <!--返回顶部-->
+    <div class="go_top">
+        <i class="iconfont icon-xiangshang active"></i>
+        <div>顶部</div>
+    </div>
+    <audio id="myaudio" src="" controls="controls" loop="false" hidden="true" />
+
+</div>
+{template 'temp/activity_effects'}
+<!--底部按钮-->
+{template 'temp/common_footer'}
+
+<script>
+
+    // console.log('$template',{php echo json_encode($template)})
+    // console.log('$imgcate',{php echo json_encode($imgcate)})
+    // console.log('$musiccate',{php echo json_encode($musiccate)})
+    console.log('$activity',{php echo json_encode($activity)})
+    console.log('$case',{php echo json_encode($case)})
+</script>
+<script>
+    var datas={
+        template_id:"{$case['template']['id']}",//模板id
+        bgimage:"{if $activity}{$activity['bgimage']}{else}{$case['template']['bgimage']}{/if}",//模板背景
+        image:"{if $activity}{$activity['image']}{else}{$case['template']['image']}{/if}",//模板图片
+        music_id:'',
+        music:"{$activity['music']}",
+        effects_id:'',//特效
+        effects_imgs:{if !empty($activity['effects_imgs'])}{php echo json_encode($activity['effects_imgs'])}{else}''{/if},
+        // cate_img:'',//更换图片
+    };
+    var imgcate={php echo json_encode($imgcate)};
+    var musiccate={php echo json_encode($musiccate)};
+
+    function autoPlay(url){
+        $('#myaudio').attr('src',url)
+        var myAuto = document.getElementById('myaudio');
+        myAuto.play();
+    }
+    var musicSelect = new huiPicker('#musicSelect', function(){
+        var val = musicSelect.getVal(1);
+        var txt = musicSelect.getText(1);
+        if(val==-1){
+            datas['music']='';
+            autoPlay('')
+        }else {
+            for (var i = 0; i < musiccate.length; i++) {
+                for (var j = 0; j < musiccate[i]['music'].length; j++) {
+                    if (musiccate[i]['music'][j]['id'] == val) {
+                        autoPlay(musiccate[i]['music'][j]['link'])
+                        console.log(musiccate[i]['music'][j]['link'])
+                        datas['music']=musiccate[i]['music'][j]['link'];
+                        return
+                    }
+                }
+
+            }
+        }
+        console.log(musicSelect)
+        datas.music_id=val;
+
+
+    });
+    /* 地区选择， 关联型数据 */
+    var shopAddress = new huiPicker('#shop_address', function(){
+        var sheng   = shopAddress.getText(0);
+        var shi     = shopAddress.getText(1);
+        var qu      = shopAddress.getText(2);
+        hui('#shop_address').val(sheng + shi + qu);
+    });
+    shopAddress.level = 3;
+    shopAddress.bindRelevanceData(cities);
+    musicSelect.level = 2;
+    // 初始化音乐
+
+    var musics=[{
+        value: '-1',
+        text: '无',
+        children: [
+            {
+                value: '-1',
+                text: '无背景音效'
+            }
+        ]
+    }];
+    if(!!musiccate) {
+        for (var i=0;i<musiccate.length;i++) {
+            var obj={};
+            obj['value']=musiccate[i]['id']
+            obj['text']=musiccate[i]['title']
+            obj['children']=[];
+            for (var j=0;j<musiccate[i]['music'].length;j++) {
+                obj['children'].push({
+                    value: musiccate[i]['music'][j]['id'],
+                    text: musiccate[i]['music'][j]['title'],
+                    link: musiccate[i]['music'][j]['link']
+                })
+            }
+            musics.push(obj)
+        }
+        console.log(obj)
+    }
+
+    musicSelect.bindRelevanceData(musics);
+
+
+    $("#datetime-picker1").datetimePicker();
+
+
+
+   function selectGoodimg(self) {
+       var reader=new FileReader();
+       var arr=$(self).val().split('\\');
+       arr=arr[arr.length-1].split('/');
+       var my=arr[arr.length-1];//这就是要取得的图片名称
+       reader.onload=function(e){
+           $.post(
+               "{php echo $this->createMobileUrl('upload',['op'=>'image'])}",
+               {
+                   'file':reader.result,
+                   'name':my,
+                   'size':e.total,
+                   'module':"{$_GPC['module']}",
+                   'activity_id':"{$activity_id}",
+               },
+               function (data) {
+                   $(self).next().next().attr('src',data.message)
+               },'json'
+           )
+           // console.log( reader.result);  //或者 e.target.result都是一样的，都是base64码
+       }
+       reader.readAsDataURL(self.files[0])
+   }
+
+
+   //添加商品项
+    $('.c_addbtn').click(function () {
+        var sumnum=$('.c_setting .basic_setting').length
+        if(sumnum<6){
+            var html=`{template 'temp/goods_detail'}`;
+            $('.detail_html').append(html)
+        }
+        sortGoods()
+    })
+
+    // 商品重新排序
+    function sortGoods() {
+        for(var i=0;i<=$('.sort_goods').length;i++){
+           $('.sort_goods').eq(i).html(i+1)
+        }
+    }
+
+    //删除图片(描述)
+    function delMiaoshu(self){
+       $(self).parents('.csms_content').remove()
+    }
+
+    //上移文字(活动优惠)
+    function upYouhui(self){
+        var nowHtml=$(self).parents('.csys_content').find('textarea').val()
+        var nextHtml=$(self).parents('.csys_content').prev().find('textarea').val()
+        $(self).parents('.csys_content').find('textarea').val(nextHtml)
+        $(self).parents('.csys_content').prev().find('textarea').val(nowHtml)
+    }
+    //上移图片(活动描述)
+    function upMiaoshu(self){
+        var nowHtml=$(self).parents('.csms_content').find('img').attr('src')
+        var nextHtml=$(self).parents('.csms_content').prev().find('img').attr('src')
+        $(self).parents('.csms_content').find('img').attr('src',nextHtml)
+        $(self).parents('.csms_content').prev().find('img').attr('src',nowHtml)
+    }
+
+    //下移文字(活动优惠)
+    function downYouhui(self){
+        var nowHtml=$(self).parents('.csys_content').find('textarea').val()
+        var nextHtml=$(self).parents('.csys_content').next().find('textarea').val()
+        $(self).parents('.csys_content').find('textarea').val(nextHtml)
+        $(self).parents('.csys_content').next().find('textarea').val(nowHtml)
+    }
+    //下移图片(活动描述)
+    function downMiaoshu(self){
+        var nowHtml=$(self).parents('.csms_content').find('img').attr('src')
+        var nextHtml=$(self).parents('.csms_content').next().find('img').attr('src')
+        $(self).parents('.csms_content').find('img').attr('src',nextHtml)
+        $(self).parents('.csms_content').next().find('img').attr('src',nowHtml)
+    }
+
+
+
+
+    //更换图片分类
+    function changeImgcate(self) {
+        if(!$(self).hasClass('active')){
+            $('.ac_cates div').removeClass('active')
+            $(self).addClass('active')
+            var idx=Number($(self).attr('data-idx'))
+            var html=''
+            for(var i=0;i<imgcate[idx]['img'].length;i++){
+                html+=`<img onclick="changeImg(this)" src="${imgcate[idx]['img'][i]['image']}" data-id="${imgcate[idx]['img'][i]['id']}" alt="">`
+            }
+            $('.ac_imgs').html(html)
+        }
+    }
+
+    function submit(num) {
+        var mandatory=false;
+        datas['title']=$('.d_title').val();//活动标题
+        datas['image']=$('.h_img').attr('src')//背景主图
+        datas['titlebgimg']=$('.titlebgimg').attr('src');//标题背景图
+        datas['bgimage']=$('.a_content').css('background-image').replace('url(','').replace(')','').replace('"','').replace('"','')//背景主图
+        datas['starttime']=$('#datetime-picker1').val()//开始时间
+        datas['endtime']=$('#datetime-picker2').val()//结束时间
+        datas['oprice']=$('.d_oprice').val()//原价
+        datas['yprice']=$('.d_yprice').val()//预付
+        datas['gnum']=$('.d_gnum').val()//库存
+        // 商品信息
+
+        if(!datas['title']){tips('请填写活动标题'); return false;}
+        if(!datas['starttime']){tips('请填写开始时间'); return false;}
+        if(!datas['endtime']){tips('请填写结束时间'); return false;}
+        if(!datas['oprice']){tips('请填写原价'); return false;}
+        if(!datas['yprice']){tips('请填写预付金额'); return false;}
+        if(!datas['gnum']){tips('请填写库存数量'); return false;}
+
+        //商品设置
+        var jieti={num:[],price:[]};
+        for (var ij = 0; ij < $('.s_jieti>div').length;ij++) {
+            jieti['num'].push($($('.s_jieti>div')[ij]).find('.d_snum').val())
+            jieti['price'].push($($('.s_jieti>div')[ij]).find('.d_price').val())
+        }
+        datas['jieti']=jieti;
+
+        //活动描述内容
+        datas['desc_val']=$('#contentEditor_miaoshu').html();
+        if(!datas['desc_val']){tips('请填写活动描述内容'); return false;}
+        //活动规则内容
+        // if(!datas['rule_val']){tips('请填写活动规则内容'); return false;}
+        datas['shop_val']=$('#contentEditor_shop').html();
+
+        {if $setting['shop_default']!=1}
+        //联系方式
+        datas['shop_name']=$('.d_shop_name').val()
+        datas['shop_mobile']=$('.d_shop_mobile').val()
+        datas['shop_address']=$('.d_shop_address').val()
+        datas['shop_code']=$('.d_shop_code').attr('src')
+        if(!datas['shop_name']){tips('请填写商家姓名'); return false;}
+        if(!datas['shop_mobile']){tips('请填写咨询热线'); return false;}
+        //联系地址
+        if($('#shop_address').val()){
+            datas['shop_province']=$('#shop_address').val().split(' ')[0]
+            datas['shop_city']=$('#shop_address').val().split(' ')[1]
+            datas['shop_district']=$('#shop_address').val().split(' ')[2]
+        }
+        {/if}
+
+        //信息收集
+        var userinfo=[];
+        for (var iiii = 0; iiii < $('.d_userinfo').length;iiii++) {
+            userinfo.push({
+                title:$($('.d_userinfo')[iiii]).find('.d_u_title').val(),
+                checked:$($('.d_userinfo')[iiii]).find('.d_u_checked')[0].checked
+            })
+        }
+        datas['userinfo']=userinfo;
+        // 分享设置
+        datas['share_img']=$('.d_share_img').attr('src');
+        datas['share_title']=$('.d_share_title').val();
+        datas['share_desc']=$('.d_share_desc').val();
+        if(!datas['share_img']){tips('请上传分享图'); return false;}
+        if(!datas['share_title']){tips('请填写分享标题'); return false;}
+        if(!datas['share_desc']){tips('请填写分享描述'); return false;}
+
+        //区域限制
+        datas['regional']= $('.d_regional:checked').val()//是否需要费用
+        if($('.d_regional')[1].checked){
+            if($('.d_ak').val()==''){tips('请填写百度地图密钥'); return false;}
+            else{datas['ak']=$('.d_ak').val()}
+            if($('.d_num').length==0){tips('请添加区域'); return false;}
+            else{
+                var r_address=[];
+                for(var ir=0;ir<$('.d_num').length;ir++){
+                    r_address.push($('.d_num')[ir].value)
+                }
+                datas['r_address']=r_address;
+            }
+        }
+
+        console.log(datas)
+            {if $_GPC['cz']=='bj'}datas['activity_id']="{$activity_id}";{/if}
+        $.post(
+            "{php echo $this->createMobileUrl('making',['op'=>'post'])}",
+            {
+                'from':datas,
+                'module':"{$_GPC['module']}",
+                'case_id':"{$case_id}"
+            },
+            function (data) {
+                tips(data.message)
+                if(data.errno==0){
+
+                    setTimeout(function () {
+                        if(num=='1'){
+                            location.href="./index.php?c=entry&i={$_W['uniacid']}&do=index&activity_id="+data.data.activity_id+"&m={$case['module']}"
+                        }else if(num=='2'){
+                            location.href="{php echo $this->createMobileUrl('activitys',['op'=>'activitys_detail'])}&activity_id="+data.data.id
+                        }
+                    },2000)
+                }
+            },'json'
+        )
+    }
+
+
+    //添加团购阶梯
+    $('.a_addbtn').click(function(){
+        $('.s_jieti').append('<div class="flex flex_a_center p_relative">' +
+            '    <span class="word-break"><i class="iconfont icon-essential"></i>参团人数</span>' +
+            '    <input type="number" class="d_snum" value=""/>' +
+            '    <span>人</span>' +
+            '    <span class="word-break"><i class="iconfont icon-essential"></i>价格</span>' +
+            '    <input type="number" class="d_price" value=""/>' +
+            '    <span class="word-break" style="margin-right: 40px;width: 90%">元/人</span>' +
+            '    <i onclick="delJiet(this)" class="p_absolute iconfont icon-delete-s sj_del"></i>' +
+            '</div>')
+        if($('.s_jieti>div').length==6){
+            $('.a_addbtn').hide();
+        }
+    })
+    //删除阶梯
+    function delJiet(self) {
+        $(self).parent().remove();
+        if($('.s_jieti>div').length<6){
+            $('.a_addbtn').show();
+        }
+    }
+</script>
+<script>
+    // 商品操作
+    // 商家介绍重新排序
+    function sortShangpin(sumnum) {
+        for(var i=0;i<=sumnum;i++){
+            if((sumnum==i)&&i>0){
+                $($('.cess_contents2 .cess_content')[i-1]).find('.cssccb_down').hide()
+                $($('.cess_contents2 .cess_content')[i-1]).find('.cssccb_up').show()
+            }else {
+                if (i == 0) {
+                    $($('.cess_contents2 .cess_content')[0]).find('.cssccb_up').hide()
+                    $($('.cess_contents2 .cess_content')[0]).find('.cssccb_down').show()
+                } else{
+                    $($('.cess_contents2 .cess_content')[i]).find('div').show()
+                }
+            }
+        }
+    }
+    //删除区块(商家介绍)
+    function delShangpin(self){
+        $(self).parents('.cess_content2').remove()
+    }
+    //上移区块(商家介绍)
+    function upShangpin(self){
+        var nowHtml='<div class="cess_content flex flex_a_center p_relative">'+$(self).parents('.cess_content2').html()+'</div>'
+        $(self).parents('.cess_content2').prev().before(nowHtml)
+        if($(self).parents('.cess_content2').find('textarea')){
+            var value=$(self).parents('.cess_content2').find('textarea').val()
+            $(self).parents('.cess_content2').prev().prev().find('textarea').val(value)
+        }
+        $(self).parents('.cess_content2').remove()
+        sortShangpin($('.cess_contents2 .cess_content').length)
+    }
+    //下移区块(商家介绍)
+    function downShangpin(self){
+        var nowHtml='<div class="cess_content2 flex flex_a_center p_relative">'+$(self).parents('.cess_content2').html()+'</div>'
+        console.log($(self).parents('.cess_content2').next());
+        if($(self).parents('.cess_contents2').find('.cess_content2').length>1) {
+            $(self).parents('.cess_content2').next().after(nowHtml)
+            if ($(self).parents('.cess_content2').find('textarea')) {
+                var value = $(self).parents('.cess_content2').find('textarea').val()
+                $(self).parents('.cess_content2').next().next().find('textarea').val(value)
+            }
+            $(self).parents('.cess_content2').remove()
+            sortShangpin($('.cess_contents2 .cess_content2').length)
+        }
+    }
+    //添加图片
+    $('.sp_addImg').click(function () {
+        if($('.cess_contents2 img').length<10) {
+            var html = `{template 'temp/goods_sp_img'}`;
+            $('.cess_contents2').append(html)
+            sortShangpin($('.cess_contents2 .cess_content2').length)
+        }
+    })
+
+
+</script>
+<script>
+    var contentEditor_goods = new Eleditor({
+        el: '#contentEditor_goods',
+        upload:{
+            server: "{php echo $this->createMobileUrl('upload',['op'=>'form_image'])}",
+            formData: {
+                // 'token':123456789,
+                // 'file':reader.result,
+                // 'name':my,
+                // 'size':e.total,
+                'module':"{$_GPC['module']}",
+                'activity_id':"{$activity_id}",
+            },
+            accept: {//accept一般不用设置
+                title: 'Images',
+                extensions: 'gif,jpg,jpeg,bmp,png,webp',
+                mimeTypes: 'image/*'
+            },
+            compress: false,
+            fileSizeLimit: 2
+        },
+        /*自定义按钮的例子*/
+        toolbars: [
+            'insertText',
+            'editText',
+            'insertImage',
+            'insertLink',
+            'insertHr',
+            'delete',
+            'undo',
+            'cancel'
+        ]
+        //placeHolder: 'placeHolder设置占位符'
+    });
+</script>
+{template 'common/footer'}

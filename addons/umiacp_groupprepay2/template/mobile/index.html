@@ -97,12 +97,17 @@
     .ah_top{
         background: rgba(0,0,0,0.7);
         color: #aaa;
-        display: inline-flex;
-        padding: 0 6px;
+        display: flex;
+        justify-content: space-around;
         position: absolute;
         top: 0;
-        left: 0;
+        left: 20%;
         z-index: 5;
+        width: 60%;
+        text-align: center;
+        font-size: 10px;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
     }
     .ah_top span{
         color: #fff;
@@ -175,8 +180,15 @@
         font-weight: 700;
         margin-bottom: 10px;
     }
-    .ac_time{
-
+    .ac_desc{
+        background: #FA3F40;
+        color: #fff;
+        padding: 10px 0;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+    .ac_desc span{
+        color: #FFFF72;
     }
     .ac_time>div{
         width: 100%;
@@ -369,9 +381,7 @@
     .a_footer{
         position: fixed;
         left: 0;
-        bottom: 0;
-        padding: 4%;
-        background: rgba(0,0,0,0.7);
+        bottom: 10px;
         z-index: 10;
         width: 100%;
         text-align: center;
@@ -459,7 +469,6 @@
     }
 
     .pt_contents{
-        border-bottom: 1px solid #ddd;
         padding: 15px 0;
     }
     .ptc_step{
@@ -493,10 +502,19 @@
     }
     .ptc_jieti{
         margin-top: 10px;
+        background: url("{YOUMI_URL_APP}img/pt_bg.png");
+        background-size: 100% 100%;
+        color: #fff;
+        height: 50px;
+        line-height: 50px;
+        padding: 0 20px;
+        font-size: 16px;
     }
     .ptc_jieti>div{
-        width: 30%;
-        margin-bottom:10px;
+        /*width: 30%;*/
+        margin-bottom: 10px;
+        font-size: 16px;
+        font-weight: 700;
     }
     .ptcj_detail{
 
@@ -514,12 +532,16 @@
 
     .fb_tip{
         padding: 1% 0;
-        margin-bottom: -15px;
+        background: rgba(0,0,0,0.7);
         margin-top: 10px;
         position: relative;
+        width: 80%;
+        left: 10%;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
     }
     .fb_tip a{
-        font-size: 16px;
+        font-size: 12px;
     }
     .fb_tip .iconfont{
         color: #fff;
@@ -537,7 +559,7 @@
         left: 0;
         width: 100%;
         z-index: 2;
-        height: 60%;
+        height: 70%;
     }
 
     .bullet{
@@ -567,8 +589,18 @@
     <!--头部-->
     <div class="a_head p_relative">
         <img class="h_img" src="{$activity['image']}" alt="">
+        <!--倒计时-->
+        <div>
+            {if $activity['status']=='1'&&$activity['status2']!=2}
+            <div class="text_center" style="background: #FFFF72;">距离活动结束还有:<span class="act_day"></span>天<span class="act_hour"></span>时<span class="act_min"></span>分<span class="act_sec"></span>秒</div>
+            {else}
+            <div class="text_center">活动已结束</div>
+            {/if}
+        </div>
         <div class="flex flex_a_center ah_top">
-            <span>{$activity['pv']}</span>人查看<span>{$activity['share']}</span>人分享<span>{$activity['participate']}</span>人参团
+            <span><span class="sys_color">{$activity['pv']}</span>人查看</span>
+            <span><span class="sys_color">{$activity['share']}</span>人分享</span>
+            <span><span class="sys_color">{$activity['participate']}</span>人参团</span>
         </div>
         {if $activity['music']}<i id="music" class="iconfont icon-music active"><audio id="audiojs" src="{$activity['music']}" autoplay loop></audio></i>{/if}
         {if $activity['effects_imgs']}<i class="iconfont icon-mofabang active"></i>{/if}
@@ -579,213 +611,48 @@
 
         <!--弹幕-->
         <div class="dm_content"></div>
-
     </div>
     <!--下部分，背景图片 background->repeat-->
     <div class="a_content">
-
-        <h4 class="ac_title text_center sys_color">{$activity['title']}</h4>
-        <!--倒计时-->
-        {if $activity['status']=='1'&&$activity['status2']!=2}
-        <div class="ac_time p_relative sys_color">
-            <img style="width: 100%" src="{YOUMI_URL_APP}img/time_bg.png" alt="">
-            <div class="p_absolute">距离活动结束还有:<span class="act_day"></span>天<span class="act_hour"></span>时<span class="act_min"></span>分<span class="act_sec"></span>秒</div>
-        </div>
-        {/if}
-        <!--公告-->
-        {if !empty($records)}
-        <div class="notice_active ac_messages sys_color" style="display: none">
-            <ul>
-                {loop $records $rv}
-                <li class="notice_active_ch ft12">{$rv['tips']}</li>
-                {/loop}
-            </ul>
-        </div>
-        {/if}
+        <h4 class="ac_title">{$activity['title']}</h4>
+        <div class="ac_desc text_center">已报名 <span>{$activity['participate']}</span> 人/当前共享优惠价 <span>{$activity['nprice']}</span> 元</div>
         <!--拼团说明-->
-        <div class="ac_youhui p_relative">
-            <div class="acy_title p_relative">
-                <img style="height: 40px" src="{YOUMI_URL_APP}img/m_titlebg3.png" alt="">
-                <input type="text" value="拼团玩法" readonly>
+        <div style="height: 10px;background: #eee;margin: 15px -4%;"></div>
+        <img src="{YOUMI_URL_APP}img/pt_title.png" alt="">
+        <div class="acys_contents text-center pt_contents p_relative" style="padding: 10px 5px">
+            {loop $activity['jieti']['num'] $jdx $jv}
+            {if !empty($activity['jieti']['num'][$jdx])}
+            <div class="flex flex_wrap flex_j_between ptc_jieti">
+                <div>拼团满{$activity['jieti']['num'][$jdx]}人</div>
+                <div>优惠价<span class="ft16">{$activity['jieti']['price'][$jdx]}</span>元/人</div>
             </div>
-            <div class="acy_content">
-                <div class="acys_contents text-center pt_contents">
-                    <div class="flex flex_j_around ptc_step">
-                        <img src="{YOUMI_URL_APP}img/pt_s1.jpg" alt="">
-                        <i class="sys_color iconfont icon-wanjiantou"></i>
-                        <img src="{YOUMI_URL_APP}img/pt_s2.jpg" alt="">
-                        <i class="sys_color iconfont icon-wanjiantou"></i>
-                        <img src="{YOUMI_URL_APP}img/pt_s3.jpg" alt="">
-                    </div>
-                    <div class="flex flex_j_around ptc_step2">
-                        <div class="flex flex_a_center sys_color">
-                            <span>1</span>
-                            <div class="ft10" style="line-height: 12px">我要参团支付预付款</div>
-                        </div>
-                        <div class="flex flex_a_center sys_color">
-                            <span>2</span>
-                            <div class="ft10" style="line-height: 12px">邀请好友支付参团</div>
-                        </div>
-                        <div class="flex flex_a_center sys_color">
-                            <span>3</span>
-                            <div class="ft10" style="line-height: 12px">达到人数团购成功</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="acys_contents text-center pt_contents p_relative" style="padding: 10px 5px">
-                    <div>原价: <span class="sys_color">{$activity['oprice']}</span>元</div>
-                    <!--<div>当前价价格: <b class="sys_color ft16">{$activity['nprice']}</b>元</div>-->
-                    <div>参团需预付: <span class="sys_color ft16">{$activity['yprice']}</span>元</div>
-                    <b class="sys_color">(到店支付尾款)</b>
-                    <div class="flex flex_wrap flex_j_between ptc_jieti">
-                        {loop $activity['jieti']['num'] $jdx $jv}
-                        {if !empty($activity['jieti']['num'][$jdx])}
-                        <div class="p_relative ptcj_detail">
-                            {if $activity['njieti']==$jdx}
-                            <img src="{YOUMI_URL_APP}img/pt_jt6.png" alt="">
-                            {else}
-                            <img src="{YOUMI_URL_APP}img/pt_jt0.png" alt="">
-                            {/if}
-                            <div class="p_absolute">
-                                满{$activity['jieti']['num'][$jdx]}人
-                                <b class="ft16">{$activity['jieti']['price'][$jdx]}</b>
-                                元
-                            </div>
-                        </div>
-                        {/if}
-                        {/loop}
-                    </div>
-                    <div class="p_absolute ptc_num">
-                        <span class="sys_color ft14">{$activity['participate']}</span>人已参团,剩<span class="sys_color ft14">{php echo ($activity['gnum']-$activity['participate'])}</span>份
-                    </div>
-                </div>
-                <!--活动进行时-->
-                <div class="acys_contents">
-                    <div class="ft12 color777" style="margin-bottom: 15px">以下小伙伴已加入团购，人多更优惠，等你哦</div>
-                    <div class="acsc_list">
-                        {loop $records2 $rv}
-                        <div>
-                            <span class="ft12">{$rv['realname']}</span>
-                            <span class="ft12" style="width: 50%">{php echo date('Y-m-d H:i',$rv['createtime'])}参团</span>
-                            <span class="ft12">当前价格 {$activity['nprice']}元</span>
-                        </div>
-                        {/loop}
-                    </div>
-                </div>
-            </div>
+            {/if}
+            {/loop}
         </div>
-        <!--活动优惠-->
-        {if !empty($activity['preferential_val'])}
-        <div class="ac_youhui p_relative">
-            <div class="acy_title p_relative">
-                <img style="height: 40px" src="{if $activity['titlebgimg']}{$activity['titlebgimg']}{else}{YOUMI_URL_APP}img/m_titlebg2.png{/if}" alt="">
-                <input type="text" value="{$activity['preferential_title']}" readonly>
-            </div>
-            <div class="acy_content">
-                <div class="acys_contents">
-                    <!--内容-->
-                    {loop $activity['preferential_val'] $apidx $apv}
-                    {if !empty($apv)}
-                    <div class="acysc_detail flex flex_a_center">
-                        <div style="width: 16%"><span>{php echo ($apidx+1)}</span></div>
-                        <div style="width: 84%;word-break: break-all">{$apv}</div>
-                    </div>
-                    {/if}
-                    {/loop}
-                </div>
-            </div>
-            <img class="iconPig" src="{YOUMI_URL_APP}img/pig.png" alt="">
-        </div>
-        {/if}
-        <!--商品描述-->
-        <div class="ac_youhui p_relative">
-            <div class="acy_title p_relative">
-                <img style="height: 40px" src="{if $activity['titlebgimg']}{$activity['titlebgimg']}{else}{YOUMI_URL_APP}img/m_titlebg2.png{/if}" alt="">
-                <input type="text" value="商品描述" readonly>
-            </div>
-            <div class="acy_content">
-                <div class="acys_contents">
-                    <!--内容-->
-                    {php echo htmlspecialchars_decode($activity['goods_val'])}
-                    {loop $activity['goods_imgs'] $adv}
-                    <img style="width: 100%;margin: 3px 0" src="{$adv}" alt="">
-                    {/loop}
-                </div>
-            </div>
-            <img class="iconPig" src="{YOUMI_URL_APP}img/pig.png" alt="">
-        </div>
-
+        <div style="height: 10px;background: #eee;margin: 15px -4%;"></div>
         <!--活动描述-->
         {if !empty($activity['desc_val'])}
         <div class="ac_youhui p_relative">
-            <div class="acy_title p_relative">
-                <img style="height: 40px" src="{if $activity['titlebgimg']}{$activity['titlebgimg']}{else}{YOUMI_URL_APP}img/m_titlebg2.png{/if}" alt="">
-                <input type="text" value="活动介绍" readonly>
-            </div>
+            <img src="{YOUMI_URL_APP}img/huodong.png" alt="">
             <div class="acy_content">
                 <div class="acys_contents">
                     <!--内容-->
                     {php echo htmlspecialchars_decode($activity['desc_val'])}
-                    {loop $activity['desc_imgs'] $adv}
-                    <img style="width: 100%;margin: 3px 0" src="{$adv}" alt="">
-                    {/loop}
                 </div>
             </div>
-            <img class="iconPig" src="{YOUMI_URL_APP}img/pig.png" alt="">
         </div>
         {/if}
-        <!--活动信息-->
-        {if !empty($activity['receive_time'])}
-        <div class="ac_youhui p_relative">
-            <div class="acy_title p_relative">
-                <img style="height: 40px" src="{if $activity['titlebgimg']}{$activity['titlebgimg']}{else}{YOUMI_URL_APP}img/m_titlebg2.png{/if}" alt="">
-                <input type="text" value="领取信息" readonly>
-            </div>
-            <div class="acy_content">
-                <div class="acys_contents">
-                    <!--内容-->
-                    <div>领取时间: {$activity['receive_time']}</div>
-                    <div>领取地址: {$activity['receive_address']}</div>
-                    <div>联系方式: {$activity['receive_mobile']}</div>
-                </div>
-            </div>
-            <img class="iconPig" src="{YOUMI_URL_APP}img/pig.png" alt="">
-        </div>
-        {/if}
+        <div style="height: 10px;background: #eee;margin: 15px -4%;"></div>
         <!--主办方资料-->
         {if !empty($activity['shop_val'])}
         <div class="ac_youhui p_relative">
-            <div class="acy_title p_relative">
-                <img style="height: 40px" src="{if $activity['titlebgimg']}{$activity['titlebgimg']}{else}{YOUMI_URL_APP}img/m_titlebg2.png{/if}" alt="">
-                <input type="text" value="{$activity['shop_title']}">
-            </div>
+            <img src="{YOUMI_URL_APP}img/jigou.png" alt="">
             <div class="acy_content">
                 <div class="acys_contents">
                     <!--内容-->
                     {php echo htmlspecialchars_decode($activity['shop_val'])}
-                    {loop $activity['shop_imgs'] $sv}
-                    <img style="width: 100%;margin-bottom: 2px" src="{$sv}" alt="">
-                    {/loop}
                 </div>
             </div>
-            <img class="iconPig" src="{YOUMI_URL_APP}img/pig.png" alt="">
-        </div>
-        {/if}
-
-        <!--活动规则-->
-        {if !empty($activity['rule_val'])}
-        <div class="ac_youhui p_relative">
-            <div class="acy_title p_relative">
-                <img style="height: 40px" src="{if $activity['titlebgimg']}{$activity['titlebgimg']}{else}{YOUMI_URL_APP}img/m_titlebg2.png{/if}" alt="">
-                <input type="text" value="{$activity['rule_title']}" readonly>
-            </div>
-            <div class="acy_content">
-                <div class="acys_contents">
-                    <!--内容-->
-                    {php echo htmlspecialchars_decode($activity['rule_val'])}
-                </div>
-            </div>
-            <img class="iconPig" src="{YOUMI_URL_APP}img/pig.png" alt="">
         </div>
         {/if}
 
@@ -853,14 +720,11 @@
         {/if}
         {if $setting_activity&&$setting_activity['making_status']==1}
         <div class="fb_tip flex flex_j_around flex_a_center ft16">
-            <div class="color_fff">{$setting_activity['copyright']}</div>
+            <div class="color_fff ft12">{$setting_activity['copyright']}</div>
             <a href="{$setting_activity['copyright_url']}">{if $setting_activity['copyright_buy']}{$setting_activity['copyright_buy']}{else}去购买{/if}</a>
-            <i class="iconfont icon-Close" onclick="$('.fb_tip').hide()"></i>
         </div>
         {/if}
     </div>
-
-
 
 </div>
 {template 'canvas_share'}

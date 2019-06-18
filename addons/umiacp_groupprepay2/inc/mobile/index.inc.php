@@ -20,7 +20,6 @@ $setting = youmi_setting_get_list();
 youmi_puv('index');
 
 
-
 $setting_activity = pdo_getall(UMI_NAME . '_' . 'setting', array('uniacid' => $uniacid));
 foreach ($setting_activity as $key => &$value) {
     $svalue = unserialize($value['svalue']);
@@ -264,9 +263,9 @@ if ($op == 'sign_up') {
     $data['createtime'] = time();
 //    pdo_insert(YOUMI_NAME . '_record', $data);
 
-//    pdo_update(YOUMI_NAME . '_activity', ['participate +=' => 1], ['id' => $activity_id]);
-//    pdo_update(UMI_NAME . '_activity', ['participate +=' => 1], ['shop_id' => $activity['shop_id'], 'module' => YOUMI_NAME, 'activity_id' => $activity_id]);
-//
+    pdo_update(YOUMI_NAME . '_activity', ['participate +=' => 1], ['id' => $activity_id]);
+    pdo_update(UMI_NAME . '_activity', ['participate +=' => 1], ['shop_id' => $activity['shop_id'], 'module' => YOUMI_NAME, 'activity_id' => $activity_id]);
+
     if (!$this->member['mobile']) {
         pdo_update(YOUMI_NAME . '_member', ['realname' => $cut['realname'], 'mobile' => $cut['mobile']], ['mid' => $this->mid]);
     }

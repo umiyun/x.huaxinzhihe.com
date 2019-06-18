@@ -9,7 +9,7 @@ a{
     background: #661B16;
 }
 .sys_color{
-    color: #661B16;
+    color: #FA3F40!important;
 }
 .color_fff{
     color: #fff!important;
@@ -111,7 +111,7 @@ div{
     background: linear-gradient(to bottom,#FD6E4A,#F00C0A);
     text-align: center;
     padding: 1.5% 4%;
-    border-radius: 5px;
+    border-radius: 35px;
     color: #fff;
     font-size: 12px;
 }

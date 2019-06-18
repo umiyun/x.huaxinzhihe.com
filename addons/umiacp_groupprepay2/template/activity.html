@@ -197,7 +197,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>用户信息收集</label>
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>阶梯价格</label>
                     <div class="col-sm-8">
                         <table class="table table-hover">
                             <thead>
@@ -276,14 +276,14 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" style="display: none">
                     <label class="col-xs-12 col-sm-3 col-md-2 control-label">活动优惠标题</label>
                     <div class="col-sm-8 col-xs-12">
                         <input maxlength="6" type="text" id='data[preferential_title]' name="data[preferential_title]" class="form-control" value="{$item['preferential_title']}" />
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" style="display: none">
                     <label class="col-xs-12 col-sm-3 col-md-2 control-label">活动优惠内容</label>
                     <div class="col-sm-8">
                         <!--<textarea class="form-control" name="data[preferential_val]" >{$item['preferential_val']}</textarea>-->
@@ -296,7 +296,7 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" style="display: none">
                     <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>商品描述</label>
                     <div class="col-sm-8">
                         {php echo tpl_ueditor('data[goods_val]', $item['goods_val']);}
@@ -311,7 +311,7 @@
 
 
                 <div class="form-group">
-                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">活动介绍内容</label>
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">活动内容</label>
                     <div class="col-sm-8">
                         {php echo tpl_ueditor('data[desc_val]', $item['desc_val']);}
                     </div>
@@ -323,13 +323,13 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" style="display: none">
                     <label class="col-xs-12 col-sm-3 col-md-2 control-label">活动须知标题</label>
                     <div class="col-sm-8">
                         <textarea class="form-control" name="data[rule_title]" >{$item['rule_title']}</textarea>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="display: none">
                     <label class="col-xs-12 col-sm-3 col-md-2 control-label">活动须知内容</label>
                     <div class="col-sm-8">
                         {php echo tpl_ueditor('data[rule_val]', $item['rule_val']);}
@@ -337,33 +337,33 @@
                 </div>
 
 
-                <div class="form-group">
+                <div class="form-group" style="display: none">
                     <label class="col-xs-12 col-sm-3 col-md-2 control-label">领取信息</label>
                     <div class="col-sm-8 col-xs-12">
                         <input type="text" id='data[receive_name]' name="data[receive_name]" class="form-control" value="{$item['receive_name']}" />
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="display: none">
                     <label class="col-xs-12 col-sm-3 col-md-2 control-label">活动时间</label>
                     <div class="col-sm-8 col-xs-12">
                         <input type="text" id='data[receive_time]' name="data[receive_time]" class="form-control" value="{$item['receive_time']}" />
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" style="display: none">
                     <label class="col-xs-12 col-sm-3 col-md-2 control-label">活动地址</label>
                     <div class="col-sm-8 col-xs-12">
                         <input type="text" id='data[receive_address]' name="data[receive_address]" class="form-control" value="{$item['receive_address']}" />
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="display: none">
                     <label class="col-xs-12 col-sm-3 col-md-2 control-label">联系方式</label>
                     <div class="col-sm-8 col-xs-12">
                         <input type="text" id='data[receive_mobile]' name="data[receive_mobile]" class="form-control" value="{$item['receive_mobile']}" />
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" style="display: none">
                     <label class="col-xs-12 col-sm-3 col-md-2 control-label">商家介绍标题</label>
                     <div class="col-sm-8 col-xs-12">
                         <input maxlength="6" type="text" name="data[shop_title]" class="form-control" value="{$item['shop_title']}" />

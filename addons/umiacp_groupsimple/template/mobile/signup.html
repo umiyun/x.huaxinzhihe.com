@@ -80,8 +80,11 @@
         $('.os_change').removeClass('active');
         $(this).addClass('active');
     });
-
+    var canPay=true;
     $('.os_btn').click(function () {
+        if(!canPay){
+            return false;
+        }
         if(!regional){tips('您不在活动区域范围内');return false;}
         var realname=$($(".os_input").eq(0)).find('input').val();
         var mobile=$($(".os_input").eq(1)).find('input').val();
@@ -118,6 +121,7 @@
         if(tip){
             return false;
         }
+        canPay=false;
         localStorage.setItem('bm_userinfo',JSON.stringify({'realname':realname,'mobile':mobile}))
         $.post(
             "{php echo $this->createMobileUrl('order',['op'=>'create_order'])}",
@@ -171,13 +175,18 @@
                         }, 'json'
                     );
                 }else if(data.errno == 2){
-                    tips(data.message)
+                    tips(data.message);
                     setTimeout(function () {
-                        location.reload()
+                        setTimeout(function () {
+                            location.href="{php echo $this->createMobileurl('index',['activity_id'=>$activity_id,'fmid'=>$_GPC['fmid'],'op'=>'detail'])}&id="+data.data.group_id
+                        },2000)
                     },1500)
                 } else{
                     tips(data.message);
                 }
+                setTimeout(function () {
+                    canPay=true;
+                },2000)
             }, 'json'
         )
     })

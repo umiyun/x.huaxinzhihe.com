@@ -91,7 +91,45 @@ function endsWith($haystack, $needle){
 //    }
 //    echo '插入成功';
 //}
+function addZero($num, $len)
+{
+    while (strlen($num) < $len) {
+        $num = '0' . $num;
+    }
+    return $num;
+}
+function getArrangeNo()
+{
+    $today = date('Ymd');
+    $cacheNo = cache_load(YOUMI_NAME.'_GROUP_ID_NO_KEY');
+    $cacheDate =  cache_load(YOUMI_NAME.'_GROUP_ID_DATA_KEY');
+    if (empty($cacheNo)) {
+        $couponRule = pdo_fetch('select * from '.tablename('umiacp_groupsimple_group').' order by id desc');
 
+        if ($couponRule) {
+            $dbDate = substr($couponRule['arrangeNo'], 2, 8);
+            $dbNo = (int)substr($couponRule['arrangeNo'], 10);
+            if ($today == $dbDate) {
+                $couponRuleNo = addZero(++$dbNo, 4);
+                $couponRuleDate = $today;
+                return ($couponRuleDate . $couponRuleNo) ;
+            }
+        }
+        $couponRuleNo = '0001';
+        $couponRuleDate = $today;
+        return  ($couponRuleDate . $couponRuleNo) ;
+    }
+    if ($today == $cacheDate) {
+        $couponRuleNo = addZero(++$cacheNo, 4);
+    } else {
+        $couponRuleNo = '0001';
+    }
+    $couponRuleDate = $today;
+    return  ($couponRuleDate . $couponRuleNo) ;
+}
+if ($op=='b'){
+echo getArrangeNo();
+}
 if ($op == 'post') {
     $mid = intval($_GPC['mid']);
     $paras[':mid'] = $mid;

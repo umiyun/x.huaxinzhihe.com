@@ -13,6 +13,9 @@
         <a href="javascript:;">小程序参数设置</a>
     </li>
 </ul>
+任务定时器地址：{php echo $_W['siteroot'].'app/index.php?i='.$this->uniacid.'&c=entry&m=umiacp_groupsimple&do=task&user_type=1'}
+<br>
+<span style="color: red">红包发放必须将任务定时器挂在宝塔或者其他可以执行的地方 定时执行，执行时间30秒或者1分钟循环执行</span>
 <div class="panel panel-default">
     <form class="form-horizontal" role="form" method="post" action="" name="submit">
         <div id="base" class="panel-body base">

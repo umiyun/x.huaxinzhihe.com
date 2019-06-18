@@ -51,23 +51,30 @@ if ($op == 'display') {
         $fmid = 0;
     }
     $records = pdo_fetchall('select * from ' . tablename(YOUMI_NAME . '_order') . ' where uniacid = ' . $uniacid . ' and activity_id = ' . $activity_id . ' and status in (2,3) order by createtime DESC');
-    $ranks = pdo_fetchall('select * from ' . tablename(YOUMI_NAME . '_order') . ' where uniacid = ' . $uniacid . ' and activity_id = ' . $activity_id . ' and commission >0 order by commission DESC');
-    $groups = pdo_getall(YOUMI_NAME . '_group', ['uniacid' => $uniacid, 'activity_id' => $activity_id]);
-    $successNum=0;
+    $ranks = pdo_fetchall('select fmid,sum(commission) as commission from ' . tablename(YOUMI_NAME . '_order') . ' where uniacid = ' . $uniacid . ' and activity_id = ' . $activity_id . ' and commission > 0 and fmid <> 0 group by fmid order by commission DESC');
+    foreach ($ranks as &$rank) {
+        $mem = $this->getMemberInfo($rank['fmid']);
+        $rank['nickname'] = $mem['nickname'];
+        $rank['avatar'] = $mem['avatar'];
+        unset($rank);
+    }
+//    $groups = pdo_getall(YOUMI_NAME . '_group', ['uniacid' => $uniacid, 'activity_id' => $activity_id]);
+    $groups = pdo_fetchall('select * from ' . tablename(YOUMI_NAME . '_group') . ' where uniacid=:uniacid and activity_id=:activity_id order by now_num asc', [':uniacid' => $uniacid, ':activity_id' => $activity_id]);
+    $successNum = 0;
     foreach ($groups as $group) {
-        if ($group['status']==1){
+        if ($group['status'] == 1) {
             $successNum++;
         }
     }
     $records_count = count($records);
 //    $fmember = $this->getMemberInfo($fmid);
     foreach ($records as &$record) {
-        if ($record['leader']==1){
-        $record['tips'] = $record['nickname'] . ' 开团成功';
+        if ($record['leader'] == 1) {
+            $record['tips'] = $record['nickname'] . ' 开团成功';
 
-        }else{
+        } else {
 
-        $record['tips'] = $record['nickname'] . ' 参团成功';
+            $record['tips'] = $record['nickname'] . ' 参团成功';
         }
 
         unset($record);
@@ -142,7 +149,7 @@ if ($op == 'display') {
         pdo_update(UMI_NAME . '_shop', $update1, ['id' => $activity['shop_id']]);
     }
     $_share['title'] = $activity['share_title'];
-    $_share['imgUrl'] = $activity['share_img'];
+    $_share['imgUrl'] = tomedia($activity['share_img']);
     $_share['desc'] = $activity['share_desc'];
     if (empty($setting['cannon_fodder'])) {
         $_share['link'] = $_W['siteroot'] . "app/" . $this->createMobileUrl('index', array('fmid' => $this->mid, 'activity_id' => $activity_id));
@@ -248,8 +255,6 @@ if ($op == 'sign_up') {
 //        $order['id'] = pdo_insertid();
 
 
-
-
     youmi_result(0, '提交成功', $data);
 }
 
@@ -328,12 +333,11 @@ if ($op == 'regional') {
     // var_dump($arr);exit;
 }
 
-if ($op=='detail'){
-    $group_id=$_GPC['id'];
-    $activity_id=$_GPC['activity_id'];
-    $members=pdo_getall(YOUMI_NAME.'_order',['group_id'=>$group_id,'activity_id'=>$activity_id,'status'=>[2,3]],['avatar','nickname','leader']);
-    $activity=pdo_get(YOUMI_NAME.'_activity',['id'=>$activity_id]);
-
+if ($op == 'detail') {
+    $group_id = $_GPC['id'];
+    $activity_id = $_GPC['activity_id'];
+    $members = pdo_getall(YOUMI_NAME . '_order', ['group_id' => $group_id, 'activity_id' => $activity_id, 'status' => [2, 3]], ['avatar', 'nickname', 'leader']);
+    $activity = pdo_get(YOUMI_NAME . '_activity', ['id' => $activity_id]);
 
 
     if ($activity['shop_id'] > 0) {
@@ -372,6 +376,14 @@ if ($op=='detail'){
 //    $update['pv +='] = 1;
     pdo_update(YOUMI_NAME . '_activity', $update, ['id' => $activity_id]);
 
+    $_share['title'] = $activity['share_title'];
+    $_share['imgUrl'] = tomedia($activity['share_img']);
+    $_share['desc'] = $activity['share_desc'];
+    if (empty($setting['cannon_fodder'])) {
+        $_share['link'] = $_W['siteroot'] . "app/" . $this->createMobileUrl('index', array('op' => 'detail', 'id' => $group_id, 'fmid' => $this->mid, 'activity_id' => $activity_id));
+    } else {
+        $_share['link'] = $setting['cannon_fodder'] . "app/" . $this->createMobileUrl('index', array('op' => 'detail', 'id' => $group_id, 'fmid' => $this->mid, 'activity_id' => $activity_id));
+    }
 
     include $this->template('detail');
     exit();

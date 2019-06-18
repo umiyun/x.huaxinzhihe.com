@@ -3,14 +3,6 @@
     <li data-class="#base" class="active">
         <a href="javascript:;">订单通知</a>
     </li>
-    <li data-class="#share">
-        <a href="javascript:;">核销通知</a>
-    </li>
-
-    <li data-class="#group">
-        <a href="javascript:;">拼团成功</a>
-    </li>
-
 
 </ul>
 <div class="panel panel-default">
@@ -25,200 +17,108 @@
                 <th class="text-center">二级行业</th>
                 </thead>
                 <tbody>
-
                 <tr>
                     <td align="center">
-                        <div class="type-parent">OPENTM207351887</div>
+                        <div class="type-parent opentm1">OPENTM415557602</div>
                     </td>
                     <td align="center">
-                        <div class="type-parent">订单通知</div>
+                        <div class="type-parent">下单成功提醒</div>
                     </td>
                     <td align="center">
                         <div class="type-parent">IT科技</div>
                     </td>
                     <td align="center">
-                        <div class="type-parent">IT软件与服务</div>
+                        <div class="type-parent">IT科技 - 互联网|电子商务</div>
                     </td>
                 </tr>
                 </tbody>
             </table>
-
-            <div class="form-group">
-
-                <label class="col-sm-2 control-label">内容示例</label>
-                <div class="col-sm-8">
-                    您已预订成功，请在24小时内完成支付。<br>
-                    产品名称：20134-0815<br>
-                    订单编号：A39393939331<br>
-                    通知内容：预订时间 2015-08-01 15:34<br>
-                    如有疑问，请拨打咨询热线<br>
-                </div>
-            </div>
-
-
-            <div class="form-group">
-                <label class="col-sm-2 control-label">模板ID</label>
-                <div class="col-sm-8">
-                    <input type="text" class="form-control" name="set[order_tpl][order_id]"
-                           value="{$setting['order_id']}">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="col-sm-2 control-label">开头内容</label>
-                <div class="col-sm-8">
-                    <input type="text" class="form-control" name="set[order_tpl][order_first]"
-                           value="{$setting['order_first']}">
-                </div>
-            </div>
-
-
-            <div class="form-group">
-                <label class="col-sm-2 control-label">结尾内容</label>
-                <div class="col-sm-8">
-                    <input type="text" class="form-control" name="set[order_tpl][order_remark]"
-                           value="{$setting['order_remark']}">
-                </div>
-            </div>
-
-        </div>
-        <div id="share" class="panel-body share" style="display:none;">
-            <table class="table table-hover">
-                <thead class="navbar-inner">
-                <th class="text-center">编号</th>
-                <th class="text-center">标题</th>
-                <th class="text-center">一级行业</th>
-                <th class="text-center">二级行业</th>
-                </thead>
-                <tbody>
-
-                <tr>
-                    <td align="center">
-                        <div class="type-parent">OPENTM413557852</div>
-                    </td>
-                    <td align="center">
-                        <div class="type-parent">核销成功提醒</div>
-                    </td>
-                    <td align="center">
-                        <div class="type-parent">IT科技</div>
-                    </td>
-                    <td align="center">
-                        <div class="type-parent">IT软件与服务</div>
-                    </td>
-                </tr>
-
-                </tbody>
-            </table>
-
-            <div class="form-group">
-
-                <label class="col-sm-2 control-label">内容示例</label>
-                <div class="col-sm-8">
-                    亲爱的小主，您的预售券已使用。<br>
-                    商品名称：99元中餐任性吃<br>
-                    商品金额：99元<br>
-                    商品数量：1<br>
-                    核销时间：2018年1月21日 18:36<br>
-                    更多信息可点击查看详情
+            <div class="form-group" id="addTemp">
+                <label class="col-sm-2 control-label">模版示例</label>
+                <div class="col-sm-8 example1">
+                    <span class="co_first">订单已经提交成功</span><br>
+                    订单号码：<span class="co_keyword1">1805020012</span><br>
+                    订单金额：<span class="co_keyword2">100</span><br>
+                    <span class="co_remark">可以在订单管理中查看详情</span><br>
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-2 control-label">模板ID</label>
+                <label class="col-sm-2 control-label"></label>
                 <div class="col-sm-8">
-                    <input type="text" class="form-control" name="set[saler_tpl][saler_id]"
-                           value="{$setting['saler_id']}">
+                    <span style="color:red;">#昵称#：将被替换成用户昵称</span><br>
+                    <span style="color:red;">#姓名#：将被替换成用户姓名</span><br>
+                    <span style="color:red;">#电话#：将被替换成用户联系电话</span><br>
+                    <span style="color:red;">#价格#：将被替换成商品价格</span><br><br><br>
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="col-sm-2 control-label">开头内容</label>
-                <div class="col-sm-8">
-                    <input type="text" class="form-control" name="set[saler_tpl][saler_first]"
-                           value="{$setting['saler_first']}">
+                <label class="col-sm-2 control-label">模板开关</label>
+                <div class="col-sm-8 col-xs-12">
+                    <label class='radio-inline'>
+                        <input class="template1" type='radio' name='set[message][create_order][open]' value='0' {if intval($setting['create_order']['open']) == 0}checked{/if} /> 关闭
+                    </label>
+                    <label class='radio-inline'>
+                        <input class="template1" type='radio' name='set[message][create_order][open]' value='1' {if intval($setting['create_order']['open']) == 1}checked{/if} /> 新增
+                    </label>
+                    <label class='radio-inline'>
+                        <input class="template1" type='radio' name='set[message][create_order][open]' value='2' {if intval($setting['create_order']['open']) == 2}checked{/if} /> 选择
+                    </label>
+                </div>
+                <input type="hidden" id="temp_id" name="set[message][create_order][temp_id]" value="{$setting['create_order']['temp_id']}"/>
+            </div>
+
+            <div class="form-group" style="display: none">
+                <input type="text" name="template_id" class="template_id1">
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label">
+                    <span class="text-danger">*</span>
+                    微信模板详细内容
+                </label>
+                <div class="col-sm-8 col-xs-12">
+                    <textarea class="form-control content1" {if $setting['content']}readonly{/if} name="set[message][create_order][content]" rows="8">{$setting['create_order']['content']}</textarea>
+                </div>
+            </div>
+            <div class="form-group" style="display: none">
+                <label class="col-sm-2 control-label"></label>
+                <div class="col-sm-8 col-xs-12">
+                    <a id="J_resolve" class="btn btn-info" title="解析模板内容" href="javascript:;">解析模板内容</a>
+                </div>
+            </div>
+            <div class="form-group s_list" style="display: none">
+                <label class="col-sm-2 control-label"></label>
+                <div class="col-sm-2 col-xs-12">
+                    <select class="form-control" name="">
+                        {loop $list $lv}
+                        <option data-id="{$lv['template_id']}" data-content="{$lv['content']}" value="{$lv['template_id']}">{$lv['title']}</option>
+                        {/loop}
+                    </select>
                 </div>
             </div>
 
 
-            <div class="form-group">
-                <label class="col-sm-2 control-label">结尾内容</label>
-                <div class="col-sm-8">
-                    <input type="text" class="form-control" name="set[saler_tpl][saler_remark]"
-                           value="{$setting['saler_remark']}">
-                </div>
-            </div>
-
-
-        </div>
-
-
-        <div id="group" class="panel-body share" style="display:none;">
-            <table class="table table-hover">
-                <thead class="navbar-inner">
-                <th class="text-center">编号</th>
-                <th class="text-center">标题</th>
-                <th class="text-center">一级行业</th>
-                <th class="text-center">二级行业</th>
-                </thead>
-                <tbody>
-
-                <tr>
-                    <td align="center">
-                        <div class="type-parent">OPENTM414768654</div>
-                    </td>
-                    <td align="center">
-                        <div class="type-parent">拼团结果提醒</div>
-                    </td>
-                    <td align="center">
-                        <div class="type-parent">IT科技</div>
-                    </td>
-                    <td align="center">
-                        <div class="type-parent">互联网|电子商务</div>
-                    </td>
-                </tr>
-
-                </tbody>
-            </table>
-
-            <div class="form-group">
-
-                <label class="col-sm-2 control-label">内容示例</label>
-                <div class="col-sm-8">
-
-                    您有新的拼团订单已经组团成功<br>
-                    拼团状态：参团成功<br>
-                    商品明细：百香果10斤装<br>
-                    拼团价格：88元<br>
-                    剩余人数：3<br>
-                    时间：2014年7月21日 18:36<br>
-                    感觉您的惠顾，更多拼团请点击详情！
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label">模板ID</label>
-                <div class="col-sm-8">
-                    <input type="text" class="form-control" name="set[group_tpl][group_id]"
-                           value="{$setting['group_id']}">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="col-sm-2 control-label">开头内容</label>
-                <div class="col-sm-8">
-                    <input type="text" class="form-control" name="set[group_tpl][group_first]"
-                           value="{$setting['group_first']}">
-                </div>
-            </div>
-
-
-            <div class="form-group">
-                <label class="col-sm-2 control-label">结尾内容</label>
-                <div class="col-sm-8">
-                    <input type="text" class="form-control" name="set[group_tpl][group_remark]"
-                           value="{$setting['group_remark']}">
+            <div id="J_KeyValue" class="form-group" {if $setting['create_order']['open'] == 0}style="display: none"{/if}>
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label">
+                    <span class="text-danger">*</span>
+                    模板参数
+                </label>
+                <div class="col-xs-12 col-sm-9 col-md-10">
+                    <div id="J_keyValue_Content">
+                        {php $i = 0;}
+                        {loop $setting['create_order']['data'] $k $it}
+                        <div class="form-inline" style="margin-bottom:5px; display: flex;align-items: center;">
+                            <input class="form-control" readonly="" name="set[message][create_order][data][{$it['key']}][key]" value="{$it['key']}" placeholder="键" style="width: 10%;"/>
+                            :
+                            <input class="form-control" name="set[message][create_order][data][{$it['key']}][value]" placeholder="默认值" value="{$it['value']}" style="width: 65%;"/>
+                            <div style="display: inline-block; flex: 1;width: 25%;" class="color">
+                                {php echo tpl_form_field_color("set[message][create_order][data][" . $it['key'] . "][color]", $it['color']);}
+                            </div>
+                        </div>
+                        {php $i++;}
+                        {/loop}
+                    </div>
                 </div>
             </div>
         </div>
-
 
 
         <div class="form-group">
@@ -239,6 +139,97 @@
         $('form>.panel-body').hide();
         $($(this).data('class')).show();
     })
-</script>
 
+</script>
+<script>
+    var i = 0;
+    var main = $("#J_keyValue_Content");
+    function addline(key) {
+        var html = '<div class="form-inline" style="margin-bottom:5px;">' +
+            '<input class="form-control" readonly="" name="set[message][create_order][data][' + key + '][key]" value="' + key + '" placeholder="键" style="width: 10%;"/> :' +
+            '<input class="form-control" name="set[message][create_order][data][' + key + '][value]" placeholder="默认值" style="width: 70%;"/>' +
+            '<input class="form-control color" name="set[message][create_order][data][' + key + '][color]" placeholder="颜色" />' +
+            '</div>';
+        main.html(main.html() + html);
+        i += 1;
+    }
+    function addContent() {
+        //解析
+        var content = $("[name='set[message][create_order][content]']").val();
+        if (content == "" || content == undefined) {
+            util.message("该详细内容无法解析！", "", "error");
+            return false;
+        }
+
+        main.html("");
+        i = 0;
+        //开始解析
+        var reg = /\{\{.*?\.(DATA)\}\}/gi;
+        var array = [];
+        var temp;
+        while (array = reg.exec(content)) {
+            temp = array[0].replace(" ", "").replace("{{", "").replace(".DATA}}", "");
+            addline(temp);
+        }
+        //选取颜色
+        $(".color").each(function () {
+            var ele = this;
+            util.colorpicker(ele, function (color) {
+                $(ele).val(color.toString());
+            });
+        });
+        //显示
+        $("#J_KeyValue").show();
+    }
+
+    function addTemp(example) {
+
+        var html = '<label class="col-sm-2 control-label">模版示例</label>\n' +
+            '                <div class="col-sm-8 example1">\n' +
+            '                    <span class="co_first">订单已经提交成功</span><br>\n' +
+            '                    订单号码：<span class="co_keyword1">1805020012</span><br>\n' +
+            '                    订单金额：<span class="co_keyword2">100</span><br>\n' +
+            '                    <span class="co_remark">可以在订单管理中查看详情</span><br>\n' +
+            '                </div>'
+        $("#addTemp").html(html);
+    }
+    var list={php echo json_encode($list)};
+    $('.template1').click(function () {
+        console.log(1);
+        var val=$(this).val();
+        if(val==1){
+            $('.s_list').hide();
+            $.post(
+                "{php echo $this->createWebUrl('template',['op'=>'add'])}",
+                {
+                    'opentm':$('.opentm1').html()
+                },
+                function (data) {
+                    if(data.errno==0){
+                        $('.content1').val(data.data.content);
+                        $('#temp_id').val(data.data.template_id);
+                        addContent()
+                        // addTemp(data.data.example)
+                    }
+                },'json'
+            )
+        }else if (val==2){
+            $('.s_list').show();
+            $('.content1').val(list[0]['content']);
+            $('#temp_id').val(list[0]['template_id']);
+            addContent()
+        }else if (val==0){
+            $('.s_list').hide();
+        }
+    });
+    $('.s_list select').change(function () {
+        $('.content1').val($('.s_list option:selected').attr('data-content'));
+        $('#temp_id').val($('.s_list option:selected').attr('data-id'));
+        addContent()
+    })
+</script>
+<script>
+    console.log({php echo json_encode($list)})
+    console.log({php echo json_encode($setting)})
+</script>
 {template 'common/footer'}

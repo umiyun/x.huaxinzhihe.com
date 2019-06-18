@@ -29,6 +29,9 @@
                             <option {if $_GPC['status'] == 2}selected{/if} value='2'>已支付</option>
                             <option {if $_GPC['status'] == 3}selected{/if} value='3'>已核销</option>
                             <option {if $_GPC['status'] == 4}selected{/if} value='4'>已取消</option>
+                            <option {if $_GPC['status'] == 5}selected{/if} value='5'>已退款</option>
+                            <option {if $_GPC['status'] == 7}selected{/if} value='7'>退款失败</option>
+                            <option {if $_GPC['status'] == 8}selected{/if} value='8'>待退款</option>
 <!--                            <option {if $_GPC['status'] == 5}selected{/if} value='5'>申请退款</option>-->
 <!--                            <option {if $_GPC['status'] == 6}selected{/if} value='6'>已退款</option>-->
                         </select>

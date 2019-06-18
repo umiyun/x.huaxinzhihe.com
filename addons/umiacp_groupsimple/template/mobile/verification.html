@@ -30,18 +30,26 @@
         font-size: 16px;
         padding: 2%;
     }
+    .d_content>div{
+        margin: 10px;
+    }
 </style>
-
+<div class="tips"></div>
 <div class="detail">
     <div class="d_top flex">
         <img style="width: 90px;height:90px;margin-right: 5px" src="{php echo tomedia($order['goods']['image'])}" alt="">
         <div class="flex1 p_relative">
             <div class="" >{$order['goods']['title']}</div>
-            <div class="color777 ft12 " >单号 {$order['ordersn']}</div>
-            <!--<div class="color777 ft12 " >支付时间 {php echo date('Y-m-d H:i:s',$order['pay_time'])}</div>-->
-            <div class="color777 ft12 " >用户 {$order['cut']['realname']}</div>
-            <div class="color777 ft12 " >价格 ￥{$order['price']}</div>
+
+            <div class="color777 ft12 " style="position: absolute;bottom: 0;left: 0;">价格 ￥{$order['price']}</div>
         </div>
+    </div>
+    <div class="d_content">
+        <div class="ft12 flex flex_j_between" ><span class="color777">单号</span> {$order['ordersn']}</div>
+        <div class="ft12 flex flex_j_between" ><span class="color777">下单时间</span> {php echo date('Y-m-d H:i:s',$order['createtime'])}</div>
+        <div class="ft12 flex flex_j_between" ><span class="color777">支付时间</span> {php echo date('Y-m-d H:i:s',$order['pay_time'])}</div>
+        <div class="ft12 flex flex_j_between" ><span class="color777">用户姓名</span> {$order['realname']}</div>
+        <div class="ft12 flex flex_j_between" ><span class="color777">用户电话</span> {$order['mobile']}</div>
     </div>
     <div class="d_bottom flex flex_j_center">
         <a href="javascript:;" class="a_btn hx_btn">
@@ -57,7 +65,7 @@
         $.post(
             "{php echo $this->createMobileUrl('saler',array('op' =>'check','order_id'=>$_GPC['order_id']))}",
             function (data) {
-               tips(data.message)
+                tips(data.message)
                 if(data.type=='success'){
                     setTimeout(function () {
                         wx.scanQRCode({
@@ -79,4 +87,4 @@
     }
 </script>
 
-{template 'footer'}
+{template 'common/footer'}

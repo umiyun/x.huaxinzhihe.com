@@ -247,7 +247,7 @@
         -webkit-justify-content: space-around;
     }
     .acs_content span{
-        width: 20%;
+        width: 30%;
         text-align: center;
         margin-top: 5px;
     }
@@ -707,12 +707,12 @@
             <div class="flex flex_j_center">
                 <div>
                     <span class="act_day"></span>
-                    <p>DATS</p>
+                    <p>DAYS</p>
                 </div>
                 <div style="font-size: 32px;margin: 0 4px;position: relative;bottom: 3px"> : </div>
                 <div>
                     <span class="act_hour"></span>
-                    <p>HOURSE</p>
+                    <p>HOURS</p>
                 </div>
                 <div style="font-size: 32px;margin: 0 4px;position: relative;bottom: 3px"> : </div>
                 <div>
@@ -816,10 +816,24 @@
             <div>￥<span>{$activity['single_price']}</span></div>
             <div class="ft16">单人购买</div>
         </div>
+        {if $activity['status']==3}
         <div onclick="openSign(2,{$_GPC['id']})" class="buy_tuan">
             <div>￥<span>{$activity['group_price']}</span></div>
             <div class="ft16">我要参团</div>
         </div>
+        {/if}
+        {if $activity['status']==1}
+        <div class="buy_tuan">
+            <div>￥<span>{$activity['group_price']}</span></div>
+            <div class="ft16">拼团成功</div>
+        </div>
+        {/if}
+        {if $activity['status']==2}
+        <div class="buy_tuan">
+            <div>￥<span>{$activity['group_price']}</span></div>
+            <div class="ft16">拼团失败</div>
+        </div>
+        {/if}
         {/if}
         {if $activity['status']==2}
         <div class="status_btn">

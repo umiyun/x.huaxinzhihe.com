@@ -131,71 +131,55 @@ if (is_array($setting['payment'])) {
                 $activity = pdo_get(YOUMI_NAME . '_' . 'activity', ['uniacid' => $log['uniacid'], 'id' => $order['activity_id']]);
 
                 if ($order['status'] == 1) {
-                    if ($activity['gnum'] > $activity['success']) {
-                        pdo_update(YOUMI_NAME . '_' . 'order', ['status' => 2, 'pay_time' => TIMESTAMP, 'transid' => $get['transaction_id']], ['id' => $order['id']]);
-                        pdo_update(YOUMI_NAME . '_activity', ['success +=' => 1], ['id' => $order['activity_id']]);
-                        if ($order['leader'] == 1) {
 
-                            pdo_update(YOUMI_NAME . '_group', ['status' => 3], ['id' => $order['group_id']]);
-                        } else {
+                    if ($order['group_id'] || $order['leader'] == 1) {
+                        if (intval($activity['success']) + intval($activity['group_num']) <= intval($activity['gnum'])) {
+                            pdo_update(YOUMI_NAME . '_' . 'order', ['status' => 2, 'pay_time' => TIMESTAMP, 'transid' => $get['transaction_id']], ['id' => $order['id']]);
+                            if ($order['leader'] == 1) {
 
+                                $group['uniacid'] = $order['uniacid'];
+                                $group['mid'] = $order['mid'];
+                                $group['activity_id'] = $activity['id'];
+                                $group['shop_id'] = $activity['shop_id'];
+                                $group['commission'] = $activity['commission'];
+                                $group['createtime'] = time();
+                                $group['group_num'] = $activity['group_num'];
+                                $group['now_num'] = 1;
+                                $group['group_id'] = $order['tid'];
+                                $group['nickname'] = $order['nickname'];
+                                $group['avatar'] = $order['avatar'];
+                                $group['status'] = 3;
 
-                            //判断团支付成功人数是否等于成团人数
-                            $successNum = pdo_fetchcolumn("select count(id) from " . tablename(YOUMI_NAME . '_order') . " where group_id = :group_id and status = 2", [':group_id' => $order['group_id']]);
-
-                            if ($successNum == $activity['group_num']) {
-                                pdo_update(YOUMI_NAME . '_group', ['status' => 1, 'success_time' => time(), 'now_num' => $successNum], ['id' => $order['group_id']]);
-
-                                //发放佣金
-                                $orders = pdo_getall(YOUMI_NAME . '_' . 'order', ['group_id' => $order['group_id'], 'status' => 2, 'fmid !=' => 0], ['id', 'price', 'fmid', 'uniacid']);
-                                $commission = $group = pdo_getcolumn(YOUMI_NAME . '_group', ['id' => $order['group_id']], 'commission');
-
-//                                $forders = [];
-//                                $fmids = [];
-//                                foreach ($orders as $order) {
-//                                    if (!in_array($order['fmid'], $fmids)) {
-//                                        $fmids[] = $order['fmid'];
-//                                        $forders[] = $order;
-//                                    }
-//                                }
-//                                foreach ($forders as $order) {
-//                                    sendCommission($order, $commission);
-//                                }
-
-                                $sum_coms=[];
-                                foreach ($orders as $order) {
-                                    if ($sum_coms[$order['fmid']]){
-
-                                        $sum_coms[$order['fmid']]+=$order['commission'];
-                                    }else{
-                                        $sum_coms[$order['fmid']]=$order['commission'];
-                                    }
-                                }
-                                foreach ($sum_coms as $fmid=> $com) {
-                                    pdo_update(YOUMI_NAME . '_order',['commission'=>$com],['mid'=>$fmid,'group_id'=>$order['group_id']]);
-                                }
-                                foreach ($orders as $order) {
-                                    sendCommission($order, $commission);
-                                }
-
-
-
-
+                                pdo_insert(YOUMI_NAME . '_group', $group);
+                                $group_id = pdo_insertid();
+                                pdo_update(YOUMI_NAME . '_order', ['group_id' => $group_id], ['id' => $order['id']]);
                             } else {
 
-                                pdo_update(YOUMI_NAME . '_group', ['now_num' => $successNum], ['id' => $order['group_id']]);
-                            }
-                            //发送拼团通知
-                            $url=$_W['siteroot'] . "app/" .$this->createMobileUrl('index', array( 'activity_id' => $activity_id));
-                            $res=     handleGroupMsg($_W['openid'],$order['title'],$order['price'],$successNum,$url);
-                        }
+                                //判断团支付成功人数是否等于成团人数
+                                $successNum = pdo_fetchcolumn("select count(id) from " . tablename(YOUMI_NAME . '_order') . " where group_id = :group_id and status = 2", [':group_id' => $order['group_id']]);
 
+                                if ($successNum == $activity['group_num']) {
+                                    pdo_update(YOUMI_NAME . '_group', ['status' => 1, 'success_time' => time(), 'now_num' => $successNum], ['id' => $order['group_id']]);
+                                    pdo_update(YOUMI_NAME . '_activity', ['success +=' => $successNum], ['id' => $order['activity_id']]);
+
+                                } else {
+
+                                    pdo_update(YOUMI_NAME . '_group', ['now_num' => $successNum], ['id' => $order['group_id']]);
+                                }
+
+                            }
+                        } else {
+                            pdo_update(YOUMI_NAME . '_group', ['status' => 2, 'success_time' => time()], ['id' => $order['group_id']]);
+                            pdo_update(YOUMI_NAME . '_' . 'order', ['status' => 8, 'pay_time' => TIMESTAMP, 'transid' => $get['transaction_id']], ['group_id' => $order['group_id']]);
+                        }
 
                         require_once IA_ROOT . '/addons/' . YOUMI_NAME . '/core/functions/order.php';
 
                         youmi_settlement_log($order, 1, $order['price'], YOUMI_NAME . '用户支付订单：订单ID：' . $order['id'] . '，支付时间：' . date('Y-m-d H:i:s'));
                     } else {
-                        pdo_update(YOUMI_NAME . '_' . 'order', ['status' => 7, 'pay_time' => TIMESTAMP, 'transid' => $get['transaction_id']], ['id' => $order['id']]);
+                        if (intval($activity['success']) >= intval($activity['gnum'])) {
+                            pdo_update(YOUMI_NAME . '_' . 'order', ['status' => 8, 'pay_time' => TIMESTAMP, 'transid' => $get['transaction_id']], ['id' => $order['id']]);
+                        }
                     }
                 }
                 if ($isxml) {
@@ -221,108 +205,4 @@ if ($isxml) {
     exit;
 } else {
     exit('fail');
-}
-function sendCommission($order, $commission)
-{
-
-//    if (empty($order['fmid'])) {
-//        return;
-//    }
-    $f_member = pdo_get(YOUMI_NAME . '_member', array('mid' => $order['fmid'], 'uniacid' => $order['uniacid']), ['openid', 'mid']);
-
-    insert_log($f_member);
-    $tid = 'groupsimple' . time() . $order['id'];
-    if ($order['price'] >= $commission) {
-
-        $res = youmi_finance($f_member['openid'], $tid, $commission, '佣金');
-        insert_log($res);
-
-        if ($res['result_code'] == 'SUCCESS') {
-            pdo_update(YOUMI_NAME . '_order', array('send_status' => 1), array('id' => $order['id']));
-        } else {
-            pdo_update(YOUMI_NAME . '_order', array('send_status' => 2), array('id' => $order['id']));
-        }
-
-    }
-}
-
-function youmi_finance($openid = '', $tid, $money, $desc = '')
-{
-
-
-    $desc = empty($desc) ? '商家提现' : $desc;
-    $setting = youmi_setting_get_list();
-
-    $pay = new WeixinPay($setting['wxapp_appid'], $openid, $setting['wxapp_mchid'], $setting['wxapp_signkey'], $tid, $desc, $money);
-
-    if (empty($openid)) return error(-1, 'openid不能为空');
-
-    $pars = array();
-    $pars['mch_appid'] = $setting['wxapp_appid'];
-    $pars['mchid'] = $setting['wxapp_mchid'];
-    $pars['partner_trade_no'] = $tid;
-    $pars['openid'] = $openid;
-    $pars['check_name'] = 'NO_CHECK';
-    $pars['amount'] = floatval($money) * 100;
-    $pars['desc'] = $desc;
-    $pars['spbill_create_ip'] = gethostbyname($_SERVER["HTTP_HOST"]);
-    if (empty($pars['mch_appid']) || empty($pars['mchid'])) {
-        $rearr['err_code'] = '请先在系统设置-小程序参数设置内设置微信商户号和秘钥';
-        return $rearr;
-    }
-
-    $rearr = $pay->finance($pars);
-
-    return $rearr;
-
-}
-
-function handleGroupMsg($openid,$k2,$k3,$k4,$url){
-
-    $args=[
-        'keyword1'=>'参团成功',
-        'keyword2'=>$k2,
-        'keyword3'=>$k3,
-        'keyword4'=>$k4,
-        'keyword5'=>date('Y-m-d H:i:s'),
-    ];
-    return sendGroupMsg($openid,$args,$url);
-}
-function sendGroupMsg($openid,$args,$url){
-
-    $setting=  youmi_setting_get_list();
-    $data = array(
-        'first' => array(
-            'value' => $setting['cut_first'],
-            'color' => '#ff510'
-        ),
-        'keyword1' => array(
-            'value' => $args['keyword1'],
-            'color' => '#ff510'
-        ),
-        'keyword2' => array(
-            'value' => $args['keyword2'],
-            'color' => '#ff510'
-        ),
-        'keyword3' => array(
-            'value' => $args['keyword3'],
-            'color' => '#ff510'
-        ),
-        'keyword4' => array(
-            'value' => $args['keyword4'],
-            'color' => '#ff510'
-        ),
-        'keyword5' => array(
-            'value' => $args['keyword5'],
-            'color' => '#ff510'
-        ),
-        'remark' => array(
-            'value' => $setting['cut_remark'],
-            'color' => '#ff510'
-        ),
-    );
-
-    $account_api = WeAccount::create();
-
-    return $account_api->sendTplNotice($openid, $setting['cut_id'], $data,$url);
 }

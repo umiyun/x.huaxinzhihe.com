@@ -32,10 +32,7 @@ class Umiacp_groupsimpleModuleSite extends WeModuleSite
         global $_GPC, $_W;
 
             $this->checkActivityValid();
-
-
-
-        $this->uniacid = intval($_W['uniacid']);
+            $this->uniacid = intval($_W['uniacid']);
 
         if ($_W['user']) {
             $this->uid = $_W['uid'];

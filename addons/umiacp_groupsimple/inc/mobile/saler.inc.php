@@ -33,18 +33,18 @@ if (!$order) {
     message('订单不存在');
 }
 
-$saler = pdo_get(YOUMI_NAME . '_' . 'saler', ['uniacid' => $uniacid,'activity_id' => $order['activity_id'], 'shop_id' => $order['shop_id'], 'openid' => $this->openid, 'status' => 1]);
+$saler = pdo_get(YOUMI_NAME . '_' . 'saler', ['uniacid' => $uniacid, 'activity_id' => $order['activity_id'], 'shop_id' => $order['shop_id'], 'openid' => $this->openid, 'status' => 1]);
 if (!$saler) {
     $shop = pdo_get(UMI_NAME . '_' . 'shop', ['uniacid' => $uniacid, 'id' => $order['shop_id'], 'openid' => $this->openid, 'status' => 2]);
-    $member= pdo_get(UMI_NAME . '_' . 'saler', ['uniacid' => $uniacid,'openid' => $this->openid]);
+    $member = pdo_get(UMI_NAME . '_' . 'saler', ['uniacid' => $uniacid, 'openid' => $this->openid]);
 
-    if (!$saler && !$shop&&!$member) {
+    if (!$saler && !$shop && !$member) {
         message('非常抱歉，您无权核销此商品');
     }
 }
 
 $order['goods'] = pdo_fetch('SELECT * FROM ' . tablename(YOUMI_NAME . '_' . 'activity') . ' where uniacid = :uniacid and id = ' . $order['activity_id'], [':uniacid' => $uniacid]);
-$order['shop'] = pdo_fetch('SELECT * FROM ' . tablename(YOUMI_NAME . '_' . 'shop') . ' where uniacid = :uniacid and id = ' . $order['shop_id'], [':uniacid' => $uniacid]);
+$order['shop'] = pdo_fetch('SELECT * FROM ' . tablename(UMI_NAME . '_' . 'shop') . ' where uniacid = :uniacid and id = ' . $order['shop_id'], [':uniacid' => $uniacid]);
 
 
 if ($order['status'] == 3) {
@@ -71,11 +71,12 @@ if ($op == 'check') {
 
     $res = pdo_update(YOUMI_NAME . '_' . 'order', ['status' => 3, 'saler_id' => $this->mid, 'saler_openid' => $this->openid, 'salertime' => time()], ['id' => $order_id]);
     if ($res) {
-       $res= youmi_settlement_log($order, 2, $order['price'], '核销订单：订单ID：' . $order_id . '，核销员：' . $this->username . '，核销时间：' . date('Y-m-d H:i:s'));
+        $res = youmi_settlement_log($order, 2, $order['price'], '核销订单：订单ID：' . $order_id . '，核销员：' . $this->username . '，核销时间：' . date('Y-m-d H:i:s'));
 //die(json_encode($res));
     }
 //    message($res);
     $errno = $res ? 0 : 1;
+//    pdo_debug();
 //    message('核销' . ($res ? '成功' : '失败'), '', $res ? 'success' : 'error');
     youmi_result($errno, '核销' . ($res ? '成功' : '失败'));
 

@@ -23,7 +23,7 @@ if ($op == 'display') {
     }
     $keyword = trim($_GPC['keyword']);
     if ($keyword) {
-        $condition .= " and (o.title like '%{$keyword}%' and o.tid like '%{$keyword}%' or o.transid like '%{$keyword}%') ";
+        $condition .= " and (o.title like '%{$keyword}%' or o.tid like '%{$keyword}%' or o.transid like '%{$keyword}%') ";
     }
     $orderby = ' order by ';
 
@@ -46,7 +46,13 @@ if ($op == 'display') {
 		\'已核销\' 
 		WHEN \'4\' THEN
 		\'已取消\' 
-        WHEN \'7\' THEN
+		WHEN \'5\' THEN
+		\'已退款\' 
+		WHEN \'6\' THEN
+		\'已失效\' 
+		WHEN \'7\' THEN
+		\'退款失败\' 
+        WHEN \'8\' THEN
 		\'待退款\' 
 		ELSE \'\' 
 	END AS statusname 
@@ -94,7 +100,13 @@ if ($op == 'download') {
 		\'已核销\' 
 		WHEN \'4\' THEN
 		\'已取消\' 
-        WHEN \'7\' THEN
+		WHEN \'5\' THEN
+		\'已退款\' 
+		WHEN \'6\' THEN
+		\'已失效\' 
+		WHEN \'7\' THEN
+		\'退款失败\' 
+        WHEN \'8\' THEN
 		\'待退款\' 
 		ELSE \'\' 
 	END AS statusname 
@@ -143,7 +155,7 @@ if ($op == 'del') {
     pdo_update(YOUMI_NAME . '_' . 'order', ['status' => -1], array('id' => $id));
     itoast('温馨提示：订单删除成功！', referer(), 'success');
 }
-        
+
 if ($op == 'search') {
     //选择用户
 
@@ -154,4 +166,3 @@ if ($op == 'search') {
     die(json_encode(['status' => $ds ? 1 : 0, 'ds' => $ds]));
 
 }
-        

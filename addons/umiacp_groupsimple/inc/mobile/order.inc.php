@@ -48,8 +48,7 @@ if ($op == 'create_order') {
 
     $activity = pdo_fetch("select * from " . tablename(YOUMI_NAME . '_' . 'activity') . " where `uniacid` = {$uniacid} and id = {$activity_id} ");
 
-    if ($activity['success'] >= $activity['gnum']) {
-
+    if (intval($activity['success']) >= intval($activity['gnum'])) {
         youmi_result(1, '商品已抢光');
     }
     if ($activity['status'] == 2) {
@@ -62,6 +61,10 @@ if ($op == 'create_order') {
     switch ($type) {
         case 1:
             //开团价
+            if (intval($activity['success']) + intval($activity['group_num']) > intval($activity['gnum'])) {
+                pdo_update(YOUMI_NAME . '_group', ['status' => 2], ['activity_id' => $activity['id'], 'status' => 3]);
+                youmi_result(1, '库存不足');
+            }
             $price = $activity['leader_price'];
             break;
         case 2:
@@ -84,22 +87,24 @@ if ($op == 'create_order') {
             youmi_result(1, '请勿重复开团');
         }
 
-
-        $data['group_id'] = getGroupId();
+        $moduleid = empty($_W['fans']['uid']) ? '000000' : sprintf("%06d", $_W['fans']['uid']);
+        $tid = date('YmdHis') . $moduleid . random(8, 1);
+        $data['group_id'] = $tid;
         $data['leader'] = 1;
         $data['member'] = $this->getMemberInfo($this->mid);
 
         $group = getGroupData($data, $activity, $uniacid);
         $group['status']=3;
         pdo_insert(YOUMI_NAME . '_' . 'group', $group);
+        $data['tid'] = $tid;
         $data['group_id'] = pdo_insertid();
         unset($data['fmid']);
         $order = getOrderData($data, $activity, $uniacid);
-
+        $order['pay_time'] = time();
         $order['status'] = 2;
         $status = pdo_insert(YOUMI_NAME . '_' . 'order', $order);
-        $errno = $status ? 2 : 1;
-        youmi_result($errno, '开团' . ($status ? '成功' : '失败'));
+        $errno = $status ? 2 : 1;//团长免费
+        youmi_result($errno, '开团' . ($status ? '成功' : '失败'), $order);
     }
 
 
@@ -120,11 +125,11 @@ if ($op == 'create_order') {
                 youmi_result(0, '下单成功', $order);
             }
             unset($data['fmid']);
-            $data['group_id'] = getGroupId();
+//            $data['group_id'] = getGroupId();
             $data['leader'] = 1;
-            $group = getGroupData($data, $activity, $uniacid);
-            pdo_insert(YOUMI_NAME . '_' . 'group', $group);
-            $data['group_id'] = pdo_insertid();
+//            $group = getGroupData($data, $activity, $uniacid);
+//            pdo_insert(YOUMI_NAME . '_' . 'group', $group);
+//            $data['group_id'] = pdo_insertid();
             break;
         case 2:
             //团购
@@ -132,7 +137,9 @@ if ($op == 'create_order') {
             if ($group['mid']==$this->mid) {
                 youmi_result(1, '请勿参加自己的团');
             }
-
+            if ($group['status'] != 3) {
+                youmi_result(1, '团已成功或失败，请重新开团');
+            }
 
             $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id, 'mid' => $this->mid, 'status' => [2, 3],'group_id'=>$data['group_id'] , 'pay_type' => 2]);
             if ($order) {
@@ -151,7 +158,6 @@ if ($op == 'create_order') {
                 youmi_result(1, '该团已满');
             }
 
-
             break;
         case 3:
             //单买
@@ -163,9 +169,6 @@ if ($op == 'create_order') {
             }
             break;
     }
-
-
-
 
 
     $data['member'] = $this->getMemberInfo($this->mid);
@@ -189,8 +192,8 @@ function getOrderData($data, $activity, $uniacid)
     $order['activity_id'] = $activity['id'];
     $order['shop_id'] = $activity['shop_id'];
     $order['title'] = $activity['title'];
-    $order['ordersn'] = $tid;
-    $order['tid'] = $tid;
+    $order['ordersn'] = $data['tid'] ? $data['tid'] : $tid;
+    $order['tid'] = $data['tid'] ? $data['tid'] : $tid;
     $order['status'] = 1;
     $order['createtime'] = TIMESTAMP;
     $order['realname'] = $data['realname'];

@@ -424,8 +424,10 @@
         $('.multi-img-details').sortable('option', 'scroll', false);
     })
     $('form').submit(function () {
-        if($('input[name="data[title]"]').val() == ''){
-            util.message('请输入标题');
+        var commission = $('input[name="data[commission]"]').val();
+        var group_price = $('input[name="data[group_price]"]').val();
+        if(Number(commission) > Number(group_price)){
+            util.message('佣金不能大于团购价');
             return false;
         }
     })

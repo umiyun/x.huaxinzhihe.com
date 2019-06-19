@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns="http://www.we7.cc" versionCode="0.8,1.0">
+	<application setting="false">
+		<name><![CDATA[活动宝单商品砍价(通用版)]]></name>
+		<identifie><![CDATA[umiacp_bargainsimple3]]></identifie>
+		<version><![CDATA[1.0.0]]></version>
+		<type><![CDATA[biz]]></type>
+		<ability><![CDATA[活动宝单商品砍价(通用版)]]></ability>
+		<description><![CDATA[同路人QQ群：758511946]]></description>
+		<author><![CDATA[同路人]]></author>
+		<url><![CDATA[http://www.we7.cc]]></url>
+	</application>
+	<platform>
+		<subscribes>
+			<message type="text" />
+		</subscribes>
+		<handles>
+			<message type="subscribe" />
+			<message type="qr" />
+			<message type="text" />
+			<message type="image" />
+		</handles>
+		<supports>
+			<item type="app" />
+		</supports>
+		<rule embed="false" />
+		<card embed="false" />
+	</platform>
+	<bindings>
+		<menu>
+			<entry title="炮灰域名" do="system" state="" direct="false" />
+			<entry title="活动管理" do="activity" state="" direct="false" />
+			<entry title="订单管理" do="order" state="" direct="false" />
+			<entry title="用户管理" do="member" state="" direct="false" />
+		</menu>
+	</bindings>
+	<permissions>
+	</permissions>
+	<install><![CDATA[upgrade.php]]></install>
+	<uninstall><![CDATA[]]></uninstall>
+	<upgrade><![CDATA[upgrade.php]]></upgrade>
+</manifest>

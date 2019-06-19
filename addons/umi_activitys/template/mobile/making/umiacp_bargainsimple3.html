@@ -1,0 +1,1299 @@
+{template 'header_making'}
+<link rel="stylesheet" type="text/css" href="{YOUMI_URL_APP}hui/hui.css" />
+<script type="text/javascript" src="{YOUMI_URL_APP}hui/hui.js" charset="utf-8"></script>
+<script type="text/javascript" src="{YOUMI_URL_APP}hui/hui-picker.js" charset="utf-8"></script>
+<script type="text/javascript" src="{YOUMI_URL_APP}hui/cities.js" charset="utf-8"></script>
+<style>
+    *{box-sizing: inherit;}
+    div{
+        font-size: 12px;
+    }
+    .a_head{
+        position: relative;
+    }
+    .h_img{
+        width: 100%;
+    }
+    #musicSelect,#effectsSelect{
+        position: absolute;
+        top: 43%;
+        right: 2%;
+        z-index: 5;
+        padding: 2%;
+        border-radius: 50%;
+        background: rgba(0,0,0,0.7);
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        line-height: 13px;
+    }
+    .a_head .iconfont{
+        color: #fff;
+        font-size: 20px;
+    }
+    #effectsSelect{
+        top: 65%;
+    }
+    .h_tips{
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        color: #fff;
+        background: rgba(0,0,0,0.4);
+        padding: 0 4%;
+    }
+    .h_changes{
+        color: #fff;
+        font-size: 16px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 5;
+        width: 100%;
+    }
+    .img_change{
+        margin-left: 2%;
+    }
+    .h_changes .iconfont{
+        font-size: 20px;
+        color: #F8A40D;
+    }
+    .template_change,.img_change{
+        background: rgba(0,0,0,0.6);
+        padding: 0 2%;
+        width: 25%;
+    }
+
+    .a_content{
+        padding: 4%;
+        box-sizing: border-box;
+        {if $activity['bgimage']}
+        background: url("{$activity['bgimage']}") repeat 100%;
+        {else}
+        background: url("{$case['template']['bgimage']}") repeat 100%;
+        {/if}
+
+        padding-bottom: 35%;
+    }
+    .c_title{
+        text-align: center;
+    }
+    .c_setting{
+
+
+    }
+    .ce_jianjie{
+        background: #fff;
+        border-radius: 5px;
+        padding: 2%;
+    }
+    .c_title_btn{
+        background: rgba(0,0,0,0.4);
+        display: inline-block;
+        color: #fff;
+        padding: 1% 2%;
+        margin: 2%;
+    }
+    .c_title_tips{
+        color: #777;
+    }
+    textarea{
+        border: 1px dashed #F9292A;
+        text-align: center;
+        margin: 0;
+        padding: 5px;
+    }
+    .c_title textarea{
+        padding: 2%;
+        font-size: 16px;
+        padding-bottom: 10px;
+        font-weight: 900;
+    }
+    .c_title_tips{
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+        color: #ddd;
+    }
+    .ct_date>span{
+        width: 25%;
+    }
+    .ct_date>input{
+        width: 52%;
+        margin: 2% 4%;
+        margin-bottom: 10px!important;
+    }
+    input[type=color], input[type=date], input[type=datetime-local], input[type=datetime], input[type=email], input[type=month], input[type=number], input[type=password], input[type=search], input[type=tel], input[type=text], input[type=time], input[type=url], input[type=week], select{
+        border: 1px dashed #F9292A;
+        text-align: center;
+        margin: 0 2%;
+        height: 30px;
+        padding: 5px;
+        background: transparent;
+    }
+    .basic_setting{
+        background: #E4FCFA;
+        border: 1px solid #111;
+        border-radius: 10px;
+        padding: 2%;
+        padding-top: 25px;
+    }
+
+    .s_price{
+
+    }
+    .p_gimg{
+        text-align: center;
+        border: 1px solid #aaa;
+        width: 110px;
+        height: 110px;
+        overflow: hidden;
+        background: #fff;
+    }
+    .ce_share .p_gimg{
+        display: block;
+    }
+    .p_gimg>span{
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: #F7DA79;
+        z-index: 8;
+    }
+    .p_price{
+        margin-left: 4%;
+    }
+    input.select_goodimg,input.select_good2img{
+        opacity: 0;
+    }
+    .p_gimg .select_goodimg,.p_gimg .good_logo,.select_good2img,.ac_btns .select_goodimg{
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+    .p_gimg .good_logo{
+        z-index: 5;
+    }
+    .p_price input{
+        width: 80%;
+    }
+    .s_nums{
+        margin-top: 2%;
+    }
+    .s_goodimg{
+        border: 1px dashed #F9292A;
+        margin: 4% 0;
+        text-align: center;
+        border-radius: 3px;
+        width: 100%;
+        min-height: 100px;
+    }
+    .s_goodimg>div{
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        z-index: 2;
+    }
+    .s_goodimg>img.good_logo{
+        position: relative;
+        top: 0;
+        width: 100%;
+        left: 0;
+        z-index: 5;
+    }
+
+    .c_addbtn{
+        text-align: center;
+    }
+    .c_addbtn>div{
+        display: inline-block;
+        border: 1px solid #98C1EC;
+        margin: 5%;
+        padding: 2% 6%;
+        border-radius: 4px;
+    }
+    .c_addbtn i.iconfont{
+        color: #98C1EC;
+        font-size: 20px;
+    }
+    .s_intro{
+        position: absolute;
+        top: -25px;
+        width: 70%;
+        left: 15%;
+    }
+    .s_intro img{
+        position: absolute;
+        width: 100%;
+        height: 40px;
+        left: 0;
+        top: 0;
+        z-index: 3;
+        display: none;
+    }
+    .s_intro input{
+        position: absolute;
+        width: 100%;
+        top: -10px;
+        left: 0;
+        z-index: 5;
+    }
+    .iconfont.icon-essential{
+        color: red;
+        font-size: 12px;
+    }
+    .s_close{
+        position: absolute;
+        top: -33px;
+        right: 0px;
+        z-index: 10;
+        font-size: 40px;
+        color: red;
+    }
+
+    .s_detail .weui-cells:after, .weui-cells:before,.s_detail .weui-cell:before{
+        display: none;
+    }
+    .s_detail label.weui-cell{
+        padding: 0 10px;
+    }
+    .weui-cells_checkbox .weui-icon-checked:before{
+        font-size: 20px;
+    }
+
+    .cey_title,.cem_title,.ceg_title{
+        text-align: center;
+        margin-bottom: 5%;
+    }
+    .cey_title>img,.cem_title>img,.ceg_title>img{
+        width: 60%;
+        height: 40px;
+    }
+    .cey_title>span,.cem_title>span,.ceg_title>span{
+        position: absolute;
+        bottom: -14px;
+        right: 0;
+        width: 100%;
+    }
+
+
+    .ce_youhui,.ce_miaoshu,.ce_common,.ce_lingqu{
+        margin-top: 25px;
+    }
+    .cey_title input,.cem_title input,.ce_common input,.ce_lingqu .cegt_input{
+        /*border: 1px solid transparent;*/
+        width: 38%;
+        top: 10%;
+        left: 29%;
+        position: absolute;
+        z-index: 5;
+    }
+    .cey_content,.cem_content,.ceg_content,.ces_content,.cel_content{
+        background: #fff;
+        border-radius: 5px;
+        padding: 2%;
+    }
+    .csys_content,.csms_content,.csgs_content{
+        margin-bottom: 12%;
+    }
+    .csycc_num{
+        padding: 2%;
+        background: #D8D8D8;
+        margin: 1%;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        color: #fff;
+    }
+    .csycc_btns,.csmcc_btns,.common_btns{
+        position: absolute;
+        right: 0;
+        bottom: -20px;
+        z-index: 5;
+    }
+    .csmcc_btns{
+        bottom: -14px;
+    }
+    .csycc_btns div,.csmcc_btns div,.common_btns div{
+        background: #aaa;
+        padding: 0 4%;
+        border-left: 1px solid #fff;
+        word-break: break-all;
+        color: #fff;
+        text-align: center;
+        width: 60px;
+    }
+    .ceyc_btns{
+        margin-top: 20%;
+    }
+    .ceyc_btns i.iconfont{
+        color: #98C1EC;
+    }
+    .ceyc_btns>div{
+        display: inline-block;
+        border: 1px solid #98C1EC;
+        padding: 1% 4%;
+        background: #D6E9FC;
+    }
+
+    .csms_contents .p_gimg{
+        width: 100%;
+    }
+
+    .ces_btns{
+        padding: 2%;
+    }
+    .ces_btns i{
+        font-size: 30px;
+        color: #98C1EC;
+    }
+    .ces_btns .ft16{
+        margin-top: -10px;
+    }
+
+    .cess_content{
+        margin-bottom: 40px;
+    }
+    .cess_content .common_btns{
+        bottom: -25px;
+    }
+
+    .cel_content>div{
+        margin-bottom: 10px;
+    }
+    .ce_common .cel_content input{
+        position: inherit;
+        flex: 1;
+        margin: 0 6%;
+    }
+
+    .cel_content input.weui-check{
+        display: none!important;
+    }
+    .cel_content .weui-cell.weui-check__label{
+        margin: 0;
+    }
+    .cel_content .weui-cells:after{
+        display: none;
+    }
+    .weui-cells{
+        margin-top: 0;
+    }
+    .icon-suo{
+        color: red;
+        position: relative;
+        left: 20%;
+    }
+
+    .a_changeimg,.a_changetemplate{
+        position: fixed;
+        width: 100%;
+        left: 0;
+        bottom: -50%;
+        background: rgba(0,0,0,0.8);
+        z-index: 20;
+        color: #fff;
+    }
+    .a_changeimg .btn,.a_changetemplate .btn{
+        color: #fff;
+        font-size: 14px;
+        background: #E18F3D;
+        padding: 4px 8px;
+        border-radius: 3px;
+    }
+    .ac_imgs,.at_imgs{
+        overflow-x: auto;
+        width: 100%;
+        white-space: nowrap;
+        padding: 2% 1%;
+    }
+    .at_imgs{
+        padding: 0 1%;
+    }
+    .ac_imgs img,.at_imgs>div{
+        width: 27%;
+        margin: 1%;
+        border-bottom: 2px solid transparent;
+        display: inline-block;
+        text-align: center;
+        position: relative;
+        max-height: 100px;
+    }
+    .ac_imgs img.active,.at_imgs>div.active img{
+        top: -10px;
+    }
+    .at_imgs img{
+        width: 100%;
+        position: relative;
+    }
+    .ac_btns,.at_btns{
+        padding:2%;
+    }
+    .ac_cates{
+        overflow-x: auto;
+        width: 100%;
+        white-space: nowrap;
+        padding: 2% 1%;
+        background: rgba(0,0,0,0.5);
+    }
+    .ac_cates>div{
+        width: 15%;
+        margin: 1%;
+        border-bottom: 2px solid transparent;
+        display: inline-block;
+        text-align: center;
+        padding: 2px 4px;
+        border-radius: 5px;
+        background: transparent;
+
+    }
+    .ac_cates>div.active{
+        background: rgba(140,140,140,0.9);
+    }
+    .bg_fixed{
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 15;
+        width: 100%;
+        height: 100%;
+        display: none;
+    }
+    .footer_btns{
+        position: fixed;
+        z-index: 15;
+        bottom: 0;
+        width: 100%;
+        left: 0;
+        color: #fff;
+    }
+    .fb_btns{
+        background: #fff;
+    }
+    .fb_btns>div{
+        width: 50%;
+        font-size: 20px;
+        text-align: center;
+        padding: 8px;
+    }
+    .fb_tip{
+        padding: 1% 5%;
+        background: rgba(0,0,0,0.7);
+    }
+    .go_top{
+        position: fixed;
+        bottom: 20%;
+        right: 5%;
+        width: 40px;
+        height: 40px;
+        z-index: 20;
+        color: #fff;
+        border-radius: 50%;
+        background: rgba(0,0,0,0.6);
+        text-align: center;
+        line-height: 18px;
+        padding: 6px;
+        display: none;
+    }
+    .a_changeimg .weui-cells:after{
+        display: none;
+    }
+    .weui-check__label:active {
+        background-color: transparent;
+    }
+    .a_changeimg .weui-cells_checkbox .weui-check:checked+.weui-icon-checked:before{
+        color: #E18F3D;
+    }
+
+    .d_receive_time,.d_receive_mobile,.d_receive_address{
+        display: block;
+        width: 96%!important;
+        margin-bottom: 6px!important;
+    }
+    .title_txtshadow{
+        font-weight: 900;
+        font-size: 22px;
+        color: #fff;
+        text-shadow: 3px 3px 3px #557D33
+    }
+    .weui-cells:after{display: none}
+    .s_intro,.s_close,.p_gimg{
+        display: none;
+    }
+</style>
+
+<div>
+    <div class="tips"></div>
+    <!--头部-->
+    <div class="a_head">
+        <img class="h_img" data-templateid="{if $activity['image']}{$activity['image']}{else}{$case['template']['id']}{/if}" data-bgimage="{if $activity['bgimage']}{$activity['bgimage']}{else}{$case['template']['bgimage']}{/if}" data-src="{if $activity['image']}{$activity['image']}{else}{$case['template']['image']}{/if}" src="{if $activity['bgimage']}{$activity['image']}{else}{$case['template']['image']}{/if}" alt="">
+        <div id="musicSelect">
+            <i class="iconfont icon-music"></i>
+            <div class="ft12" style="color: #fff">音乐</div>
+        </div>
+        <div id="effectsSelect">
+            <i class="iconfont icon-mofabang"></i>
+            <div class="ft12" style="color: #fff">特效</div>
+        </div>
+        <div class="h_tips">图片建议尺寸:750*600</div>
+        <div class="h_changes flex flex_a_center">
+            <div class="template_change flex flex_a_center flex_j_center">
+                <i class="iconfont icon-wodebaobeiye_genghuan"></i>
+                <div class="ft14">更换模板</div>
+            </div>
+            <div class="img_change flex flex_a_center flex_j_center">
+                <i class="iconfont icon-tupiantianjia"></i>
+                <div class="ft14">更换图片</div>
+            </div>
+        </div>
+    </div>
+    <!--下部分，背景图片 background->repeat-->
+    <div class="a_content">
+        <!--活动标题-->
+        <div class="c_title">
+            <div class="c_title_btn flex flex_a_center">
+                <!--<i class="iconfont icon-bianji1 sys_color"></i>-->
+                <span>活动标题</span>
+            </div>
+            <div class="p_relative">
+                <textarea class="d_title" maxlength="30">{$activity['title']}</textarea>
+                <span class="ft10 c_title_tips">包括标点符号最多30字</span>
+            </div>
+            <div class="ct_date flex flex_a_center flex_wrap">
+                <span><i class="iconfont icon-essential"></i>活动时间</span>
+                <input type="text" id='datetime-picker1' value="{if $activity['starttime']}{php echo date('Y-m-d H:i',$activity['starttime'])}{/if}"/>
+                <span>至</span>
+                <input type="text" id='datetime-picker2' value="{if $activity['starttime']}{php echo date('Y-m-d H:i',$activity['endtime'])}{/if}"/>
+            </div>
+            <div class="flex flex_a_center">
+                <span class="word-break"><i class="iconfont icon-essential"></i>允许中途付款</span>
+                <div class="weui-cells weui-cells_radio flex" style="background: transparent">
+                    <label class="weui-cell weui-check__label" for="cutting_pay1">
+                        <div class="weui-cell__bd">
+                            <div class="word-break">允许</div>
+                        </div>
+                        <div class="weui-cell__ft">
+                            <input name="cutting_pay" type="radio" class="d_cutting_pay weui-check" id="cutting_pay1" value="1" {if $activity['cutting_pay']!='2'}checked{/if} />
+                            <span class="weui-icon-checked"></span>
+                        </div>
+                    </label>
+                    <label class="weui-cell weui-check__label" for="cutting_pay2">
+                        <div class="weui-cell__bd">
+                            <div class="word-break">不允许</div>
+                        </div>
+                        <div class="weui-cell__ft">
+                            <input name="cutting_pay" type="radio" class="d_cutting_pay weui-check" id="cutting_pay2" value="2" {if $activity['cutting_pay']=='2'}checked{/if}>
+                            <span class="weui-icon-checked"></span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="c_setting">
+
+            <!--简介 基本设置-->
+            <div class="ce_jianjie p_relative">
+                <div class="detail_html">
+                    {if $activity['goods']}
+                    {loop $activity['goods'] $agidx $agv}
+                    <div class="basic_setting p_relative flex flex_wrap">
+                        <!--图片 价格-->
+                        <div class="s_price flex flex_wrap flex_j_between flex_a_center">
+                            <div class="p_gimg p_relative flex_a_center">
+                                <input class="select_goodimg" type="file" accept="image/*" onchange="selectGoodimg(this)">
+                                <div>
+                                    <i class="iconfont icon-tupiantianjia" style="font-size: 30px"></i>
+                                    <div class="color777 ft14">添加图片</div>
+                                    <div class="color777 ft10">(只能添加一张)</div>
+                                </div>
+                                <img class="good_logo" src="{$agv['image']}" alt="">
+                                <input type="hidden" class="good_id" value="{$agv['id']}">
+                                <span>商品 <span class="sort_goods">{php echo ($agidx+1)}</span></span>
+                            </div>
+                            <div class="p_price flex1">
+                                <div class="s_detail">
+                                    <div class="flex flex_a_center">
+                                        <span class="word-break"><i class="iconfont icon-essential"></i>原价</span>
+                                        <input type="number" class="d_oprice" value="{$agv['oprice']}"/>
+                                        <span>元</span>
+                                    </div>
+                                    <div class="ft10 color777">如有报名者不可修改</div>
+                                </div>
+                                <div class="s_detail">
+                                    <div class="flex flex_a_center">
+                                        <span class="word-break"><i class="iconfont icon-essential"></i>底价</span>
+                                        <input type="number" class="d_rprice" value="{$agv['rprice']}"/>
+                                        <span>元</span>
+                                    </div>
+                                    <div class="ft10 color777">如有报名者不可修改</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--砍价次数-->
+                        <div class="s_nums flex">
+                            <div class="s_detail">
+                                <div class="flex flex_a_center">
+                                    <span class="word-break"><i class="iconfont icon-essential"></i>需砍价</span>
+                                    <input type="number" class="d_times" value="{$agv['times']}"/>
+                                    <span>次</span>
+                                    <div></div>
+                                </div>
+                            </div>
+                            <div class="s_detail">
+                                <div class="flex flex_a_center">
+                                    <span class="word-break"><i class="iconfont icon-essential"></i>数量</span>
+                                    <input type="number" class="d_gnum" value="{$agv['gnum']}"/>
+                                    <span>份</span>
+                                </div>
+                                <div class="ft10 color777">如有报名者，数量只能增不能减</div>
+                            </div>
+                        </div>
+                        <!--描述-->
+                        <textarea style="display: none" class="s_desc text_left" placeholder="商品描述(200字内)" maxlength="200">{$agv['desc']}</textarea>
+                        <!--添加图片-->
+                        <div class="s_goodimg p_relative" style="display: none">
+                            <input class="select_good2img" type="file" accept="image/*" onchange="selectGoodimg(this)">
+                            <div>
+                                <i class="iconfont icon-tupiantianjia" style="font-size: 30px"></i>
+                                <div class="color777 ft14">添加图片</div>
+                                <div class="color777 ft10">(只能添加一张)</div>
+                            </div>
+                            <img class="good_logo" src="" alt="">
+                        </div>
+                        <!--简介-->
+                        <div class="s_intro">
+                            <img src="{YOUMI_URL_APP}img/m_titlebg1.png" alt="">
+                            <input class="i_intro d_title" type="text" placeholder="商品标题（最多15字）" maxlength="15" value="{$agv['title']}">
+                        </div>
+                        <!--删除-->
+                        <i onclick="delGoods(this,{$agv['id']})" class="s_close iconfont icon-delete-s"></i>
+                    </div>
+                    {/loop}
+                    {else}
+                    {template 'temp/goods_detail'}
+                    {/if}
+                </div>
+                <div class="c_addbtn" style="display: none">
+                    <div class="ft16">
+                        <i class="iconfont icon-jia"></i>
+                        <span>添加(最多6个)</span>
+                    </div>
+                </div>
+
+                <!--<div class="s_detail">-->
+                    <!--<div class="flex flex_a_center">-->
+                        <!--<span class="word-break"><i class="iconfont icon-essential"></i>每位报名者最多可参与</span>-->
+                        <!--<input type="number" class="" />-->
+                        <!--<span class="word-break">种商品砍价</span>-->
+                    <!--</div>-->
+                    <!--<div class="ft10 color777">如有报名者，只可增不可减</div>-->
+                <!--</div>-->
+                <!--<div class="s_detail" style="margin-top: 15px">-->
+                    <!--<div class="flex flex_a_center">-->
+                        <!--<span class="word-break"><i class="iconfont icon-essential"></i>报名者每隔</span>-->
+                        <!--<input type="number" class="" />-->
+                        <!--<span class="word-break">小时可再次给自己砍价</span>-->
+                    <!--</div>-->
+                    <!--<div class="ft10 color777">可以设置每个报名者在活动时间内多次给自己砍价；如不设置，则默认报名者仅一次给自己砍价的机会；帮砍者仅一次机会。</div>-->
+                <!--<div class="s_detail">-->
+                    <!--<div class="flex flex_a_center">-->
+                        <!--<span class="word-break"><i class="iconfont icon-essential"></i>砍到底价付费方式</span>-->
+                        <!--<div class="weui-cells weui-cells_radio">-->
+                            <!--<label class="weui-cell weui-check__label" for="x11">-->
+                                <!--<div class="weui-cell__bd">-->
+                                    <!--<div class="word-break">线下</div>-->
+                                <!--</div>-->
+                                <!--<div class="weui-cell__ft">-->
+                                    <!--<input type="radio" class="weui-check" name="radio1" id="x11" value="1" onchange="changeSdprice(this)" checked="checked">-->
+                                    <!--<span class="weui-icon-checked"></span>-->
+                                <!--</div>-->
+                            <!--</label>-->
+                            <!--<label class="weui-cell weui-check__label" for="x12">-->
+                                <!--<div class="weui-cell__bd">-->
+                                    <!--<div class="word-break">线上预约</div>-->
+                                <!--</div>-->
+                                <!--<div class="weui-cell__ft">-->
+                                    <!--<input type="radio" name="radio1" class="weui-check" id="x12" value="2" onchange="changeSdprice(this)">-->
+                                    <!--<span class="weui-icon-checked"></span>-->
+                                <!--</div>-->
+                            <!--</label>-->
+                        <!--</div>-->
+                        <!--<div class="sd_price flex flex_a_center" style="margin-top: 35px;display: none;width: 60px">-->
+                            <!--<input type="number">-->
+                            <!--<span>元</span>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <img class="iconPig" src="{YOUMI_URL_APP}img/pig.png" alt="">
+            </div>
+
+            <!--活动描述-->
+            {template 'temp/activity_miaoshu'}
+
+            <!--商家介绍-->
+            {template 'temp/activity_shop'}
+
+            {if $setting['shop_default']!=1}
+            <!--联系方式-->
+            {template 'temp/activity_receive'}
+            {/if}
+
+            <!--信息收集-->
+            {template 'temp/activity_userinfo'}
+
+            <!--分享设置-->
+            {template 'temp/activity_share'}
+            <!--区域限制设置-->
+            {template 'temp/activity_regional'}
+        </div>
+
+    </div>
+    <!--白色蒙层-->
+    <div class="bg_fixed"></div>
+    <!--模板弹窗-->
+    <div class="a_changetemplate">
+        <div class="at_btns flex flex_j_end flex_a_center">
+            <div class="at_btns">
+                <a class="btn atb_cancel" style="background: #aaa!important;margin-right: 5px" href="javascript:;">取消</a>
+                <a class="btn atb_sure" href="javascript:;">确定</a>
+            </div>
+        </div>
+        <div class="at_imgs">
+            {loop $template $tdx $tv}
+            <div onclick="changeTemplate(this)">
+                <img data-bgimage="{$tv['bgimage']}" data-titlebgimg="{$tv['titlebgimg']}" src="{$tv['image']}" data-id="{$tv['id']}" alt="">
+                <div>{$tv['title']}</div>
+            </div>
+            {/loop}
+        </div>
+    </div>
+    <!--更换图片弹窗-->
+    <div class="a_changeimg">
+        <div class="ac_btns flex flex_j_between flex_a_center">
+            <div class="flex flex_a_center">
+                <a href="javascript:;" class="btn p_relative">
+                    <span>上传图片</span>
+                    <input class="select_goodimg" type="file" accept="" onchange="selectCateimg(this)">
+                </a>
+                <div class="weui-cells weui-cells_checkbox" style="background: transparent">
+                    <label class="weui-cell weui-check__label" for="s_public" style="padding: 0;margin: 0">
+                        <div class="weui-cell__hd">
+                            <input type="checkbox" class="weui-check" name="checkbox1" id="s_public" checked="checked">
+                            <i class="weui-icon-checked"></i>
+                        </div>
+                        <div class="weui-cell__bd">
+                            <p class="ft12 color_fff">公开此图</p>
+                        </div>
+                    </label>
+                </div>
+                <!--<span style="margin-left: 5px" class="color_fff ft10">建议尺寸 750*600</span>-->
+            </div>
+            <div>
+                <a class="btn acb_cancel" style="background: #aaa!important;margin-right: 5px" href="javascript:;">取消</a>
+                <a class="btn acb_sure" href="javascript:;">确定</a>
+            </div>
+        </div>
+        <div class="ac_imgs">
+            {loop $imgcate[0]['img'] $iidx $iiv}
+            <img onclick="changeImg(this)" src="{$iiv['image']}" data-id="{$iiv['id']}" alt="">
+            {/loop}
+        </div>
+        <div class="ac_cates">
+            {loop $imgcate $idx $iv}
+            <div onclick="changeImgcate(this)" class="{if $idx==0}active{/if}" data-idx="{$idx}" data-id="{$iv['id']}">{$iv['title']}</div>
+            {/loop}
+        </div>
+    </div>
+    <!--返回顶部-->
+    <div class="go_top">
+        <i class="iconfont icon-xiangshang active"></i>
+        <div>顶部</div>
+    </div>
+    <audio id="myaudio" src="" controls="controls" loop="false" hidden="true" />
+
+</div>
+
+{template 'temp/activity_effects'}
+<!--底部按钮-->
+{template 'temp/common_footer'}
+
+<script>
+
+    // console.log('$template',{php echo json_encode($template)})
+    // console.log('$imgcate',{php echo json_encode($imgcate)})
+    // console.log('$effectscate',{php echo json_encode($effectscate)})
+    // console.log('$musiccate',{php echo json_encode($musiccate)})
+    console.log('$activity',{php echo json_encode($activity)})
+    console.log('$case',{php echo json_encode($case)})
+</script>
+<script>
+    var datas={
+        template_id:"{$case['template']['id']}",//模板id
+        bgimage:"{if $activity}{$activity['bgimage']}{else}{$case['template']['bgimage']}{/if}",//模板背景
+        image:"{if $activity}{$activity['image']}{else}{$case['template']['image']}{/if}",//模板图片
+        music_id:'',
+        music:"{$activity['music']}",
+        effects_imgs:{if !empty($activity['effects_imgs'])}{php echo json_encode($activity['effects_imgs'])}{else}''{/if},
+        effects_id:'',//特效
+        // cate_img:'',//更换图片
+    };
+    var imgcate={php echo json_encode($imgcate)};
+    var musiccate={php echo json_encode($musiccate)};
+
+
+    function autoPlay(url){
+        $('#myaudio').attr('src',url)
+        var myAuto = document.getElementById('myaudio');
+        myAuto.play();
+    }
+    var musicSelect = new huiPicker('#musicSelect', function(){
+
+        var val = musicSelect.getVal(1);
+        var txt = musicSelect.getText(1);
+        if(val==-1){
+            datas['music']='';
+            autoPlay('')
+        }else {
+            for (var i = 0; i < musiccate.length; i++) {
+                for (var j = 0; j < musiccate[i]['music'].length; j++) {
+                    if (musiccate[i]['music'][j]['id'] == val) {
+                        autoPlay(musiccate[i]['music'][j]['link'])
+                        datas['music']=musiccate[i]['music'][j]['link'];
+                        return
+                    }
+                }
+            }
+        }
+        datas.music_id=val;
+    });
+
+    /* 地区选择， 关联型数据 */
+    var shopAddress = new huiPicker('#shop_address', function(){
+        var sheng   = shopAddress.getText(0);
+        var shi     = shopAddress.getText(1);
+        var qu      = shopAddress.getText(2);
+        hui('#shop_address').val(sheng + shi + qu);
+    });
+    shopAddress.level = 3;
+    shopAddress.bindRelevanceData(cities);
+    musicSelect.level = 2;
+
+    // 初始化音乐
+
+    var musics=[{
+        value: '-1',
+        text: '无',
+        children: [
+            {
+                value: '-1',
+                text: '无背景音效'
+            }
+        ]
+    }];
+    if(!!musiccate) {
+        for (var i=0;i<musiccate.length;i++) {
+            var obj={};
+            obj['value']=musiccate[i]['id']
+            obj['text']=musiccate[i]['title']
+            obj['children']=[];
+            for (var j=0;j<musiccate[i]['music'].length;j++) {
+                obj['children'].push({
+                    value: musiccate[i]['music'][j]['id'],
+                    text: musiccate[i]['music'][j]['title'],
+                    link: musiccate[i]['music'][j]['link']
+                })
+            }
+            musics.push(obj)
+        }
+    }
+
+
+
+    musicSelect.bindRelevanceData(musics);
+
+    $("#datetime-picker1").datetimePicker();
+
+
+   function selectGoodimg(self) {
+       var reader=new FileReader();
+       var arr=$(self).val().split('\\');
+       arr=arr[arr.length-1].split('/');
+       var my=arr[arr.length-1];//这就是要取得的图片名称
+       reader.onload=function(e){
+           $.post(
+               "{php echo $this->createMobileUrl('upload',['op'=>'image'])}",
+               {
+                   'file':reader.result,
+                   'name':my,
+                   'size':e.total,
+                   'module':"{$_GPC['module']}",
+                   'activity_id':"{$activity_id}",
+               },
+               function (data) {
+                   $(self).next().next().attr('src',data.message)
+               },'json'
+           )
+           // console.log( reader.result);  //或者 e.target.result都是一样的，都是base64码
+       }
+       reader.readAsDataURL(self.files[0])
+   }
+   function selectCateimg(self) {
+       var reader=new FileReader();
+       var arr=$(self).val().split('\\');
+       arr=arr[arr.length-1].split('/');
+       var my=arr[arr.length-1];//这就是要取得的图片名称
+       reader.onload=function(e){
+           $.post(
+               "{php echo $this->createMobileUrl('making',['op'=>'upimg'])}",
+               {
+                   'file':reader.result,
+                   'name':my,
+                   'size':e.total,
+                   'public':$('#s_public')[0].checked?'1':'2',
+                   'imgcate_id':$('.ac_cates .active').attr('data-id'),
+                   'module':"{$_GPC['module']}",
+                   'activity_id':"{$activity_id}",
+               },
+               function (data) {
+                   $('.h_img').attr('src',data.message)
+               },'json'
+           )
+       }
+       reader.readAsDataURL(self.files[0])
+   }
+
+
+   //添加商品项
+    $('.c_addbtn').click(function () {
+        var sumnum=$('.c_setting .basic_setting').length;
+        if(sumnum<6){
+            var html=`{template 'temp/goods_detail'}`;
+            $('.detail_html').append(html)
+        }
+        sortGoods()
+    })
+
+    // 商品重新排序
+    function sortGoods() {
+        for(var i=0;i<=$('.sort_goods').length;i++){
+           $('.sort_goods').eq(i).html(i+1)
+        }
+    }
+    //删除图片(描述)
+    function delMiaoshu(self){
+       $(self).parents('.csms_content').remove()
+    }
+    //上移文字(活动优惠)
+    function upYouhui(self){
+        var nowHtml=$(self).parents('.csys_content').find('textarea').val()
+        var nextHtml=$(self).parents('.csys_content').prev().find('textarea').val()
+        $(self).parents('.csys_content').find('textarea').val(nextHtml)
+        $(self).parents('.csys_content').prev().find('textarea').val(nowHtml)
+    }
+    //上移图片(活动描述)
+    function upMiaoshu(self){
+        var nowHtml=$(self).parents('.csms_content').find('img').attr('src')
+        var nextHtml=$(self).parents('.csms_content').prev().find('img').attr('src')
+        $(self).parents('.csms_content').find('img').attr('src',nextHtml)
+        $(self).parents('.csms_content').prev().find('img').attr('src',nowHtml)
+    }
+    //下移文字(活动优惠)
+    function downYouhui(self){
+        var nowHtml=$(self).parents('.csys_content').find('textarea').val()
+        var nextHtml=$(self).parents('.csys_content').next().find('textarea').val()
+        $(self).parents('.csys_content').find('textarea').val(nextHtml)
+        $(self).parents('.csys_content').next().find('textarea').val(nowHtml)
+    }
+    //下移图片(活动描述)
+    function downMiaoshu(self){
+        var nowHtml=$(self).parents('.csms_content').find('img').attr('src')
+        var nextHtml=$(self).parents('.csms_content').next().find('img').attr('src')
+        $(self).parents('.csms_content').find('img').attr('src',nextHtml)
+        $(self).parents('.csms_content').next().find('img').attr('src',nowHtml)
+    }
+
+    // 线上线下单选框
+    function changeSdprice(self){
+        if(self.value=='1'){
+           $('.sd_price').hide()
+        }else{
+            $('.sd_price').show()
+        }
+    }
+
+    //更换图片分类
+    function changeImgcate(self) {
+        if(!$(self).hasClass('active')){
+            $('.ac_cates div').removeClass('active')
+            $(self).addClass('active')
+            var idx=Number($(self).attr('data-idx'))
+            var html=''
+            for(var i=0;i<imgcate[idx]['img'].length;i++){
+                html+=`<img onclick="changeImg(this)" src="${imgcate[idx]['img'][i]['image']}" data-id="${imgcate[idx]['img'][i]['id']}" alt="">`
+            }
+            $('.ac_imgs').html(html)
+        }
+    }
+    //更换图片
+    function changeImg(self) {
+        if(!$(self).hasClass('active')){
+            $('.ac_imgs img').removeClass('active')
+            $(self).addClass('active')
+            $('.h_img').attr('src',$(self).attr('src'))
+        }
+    }
+    $('.img_change').click(function () {
+        $(".a_changeimg").animate({bottom:"0"},800);
+        $('.bg_fixed').show()
+    })
+    $('.acb_cancel').click(function () {
+        $('.h_img').attr('src', $('.h_img').attr('data-src'))
+        $(".a_changeimg").animate({bottom:"-45%"},800);
+        $('.bg_fixed').hide()
+    })
+    $('.acb_sure').click(function () {
+        $(".a_changeimg").animate({bottom:"-45%"},800);
+        $('.h_img').attr('data-src', $('.h_img').attr('src'))
+        $('.bg_fixed').hide()
+        datas.image=$('.h_img').attr('src')
+    })
+
+    //更换模板
+    $('.template_change').click(function () {
+        $(".a_changetemplate").animate({bottom:"0"},600);
+        $('.bg_fixed').show()
+    })
+    function changeTemplate(self) {
+        datas['titlebgimg']=$('.titlebgimg').attr('src');
+        if(!$(self).hasClass('active')){
+            $('.at_imgs>div').removeClass('active')
+            $(self).addClass('active')
+            $('.h_img').attr('src',$(self).find('img').attr('src'))
+            $('.a_content').css('background','url("'+$(self).find('img').attr('data-bgimage')+'") repeat 100%')
+            datas.bgimage=$(self).find('img').attr('data-bgimage')
+            if($(self).find('img').attr('data-titlebgimg')) {
+                $('.titlebgimg').attr('src', $(self).find('img').attr('data-titlebgimg'));
+            }
+            datas.template_id=$(self).find('img').attr('data-id')
+        }
+    }
+    $('.atb_cancel').click(function () {
+        $('.h_img').attr('src', $('.h_img').attr('data-src'))
+        $('.a_content').css('background','url("'+$('.h_img').attr('data-bgimage')+'") repeat 100%')
+        $(".a_changetemplate").animate({bottom:"-45%"},600);
+        $('.titlebgimg').attr('src', datas.titlebgimg);
+        $('.bg_fixed').hide()
+    })
+    $('.atb_sure').click(function () {
+        $(".a_changetemplate").animate({bottom:"-45%"},600);
+        $('.h_img').attr('data-src', $('.h_img').attr('src')).attr('data-bgimage',datas.bgimage).attr('data-templateid',datas.template_id)
+        datas.titlebgimg=$('.titlebgimg').attr('src');
+        $('.bg_fixed').hide()
+    })
+    // 返回顶部
+    // $("body").on("touchstart", function(e) {
+    //     e.preventDefault();
+    //     startX = e.originalEvent.changedTouches[0].pageX, startY = e.originalEvent.changedTouches[0].pageY;
+    // });
+    // $("body").on("touchmove", function(e) {
+    //     e.preventDefault();
+    //     moveEndX = e.originalEvent.changedTouches[0].pageX,
+    //         moveEndY = e.originalEvent.changedTouches[0].pageY,
+    //         X = moveEndX - startX,
+    //         Y = moveEndY - startY;
+    //
+    //     if(document.documentElement.scrollTop>100){
+    //         $('.go_top').fadeIn()
+    //     }else{
+    //         $('.go_top').fadeOut()
+    //     }
+    //
+    // });
+    // $('.go_top').click(function(){
+    //     $(window).scrollTop(0);
+    //     $('.go_top').fadeOut()
+    // })
+
+
+    function submit(num) {
+            var mandatory=false;
+            datas['title']=$('.d_title').val();//活动标题
+            datas['image']=$('.h_img').attr('src')//背景主图
+            datas['titlebgimg']=$('.titlebgimg').attr('src');//标题背景图
+            datas['bgimage']=$('.a_content').css('background-image').replace('url(','').replace(')','').replace('"','').replace('"','')//背景主图
+            datas['starttime']=$('#datetime-picker1').val();//开始时间
+            datas['endtime']=$('#datetime-picker2').val();//结束时间
+            datas['cutting_pay']=$('.d_cutting_pay:checked').val();//允许中途砍价
+            // 商品信息
+
+            if(!datas['title']){tips('请填写活动标题'); return false;}
+            if(!datas['starttime']){tips('请填写开始时间'); return false;}
+            if(!datas['endtime']){tips('请填写结束时间'); return false;}
+
+            if($('.basic_setting').length>0) {
+                var goods=[];
+                for (var j = 0; j < $('.basic_setting').length;j++) {
+                    var goodDom=$($('.basic_setting')[j])
+                    goods.push({
+                        {if $_GPC['cz']=='bj'}
+                        id:goodDom.find('.good_id').val(),
+                        {/if}
+                        // image:goodDom.find('.good_logo').attr('src'),
+                        // title:goodDom.find('.d_title').val(),
+                        oprice:goodDom.find('.d_oprice').val(),
+                        rprice:goodDom.find('.d_rprice').val(),
+                        gnum:goodDom.find('.d_gnum').val(),
+                        times:goodDom.find('.d_times').val(),
+                    })
+                    if(!goods[0].oprice||!goods[0].rprice||!goods[0].gnum||!goods[0].times){
+                        mandatory=true;
+                    }
+                }
+                datas['goods']=goods
+            }else{
+                tips('请填写商品信息!')
+                return false;
+            }
+            if(mandatory) {
+                tips('请填写商品信息!')
+                return false;
+            }
+
+            //优惠标题
+            // datas['preferential_title']=$('.d_preferential_title').val()
+            // if(!datas['preferential_title']){tips('请填写优惠标题'); return false;}
+            // 优惠内容
+            if($('.d_preferential_val').length>0) {
+                var desc_vals=[];
+                for (var i = 0; i < $('.d_preferential_val').length;i++) {
+                    desc_vals.push($($('.d_preferential_val')[i]).val())
+                }
+                datas['preferential_val']=desc_vals
+            }else{
+                // tips('请输入优惠内容!')
+                // return false;
+            }
+            //活动描述标题
+            datas['desc_title']=$('.d_desc_title').val();
+            if(!datas['desc_title']){tips('请填写活动描述标题'); return false;}
+            //活动描述内容
+            // datas['desc_val']=$('.d_desc_val').val()
+            datas['desc_val']=$('#contentEditor_miaoshu').html();
+            // if(!datas['desc_val']){tips('请填写活动描述内容'); return false;}
+            // //活动描述图片
+            // if($('.d_desc_img').length>0) {
+            //     var desc_imgs=[];
+            //     for (var ii = 0; ii < $('.d_desc_img').length;ii++) {
+            //         desc_imgs.push($($('.d_desc_img')[ii]).attr('src'))
+            //     }
+            //     datas['desc_imgs']=desc_imgs
+            // }
+            //商家介绍
+            datas['shop_title']=$('.d_shop_title').val()
+            // if(!datas['shop_title']){tips('请填写商家介绍标题'); return false;}
+            datas['shop_val']=$('#contentEditor_shop').html();
+            {if $setting['shop_default']!=1}
+            //联系方式
+            datas['shop_name']=$('.d_shop_name').val()
+            datas['shop_mobile']=$('.d_shop_mobile').val()
+            datas['shop_address']=$('.d_shop_address').val()
+            datas['shop_code']=$('.d_shop_code').attr('src')
+            if(!datas['shop_name']){tips('请填写商家姓名'); return false;}
+            if(!datas['shop_mobile']){tips('请填写咨询热线'); return false;}
+            //联系地址
+            if($('#shop_address').val()){
+                datas['shop_province']=$('#shop_address').val().split(' ')[0]
+                datas['shop_city']=$('#shop_address').val().split(' ')[1]
+                datas['shop_district']=$('#shop_address').val().split(' ')[2]
+            }
+            {/if}
+
+            //信息收集
+            var userinfo=[]
+            for (var iiii = 0; iiii < $('.d_userinfo').length;iiii++) {
+                userinfo.push({
+                    title:$($('.d_userinfo')[iiii]).find('.d_u_title').val(),
+                    checked:$($('.d_userinfo')[iiii]).find('.d_u_checked')[0].checked
+                })
+            }
+            datas['userinfo']=userinfo;
+
+            // 分享设置
+            datas['share_img']=$('.d_share_img').attr('src');
+            datas['share_title']=$('.d_share_title').val();
+            datas['share_desc']=$('.d_share_desc').val();
+            if(!datas['share_img']){tips('请上传分享图'); return false;}
+            if(!datas['share_title']){tips('请填写分享标题'); return false;}
+            if(!datas['share_desc']){tips('请填写分享描述'); return false;}
+
+            //区域限制
+            datas['regional']= $('.d_regional:checked').val()//是否需要费用
+            if($('.d_regional')[1].checked){
+                if($('.d_ak').val()==''){tips('请填写百度地图密钥'); return false;}
+                else{datas['ak']=$('.d_ak').val()}
+                if($('.d_num').length==0){tips('请添加区域'); return false;}
+                else{
+                    var r_address=[];
+                    for(var ir=0;ir<$('.d_num').length;ir++){
+                        r_address.push($('.d_num')[ir].value)
+                    }
+                    datas['r_address']=r_address;
+                }
+            }
+
+            console.log(datas);
+        {if $_GPC['cz']=='bj'}datas['activity_id']="{$activity_id}";{/if}
+        $.post(
+            "{php echo $this->createMobileUrl('making',['op'=>'post'])}",
+            {
+                'from':datas,
+                'module':"{$_GPC['module']}",
+                'case_id':"{$case_id}"
+            },
+            function (data) {
+                tips(data.message)
+                if(data.errno==0){
+
+                    setTimeout(function () {
+                        if(num=='1'){
+                            location.href="./index.php?c=entry&i={$_W['uniacid']}&do=index&activity_id="+data.data.activity_id+"&m={$case['module']}"
+                        }else if(num=='2'){
+                            location.href="{php echo $this->createMobileUrl('activitys',['op'=>'activitys_detail'])}&activity_id="+data.data.id
+                        }
+                    },2000)
+                }
+
+            },'json'
+        )
+    }
+
+
+    function delGoods(self,id){
+
+        var r=confirm("确定删除该商品!");
+        if (r==true){
+            $.post(
+                "{php echo $this->createMobileUrl('making',['op'=>'del_goods'])}",
+                {
+                    'activity_id':"{$activity_id}",
+                    'goods_id':id,
+                    'module':"{$case['module']}"
+                },
+                function (data) {
+                    if (data.errno == 0) {
+                        $(self).parent().remove()
+                    }
+                    tips(data.message)
+                },'json'
+            )
+        }
+
+    }
+</script>
+{template 'common/footer'}

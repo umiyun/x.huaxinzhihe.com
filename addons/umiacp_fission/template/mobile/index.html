@@ -679,6 +679,7 @@
     </div>
     {/if}
 </div>
+{if !empty($members2)}
 <!-- 排行版 -->
 <div class="rankings-box">
     <div class="rankings">
@@ -716,6 +717,7 @@
     </div>
 </div>
 <!-- 排行版end -->
+{/if}
 {if $setting_activity&&$setting_activity['making_status2']==1}
 <div style="text-align: center;margin: 40px 0 0 0;">
     <a href="{$_W['siteroot']}index.php?c=entry&i={$_W['uniacid']}&do=making&case_id={$activity_umi['case_id']}&m=umi_activitys&module={$_W['current_module']['name']}" style="color:#000;border: 1px solid #000;padding: 6px 16px;border-radius: 5px;text-decoration: none;">
@@ -937,6 +939,7 @@
     window.addEventListener('load', init, false);
     console.log('$setting_activity',{php echo json_encode($setting_activity)})
     console.log('$activity',{php echo json_encode($activity)})
+    console.log('$members2',{php echo json_encode($members2)})
 </script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {

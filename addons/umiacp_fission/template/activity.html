@@ -187,26 +187,32 @@
                 <div class="form-group">
                     <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">限制报名人数</label>
                     <div class="col-xs-8 col-sm-8" style="display: flex;align-items: center">
-                        <label class="radio radio-inline" style="padding-top: 4px">
+                        <label class="radio radio-inline" style="padding-top: 4px" onclick="$('.d_signnum').hide()">
                             <input type="radio" name="data[signstatus]" value="1" {if intval($item['signstatus']) != 2}checked="checked"{/if}> 不限制
                         </label>
-                        <label class="radio radio-inline" style="padding-top: 4px">
+                        <label class="radio radio-inline" style="padding-top: 4px" onclick="$('.d_signnum').show()">
                             <input type="radio" name="data[signstatus]" value="2" {if intval($item['signstatus']) == 2}checked="checked"{/if}> 限制
                         </label>
-                        <input type="text" name="data[signnum]" value="{$item['signnum']}" class="form-control" style="width: 20%;display: inline-block;margin-left: 20px">
+                        <input type="text" name="data[signnum]" value="{$item['signnum']}" class="form-control d_signnum" style="width: 20%;margin-left: 20px;{if $item['signstatus']!=2}display: none;{/if}">
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="col-xs-12 col-sm-3 col-md-2 col-lg-2 control-label">是否需要费用</label>
                     <div class="col-xs-8 col-sm-8" style="display: flex;align-items: center">
-                        <label class="radio radio-inline" style="padding-top: 4px">
+                        <label class="radio radio-inline" style="padding-top: 4px" onclick="$('.d_needmoney').hide()">
                             <input type="radio" name="data[needstatus]" value="1" {if intval($item['needstatus']) != 2}checked="checked"{/if}> 不需要
                         </label>
-                        <label class="radio radio-inline" style="padding-top: 4px">
+                        <label class="radio radio-inline" style="padding-top: 4px" onclick="$('.d_needmoney').show()">
                             <input type="radio" name="data[needstatus]" value="2" {if intval($item['needstatus']) == 2}checked="checked"{/if}> 需要
                         </label>
-                        <input type="text" name="data[needmoney]" value="{$item['needmoney']}" class="form-control" style="width: 20%;display: inline-block;margin-left: 20px">
+                        <input type="text" name="data[needmoney]" value="{$item['needmoney']}" class="form-control d_needmoney" style="width: 20%;margin-left: 20px;{if $item['needstatus']!=2}display: none;{/if}">
+                    </div>
+                </div>
+                <div class="form-group d_needmoney" style="{if $item['needstatus']!=2}display: none;{/if}">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">佣金金额</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" name="data[commission]" value="{$item['commission']}" class="form-control">
                     </div>
                 </div>
 
@@ -463,10 +469,17 @@
     require(['jquery.ui'],function() {
         $('.multi-img-details').sortable({scroll: 'false'});
         $('.multi-img-details').sortable('option', 'scroll', false);
-    })
+    });
     $('form').submit(function () {
         if($('input[name="data[title]"]').val() == ''){
             util.message('请输入标题');
+            return false;
+        }
+        var needstatus=$('[name="data[needstatus]"]:checked').val();
+        var needmoney=$('[name="data[needmoney]"]').val();
+        var commission=$('[name="data[commission]"]').val();
+        if(needstatus==2&&(needmoney<=commission)){
+            util.message('佣金金额不能大于报名金额');
             return false;
         }
     })

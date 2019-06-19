@@ -159,7 +159,13 @@ if ($op == 'display') {
     include $this->template('index');
     exit();
 }
+if ($op == 'page_complain') {
+    $_W['page']['title'] = '投诉';
+    $activity_id = intval($_GPC['activity_id']);
 
+    include $this->template('complain');
+    exit();
+}
 if ($op == 'share') {
 
     $activity_id = intval($_GPC['activity_id']);
@@ -338,6 +344,7 @@ if ($op == 'detail') {
     $activity_id = $_GPC['activity_id'];
     $members = pdo_getall(YOUMI_NAME . '_order', ['group_id' => $group_id, 'activity_id' => $activity_id, 'status' => [2, 3]], ['avatar', 'nickname', 'leader']);
     $activity = pdo_get(YOUMI_NAME . '_activity', ['id' => $activity_id]);
+    $group = pdo_get(YOUMI_NAME . '_group', ['id' => $group_id]);
 
 
     if ($activity['shop_id'] > 0) {

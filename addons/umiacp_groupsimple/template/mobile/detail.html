@@ -566,6 +566,13 @@
         padding: 4px 0;
         height: 50px;
     }
+    .status_btn{
+        width: 80%;
+        color: #FFC700;
+        background: #000;
+        height: 50px;
+        line-height: 50px;
+    }
     .shop_detail .icon-dianhua{
         color: #7132BF;
     }
@@ -812,28 +819,28 @@
             <p class="ft12">首页</p>
         </a>
         {if $activity['status']==1}
-        <div onclick="openSign(3,{$_GPC['id']})" class="buy_dan">
-            <div>￥<span>{$activity['single_price']}</span></div>
-            <div class="ft16">单人购买</div>
-        </div>
-        {if $activity['status']==3}
-        <div onclick="openSign(2,{$_GPC['id']})" class="buy_tuan">
-            <div>￥<span>{$activity['group_price']}</span></div>
-            <div class="ft16">我要参团</div>
-        </div>
-        {/if}
-        {if $activity['status']==1}
-        <div class="buy_tuan">
-            <div>￥<span>{$activity['group_price']}</span></div>
-            <div class="ft16">拼团成功</div>
-        </div>
-        {/if}
-        {if $activity['status']==2}
-        <div class="buy_tuan">
-            <div>￥<span>{$activity['group_price']}</span></div>
-            <div class="ft16">拼团失败</div>
-        </div>
-        {/if}
+            <div onclick="openSign(3,{$_GPC['id']})" class="buy_dan">
+                <div>￥<span>{$activity['single_price']}</span></div>
+                <div class="ft16">单人购买</div>
+            </div>
+            {if $group['status']==3}
+            <div onclick="openSign(2,{$_GPC['id']})" class="buy_tuan">
+                <div>￥<span>{$activity['group_price']}</span></div>
+                <div class="ft16">我要参团</div>
+            </div>
+            {/if}
+            {if $group['status']==1}
+            <div class="buy_tuan">
+                <div>￥<span>{$activity['group_price']}</span></div>
+                <div class="ft16">拼团成功</div>
+            </div>
+            {/if}
+            {if $group['status']==2}
+            <div class="buy_tuan">
+                <div>￥<span>{$activity['group_price']}</span></div>
+                <div class="ft16">拼团失败</div>
+            </div>
+            {/if}
         {/if}
         {if $activity['status']==2}
         <div class="status_btn">

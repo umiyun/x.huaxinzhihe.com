@@ -202,7 +202,13 @@ if ($op == 'share') {
 
 }
 
+if ($op == 'page_complain') {
+    $_W['page']['title'] = '投诉';
+    $activity_id = intval($_GPC['activity_id']);
 
+    include $this->template('complain');
+    exit();
+}
 if ($op == 'sign_up') {
     $activity_id = intval($_GPC['activity_id']);
     $activity = pdo_get(YOUMI_NAME . '_activity', ['id' => $activity_id]);

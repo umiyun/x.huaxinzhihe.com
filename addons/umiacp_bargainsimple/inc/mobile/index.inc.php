@@ -277,7 +277,13 @@ if ($op == 'share') {
     youmi_result(0, '分享成功');
 }
 
+if ($op == 'page_complain') {
+    $_W['page']['title'] = '投诉';
+    $activity_id = intval($_GPC['activity_id']);
 
+    include $this->template('complain');
+    exit();
+}
 if ($op == 'sign_up') {
 
     $activity_id = intval($_GPC['activity_id']);

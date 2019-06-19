@@ -175,7 +175,13 @@ if ($op == 'share') {
     pdo_update(YOUMI_NAME . '_activity', $update, ['id' => $activity_id]);
 
 }
+if ($op == 'page_complain') {
+    $_W['page']['title'] = '投诉';
+    $activity_id = intval($_GPC['activity_id']);
 
+    include $this->template('complain');
+    exit();
+}
 
 if ($op == 'sign_up') {
     $activity_id = intval($_GPC['activity_id']);

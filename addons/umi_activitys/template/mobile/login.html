@@ -266,7 +266,7 @@
             </div>
         </div>
 
-        {if !$shop['id']}
+        {if !$shop['id']&&$setting['sign_code']==1}
         <div class="weui-cell">
             <div class="weui-cell__bd flex">
                 <input id="mobile_code" class="weui-input" type="tel" maxlength="6" placeholder="请输入验证码">
@@ -444,12 +444,13 @@
             tips("请上传一个二维码，以便创建活动的时候用户能联系到您");
             return false;
         }
-
-        var mb = $('#mobile_code').val();
+        var mb = $('#mobile_code').val()||0;
+        {if !$shop['id']&&$setting['sign_code']==1}
         if (mb == '') {
             $.toast("请输入验证码", 'cancel');
             return false;
         }
+        {/if}
         if(!$('#s11')[0].checked){
             $.toast("您未同意注册协议", 'cancel');
             return false;

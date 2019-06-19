@@ -63,8 +63,8 @@ if ($op == 'create_order') {
 
     $moduleid = empty($_W['fans']['uid']) ? '000000' : sprintf("%06d", $_W['fans']['uid']);
     $tid = date('YmdHis') . $moduleid . random(8, 1);
-    if(strlen($activity['title'])>12) {
-        $pay_title=substr($activity['title'],10).'...';
+    if(mb_strlen($activity['title'])>12) {
+        $pay_title=substr($activity['title'],0,10).'...';
     }else{
         $pay_title=$activity['title'];
     }

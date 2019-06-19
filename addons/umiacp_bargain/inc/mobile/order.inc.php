@@ -62,12 +62,19 @@ if ($op == 'create_order') {
     $moduleid = empty($_W['fans']['uid']) ? '000000' : sprintf("%06d", $_W['fans']['uid']);
     $tid = date('YmdHis') . $moduleid . random(8, 1);
 
+
+    if(mb_strlen($goods['title'])>12) {
+        $pay_title=substr($goods['title'],0,10).'...';
+    }else{
+        $pay_title=$goods['title'];
+    }
+
     $order['uniacid'] = $uniacid;
     $order['cut_id'] = $cut_id;
     $order['goods_id'] = $cut['goods_id'];
     $order['activity_id'] = $cut['activity_id'];
     $order['shop_id'] = $cut['shop_id'];
-    $order['title'] = $goods['title'];
+    $order['title'] = $pay_title;
     $order['ordersn'] = $tid;
     $order['tid'] = $tid;
     $order['status'] = 1;

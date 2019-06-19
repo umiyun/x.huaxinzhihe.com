@@ -32,7 +32,6 @@ if ($op == 'create_order') {
     }
     $cut = pdo_fetch("select * from " . tablename(YOUMI_NAME . '_' . 'cut') . " where `uniacid` = {$uniacid} and id = {$cut_id} ");
     $activity = pdo_fetch("select * from " . tablename(YOUMI_NAME . '_' . 'activity') . " where `uniacid` = {$uniacid} and id = {$cut['activity_id']} ");
-//    die(json_encode($activity));
     $goods = pdo_fetch("select * from " . tablename(YOUMI_NAME . '_' . 'goods') . " where `uniacid` = {$uniacid} and id = {$cut['goods_id']} ");
     if (!$goods || $goods['status'] == 2) {
         youmi_result(1, '商品已下架');
@@ -63,12 +62,11 @@ if ($op == 'create_order') {
 
     $moduleid = empty($_W['fans']['uid']) ? '000000' : sprintf("%06d", $_W['fans']['uid']);
     $tid = date('YmdHis') . $moduleid . random(8, 1);
-    if(strlen($activity['title'])>12) {
-        $pay_title=substr($activity['title'],10).'...';
+    if(mb_strlen($activity['title'])>12) {
+        $pay_title=substr($activity['title'],0,10).'...';
     }else{
         $pay_title=$activity['title'];
     }
-
     $order['uniacid'] = $uniacid;
     $order['cut_id'] = $cut_id;
     $order['goods_id'] = $cut['goods_id'];
@@ -79,6 +77,7 @@ if ($op == 'create_order') {
     $order['tid'] = $tid;
     $order['status'] = 1;
     $order['createtime'] = TIMESTAMP;
+
     $status = pdo_insert(YOUMI_NAME . '_' . 'order', $order);
     $order['id'] = pdo_insertid();
     $errno = $status ? 0 : 1;

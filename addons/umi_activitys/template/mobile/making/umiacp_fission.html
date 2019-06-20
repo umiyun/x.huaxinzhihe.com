@@ -717,7 +717,10 @@
             else{datas['needmoney']=$('.d_needmoney').val()}
             if($('.d_commission').val()==''){tips('请填写返现佣金金额'); return false;}
             else{datas['commission']=$('.d_commission').val()}
-
+            if(datas['commission']>=$('.d_needmoney').val()){
+                tips('佣金金额不能大于报名金额');
+                return false;
+            }
             //活动信息
             datas['receive_name']=$('.d_receive_name').val()
             datas['receive_time']=$('.d_receive_time').val()

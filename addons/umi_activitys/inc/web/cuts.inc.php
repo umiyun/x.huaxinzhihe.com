@@ -36,24 +36,23 @@ if ($op == 'display') {
     if (in_array($module, ['umiacp_10second', 'umiacp_eggfreny'])) {
         $list = pdo_fetchall('SELECT * FROM ' . tablename($module . '_reward').' where uniacid = :uniacid ' . $condition . $orderby . ' LIMIT ' . ($pindex - 1) * $psize . ',' . $psize, $paras);
         $total = pdo_fetchcolumn('SELECT COUNT(*) FROM ' . tablename($module . '_reward') . ' WHERE uniacid = :uniacid ' . $condition, $paras);
-    } else {
+    } else if(in_array($module, ['umiacp_groupsimple'])){
+        $list = pdo_fetchall('SELECT * FROM ' . tablename($module . '_order').' where uniacid = :uniacid ' . $condition . $orderby . ' LIMIT ' . ($pindex - 1) * $psize . ',' . $psize, $paras);
+        $total = pdo_fetchcolumn('SELECT COUNT(*) FROM ' . tablename($module . '_order') . ' WHERE uniacid = :uniacid ' . $condition, $paras);
+    }else {
         $list = pdo_fetchall('SELECT * FROM ' . tablename($module . '_cut').' where uniacid = :uniacid ' . $condition . $orderby . ' LIMIT ' . ($pindex - 1) * $psize . ',' . $psize, $paras);
         $total = pdo_fetchcolumn('SELECT COUNT(*) FROM ' . tablename($module . '_cut') . ' WHERE uniacid = :uniacid ' . $condition, $paras);
     }
-
     foreach ($list as &$item) {
 
         if ($module == 'umiacp_vote') {
             $item['vote_imgs']=unserialize($item['vote_imgs']);
         }
 
-
-
         if ($item['shop_id']) {
             $shop = pdo_get(YOUMI_NAME . '_' . 'shop', ['id' => $item['shop_id']]);
             $item['shoptitle'] = $shop['title'];
         }
-
 
         $module1 = pdo_get(YOUMI_NAME . '_' . 'module', ['module' => $item['module']]);
         $item['moduletitle'] = $module1['title'];
@@ -91,7 +90,43 @@ if ($op == 'display') {
                 }
                 break;
             case 'umiacp_apply' :
-            case 'umiacp_groupprepay' :
+                switch ($item['status']) {
+                    case 1 :
+                        $item['statusname'] = '已报名';
+                        break;
+                    case 2 :
+                        $item['statusname'] = '已支付';
+                        break;
+                    case 3 :
+                        $item['statusname'] = '已购买';
+                        break;
+                    case 4 :
+                        $item['statusname'] = '已取消';
+                        break;
+                    default :
+                        $item['statusname'] = '';
+                        break;
+                }
+                break;
+            case 'umiacp_groupsimple' :
+                switch ($item['status']) {
+                    case 1 :
+                        $item['statusname'] = '已报名';
+                        break;
+                    case 2 :
+                        $item['statusname'] = '已支付';
+                        break;
+                    case 3 :
+                        $item['statusname'] = '已购买';
+                        break;
+                    case 4 :
+                        $item['statusname'] = '已取消';
+                        break;
+                    default :
+                        $item['statusname'] = '';
+                        break;
+                }
+                break;
             case 'umiacp_lighten' :
                 switch ($item['status']) {
                     case 1 :
@@ -164,6 +199,8 @@ if ($op == 'display') {
         include $this->template('cuts_apply');
     } else if ($module == 'umiacp_groupprepay') {
         include $this->template('cuts_groupprepay');
+    } else if ($module == 'umiacp_groupsimple') {
+        include $this->template('cuts_groupsimple');
     } else if ($module == 'umiacp_lighten') {
         include $this->template('cuts_lighten');
     } else {

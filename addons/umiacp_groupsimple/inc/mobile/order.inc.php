@@ -365,6 +365,9 @@ if ($op == 'display') {
                 $item['statusname'] = '';
                 break;
         }
+        if (!$item['group_status']) {
+            $item['group_status'] = 1;
+        }
         $item['saler_qrurl'] = $_W['siteroot'] . 'app/' . $this->createMobileUrl('saler', ['user_type' => 2, 'order_id' => $item['id']]);
         $item['goods'] = pdo_get(YOUMI_NAME . '_' . 'activity', ['id' => $item['activity_id']]);
         $item['goods']['image'] = tomedia($item['goods']['image']);

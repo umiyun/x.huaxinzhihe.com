@@ -332,6 +332,7 @@ if ($op == 'sign_up') {
     $cut['nprice'] = floatval($goods['oprice']) - $price;
 
     $cut['realname'] = trim($_GPC['realname']);
+    $cut['avatar'] =  $member['avatar'];;
     $cut['mobile'] = trim($_GPC['mobile']);
     $cut['userinfo'] = $_GPC['userinfo'];
 

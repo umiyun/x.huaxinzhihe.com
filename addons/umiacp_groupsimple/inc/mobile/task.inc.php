@@ -24,6 +24,117 @@ if ($op == 'display') {
     exit();
 }
 
+
+if ($op == 'update_group') {
+
+    $paras[':uniacid'] = $this->uniacid;
+    $groups = pdo_fetchall('SELECT * FROM ' . tablename(YOUMI_NAME . '_' . 'group') . ' where uniacid = :uniacid and activity_id = 186  ', $paras);
+    foreach ($groups as &$group) {
+        $now_num = pdo_fetchcolumn('select count(id) from ' . tablename(YOUMI_NAME . '_' . 'order') . ' where uniacid = ' . $group['uniacid'] . ' and group_id = ' . $group['id'] . ' and status = 2');
+
+        if ($now_num >= 3 && $group['status'] == 3) {
+            $res += pdo_update(YOUMI_NAME . '_' . 'group', ['status' => 1, 'now_num' => 3, 'success_time' => time()], ['id' => $group['id']]);
+        } elseif ($group['status'] == 1 && $now_num >= 3) {
+            $res += pdo_update(YOUMI_NAME . '_' . 'group', ['now_num' => 3], ['id' => $group['id']]);
+        } else if ($now_num < 3) {
+            $res += pdo_update(YOUMI_NAME . '_' . 'group', ['now_num' => $now_num], ['id' => $group['id']]);
+        }
+
+        unset($group);
+    }
+    youmi_result($res);
+
+}
+
+/**
+ * 实时更新订单
+ * do : task   op : reset_order
+ */
+if ($op == 'reset_order') {
+    $referrer = trim($_GPC['referrer']);
+//    if (!$referrer) {
+//        youmi_result(1, '非法访问');
+//    }
+
+    $paras[':uniacid'] = $this->uniacid;
+    $new = TIMESTAMP;
+
+
+    $orders = pdo_fetchall('SELECT * FROM ' . tablename(YOUMI_NAME . '_' . 'order') . ' where uniacid = :uniacid and activity_id = 186 and query_lock = 0 limit 20 ', $paras);
+    $res = 0;
+
+//    youmi_result(1, '', $orders);
+    if ($orders) {
+
+        load()->model('account');
+        $setting = uni_setting($_W['uniacid'], array('payment'));
+        if (is_array($setting['payment'])) {
+            $wechat = $setting['payment']['wechat'];
+            if (intval($wechat['switch']) == 3) {
+                $facilitator_setting = uni_setting($wechat['service'], array('payment'));
+                $wechat['signkey'] = $facilitator_setting['payment']['wechat_facilitator']['signkey'];
+            } else {
+                $wechat['signkey'] = ($wechat['version'] == 1) ? $wechat['key'] : $wechat['signkey'];
+            }
+        }
+
+        $appid = trim($_W['uniaccount']["key"]);
+        $mch_id = trim($wechat["mchid"]);
+        $key = trim($wechat["signkey"]);
+
+        foreach ($orders as $order) {
+
+//            $order['tid'] = '2019061909195300000018000616';
+//            $order['title'] = '德州学房英语学院618双抢嗨';
+//            $order['price'] = '99';
+
+            $weixinpay = new WeixinPay($appid, $openid, $mch_id, $key, $order['tid'], $order['title'], $order['price']);
+            $return = $weixinpay->orderquery();
+
+//            youmi_result(1, $return);
+
+            if ($return['return_code'] == 'SUCCESS' && $return['result_code'] == 'SUCCESS') {
+                if ($return['trade_state'] == 'SUCCESS' && floatval($return['total_fee']) / 100 == $order['price']) {
+                    $update['status'] = 2;
+                    $update['pay_time'] = TIMESTAMP;
+                    $update['transid'] = $return['transaction_id'];
+                    if (!$order['group_id'] && $order['leader'] == 1) {
+                        pdo_insert(YOUMI_NAME . '_' . 'group', [
+                            'uniacid' => $order['uniacid'],
+                            'activity_id' => $order['activity_id'],
+                            'shop_id' => $order['shop_id'],
+                            'mid' => $order['mid'],
+                            'createtime' => $order['createtime'],
+                            'status' => 3,
+                            'group_id' => $return['transaction_id'],
+                            'group_num' => 3,
+                            'now_num' => 1,
+                            'avatar' => $order['avatar'],
+                            'nickname' => $order['nickname'],
+                        ]);
+                        $update['group_id'] = pdo_insertid();
+                    }
+                }
+            }
+            if ($return['trade_state'] == 'REFUND') {
+                $update['status'] = 5;
+                $update['transid'] = $return['transaction_id'];
+            }
+
+            if ($return['return_code'] == 'SUCCESS' && $return['result_code'] != 'SUCCESS') {
+
+            }
+            $update['query_lock'] = 1;
+            $res += pdo_update(YOUMI_NAME . '_' . 'order', $update, ['id' => $order['id']]);
+            unset($order);
+            unset($return);
+        }
+    }
+    youmi_result(0, '成功处理' . $res . '条订单！');
+
+}
+
+
 /**
  * 实时发送佣金
  * do : task   op : display
@@ -37,12 +148,11 @@ function send_com($uniacid)
     $count = 0;
     $error = 0;
     foreach ($groups as &$group) {
-        $activity = pdo_get(YOUMI_NAME . '_' . 'activity', ['uniacid' => $uniacid, 'id' => $group['activity_id']]);
-        $commission = floatval($activity['commission']);
 
         $orders = pdo_getall(YOUMI_NAME . '_' . 'order', ['group_id' => $group['id'], 'send_status !=' => 1, 'status' => 2, 'fmid !=' => 0]);
 
         foreach ($orders as &$order) {
+            $commission = floatval($order['commission']);
             if (floatval($order['price']) <= $commission) {
                 $count++;
                 continue;
@@ -52,10 +162,10 @@ function send_com($uniacid)
 
             if (($result['return_code'] == 'SUCCESS') && ($result['result_code'] == 'SUCCESS')) {
                 $success++;
-                pdo_update(YOUMI_NAME . '_' . 'order', ['send_status' => 1, 'commission' => $commission, 'send_result' => '发放成功'], ['id' => $order['id']]);
+                pdo_update(YOUMI_NAME . '_' . 'order', ['send_status' => 1, 'send_result' => '发放成功'], ['id' => $order['id']]);
             } else {
                 $result['msg'] = (empty($result['err_code_des']) ? $result['return_msg'] : $result['err_code_des']);
-                pdo_update(YOUMI_NAME . '_' . 'order', ['send_status' => 2, 'commission' => $commission, 'send_result' => $result['msg']], ['id' => $order['id']]);
+                pdo_update(YOUMI_NAME . '_' . 'order', ['send_status' => 2, 'send_result' => $result['msg']], ['id' => $order['id']]);
                 $error++;
                 break 2;
             }
@@ -91,7 +201,7 @@ function send_msg($uniacid)
             //发送拼团通知
             $url = $_W['siteroot'] . "app/index.php?i={$uniacid}&c=entry&activity_id={$group['activity_id']}&op=detail&id={$group['id']}&do=index&m=umiacp_groupsimple";
             $result = handleGroupMsg($f_member['openid'], $order['title'], $order['price'], $group['now_num'], $url);
-die(json_encode($result));
+
             if (!is_error($result)) {
                 $success++;
                 pdo_update(YOUMI_NAME . '_' . 'order', ['msg_status' => 1, 'msg_result' => '发放成功'], ['id' => $order['id']]);

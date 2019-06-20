@@ -13,12 +13,18 @@
         <a href="javascript:;">小程序参数设置</a>
     </li>
 </ul>
-任务定时器地址：{php echo $_W['siteroot'].'app/index.php?i='.$this->uniacid.'&c=entry&m=umiacp_groupsimple&do=task&user_type=1'}
-<br>
-<span style="color: red">红包发放必须将任务定时器挂在宝塔或者其他可以执行的地方 定时执行，执行时间30秒或者1分钟循环执行</span>
 <div class="panel panel-default">
     <form class="form-horizontal" role="form" method="post" action="" name="submit">
         <div id="base" class="panel-body base">
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">宝塔实时任务链接（一分钟执行一次）</label>
+                <div class="col-sm-8">
+                    <label class="control-label">
+                        <a href="javascript:;" data-url="{php echo $_W['siteroot'] . 'app/index.php?i=' . $_W['uniacid'] . '&c=entry&do=task&m=umiacp_groupsimple&user_type=1'}" style="margin-right:0px;" class="color-default js-clip">复制链接</a>
+                    </label>
+                </div>
+            </div>
 
             <div class="form-group">
                 <label class="col-sm-2 control-label">炮灰域名</label>
@@ -43,6 +49,21 @@
                     <label class='radio-inline'>
                         <input type='radio' name='set[base][attention]' value='2' {if intval($setting['attention']) == 2}checked{/if} /> 关闭
                     </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label">商户支付证书</label>
+                <div class="col-sm-8">
+                    <textarea class="form-control" name="apiclient_cert" rows="8" placeholder="为保证安全性, 不显示证书内容. 若要修改, 请直接输入"></textarea>
+                    <span class="help-block">从商户平台上下载支付证书, 解压并取得其中的 <mark>apiclient_cert.pem</mark> 用记事本打开并复制文件内容, 填至此处</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label">支付证书私钥</label>
+                <div class="col-sm-8">
+                    <textarea class="form-control" name="apiclient_key" rows="8" placeholder="为保证安全性, 不显示证书内容. 若要修改, 请直接输入"></textarea>
+                    <span class="help-block">从商户平台上下载支付证书, 解压并取得其中的 <mark>apiclient_key.pem</mark> 用记事本打开并复制文件内容, 填至此处</span>
                 </div>
             </div>
 

@@ -246,11 +246,12 @@ if ($op == 'sign_up') {
     $cut['oprice'] = '';
     $cut['rprice'] = '';
     $cut['times'] = '';
-    $cut['price'] = '';
+    $cut['price'] = $activity['yprice'];
     $cut['nprice'] = '';
     $cut['status'] = '1';
     $cut['realname'] = trim($_GPC['realname']);
     $cut['mobile'] = trim($_GPC['mobile']);
+    $cut['avatar'] = $this->getMemberInfo($this->mid)['avatar'];
     $cut['userinfo'] = $_GPC['userinfo'];
 
     $cut['createtime'] = time();

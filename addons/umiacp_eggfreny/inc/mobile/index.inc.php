@@ -214,6 +214,7 @@ if ($op == 'sign_up') {
         $reward['id'] = pdo_insertid();
         $update2['participate +='] = 1;
         pdo_update(YOUMI_NAME . '_activity', $update2, ['id' => $activity_id]);
+        pdo_update(UMI_NAME . '_activity', $update2, ['shop_id' => $activity['shop_id'], 'module' => YOUMI_NAME, 'activity_id' => $activity_id]);
     } else {
         youmi_result(1, '请勿重复报名');
 //        if($reward['day']<$start_time){

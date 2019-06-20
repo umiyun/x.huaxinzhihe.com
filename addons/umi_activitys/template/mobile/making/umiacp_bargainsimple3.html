@@ -1196,7 +1196,7 @@
             // }
             //商家介绍
             datas['shop_title']=$('.d_shop_title').val()
-            // if(!datas['shop_title']){tips('请填写商家介绍标题'); return false;}
+            if(!datas['shop_title']){tips('请填写商家介绍标题'); return false;}
             datas['shop_val']=$('#contentEditor_shop').html();
             {if $setting['shop_default']!=1}
             //联系方式
@@ -1215,7 +1215,7 @@
             {/if}
 
             //信息收集
-            var userinfo=[]
+            var userinfo=[];
             for (var iiii = 0; iiii < $('.d_userinfo').length;iiii++) {
                 userinfo.push({
                     title:$($('.d_userinfo')[iiii]).find('.d_u_title').val(),

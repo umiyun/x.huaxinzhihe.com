@@ -6,180 +6,204 @@
  * Time: 12:18
  */
 
-if (!defined('IN_IA')) {
-    exit('Access Denied');
+global $_W, $_GPC;
+
+$uniacid = intval($this->uniacid);
+$openid = trim($this->openid);
+
+if (!$this->mid || !$this->openid) {
+    youmi_result(1, '请先登录');
 }
 
-define('UMIACP_NAME', 'umiacp_bargainsimple3');
+$op = trim($_GPC['op']) ? trim($_GPC['op']) : 'pay';
 
 /**
- * 获取活动数据
+ *  执行支付.
+ * do   pay
+ * order_id     订单
  */
-if (!function_exists('youmi_get_activity')) {
-    function youmi_get_activity($activity_id)
-    {
-        $item = pdo_get(YOUMI_NAME . '_activity', ['id' => $activity_id]);
-        $activity = pdo_get(UMIACP_NAME . '_activity', ['id' => $item['activity_id']]);
-        $activity['desc_imgs'] = unserialize($activity['desc_imgs']);
-        $activity['shop_imgs'] = unserialize($activity['shop_imgs']);
-        $activity['userinfo'] = unserialize($activity['userinfo']);
-//        $activity['preferential_val'] = unserialize($activity['preferential_val']);
-        $activity['effects_imgs'] = unserialize($activity['effects_imgs']);
-        $activity['r_address'] = unserialize($activity['r_address']);
-        foreach ($activity['shop_imgs'] as &$shop_img) {
-            $shop_img = tomedia($shop_img);
-            unset($shop_img);
-        }
-        foreach ($activity['desc_imgs'] as &$desc_img) {
-            $desc_img = tomedia($desc_img);
-            unset($desc_img);
-        }
-        $goods = pdo_getall(UMIACP_NAME . '_goods', ['activity_id' => $item['activity_id'], 'status >' => -1]);
-        foreach ($goods as &$good) {
-            $good['image'] = tomedia($good['image']);
-            unset($good);
-        }
-        $activity['goods'] = $goods;
+if ($op == 'pay') {
 
-        return $activity;
+    $order_id = intval($_GPC['order_id']);
+    // 判断权限
+    $order = $this->hasOrder($order_id);
+
+    $goods = pdo_fetch("select * from " . tablename(YOUMI_NAME . '_' . 'goods') . " where `uniacid` = {$uniacid} and id = {$order['goods_id']} ");
+
+    if ($goods['status'] == 3 || $goods['success'] >= $goods['gnum']) {
+        youmi_result(1, '商品已抢光');
+    }
+    if ($goods['status'] == 2) {
+        youmi_result(1, '商品已下架');
+    }
+
+    if ($order && $order['status'] == 1) {
+        //构造支付请求中的参数
+        $params = array(
+            'tid' => $order['tid'],             //模块中的订单号，此号码用于业务模块中区分订单，交易的识别码
+            'ordersn' => $order['ordersn'],     //收银台中显示的订单号
+            'title' => $order['title'],         //收银台中显示的标题
+            'fee' => $order['price'],           //收银台中显示需要支付的金额,只能大于 0
+            'user' => $order['mid'],            //付款用户, 付款的用户名(选填项)
+        );
+
+        global $_W;
+        load()->model('activity');
+        load()->model('module');
+        activity_coupon_type_init();
+        if (!$this->inMobile) {
+            youmi_result(1, '支付功能只能在手机上使用');
+        }
+
+        $params['module'] = $this->module['name'];
+        $return = pay($order);
+        if (is_error($return)) {
+            youmi_result(1, $return['message'], $return);
+        }
+        if ($return['return_code'] == 'FAIL') {
+            youmi_result(1, $return['return_msg']);
+        }
+        youmi_result(0, '', $return);
+    } else {
+        if ($order['status'] == 4) {
+            youmi_result(1, '订单已取消');
+        }
+        if ($order['status'] == 2) {
+            youmi_result(1, '订单已支付');
+        }
+        youmi_result(1, '订单不存在或已支付');
     }
 }
 
+function pay($order)
+{
+    global $_W, $_GPC;
+    load()->model('account');
+    $paytype = !empty($order['paytype']) ? $order['paytype'] : 'wechat';
+    $moduels = uni_modules();
+    if (empty($order) || !array_key_exists(YOUMI_NAME, $moduels)) {
+        return error(1, '模块不存在');
+    }
+
+    $uniontid = $order['tid'];
+    $paylog = pdo_get('core_paylog', array('uniacid' => $_W['uniacid'], 'module' => YOUMI_NAME, 'tid' => $order['tid']));
+    if (empty($paylog)) {
+        $paylog = array(
+            'uniacid' => $_W['uniacid'],
+            'acid' => $_W['acid'],
+            'type' => 'wechat',
+            'openid' => $_W['openid'],
+            'module' => YOUMI_NAME,
+            'tid' => $order['tid'],
+            'uniontid' => $uniontid,
+            'fee' => floatval($order['price']),
+            'card_fee' => floatval($order['price']),
+            'status' => '0',
+            'is_usecard' => '0',
+            'tag' => iserializer(array('acid' => $_W['acid'], 'uid' => $_W['member']['uid']))
+        );
+        pdo_insert('core_paylog', $paylog);
+        $paylog['plid'] = pdo_insertid();
+    }
+    if (!empty($paylog) && $paylog['status'] != '0') {
+        return error(1, '这个订单已经支付成功, 不需要重复支付.');
+    }
+    if (!empty($paylog) && empty($paylog['uniontid'])) {
+        pdo_update('core_paylog', array(
+            'uniontid' => $uniontid,
+        ), array('plid' => $paylog['plid']));
+        $paylog['uniontid'] = $uniontid;
+    }
+
+    return wxapp_pay($order, $paylog['openid']);
+}
+
 /**
- * 保存活动数据
+ *  支付回调
+ * do   pay     op      payResult
+ * order_id     订单
  */
-if (!function_exists('youmi_save_activity')) {
-    function youmi_save_activity($from,$shop_default,$shop)
-    {
+if ($op == 'payResult') {
+    //订单id
+    $order_id = intval($_GPC['order_id']);
+// 判断权限
+    $order = $this->hasOrder($order_id);
+    if ($order && $order['status'] == 1) {
+        //订单
+        $paylog = pdo_get('core_paylog', array('uniacid' => $this->uniacid, 'module' => YOUMI_NAME, 'tid' => $order['tid']));
+        if ($paylog['status'] == 0) {
+            global $_W, $_GPC;
 
+            $setting = uni_setting($_W['uniacid'], array('payment'));
+            if(is_array($setting['payment'])) {
+                $wechat = $setting['payment']['wechat'];
+                if (intval($wechat['switch']) == 3) {
+                    $facilitator_setting = uni_setting($wechat['service'], array('payment'));
+                    $wechat['signkey'] = $facilitator_setting['payment']['wechat_facilitator']['signkey'];
+                } else {
+                    $wechat['signkey'] = ($wechat['version'] == 1) ? $wechat['key'] : $wechat['signkey'];
+                }
+            }
 
-        $data['uniacid'] = $from['uniacid'];
-        $data['shop_id'] = $from['shop_id'];
-        //        $data['effects_id'] = $from['effects_id'];
-        $data['effects_imgs'] = serialize($from['effects_imgs']);
-        $data['title'] = $from['title'];
-        $data['image'] = $from['image'];
-        $data['bgimage'] = $from['bgimage'];
-        $data['music'] = $from['music'];
-        $data['starttime'] = strtotime($from['starttime']);
-        $data['endtime'] = strtotime($from['endtime']);
-        $data['cutting_pay'] = $from['cutting_pay'];
-//        $data['preferential_title'] = $from['preferential_title'];
-//        $data['preferential_val'] = serialize($from['preferential_val']);
-        $data['desc_title'] = $from['desc_title'];
-        $data['desc_val'] = $from['desc_val'];
-//        $data['desc_imgs'] = serialize($from['desc_imgs']);
-//        $data['rule_title'] = $from['rule_title'];
-//        $data['rule_val'] = $from['rule_val'];
-        $data['shop_title'] = $from['shop_title'];
-        $data['shop_val'] = $from['shop_val'];
-        $data['shop_imgs'] = serialize($from['shop_imgs']);
-//        $data['receive_time'] = $from['receive_time'];
-//        $data['receive_address'] = $from['receive_address'];
-//        $data['receive_mobile'] = $from['receive_mobile'];
-        if($shop_default==1) {//默认商家信息
-            $data['shop_name'] = $shop['realname'];
-            $data['shop_mobile'] = $shop['mobile'];
-            $data['shop_province'] = $shop['province'];
-            $data['shop_city'] = $shop['city'];
-            $data['shop_district'] = $shop['district'];
-            $data['shop_address'] = $shop['address'];
-            $data['shop_code'] = $shop['qrcode'];
-        }else{
-            $data['shop_name'] = $from['shop_name'];
-            $data['shop_mobile'] = $from['shop_mobile'];
-            $data['shop_province'] = $from['shop_province'];
-            $data['shop_city'] = $from['shop_city'];
-            $data['shop_district'] = $from['shop_district'];
-            $data['shop_address'] = $from['shop_address'];
-            $data['shop_code'] = $from['shop_code'];
+            $appid = trim($_W['uniaccount']["key"]);
+            $mch_id = trim($wechat["mchid"]);
+            $key = trim($wechat["signkey"]);
+
+            $weixinpay = new WeixinPay($appid, $openid, $mch_id, $key, $order['tid'], $order['title'], $order['price']);
+            $return = $weixinpay->orderquery();
+            if ($return['return_code'] == 'SUCCESS' && $return['result_code'] == 'SUCCESS') {
+                if ($return['trade_state'] == 'SUCCESS' && floatval($return['total_fee']) / 100 == $order['price']) {
+                    $paylog['status'] = 1;
+                    $tag = unserialize($paylog['tag']);
+                    $tag['transaction_id'] = $return['transaction_id'];
+                    $paylog['tag'] = serialize($tag);
+                    pdo_update('core_paylog', ['status' => 1, 'tag' => $paylog['tag']], ['plid' => $paylog['plid']]);
+                }
+            }
         }
-        $data['userinfo'] = serialize($from['userinfo']);
-        $data['titlebgimg'] = $from['titlebgimg'];
-        $data['share_img'] = $from['share_img'];
-        $data['share_title'] = $from['share_title'];
-        $data['share_desc'] = $from['share_desc'];
+        $tag = unserialize($paylog['tag']);
+        $transaction_id = $tag['transaction_id'];
+        $status = intval($paylog['status']) === 1;
+        if ($status && $order['status'] == 1) {
+            $order = pdo_get(YOUMI_NAME . '_' . 'order', ['uniacid' => $this->uniacid, 'ordersn' => $params['tid']]);
+            pdo_update(YOUMI_NAME . '_' . 'order', ['status' => 2, 'pay_time' => TIMESTAMP, 'transid' => $transaction_id], ['id' => $order['id']]);
+            pdo_update(YOUMI_NAME . '_goods', ['success +=' => 1], ['id' => $order['goods_id']]);
+            pdo_update(YOUMI_NAME . '_activity', ['success +=' => 1], ['id' => $order['activity_id']]);
+            pdo_update(YOUMI_NAME . '_cut', ['status' => 3], ['id' => $order['cut_id']]);
 
-        $data['regional'] = $from['regional'];
-        $data['ak'] = $from['ak'];
-        $data['r_address'] = serialize($from['r_address']);
+            youmi_settlement_log($order, 1, $order['price'], '用户支付订单：订单ID：' . $order['id'] . '，用户：' . $this->username . '，支付时间：' . date('Y-m-d H:i:s'));
 
-        if ($from['activity_id']) {
-            $item = pdo_get(YOUMI_NAME . '_activity', ['id' => $from['activity_id']]);
-            $res = pdo_update(UMIACP_NAME . '_activity', $data, ['id' => $item['activity_id']]);
-            $activity_id = $item['activity_id'];
-            pdo_update(YOUMI_NAME . '_activity', [
-                'title' => $data['title'],
-                'logo' => $data['image'],
-            ], ['id' => $from['activity_id']]);
-            $data['activity_id']=$activity_id;
-            $errno = 0;
-            $message = '更新成功';
+            message('支付成功！', $this->createMobileUrl('order'), 'success');
+        }
+        message('支付失败！', $this->createMobileUrl('index', ['activity_id' => $order['activity_id']]), 'error');
+
+    } else {
+        youmi_result(1, '订单不存在或已支付');
+    }
+}
+
+
+function wxapp_pay($order, $openid)
+{
+    global $_W, $_GPC;
+    load()->model('account');
+    $setting = uni_setting($_W['uniacid'], array('payment'));
+    if(is_array($setting['payment'])) {
+        $wechat = $setting['payment']['wechat'];
+        if (intval($wechat['switch']) == 3) {
+            $facilitator_setting = uni_setting($wechat['service'], array('payment'));
+            $wechat['signkey'] = $facilitator_setting['payment']['wechat_facilitator']['signkey'];
         } else {
-            $data['status'] = 1;
-            $data['createtime'] = time();
-            $res = pdo_insert(UMIACP_NAME . '_activity', $data);
-            $activity_id = pdo_insertid();
-            $data['activity_id']=$activity_id;
-            if ($res) {
-                $errno = 0;
-                $message = '新增成功';
-
-                pdo_insert(YOUMI_NAME . '_activity', [
-                    'uniacid' => $data['uniacid'],
-                    'mid' => $from['mid'],
-                    'shop_id' => $data['shop_id'],
-                    'case_id' => $from['case_id'],
-                    'activity_id' => $activity_id,
-                    'module' => UMIACP_NAME,
-                    'title' => $data['title'],
-                    'logo' => $data['image'],
-                    'status' => 1,
-                    'createtime' => time(),
-                ]);
-                $a_id = pdo_insertid();
-            } else {
-                $errno = 1;
-                $message = '新增失败';
-            }
+            $wechat['signkey'] = ($wechat['version'] == 1) ? $wechat['key'] : $wechat['signkey'];
         }
-
-        foreach ($from['goods'] as &$good) {
-
-            if ($good['id']) {
-                $good_id = $good['id'];
-                unset($good['id']);
-                pdo_update(UMIACP_NAME . '_goods', $good, ['id' => $good_id]);
-            } else {
-                $good['uniacid'] = $from['uniacid'];
-                $good['activity_id'] = $activity_id;
-                $good['shop_id'] = $from['shop_id'];;
-                $good['status'] = 1;
-                $good['createtime'] = time();
-                unset($good['id']);
-                pdo_insert(UMIACP_NAME . '_goods', $good);
-            }
-            unset($good);
-        }
-        $data['id']=($from['activity_id']?$from['activity_id']:$a_id);
-        return ['errno' => $errno, 'message' => $message, 'data' => $data];
     }
+
+    $appid = trim($_W['uniaccount']["key"]);
+    $mch_id = trim($wechat["mchid"]);
+    $key = trim($wechat["signkey"]);
+
+    $weixinpay = new WeixinPay($appid, $openid, $mch_id, $key, $order['tid'], $order['title'], $order['price']);
+    $return = $weixinpay->pay();
+    return $return;
 }
-
-/**
- * 删除商品数据
- */
-if (!function_exists('youmi_del_goods')) {
-    function youmi_del_goods($activity_id, $good_id)
-    {
-        $activity = pdo_get(YOUMI_NAME . '_activity', ['id' => $activity_id]);
-        if ($activity['status'] == 1) {
-            youmi_result(1, '活动上架中，不允许删除');
-        }
-        $res = pdo_update(UMIACP_NAME . '_goods', ['status' => -1], ['id' => $good_id, 'activity_id' => $activity['activity_id']]);
-        youmi_result($res ? 0 : 1, '删除' . ($res ? '成功' : '失败'));
-
-    }
-}
-
 

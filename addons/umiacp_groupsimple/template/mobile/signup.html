@@ -135,6 +135,7 @@
                 'fmid':"{$_GPC['fmid']}"
             },
             function (data) {
+                var group_id=data.data.group_id;
                 if(!!data.data.id) {
                     var order_id=data.data.id;
                     $.post(
@@ -156,7 +157,11 @@
                                     },
                                     function(res){
                                         if(res.err_msg == "get_brand_wcpay_request:ok"){
-
+                                            if($('.open_signup').attr('data-type')==3){
+                                                location.href="{php echo $this->createMobileurl('order')}"
+                                            }else{
+                                                location.href="{php echo $this->createMobileurl('index',['activity_id'=>$activity_id,'fmid'=>$_GPC['fmid'],'op'=>'detail'])}&id="+group_id
+                                            }
                                         }else{
                                             $.post(
                                                 "{php echo $this->createMobileUrl('order',['op'=>'cancel'])}",
@@ -165,9 +170,6 @@
                                                 },
                                             )
                                         }
-                                        setTimeout(function () {
-                                            location.reload();
-                                        },2000)
                                     });
                             }else {
                                 tips(data.message)

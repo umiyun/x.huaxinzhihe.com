@@ -1127,6 +1127,7 @@
             $($(".os_input").eq(1)).find('input').val(kj_userinfo.mobile)
         }
         var clsname=".os_change[data-type='"+type+"']";
+        $('.os_change').hide();
         $(clsname).show();
         $('.open_signup,.bg_fixed_sign').fadeIn();
         $('.open_signup').attr('data-id',id).attr('data-type',type);

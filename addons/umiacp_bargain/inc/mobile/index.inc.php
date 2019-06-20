@@ -328,6 +328,7 @@ if ($op == 'sign_up') {
 
     $cut['realname'] = trim($_GPC['realname']);
     $cut['mobile'] = trim($_GPC['mobile']);
+    $cut['avatar'] = $this->getMemberInfo($this->mid)['avatar'];
     $cut['userinfo'] = $_GPC['userinfo'];
 
     $cut['createtime'] = time();

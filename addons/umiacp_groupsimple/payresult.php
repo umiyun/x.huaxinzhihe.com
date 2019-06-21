@@ -132,9 +132,9 @@ if (is_array($setting['payment'])) {
 
                 if ($order['status'] == 1) {
 
-                    if ($order['group_id'] || $order['leader'] == 1) {
+                    if ($order['pay_type'] != 3) {
                         if (intval($activity['success']) + intval($activity['group_num']) <= intval($activity['gnum'])) {
-                            pdo_update(YOUMI_NAME . '_' . 'order', ['status' => 2, 'pay_time' => TIMESTAMP, 'transid' => $get['transaction_id']], ['id' => $order['id']]);
+                            pdo_update(YOUMI_NAME . '_' . 'order', ['status' => 2, 'pay_time' => TIMESTAMP, 'commission' => $activity['commission'], 'transid' => $get['transaction_id']], ['id' => $order['id']]);
                             if ($order['leader'] == 1) {
 
                                 $group['uniacid'] = $order['uniacid'];
@@ -170,16 +170,21 @@ if (is_array($setting['payment'])) {
                             }
                         } else {
                             pdo_update(YOUMI_NAME . '_group', ['status' => 2, 'success_time' => time()], ['id' => $order['group_id']]);
-                            pdo_update(YOUMI_NAME . '_' . 'order', ['status' => 8, 'pay_time' => TIMESTAMP, 'transid' => $get['transaction_id']], ['group_id' => $order['group_id']]);
+                            pdo_update(YOUMI_NAME . '_' . 'order', ['status' => 8, 'pay_time' => TIMESTAMP, 'commission' => $activity['commission'], 'transid' => $get['transaction_id']], ['group_id' => $order['group_id']]);
                         }
 
                         require_once IA_ROOT . '/addons/' . YOUMI_NAME . '/core/functions/order.php';
 
-                        youmi_settlement_log($order, 1, $order['price'], YOUMI_NAME . '用户支付订单：订单ID：' . $order['id'] . '，支付时间：' . date('Y-m-d H:i:s'));
+                        youmi_settlement_log($order, 1, floatval($order['price']) - floatval($activity['commission']), YOUMI_NAME . '用户支付订单：订单ID：' . $order['id'] . '，支付时间：' . date('Y-m-d H:i:s'));
                     } else {
                         if (intval($activity['success']) >= intval($activity['gnum'])) {
                             pdo_update(YOUMI_NAME . '_' . 'order', ['status' => 8, 'pay_time' => TIMESTAMP, 'transid' => $get['transaction_id']], ['id' => $order['id']]);
+                        } else {
+                            pdo_update(YOUMI_NAME . '_' . 'order', ['status' => 2, 'pay_time' => TIMESTAMP, 'transid' => $get['transaction_id']], ['id' => $order['id']]);
                         }
+
+                        require_once IA_ROOT . '/addons/' . YOUMI_NAME . '/core/functions/order.php';
+                        youmi_settlement_log($order, 1, floatval($order['price']), YOUMI_NAME . '用户支付订单：订单ID：' . $order['id'] . '，支付时间：' . date('Y-m-d H:i:s'));
                     }
                 }
                 if ($isxml) {

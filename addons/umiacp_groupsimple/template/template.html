@@ -1,14 +1,27 @@
 {template 'common/header'}
 <ul class="nav nav-tabs">
-    <li data-class="#base" class="active">
-        <a href="javascript:;">订单通知</a>
+    <li {if $_GPC['skey'] == 'create_order' || $_GPC['skey'] == ''}class="active"{/if}>
+        <a href="{php echo $this->createWebUrl('template', ['skey' => 'create_order'])}">下单成功提醒</a>
+    </li>
+    <li {if $_GPC['skey'] == 'group_success'}class="active"{/if}>
+        <a href="{php echo $this->createWebUrl('template', ['skey' => 'group_success'])}">拼团成功通知</a>
+    </li>
+    <li {if $_GPC['skey'] == 'group_error'}class="active"{/if}>
+        <a href="{php echo $this->createWebUrl('template', ['skey' => 'group_error'])}">拼团失败通知</a>
     </li>
 
 </ul>
 <div class="panel panel-default">
     <form class="form-horizontal" role="form" method="post" action="" name="submit">
         <div id="base" class="panel-body base">
-
+            <div class="form-group">
+                <label class="col-sm-2 control-label"></label>
+                <div class="col-sm-8">
+                    <span style="color:red;">#昵称#：将被替换成用户昵称</span><br>
+                    <span style="color:red;">#姓名#：将被替换成用户姓名</span><br>
+                    <span style="color:red;">#电话#：将被替换成用户联系电话</span><br>
+                </div>
+            </div>
             <table class="table table-hover">
                 <thead class="navbar-inner">
                 <th class="text-center">编号</th>
@@ -40,15 +53,6 @@
                     订单号码：<span class="co_keyword1">1805020012</span><br>
                     订单金额：<span class="co_keyword2">100</span><br>
                     <span class="co_remark">可以在订单管理中查看详情</span><br>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label"></label>
-                <div class="col-sm-8">
-                    <span style="color:red;">#昵称#：将被替换成用户昵称</span><br>
-                    <span style="color:red;">#姓名#：将被替换成用户姓名</span><br>
-                    <span style="color:red;">#电话#：将被替换成用户联系电话</span><br>
-                    <span style="color:red;">#价格#：将被替换成商品价格</span><br><br><br>
                 </div>
             </div>
 
@@ -86,10 +90,10 @@
             </div>
             <div class="form-group s_list" style="display: none">
                 <label class="col-sm-2 control-label"></label>
-                <div class="col-sm-2 col-xs-12">
+                <div class="col-sm-4 col-xs-12">
                     <select class="form-control" name="">
                         {loop $list $lv}
-                        <option data-id="{$lv['template_id']}" data-content="{$lv['content']}" value="{$lv['template_id']}">{$lv['title']}</option>
+                        <option data-id="{$lv['template_id']}" data-content="{$lv['content']}" value="{$lv['template_id']}" {if $setting['create_order']['temp_id']==$lv['template_id']}selected{/if}>{$lv['title']}</option>
                         {/loop}
                     </select>
                 </div>
@@ -210,16 +214,19 @@
                         $('#temp_id').val(data.data.template_id);
                         addContent()
                         // addTemp(data.data.example)
+                    } else {
+                        util.message(data.message);
                     }
                 },'json'
             )
         }else if (val==2){
             $('.s_list').show();
+            $('.s_list select option:first-child')[0].selected=true;
             $('.content1').val(list[0]['content']);
             $('#temp_id').val(list[0]['template_id']);
             addContent()
         }else if (val==0){
-            $('.s_list').hide();
+            $('.s_list,#J_KeyValue').hide();
         }
     });
     $('.s_list select').change(function () {
@@ -227,6 +234,9 @@
         $('#temp_id').val($('.s_list option:selected').attr('data-id'));
         addContent()
     })
+    {if intval($setting['create_order']['open']) == 2}
+    $('.s_list').show();
+    {/if}
 </script>
 <script>
     console.log({php echo json_encode($list)})

@@ -42,7 +42,7 @@ if (!$saler) {
     }
 }
 
-$order['goods'] = pdo_fetch('SELECT * FROM ' . tablename(YOUMI_NAME . '_' . 'goods') . ' where uniacid = :uniacid and id = ' . $order['goods_id'], [':uniacid' => $uniacid]);
+$order['goods'] = pdo_fetch('SELECT * FROM ' . tablename(YOUMI_NAME . '_' . 'activity') . ' where uniacid = :uniacid and id = ' . $order['activity_id'], [':uniacid' => $uniacid]);
 $order['goods']['image'] = tomedia($order['goods']['image']);
 $order['shop'] = pdo_fetch('SELECT * FROM ' . tablename(YOUMI_NAME . '_' . 'shop') . ' where uniacid = :uniacid and id = ' . $order['shop_id'], [':uniacid' => $uniacid]);
 

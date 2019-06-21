@@ -10,14 +10,16 @@
     </li> 
 </ul>
 <div class="panel panel-default">
-    <div class="panel-default" style="display: none">
+    <div class="panel-default" >
         <div class="panel-heading">查询</div>
         <div class="panel-body">
             <form action="./index.php" method="get" class="form-horizontal" role="form" id="form1">
                 <input type="hidden" name="c" value="site">
                 <input type="hidden" name="a" value="entry">
                 <input type="hidden" name="m" value="{YOUMI_NAME}">
-                <input type="hidden" name="do" value="activitys">
+                <input type="hidden" name="do" value="cuts">
+                <input type="hidden" name="module" value="{$_GPC['module']}">
+                <input type="hidden" name="activity_id" value="{$_GPC['activity_id']}">
 
                 <div class="form-group">
                     <label class="col-md-1 col-lg-1 control-label">商家</label>
@@ -42,13 +44,16 @@
                     <div class="col-md-2" style="margin-bottom: 15px">
                         <select name="status" class="form-control">
                             <option value="">--所有--</option>
-                            <option {if $status==1}selected{/if} value="1">上架</option>
-                            <option {if $status==2}selected{/if} value="2">下架</option>
-                            <option {if $status==3}selected{/if} value="3">未开始</option>
+                            <option {if $status==1}selected{/if} value="1">待付款</option>
+                            <option {if $status==2}selected{/if} value="2">已付款</option>
+                            <option {if $status==3}selected{/if} value="3">已核销</option>
+                            <option {if $status==4}selected{/if} value="4">已取消</option>
+                            <option {if $status==5}selected{/if} value="5">已退款</option>
                         </select>
                     </div>
                     <div class="col-md-1">
                         <button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+                        <a href="{php echo $this->createWebUrl('cuts',['activity_id'=>$activity_id,'module'=>$_GPC['module'],'shop_id'=>$_GPC['shop_id'],'isdownload'=>'1','status'=>$_GPC['status'],'keyword'=>$_GPC['keyword']])}" class="btn btn-default"><i class="fa fa-download"></i> 导出</a>
                     </div>
                 </div>
             </form>

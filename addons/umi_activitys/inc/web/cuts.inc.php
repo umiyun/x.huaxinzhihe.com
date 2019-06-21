@@ -14,6 +14,7 @@ if ($op == 'display') {
     $psize = !empty($_GPC['psize']) ? $_GPC['psize'] : 10;
     $paras[':uniacid'] = $uniacid;
     $module = trim($_GPC['module']);
+    $isdownload = intval($_GPC['isdownload']);
     $status = intval($_GPC['status']);
     $shop_id = intval($_GPC['shop_id']);
     $activity_id = intval($_GPC['activity_id']);
@@ -32,15 +33,22 @@ if ($op == 'display') {
     $orderby = ' order by ';
 
     $orderby .= ' createtime desc ';
+    if($isdownload==0){
+        $limit=' LIMIT ' . ($pindex - 1) * $psize. ',' . $psize;
+    }
+
 
     if (in_array($module, ['umiacp_10second', 'umiacp_eggfreny'])) {
-        $list = pdo_fetchall('SELECT * FROM ' . tablename($module . '_reward').' where uniacid = :uniacid ' . $condition . $orderby . ' LIMIT ' . ($pindex - 1) * $psize . ',' . $psize, $paras);
+        $list = pdo_fetchall('SELECT * FROM ' . tablename($module . '_reward').' where uniacid = :uniacid ' . $condition . $orderby . $limit , $paras);
         $total = pdo_fetchcolumn('SELECT COUNT(*) FROM ' . tablename($module . '_reward') . ' WHERE uniacid = :uniacid ' . $condition, $paras);
     } else if(in_array($module, ['umiacp_groupsimple'])){
-        $list = pdo_fetchall('SELECT * FROM ' . tablename($module . '_order').' where uniacid = :uniacid ' . $condition . $orderby . ' LIMIT ' . ($pindex - 1) * $psize . ',' . $psize, $paras);
+        $list = pdo_fetchall('SELECT * FROM ' . tablename($module . '_order').' where uniacid = :uniacid ' . $condition . $orderby . $limit , $paras);
         $total = pdo_fetchcolumn('SELECT COUNT(*) FROM ' . tablename($module . '_order') . ' WHERE uniacid = :uniacid ' . $condition, $paras);
+
+
+
     }else {
-        $list = pdo_fetchall('SELECT * FROM ' . tablename($module . '_cut').' where uniacid = :uniacid ' . $condition . $orderby . ' LIMIT ' . ($pindex - 1) * $psize . ',' . $psize, $paras);
+        $list = pdo_fetchall('SELECT * FROM ' . tablename($module . '_cut').' where uniacid = :uniacid ' . $condition . $orderby . $limit , $paras);
         $total = pdo_fetchcolumn('SELECT COUNT(*) FROM ' . tablename($module . '_cut') . ' WHERE uniacid = :uniacid ' . $condition, $paras);
     }
     foreach ($list as &$item) {
@@ -53,7 +61,7 @@ if ($op == 'display') {
             $shop = pdo_get(YOUMI_NAME . '_' . 'shop', ['id' => $item['shop_id']]);
             $item['shoptitle'] = $shop['title'];
         }
-
+        $item['activitytitle']=$activity['title'];
         $module1 = pdo_get(YOUMI_NAME . '_' . 'module', ['module' => $item['module']]);
         $item['moduletitle'] = $module1['title'];
         switch ($module) {
@@ -190,6 +198,28 @@ if ($op == 'display') {
     }
     $pager = pagination($total, $pindex, $psize);
 
+    if ($isdownload){
+        $header = [
+            '活动',
+            '姓名',
+            '手机号',
+            '具体用户信息',
+            '支付状态',
+            '发起时间',
+        ];
+
+        $types = [
+            ['activitytitle', 300],
+            ['realname', 200],
+            ['mobile', 200],
+            ['userinfo', 500],
+            ['statusname', 200],
+            ['createtime', 200, 'date'],
+        ];
+
+        $this->download('报名列表', $list, $header, $types);
+        die();
+    }
 
     if ($module == 'umiacp_vote') {
         include $this->template('cuts_vote');
@@ -208,6 +238,7 @@ if ($op == 'display') {
     }
 
 }
+
 
 if ($op == 'audit') {
     $id = intval($_GPC['id']);

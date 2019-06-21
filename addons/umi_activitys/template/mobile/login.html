@@ -266,7 +266,7 @@
             </div>
         </div>
 
-        {if !$shop['id']&&$setting['sign_code']==1}
+        {if !$shop['id']&&$setting['making_status']==1}
         <div class="weui-cell">
             <div class="weui-cell__bd flex">
                 <input id="mobile_code" class="weui-input" type="tel" maxlength="6" placeholder="请输入验证码">
@@ -445,7 +445,7 @@
             return false;
         }
         var mb = $('#mobile_code').val()||0;
-        {if !$shop['id']&&$setting['sign_code']==1}
+        {if !$shop['id']&&$setting['making_status']==1}
         if (mb == '') {
             $.toast("请输入验证码", 'cancel');
             return false;

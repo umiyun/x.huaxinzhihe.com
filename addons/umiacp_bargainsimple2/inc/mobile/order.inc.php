@@ -32,7 +32,6 @@ if ($op == 'create_order') {
     }
     $cut = pdo_fetch("select * from " . tablename(YOUMI_NAME . '_' . 'cut') . " where `uniacid` = {$uniacid} and id = {$cut_id} ");
     $activity = pdo_fetch("select * from " . tablename(YOUMI_NAME . '_' . 'activity') . " where `uniacid` = {$uniacid} and id = {$cut['activity_id']} ");
-//    die(json_encode($activity));
     $goods = pdo_fetch("select * from " . tablename(YOUMI_NAME . '_' . 'goods') . " where `uniacid` = {$uniacid} and id = {$cut['goods_id']} ");
     if (!$goods || $goods['status'] == 2) {
         youmi_result(1, '商品已下架');
@@ -68,7 +67,6 @@ if ($op == 'create_order') {
     }else{
         $pay_title=$activity['title'];
     }
-
     $order['uniacid'] = $uniacid;
     $order['cut_id'] = $cut_id;
     $order['goods_id'] = $cut['goods_id'];
@@ -79,6 +77,7 @@ if ($op == 'create_order') {
     $order['tid'] = $tid;
     $order['status'] = 1;
     $order['createtime'] = TIMESTAMP;
+
     $status = pdo_insert(YOUMI_NAME . '_' . 'order', $order);
     $order['id'] = pdo_insertid();
     $errno = $status ? 0 : 1;
@@ -182,7 +181,7 @@ if ($op == 'display') {
                 break;
         }
         $item['saler_qrurl'] = $_W['siteroot'] . 'app/' . $this->createMobileUrl('saler', ['user_type' => 2, 'order_id' => $item['id']]);
-        $item['goods'] = pdo_get(YOUMI_NAME . '_' . 'goods', ['id' => $item['goods_id']]);
+        $item['goods'] = pdo_get(YOUMI_NAME . '_' . 'activity', ['id' => $item['activity_id']]);
         $item['goods']['image'] = tomedia($item['goods']['image']);
         unset($item);
     }

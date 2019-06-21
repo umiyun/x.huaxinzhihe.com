@@ -100,11 +100,11 @@
             <div class="ft12" style="background: #F8A40D;color: #fff;padding: 0 4px;border-radius: 5px;">{$lv['statusname']}</div>
         </div>
         <div class="d_top flex">
-            <img style="width: 90px;height:90px;margin-right: 5px" src="{$lv['goods']['image']}" alt="">
+            <img style="width: 90px;height:90px;margin-right: 5px" src="{php echo tomedia($lv['goods']['image'])}" alt="">
             <div class="flex1 p_relative">
-                <div class="p_absolute" style="top: 0;left: 0">{$lv['goods']['title']}</div>
+                <div class="p_absolute" style="top: 0;left: 0">{$lv['title']}</div>
                 <div class="p_absolute ft12 color777" style="bottom: 20px;">下单时间：{php echo date('Y-m-d H:i',$lv['createtime'])}</div>
-                <div class="color777 ft12 p_absolute" style="bottom: 0;left: 0">￥{$lv['goods']['rprice']}</div>
+                <div class="color777 ft12 p_absolute" style="bottom: 0;left: 0">￥{$lv['price']}</div>
             </div>
         </div>
         <div class="d_bottom flex flex_j_around">

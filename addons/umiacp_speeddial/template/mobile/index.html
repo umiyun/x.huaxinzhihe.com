@@ -734,7 +734,7 @@
         </div>
         {/if}
         <!--活动优惠-->
-        {if !empty($activity['preferential_val'])}
+        {if !empty($activity['preferential_val'][0])}
         <div class="ac_youhui p_relative">
             <div class="acy_title p_relative">
                 <img style="height: 40px" src="{if $activity['titlebgimg']}{$activity['titlebgimg']}{else}{YOUMI_URL_APP}img/m_titlebg2.png{/if}" alt="">

@@ -3,13 +3,21 @@
     .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
         vertical-align: middle;
     }
+    .layui-table-view .layui-table{
+        width: 100%;
+        height: auto;
+    }
+    .layui-table-cell{
+        height: auto;
+
+    }
 </style>
-<ul class="nav nav-tabs">
-    <li class="active">
-        <a href="">报名管理列表</a>
-    </li> 
-</ul>
-<div class="panel panel-default">
+<div class="layui-tab layui-tab-brief site-demo-table">
+    <ul class="layui-tab-title site-demo-title" style="margin-bottom: 20px">
+        <li class="layui-this">
+        <a href="javascript:;">报名管理</a>
+        </li>
+    </ul>
     <div class="panel-default" >
         <div class="panel-heading">查询</div>
         <div class="panel-body">
@@ -22,24 +30,6 @@
                 <input type="hidden" name="activity_id" value="{$_GPC['activity_id']}">
 
                 <div class="form-group">
-                    <label class="col-md-1 col-lg-1 control-label">商家</label>
-                    <div class="col-md-2" style="margin-bottom: 15px">
-                        <select name="shop_id" class="form-control">
-                            <option value="">--所有--</option>
-                            {loop $shops $sv}
-                            <option {if $sv['id']==$_GPC['shop_id']}selected{/if} value="{$sv['id']}">{$sv['title']}</option>
-                            {/loop}
-                        </select>
-                    </div>
-                    <label class="col-md-1 col-lg-1 control-label">模块</label>
-                    <div class="col-md-2" style="margin-bottom: 15px">
-                        <select name="module" class="form-control">
-                            <option value="">--所有--</option>
-                            {loop $modules $mv}
-                            <option {if $mv['module']==$_GPC['module']}selected{/if} value="{$mv['module']}">{$mv['title']}</option>
-                            {/loop}
-                        </select>
-                    </div>
                     <label class="col-md-1 col-lg-1 control-label">状态</label>
                     <div class="col-md-2" style="margin-bottom: 15px">
                         <select name="status" class="form-control">
@@ -51,7 +41,9 @@
                             <option {if $status==5}selected{/if} value="5">已退款</option>
                         </select>
                     </div>
-                    <div class="col-md-1">
+                    <input type="hidden" name="shop_id" value="{$_GPC['shop_id']}">
+                    <input type="hidden" name="module" value="{$_GPC['module']}">
+                    <div class="col-md-2">
                         <button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
                         <a href="{php echo $this->createWebUrl('cuts',['activity_id'=>$activity_id,'module'=>$_GPC['module'],'shop_id'=>$_GPC['shop_id'],'isdownload'=>'1','status'=>$_GPC['status'],'keyword'=>$_GPC['keyword']])}" class="btn btn-default"><i class="fa fa-download"></i> 导出</a>
                     </div>
@@ -60,28 +52,41 @@
         </div>
     </div>
     {if $list}
-    <div class="panel-body">
-        <form action="" method="post" class="form-horizontal form">
-            
-            <div class="table-responsive panel-body">
-                <table class="table table-hover">
-                    <thead class="navbar-inner">
-                        <th class="text-center">活动</th>
-                        <th class="text-center">用户</th>
-                        <th class="text-center">信息</th>
-                        <th class="text-center">价格</th>
-                        <th class="text-center">状态</th>
-                        <th class="text-center">报名时间</th>
+    <div class="layui-form layui-border-box layui-table-view" lay-filter="LAY-table-1" lay-id="test" style=" ">
+        <div class="layui-table-box">
+            <div class="layui-table-header">
+                <table cellspacing="0" cellpadding="0" border="0" class="layui-table">
+                    <thead>
+                    <tr>
+                        <th align="right">
+                            <div class="layui-table-cell"><span>商家</span></div>
+                        </th>
+                        <th align="right">
+                            <div class="layui-table-cell"><span>用户</span></div>
+                        </th>
+                        <th align="right">
+                            <div class="layui-table-cell"><span>信息</span></div>
+                        </th>
+                        <th align="right">
+                            <div class="layui-table-cell"><span>价格</span></div>
+                        </th>
+                        <th align="right">
+                            <div class="layui-table-cell"><span>状态</span></div>
+                        </th>
+                        <th align="right">
+                            <div class="layui-table-cell"><span>报名时间</span></div>
+                        </th>
+                    </tr>
                     </thead>
                     <tbody id="level-list">
                     {loop $list $index $item}   
                     <tr>
                         <td align="center">
-                            <div class="type-parent">{$activity['title']}</div>
+                            <div class="layui-table-cell">{$activity['title']}</div>
                         </td>
                         
                         <td align="center">
-                            <div class="type-parent">
+                            <div class="layui-table-cell">
                                 <img style="width: 40px;height: 40px;border-radius: 50%" src="{$item['avatar']}" alt=""><br>
                                 {$item['realname']} <br>
                                 {$item['mobile']}
@@ -89,18 +94,18 @@
                         </td>
                         
                         <td align="center">
-                            <div class="type-parent">{$item['userinfo']}</div>
+                            <div class="layui-table-cell">{$item['userinfo']}</div>
                         </td>
                         <td align="center">
-                            <div class="type-parent">{$item['price']}</div>
+                            <div class="layui-table-cell">{$item['price']}</div>
                         </td>
 
                         <td align="center">
-                            <div class="type-parent">{$item['statusname']}</div>
+                            <div class="layui-table-cell">{$item['statusname']}</div>
                         </td>
                         
                         <td align="center">
-                            <div class="type-parent">{if $item['createtime']}{php echo date('Y-m-d H:i' , $item['createtime'])}{else}{/if}</div>
+                            <div class="layui-table-cell">{if $item['createtime']}{php echo date('Y-m-d H:i' , $item['createtime'])}{else}{/if}</div>
                         </td>
                     </tr>
                     {/loop}
@@ -115,7 +120,7 @@
                     </tbody>
                 </table>
             </div>
-        </form>
+        </div>
     </div>
     {else}
     <div style="text-align: center;padding: 90px 0;" class="panel panel-default">暂无数据~</div>

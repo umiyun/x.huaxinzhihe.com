@@ -256,7 +256,7 @@
                     <label class='radio-inline'>
                         <input type='radio' name='set[sms][sms_type]' value='1' onclick="$('#sms1').show();$('#sms2').hide();" {if $setting['sms_type'] == 1 || intval($setting['sms_type']) == 0}checked{/if} /> 聚合
                     </label>
-                    <label class='radio-inline' style="display: none">
+                    <label class='radio-inline'>
                         <input type='radio' name='set[sms][sms_type]' value='2' onclick="$('#sms2').show();$('#sms1').hide();" {if $setting['sms_type'] == 2}checked{/if} /> 阿里大鱼
                     </label>
                 </div>
@@ -278,7 +278,7 @@
                 </div>
             </div>
 
-            <div class="layui-tab-item" {if $setting['sms_type'] == 1 || intval($setting['sms_type']) == 0}style="display:none;"{/if}>
+            <div id="sms2" {if $setting['sms_type'] != 2}style="display:none;"{/if}>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">阿里AccessKey ID</label>
                     <div class="col-sm-8">

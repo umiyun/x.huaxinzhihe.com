@@ -3,13 +3,21 @@
     .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
         vertical-align: middle;
     }
+    .layui-table-view .layui-table{
+        width: 100%;
+        height: auto;
+    }
+    .layui-table-cell{
+        height: auto;
+
+    }
 </style>
-<ul class="nav nav-tabs">
-    <li class="active">
-        <a href="">报名管理列表</a>
-    </li> 
-</ul>
-<div class="panel panel-default">
+<div class="layui-tab layui-tab-brief site-demo-table">
+    <ul class="layui-tab-title site-demo-title" style="margin-bottom: 20px">
+        <li class="layui-this">
+            <a href="javascript:;">报名管理</a>
+        </li>
+    </ul>
     <div class="panel-default" style="display: none">
         <div class="panel-heading">查询</div>
         <div class="panel-body">
@@ -55,18 +63,30 @@
         </div>
     </div>
     {if $list}
-    <div class="panel-body">
-        <form action="" method="post" class="form-horizontal form">
-            
-            <div class="table-responsive panel-body">
-                <table class="table table-hover">
-                    <thead class="navbar-inner">
-                        <th class="text-center">活动</th>
-                        <th class="text-center">用户</th>
-                        <th class="text-center">信息</th>
-                        <th class="text-center">点亮总数</th>
-                        <th class="text-center">点亮时间</th>
-                        <th class="text-center">报名时间</th>
+    <div class="layui-form layui-border-box layui-table-view" lay-filter="LAY-table-1" lay-id="test" style=" ">
+        <div class="layui-table-box">
+            <div class="layui-table-header">
+                <table cellspacing="0" cellpadding="0" border="0" class="layui-table">
+                    <thead>
+                    <tr>
+                        <th align="right">
+                            <div class="layui-table-cell"><span>活动</span></div>
+                        </th>
+                        <th align="right">
+                            <div class="layui-table-cell"><span>用户</span></div>
+                        </th>
+                        <th align="right">
+                            <div class="layui-table-cell"><span>信息</span></div>
+                        </th>
+                        <th align="right">
+                            <div class="layui-table-cell"><span>点亮总数</span></div>
+                        </th>
+                        <th align="right">
+                            <div class="layui-table-cell"><span>点亮时间</span></div>
+                        </th>
+                        <th align="right">
+                            <div class="layui-table-cell"><span>报名时间</span></div>
+                        </th>
                     </thead>
                     <tbody id="level-list">
                     {loop $list $index $item}   
@@ -110,7 +130,7 @@
                     </tbody>
                 </table>
             </div>
-        </form>
+        </div>
     </div>
     {else}
     <div style="text-align: center;padding: 90px 0;" class="panel panel-default">暂无数据~</div>

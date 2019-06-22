@@ -57,7 +57,7 @@ if(!function_exists('youmi_send_sms')) {
             }
         } else if (trim($setting['sms_type']) == 2) {
             $params = array(
-                'code' => trim($code), //code
+                'code' => trim($code) //code
             );
             $option = [
                 'keyid' => trim($setting['ali_accesskey_id']),
@@ -65,8 +65,9 @@ if(!function_exists('youmi_send_sms')) {
                 'phonenumbers' => trim($mobile),
                 'signname' => trim($setting['ali_sign']),
                 'templatecode' => trim($setting['ali_code']),
-                'templateparam' => trim($params)
+                'templateparam' => $params
             ];
+            youmi_internal_log('sms',$params);
             $result = sendSms($option);
             return ['errno' => $result['Code'] == 'OK' ? 0 : 1, 'message' => ('温馨提示：' . $result['Message']), 'result' => $result];
         }

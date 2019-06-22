@@ -32,6 +32,131 @@ function insert_log($data, $path = 'wxPayResult')
     return true;
 }
 
+function create_order_message($order)
+{
+    $type = 'create_order';
+    $temp = youmi_setting_get_by_skey($type);
+    if (!$temp['temp_id']) {
+        return false;
+    }
+    $openid = pdo_getcolumn(YOUMI_NAME . '_member', ['mid' => $order['mid']], 'openid');
+
+    $data['uniacid'] = $order['uniacid'];
+    $data['openid'] = $openid;
+    $data['type'] = $type;
+    $data['order_id'] = $order['id'];
+    $data['temp_id'] = trim($temp['temp_id']);
+    $data['url'] = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . "/app/index.php?i={$order['uniacid']}&c=entry&do=order&m=" . YOUMI_NAME;
+
+    $send = $temp['data'];
+
+    $send['first']['value'] = str_replace('#昵称#', $order['nickname'], $send['first']['value']);
+    $send['first']['value'] = str_replace('#姓名#', $order['realname'], $send['first']['value']);
+    $send['first']['value'] = str_replace('#电话#', $order['mobile'], $send['first']['value']);
+    $send['first']['value'] = str_replace('#商品#', $order['title'], $send['first']['value']);
+
+    $send['keyword1']['value'] = $order['tid'];
+    $send['keyword2']['value'] = $order['price'];
+
+    $send['remark']['value'] = str_replace('#昵称#', $order['nickname'], $send['remark']['value']);
+    $send['remark']['value'] = str_replace('#姓名#', $order['realname'], $send['remark']['value']);
+    $send['remark']['value'] = str_replace('#电话#', $order['mobile'], $send['remark']['value']);
+    $send['remark']['value'] = str_replace('#商品#', $order['title'], $send['remark']['value']);
+
+    $data['send'] = json_encode($send, 256);
+    $data['status'] = 1;
+    $data['createtime'] = time();
+    pdo_insert(YOUMI_NAME . '_message', $data);
+    return pdo_insertid();
+}
+
+function group_success_message($group_id)
+{
+    $type = 'group_success';
+    $temp = youmi_setting_get_by_skey($type);
+    if (!$temp['temp_id']) {
+        return false;
+    }
+    $orders = pdo_getall(YOUMI_NAME . '_order', ['group_id' => $group_id, 'status' => 2]);
+    $count = 0;
+    if ($orders) {
+        foreach ($orders as &$order) {
+            $openid = pdo_getcolumn(YOUMI_NAME . '_member', ['mid' => $order['mid']], 'openid');
+
+            $data['uniacid'] = $order['uniacid'];
+            $data['openid'] = $openid;
+            $data['type'] = $type;
+            $data['order_id'] = $order['id'];
+            $data['temp_id'] = trim($temp['temp_id']);
+            $data['url'] = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . "/app/index.php?i={$order['uniacid']}&c=entry&activity_id={$order['activity_id']}&op=detail&id={$group_id}&do=index&m=" . YOUMI_NAME;
+
+            $send = $temp['data'];
+
+            $send['first']['value'] = str_replace('#昵称#', $order['nickname'], $send['first']['value']);
+            $send['first']['value'] = str_replace('#姓名#', $order['realname'], $send['first']['value']);
+            $send['first']['value'] = str_replace('#电话#', $order['mobile'], $send['first']['value']);
+            $send['first']['value'] = str_replace('#商品#', $order['title'], $send['first']['value']);
+
+            $send['keyword1']['value'] = $order['tid'];
+            $send['keyword2']['value'] = $order['title'];
+
+            $send['remark']['value'] = str_replace('#昵称#', $order['nickname'], $send['remark']['value']);
+            $send['remark']['value'] = str_replace('#姓名#', $order['realname'], $send['remark']['value']);
+            $send['remark']['value'] = str_replace('#电话#', $order['mobile'], $send['remark']['value']);
+            $send['remark']['value'] = str_replace('#商品#', $order['title'], $send['remark']['value']);
+
+            $data['send'] = json_encode($send, 256);
+            $data['status'] = 1;
+            $data['createtime'] = time();
+            $count += pdo_insert(YOUMI_NAME . '_message', $data);
+
+            unset($send);
+            unset($data);
+            unset($openid);
+            unset($order);
+        }
+    }
+    return $count;
+}
+
+function no_stock_message($order)
+{
+    $type = 'no_stock';
+    $temp = youmi_setting_get_by_skey('no_stock');
+    if (!$temp['temp_id']) {
+        return false;
+    }
+    $openid = pdo_getcolumn(YOUMI_NAME . '_member', ['mid' => $order['mid']], 'openid');
+
+    $data['uniacid'] = $order['uniacid'];
+    $data['openid'] = $openid;
+    $data['type'] = $type;
+    $data['order_id'] = $order['id'];
+    $data['temp_id'] = trim($temp['temp_id']);
+    $data['url'] = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . "/app/index.php?i={$order['uniacid']}&c=entry&do=order&m=" . YOUMI_NAME;
+
+    $send = $temp['data'];
+
+    $send['first']['value'] = str_replace('#昵称#', $order['nickname'], $send['first']['value']);
+    $send['first']['value'] = str_replace('#姓名#', $order['realname'], $send['first']['value']);
+    $send['first']['value'] = str_replace('#电话#', $order['mobile'], $send['first']['value']);
+    $send['first']['value'] = str_replace('#商品#', $order['title'], $send['first']['value']);
+
+    $send['keyword1']['value'] = 0;
+    $send['keyword2']['value'] = date('Y-m-d H:i:s');
+
+    $send['remark']['value'] = str_replace('#昵称#', $order['nickname'], $send['remark']['value']);
+    $send['remark']['value'] = str_replace('#姓名#', $order['realname'], $send['remark']['value']);
+    $send['remark']['value'] = str_replace('#电话#', $order['mobile'], $send['remark']['value']);
+    $send['remark']['value'] = str_replace('#商品#', $order['title'], $send['remark']['value']);
+
+    $data['send'] = json_encode($send, 256);
+    $data['status'] = 1;
+    $data['createtime'] = time();
+    pdo_insert(YOUMI_NAME . '_message', $data);
+    return pdo_insertid();
+}
+
 $input = file_get_contents('php://input');
 $isxml = true;
 if (!empty($input) && empty($_GET['out_trade_no'])) {
@@ -130,11 +255,20 @@ if (is_array($setting['payment'])) {
                 $order = pdo_get(YOUMI_NAME . '_' . 'order', ['uniacid' => $log['uniacid'], 'tid' => $log['tid']]);
                 $activity = pdo_get(YOUMI_NAME . '_' . 'activity', ['uniacid' => $log['uniacid'], 'id' => $order['activity_id']]);
 
+                $commission = 0;
                 if ($order['status'] == 1) {
 
                     if ($order['pay_type'] != 3) {
-                        if (intval($activity['success']) + intval($activity['group_num']) <= intval($activity['gnum'])) {
+
+                        $num = intval($activity['group_num']);
+                        $commission = floatval($activity['commission']);
+                        if (intval($activity['success']) + intval($num) <= intval($activity['gnum'])) {
                             pdo_update(YOUMI_NAME . '_' . 'order', ['status' => 2, 'pay_time' => TIMESTAMP, 'commission' => $activity['commission'], 'transid' => $get['transaction_id']], ['id' => $order['id']]);
+
+                            //购买成功模版
+                            create_order_message($order);
+
+
                             if ($order['leader'] == 1) {
 
                                 $group['uniacid'] = $order['uniacid'];
@@ -159,8 +293,12 @@ if (is_array($setting['payment'])) {
                                 $successNum = pdo_fetchcolumn("select count(id) from " . tablename(YOUMI_NAME . '_order') . " where group_id = :group_id and status = 2", [':group_id' => $order['group_id']]);
 
                                 if ($successNum == $activity['group_num']) {
+                                    //团成功
                                     pdo_update(YOUMI_NAME . '_group', ['status' => 1, 'success_time' => time(), 'now_num' => $successNum], ['id' => $order['group_id']]);
                                     pdo_update(YOUMI_NAME . '_activity', ['success +=' => $successNum], ['id' => $order['activity_id']]);
+
+                                    //团成功模版
+                                    group_success_message($order['group_id']);
 
                                 } else {
 
@@ -169,23 +307,35 @@ if (is_array($setting['payment'])) {
 
                             }
                         } else {
-                            pdo_update(YOUMI_NAME . '_group', ['status' => 2, 'success_time' => time()], ['id' => $order['group_id']]);
-                            pdo_update(YOUMI_NAME . '_' . 'order', ['status' => 8, 'pay_time' => TIMESTAMP, 'commission' => $activity['commission'], 'transid' => $get['transaction_id']], ['group_id' => $order['group_id']]);
+
+                            //库存不足一团所有在拼团全失败
+                            pdo_update(YOUMI_NAME . '_group', ['status' => 2], ['activity_id' => $activity['id'], 'status' => 3]);
+                            pdo_update(YOUMI_NAME . '_' . 'order', ['status' => 2, 'pay_time' => TIMESTAMP, 'commission' => $activity['commission'], 'transid' => $get['transaction_id']], ['group_id' => $order['group_id']]);
+
+                            //拼团失败模版
+
                         }
 
-                        require_once IA_ROOT . '/addons/' . YOUMI_NAME . '/core/functions/order.php';
-
-                        youmi_settlement_log($order, 1, floatval($order['price']) - floatval($activity['commission']), YOUMI_NAME . '用户支付订单：订单ID：' . $order['id'] . '，支付时间：' . date('Y-m-d H:i:s'));
                     } else {
+
                         if (intval($activity['success']) >= intval($activity['gnum'])) {
                             pdo_update(YOUMI_NAME . '_' . 'order', ['status' => 8, 'pay_time' => TIMESTAMP, 'transid' => $get['transaction_id']], ['id' => $order['id']]);
+
+                            //库存不足模版
+                            no_stock_message($order);
+
                         } else {
                             pdo_update(YOUMI_NAME . '_' . 'order', ['status' => 2, 'pay_time' => TIMESTAMP, 'transid' => $get['transaction_id']], ['id' => $order['id']]);
-                        }
 
-                        require_once IA_ROOT . '/addons/' . YOUMI_NAME . '/core/functions/order.php';
-                        youmi_settlement_log($order, 1, floatval($order['price']), YOUMI_NAME . '用户支付订单：订单ID：' . $order['id'] . '，支付时间：' . date('Y-m-d H:i:s'));
+                            //购买成功模版
+                            create_order_message($order);
+
+                        }
                     }
+
+                    require_once IA_ROOT . '/addons/' . YOUMI_NAME . '/core/functions/order.php';
+                    youmi_settlement_log($order, 1, floatval($order['price']) - floatval($commission), YOUMI_NAME . '用户支付订单：订单ID：' . $order['id'] . '，支付时间：' . date('Y-m-d H:i:s'));
+
                 }
                 if ($isxml) {
                     $result = array(

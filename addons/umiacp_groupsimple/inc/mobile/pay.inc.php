@@ -29,10 +29,18 @@ if ($op == 'pay') {
 
     $activity = pdo_fetch("select * from " . tablename(YOUMI_NAME . '_' . 'activity') . " where `uniacid` = {$uniacid} and id = {$order['activity_id']} ");
 
-    if ($activity['success'] >= $activity['gnum']) {
-
-        youmi_result(1, '商品已抢光');
+    if ($order['pay_type'] == 3) {
+        $num = 1;
+    } else {
+        $num = $activity['group_num'];
     }
+    if (intval($activity['success']) + intval($num) > intval($activity['gnum'])) {
+        //库存不足一团所有在拼团全失败
+        pdo_update(YOUMI_NAME . '_group', ['status' => 2], ['activity_id' => $activity['id'], 'status' => 3]);
+        pdo_update(YOUMI_NAME . '_order', ['status' => 4], ['id' => $order['id']]);
+        youmi_result(1, '库存不足');
+    }
+
     if ($activity['status'] == 2) {
         youmi_result(1, '活动已下架');
     }

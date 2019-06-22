@@ -17,6 +17,46 @@ if (!$this->mid && $this->user_type != 3) {
 
 $op = trim($_GPC['op']) ? trim($_GPC['op']) : 'display';
 
+
+function create_order_message($order)
+{
+    global $_W;
+    $temp = youmi_setting_get_by_skey('create_order');
+    if (!$temp['temp_id']) {
+        return false;
+    }
+    $openid = pdo_getcolumn(YOUMI_NAME . '_member', ['mid' => $order['mid']], 'openid');
+
+    $data['uniacid'] = $order['uniacid'];
+    $data['openid'] = $openid;
+    $data['type'] = 'create_order';
+    $data['order_id'] = $order['id'];
+    $data['temp_id'] = trim($temp['temp_id']);
+    $data['url'] = $_W['siteroot'] . "app/index.php?i={$order['uniacid']}&c=entry&do=order&m=" . YOUMI_NAME;
+
+    $send = $temp['data'];
+
+    $send['first']['value'] = str_replace('#昵称#', $order['nickname'], $send['first']['value']);
+    $send['first']['value'] = str_replace('#姓名#', $order['realname'], $send['first']['value']);
+    $send['first']['value'] = str_replace('#电话#', $order['mobile'], $send['first']['value']);
+    $send['first']['value'] = str_replace('#商品#', $order['title'], $send['first']['value']);
+
+    $send['keyword1']['value'] = $order['tid'];
+    $send['keyword2']['value'] = $order['price'];
+
+    $send['remark']['value'] = str_replace('#昵称#', $order['nickname'], $send['remark']['value']);
+    $send['remark']['value'] = str_replace('#姓名#', $order['realname'], $send['remark']['value']);
+    $send['remark']['value'] = str_replace('#电话#', $order['mobile'], $send['remark']['value']);
+    $send['remark']['value'] = str_replace('#商品#', $order['title'], $send['remark']['value']);
+
+    $data['send'] = json_encode($send, 256);
+    $data['status'] = 1;
+    $data['createtime'] = time();
+    pdo_insert(YOUMI_NAME . '_message', $data);
+    return pdo_insertid();
+}
+
+
 /**
  * 下单
  * do   :   order   op  :   create_order
@@ -42,15 +82,9 @@ if ($op == 'create_order') {
     //团状态
     //团满了没
     //重复参团
-//团长免单
-
-
 
     $activity = pdo_fetch("select * from " . tablename(YOUMI_NAME . '_' . 'activity') . " where `uniacid` = {$uniacid} and id = {$activity_id} ");
 
-    if (intval($activity['success']) >= intval($activity['gnum'])) {
-        youmi_result(1, '商品已抢光');
-    }
     if ($activity['status'] == 2) {
         youmi_result(1, '活动已下架');
     }
@@ -58,17 +92,16 @@ if ($op == 'create_order') {
         youmi_result(1, '活动未开始');
     }
     $price = -1;
+    $num = 1;
     switch ($type) {
         case 1:
             //开团价
-            if (intval($activity['success']) + intval($activity['group_num']) > intval($activity['gnum'])) {
-                pdo_update(YOUMI_NAME . '_group', ['status' => 2], ['activity_id' => $activity['id'], 'status' => 3]);
-                youmi_result(1, '库存不足');
-            }
+            $num = $activity['group_num'];
             $price = $activity['leader_price'];
             break;
         case 2:
             //团购价
+            $num = $activity['group_num'];
             $price = $activity['group_price'];
             break;
         case 3:
@@ -76,12 +109,19 @@ if ($op == 'create_order') {
             $price = $activity['single_price'];
             break;
     }
+    if (intval($activity['success']) + intval($num) > intval($activity['gnum'])) {
+        //库存不足一团所有在拼团全失败
+        pdo_update(YOUMI_NAME . '_group', ['status' => 2], ['activity_id' => $activity['id'], 'status' => 3]);
+        youmi_result(1, '库存不足');
+    }
+
     $price = floatval($price);
     $data['price'] = $price;
     if ($price < 0) {
         youmi_result(1, '金额错误');
     }
     if ($price == 0 && $type == 1) {
+        //团长免单
         $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id, 'mid' => $this->mid, 'status' => [2, 3], 'pay_type' => 1]);
         if ($order) {
             youmi_result(1, '请勿重复开团');
@@ -94,7 +134,7 @@ if ($op == 'create_order') {
         $data['member'] = $this->getMemberInfo($this->mid);
 
         $group = getGroupData($data, $activity, $uniacid);
-        $group['status']=3;
+        $group['status'] = 3;
         pdo_insert(YOUMI_NAME . '_' . 'group', $group);
         $data['tid'] = $tid;
         $data['group_id'] = pdo_insertid();
@@ -103,12 +143,15 @@ if ($op == 'create_order') {
         $order['pay_time'] = time();
         $order['status'] = 2;
         $status = pdo_insert(YOUMI_NAME . '_' . 'order', $order);
+        $order['id'] = pdo_insertid();
         $errno = $status ? 2 : 1;//团长免费
+
+        //免单开团购买成功模版
+        create_order_message($order);
+
+        unset($order['id']);
         youmi_result($errno, '开团' . ($status ? '成功' : '失败'), $order);
     }
-
-
-
 
 
     switch ($type) {
@@ -118,7 +161,7 @@ if ($op == 'create_order') {
             if ($order) {
                 youmi_result(1, '请勿重复购买');
             }
-            $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id, 'mid' => $this->mid, 'status' => 1, 'pay_type' =>1]);
+            $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id, 'mid' => $this->mid, 'status' => 1, 'pay_type' => 1]);
             if ($order) {
                 $order['price'] = $price;
                 pdo_update(YOUMI_NAME . '_' . 'order', ['price' => floatval($order['price'])], ['id' => $order['id']]);
@@ -133,28 +176,28 @@ if ($op == 'create_order') {
             break;
         case 2:
             //团购
-            $group = pdo_get(YOUMI_NAME . '_' . 'group', ['id'=>$data['group_id']]);
-            if ($group['mid']==$this->mid) {
+            $group = pdo_get(YOUMI_NAME . '_' . 'group', ['id' => $data['group_id']]);
+            if ($group['mid'] == $this->mid) {
                 youmi_result(1, '请勿参加自己的团');
             }
             if ($group['status'] != 3) {
                 youmi_result(1, '团已成功或失败，请重新开团');
             }
 
-            $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id, 'mid' => $this->mid, 'status' => [2, 3],'group_id'=>$data['group_id'] , 'pay_type' => 2]);
+            $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id, 'mid' => $this->mid, 'status' => [2, 3], 'group_id' => $data['group_id'], 'pay_type' => 2]);
             if ($order) {
                 youmi_result(1, '请勿重复购买');
             }
 
 
-            $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id, 'mid' => $this->mid, 'status' => 1,'group_id'=>$data['group_id'], 'pay_type' => 2]);
+            $order = pdo_get(YOUMI_NAME . '_' . 'order', ['activity_id' => $activity_id, 'mid' => $this->mid, 'status' => 1, 'group_id' => $data['group_id'], 'pay_type' => 2]);
             if ($order) {
                 $order['price'] = $price;
                 pdo_update(YOUMI_NAME . '_' . 'order', ['price' => floatval($order['price'])], ['id' => $order['id']]);
                 youmi_result(0, '下单成功', $order);
             }
-            $successNum = pdo_fetchcolumn("select count(id) from " . tablename(YOUMI_NAME . '_order') . " where group_id = :group_id and status = :status", [':group_id' => $data['group_id'],'status' => [2, 3]]);
-            if ($successNum>=$activity['group_num']) {
+            $successNum = pdo_fetchcolumn("select count(id) from " . tablename(YOUMI_NAME . '_order') . " where group_id = :group_id and status = :status", [':group_id' => $data['group_id'], 'status' => [2, 3]]);
+            if ($successNum >= $activity['group_num']) {
                 youmi_result(1, '该团已满');
             }
 
@@ -338,7 +381,7 @@ if ($op == 'display') {
     $orderby = ' order by ';
 
     $orderby .= ' o.createtime desc ';
-    $list = pdo_fetchall('SELECT o.*,g.status as group_status FROM ' . tablename(YOUMI_NAME . '_' . 'order') . ' as o left join '.tablename(YOUMI_NAME . '_' . 'group').' as g on o.group_id=g.id where o.uniacid = :uniacid ' . $condition . $orderby . ' LIMIT ' . ($pindex - 1) * $psize . ',' . $psize, $paras);
+    $list = pdo_fetchall('SELECT o.*,g.status as group_status FROM ' . tablename(YOUMI_NAME . '_' . 'order') . ' as o left join ' . tablename(YOUMI_NAME . '_' . 'group') . ' as g on o.group_id=g.id where o.uniacid = :uniacid ' . $condition . $orderby . ' LIMIT ' . ($pindex - 1) * $psize . ',' . $psize, $paras);
 //    pdo_debug();
 //    die();
     foreach ($list as &$item) {

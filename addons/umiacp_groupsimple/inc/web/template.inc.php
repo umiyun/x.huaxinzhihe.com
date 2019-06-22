@@ -12,8 +12,8 @@ $_W['page']['title'] = '系统设置';
 //ini_set('display_errors', 'On');
 $op = trim($_GPC['op']) ? trim($_GPC['op']) : 'display';
 
-$setting = youmi_setting_get_list();
-
+$_skey = trim($_GPC['skey']) ? trim($_GPC['skey']) : 'create_order';
+$temp = youmi_setting_get_by_skey($_skey);
 if ($op == 'display') {
 
     $res = temp_list();
@@ -25,17 +25,19 @@ if ($op == 'display') {
     if (checksubmit()) {
 
         $set = $_GPC['set'];
-        foreach ($set as$skey => &$item) {
+        foreach ($set as $skey => &$item) {
             $item = array_filter($item);
             if (!$item) {
                 continue;
             }
-
+            if ($item['open'] == 1) {
+                $item['open'] = 2;
+            }
             youmi_setting_save($skey, $item);
             unset($item);
         }
 
-        itoast('温馨提示：修改成功', $this->createwebUrl('template'),'success');
+        itoast('温馨提示：修改成功', $this->createwebUrl('template', ['skey' => $_skey]), 'success');
     }
     include $this->template('template');
 }
@@ -48,7 +50,10 @@ if ($op == 'display') {
 if ($op == 'add') {
     $opentm = trim($_GPC['opentm']);
     $res = add($opentm);
-    $temp_id = $res['data']['template_id'];
+    if ($res['errcode']) {
+        youmi_result(1, '模版数量超出限制，请删除部分无用模版，或选择类似模版');
+    }
+    $temp_id = $res['template_id'];
     $res = temp_list();
     $list = $res['data'];
     foreach ($list as &$item) {
@@ -71,13 +76,15 @@ if ($op == 'del') {
     die(json_encode($res));
 }
 
-function getToken() {
+function getToken()
+{
     $account_api = WeAccount::create();
     $token = $account_api->getAccessToken();
     return $token;
 }
 
-function temp_list() {
+function temp_list()
+{
     //获取模版列表
     $token = getToken();
     $url = 'https://api.weixin.qq.com/cgi-bin/template/get_all_private_template?access_token=' . $token;
@@ -86,17 +93,20 @@ function temp_list() {
     return ['errno' => 0, 'message' => '', 'data' => $res['template_list']];
 }
 
-function add($opentm) {
+function add($opentm)
+{
     //添加模版
     $token = getToken();
     $url = 'https://api.weixin.qq.com/cgi-bin/template/api_add_template?access_token=' . $token;
     $post['template_id_short'] = trim($opentm);
     $res = ihttp_request($url, json_encode($post));
     $res = json_decode($res['content'], true);
+    return $res;
     return ['errno' => $res['errcode'] ? 1 : 0, 'message' => $res['errcode'] ? '新增失败' : '新增失败', 'data' => $res];
 }
 
-function del($temp_id) {
+function del($temp_id)
+{
     //删除模版
     $token = getToken();
     $url = 'https://api.weixin.qq.com/cgi-bin/template/del_private_template?access_token=' . $token;
@@ -106,7 +116,8 @@ function del($temp_id) {
     return ['errno' => $res['errcode'] ? 1 : 0, 'message' => $res['errcode'] ? '删除失败' : '删除成功', 'data' => $res];
 }
 
-function sendOrderMsg($openid,$args,$setting,$url){
+function sendOrderMsg($openid, $args, $setting, $url)
+{
     $data = array(
 
 
@@ -133,6 +144,6 @@ function sendOrderMsg($openid,$args,$setting,$url){
     );
 
     $account_api = WeAccount::create();
-    return $account_api->sendTplNotice($openid, $setting['order_id'], $data,$url);
+    return $account_api->sendTplNotice($openid, $setting['order_id'], $data, $url);
 }
 

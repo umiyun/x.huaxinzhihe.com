@@ -17,14 +17,17 @@ $op = trim($_GPC['op']) ? trim($_GPC['op']) : 'display';
 
 $setting = youmi_setting_get_list();
 
+//https://x.huaxinzhihe.com/app/index.php?i=3&c=entry&do=task&m=umiacp_groupsimple&user_type=1
+
 if ($op == 'display') {
     youmi_internal_log('tasklog',time());
     send_com($uniacid);
+    fail_group($uniacid);
     send_msg($uniacid);
     exit();
 }
 
-
+/*
 if ($op == 'update_group') {
 
     $paras[':uniacid'] = $this->uniacid;
@@ -46,10 +49,6 @@ if ($op == 'update_group') {
 
 }
 
-/**
- * 实时更新订单
- * do : task   op : reset_order
- */
 if ($op == 'reset_order') {
     $referrer = trim($_GPC['referrer']);
 //    if (!$referrer) {
@@ -133,11 +132,10 @@ if ($op == 'reset_order') {
     youmi_result(0, '成功处理' . $res . '条订单！');
 
 }
-
+*/
 
 /**
  * 实时发送佣金
- * do : task   op : display
  */
 function send_com($uniacid)
 {
@@ -182,42 +180,101 @@ function send_com($uniacid)
 }
 
 /**
+ * 实时添加团失败模版消息
+ */
+function fail_group($uniacid) {
+
+    $groups = pdo_fetchall('select * from ' . tablename(YOUMI_NAME . '_group') . ' where uniacid = :uniacid and status = 2 and msg_status = :msg_status limit 10 ', [':uniacid' => $uniacid, ':msg_status' => 0]);
+    $count = 0;
+    if ($groups) {
+        foreach ($groups as &$group) {
+
+            $count += group_error_message($group);
+            pdo_update(YOUMI_NAME . '_' . 'group', ['msg_status' => 1], ['id' => $group['id']]);
+            unset($group);
+        }
+    }
+    echo '成功插入' . $count . '条模版消息<br/>';
+}
+
+function group_error_message($group)
+{
+    global $_W;
+    $type = 'group_error';
+    $temp = youmi_setting_get_by_skey($type);
+    if (!$temp['temp_id']) {
+        return false;
+    }
+    $orders = pdo_getall(YOUMI_NAME . '_order', ['uniacid' => $group['uniacid'], 'group_id' => $group['id'], 'msg_status !=' => 1, 'status' => 2]);
+    $count = 0;
+    if ($orders) {
+        foreach ($orders as &$order) {
+            $openid = pdo_getcolumn(YOUMI_NAME . '_member', ['mid' => $order['mid']], 'openid');
+
+            $data['uniacid'] = $order['uniacid'];
+            $data['openid'] = $openid;
+            $data['type'] = $type;
+            $data['order_id'] = $order['id'];
+            $data['temp_id'] = trim($temp['temp_id']);
+            $data['url'] = $_W['siteroot'] . "app/index.php?i={$order['uniacid']}&c=entry&activity_id={$order['activity_id']}&op=detail&id={$group['id']}&do=index&m=" . YOUMI_NAME;
+
+            $send = $temp['data'];
+
+            $send['first']['value'] = str_replace('#昵称#', $order['nickname'], $send['first']['value']);
+            $send['first']['value'] = str_replace('#姓名#', $order['realname'], $send['first']['value']);
+            $send['first']['value'] = str_replace('#电话#', $order['mobile'], $send['first']['value']);
+            $send['first']['value'] = str_replace('#商品#', $order['title'], $send['first']['value']);
+
+            $send['keyword1']['value'] = $order['title'];
+            $send['keyword2']['value'] = $order['price'];
+            $send['keyword3']['value'] = $order['price'];
+
+            $send['remark']['value'] = str_replace('#昵称#', $order['nickname'], $send['remark']['value']);
+            $send['remark']['value'] = str_replace('#姓名#', $order['realname'], $send['remark']['value']);
+            $send['remark']['value'] = str_replace('#电话#', $order['mobile'], $send['remark']['value']);
+            $send['remark']['value'] = str_replace('#商品#', $order['title'], $send['remark']['value']);
+
+            $data['send'] = json_encode($send, 256);
+            $data['status'] = 1;
+            $data['createtime'] = time();
+            $count += pdo_insert(YOUMI_NAME . '_message', $data);
+
+            pdo_update(YOUMI_NAME . '_' . 'order', ['msg_status' => 1, 'msg_result' => '预发送成功'], ['id' => $order['id']]);
+
+            unset($send);
+            unset($data);
+            unset($openid);
+            unset($order);
+        }
+    }
+    return $count;
+}
+
+
+/**
  * 实时发送模版消息
- * do : task   op : display
  */
 function send_msg($uniacid)
 {
-
-    global $_W;
-    $groups = pdo_fetchall('select * from ' . tablename(YOUMI_NAME . '_group') . ' where uniacid = :uniacid and status = 1 and msg_status = :msg_status', [':uniacid' => $uniacid, ':msg_status' => 0]);
-
+    $messages = pdo_fetchall('select * from ' . tablename(YOUMI_NAME . '_message') . ' where uniacid = ' . $uniacid . '  and status = 1 limit 20 ');
     $success = 0;
     $error = 0;
-    foreach ($groups as &$group) {
-        $orders = pdo_getall(YOUMI_NAME . '_' . 'order', ['group_id' => $group['id'], 'msg_status !=' => 1, 'status' => 2]);
-        foreach ($orders as &$order) {
-            $f_member = pdo_get(YOUMI_NAME . '_member', array('mid' => $order['mid'], 'uniacid' => $order['uniacid']), ['openid', 'mid']);
+    if ($messages) {
+        $acc = WeAccount::create();
+        foreach ($messages as $it) {
 
-            //发送拼团通知
-            $url = $_W['siteroot'] . "app/index.php?i={$uniacid}&c=entry&activity_id={$group['activity_id']}&op=detail&id={$group['id']}&do=index&m=umiacp_groupsimple";
-            $result = handleGroupMsg($f_member['openid'], $order['title'], $order['price'], $group['now_num'], $url);
-
-            if (!is_error($result)) {
-                $success++;
-                pdo_update(YOUMI_NAME . '_' . 'order', ['msg_status' => 1, 'msg_result' => '发放成功'], ['id' => $order['id']]);
-            } else {
-                $result['msg'] = (empty($result['err_code_des']) ? $result['return_msg'] : $result['err_code_des']);
-                pdo_update(YOUMI_NAME . '_' . 'order', ['msg_status' => 2, 'msg_result' => $result['msg']], ['id' => $order['id']]);
+            $result = $acc->sendTplNotice($it['openid'], $it['temp_id'], json_decode($it['send'], true), $it['url']);
+            if (is_error($result)) {
+                $data['status'] = 3;
+                $data['result'] = $result['message'];
                 $error++;
-                break 2;
+            } else {
+                $data['status'] = 2;
+                $data['result'] = '发送成功';
+                $success++;
             }
-
-            unset($order);
+            pdo_update(YOUMI_NAME . '_message', $data, ['id' => $it['id']]);
         }
-
-        pdo_update(YOUMI_NAME . '_' . 'group', ['msg_status' => 1], ['id' => $group['id']]);
-
-        unset($group);
     }
     echo '成功' . $success . ',失败' . $error . '<br/>';
 

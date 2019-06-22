@@ -1,13 +1,24 @@
 {template 'common/header'}
+<style>
+    .flex{
+        display: flex;
+    }
+    .flex_j_between{
+        justify-content: space-between;
+    }
+</style>
 <ul class="nav nav-tabs">
-    <li {if $_GPC['skey'] == 'create_order' || $_GPC['skey'] == ''}class="active"{/if}>
+    <li {if $_skey == 'create_order'}class="active"{/if}>
         <a href="{php echo $this->createWebUrl('template', ['skey' => 'create_order'])}">下单成功提醒</a>
     </li>
-    <li {if $_GPC['skey'] == 'group_success'}class="active"{/if}>
+    <li {if $_skey == 'group_success'}class="active"{/if}>
         <a href="{php echo $this->createWebUrl('template', ['skey' => 'group_success'])}">拼团成功通知</a>
     </li>
-    <li {if $_GPC['skey'] == 'group_error'}class="active"{/if}>
+    <li {if $_skey == 'group_error'}class="active"{/if}>
         <a href="{php echo $this->createWebUrl('template', ['skey' => 'group_error'])}">拼团失败通知</a>
+    </li>
+    <li {if $_skey == 'no_stock'}class="active"{/if}>
+        <a href="{php echo $this->createWebUrl('template', ['skey' => 'no_stock'])}">库存不足提醒</a>
     </li>
 
 </ul>
@@ -16,60 +27,103 @@
         <div id="base" class="panel-body base">
             <div class="form-group">
                 <label class="col-sm-2 control-label"></label>
-                <div class="col-sm-8">
-                    <span style="color:red;">#昵称#：将被替换成用户昵称</span><br>
-                    <span style="color:red;">#姓名#：将被替换成用户姓名</span><br>
-                    <span style="color:red;">#电话#：将被替换成用户联系电话</span><br>
+                <div class="col-sm-8 flex flex_j_between">
+                    <div class="col-sm-8" style="height: min-content;">
+                        {if $_skey == 'create_order'}
+                        <div style="color:red;">此模版用于提示用户下单成功，并跳转订单列表，方便核销</div>
+                        {else if $_skey == 'group_success'}
+                        <div style="color:red;">此模版用于提示用户拼团成功，并跳转团详情，查看团成员</div>
+                        {else if $_skey == 'group_error'}
+                        <div style="color:red;">此模版用于提示用户所拼商品由于库存不足等原因拼团失败，全团订单将全部变为待退款；若开启自动退款，一段时间后将自动退款，否则将等候手动处理</div>
+                        {else if $_skey == 'no_stock'}
+                        <div style="color:red;">此模版用于提示用户所购买商品库存不足，将全额退款；若开启自动退款，一段时间后将自动退款，否则将变为待退款</div>
+                        {/if}
+
+                        <div class="example1" style="border: 1px solid #ddd;">
+                            <div style="padding: 15px;">
+                                {if $_skey == 'create_order'}
+                                <span class="co_first">订单已经提交成功</span><br>
+                                订单号码：<span class="co_keyword1">1805020012</span><br>
+                                订单金额：<span class="co_keyword2">100</span><br>
+                                <span class="co_remark">可以在订单管理中查看详情</span><br>
+                                {else if $_skey == 'group_success'}
+                                <span class="co_first">恭喜您拼团成功！我们将尽快为您发货。</span><br>
+                                订单编号：<span class="co_keyword1">21568458456568</span><br>
+                                团购商品：<span class="co_keyword2">手机</span><br>
+                                <span class="co_remark">感谢你的使用</span><br>
+                                {else if $_skey == 'group_error'}
+                                <span class="co_first">您好，您参加的拼团由于团已过期，拼团失败。</span><br>
+                                拼团商品：<span class="co_keyword1">精选新西兰猕猴桃6枚</span><br>
+                                商品金额：<span class="co_keyword2">￥10</span><br>
+                                退款金额：<span class="co_keyword2">￥10</span><br>
+                                <span class="co_remark">您的退款已经提交微信审核，感谢您的参与！</span><br>
+                                {else if $_skey == 'no_stock'}
+                                <span class="co_first">产品1111111</span><br>
+                                剩余库存：<span class="co_keyword1">10</span><br>
+                                时间：<span class="co_keyword2">2016-06-23 17:12:09</span><br>
+                                <span class="co_remark">感谢你的使用。</span><br>
+                                {/if}
+                            </div>
+                            <div class="flex flex_j_between" style="padding:8px 15px;color: #aaa;border-top: 1px solid #ddd">
+                                <span>详情</span><span>></span>
+                            </div>
+                        </div>
+                        <div style="text-align: center;color: #aaa;margin-top: 10px">内容示例</div>
+                    </div>
+                    <div class="col-sm-8">
+                        {if $_skey == 'create_order'}
+                        <span>编号：OPENTM415557602</span><br>
+                        <span>标题：下单成功提醒</span><br>
+                        <span>一级行业：IT科技</span><br>
+                        <span>二级行业：IT科技 - 互联网|电子商务</span><br>
+                        {else if $_skey == 'group_success'}
+                        <span>编号：OPENTM407456411</span><br>
+                        <span>标题：拼团成功通知</span><br>
+                        <span>一级行业：IT科技</span><br>
+                        <span>二级行业：IT科技 - 互联网|电子商务</span><br>
+                        {else if $_skey == 'group_error'}
+                        <span>编号：OPENTM401113750</span><br>
+                        <span>标题：拼团失败通知</span><br>
+                        <span>一级行业：IT科技</span><br>
+                        <span>二级行业：IT科技 - 互联网|电子商务</span><br>
+                        {else if $_skey == 'no_stock'}
+                        <span>编号：OPENTM405897230</span><br>
+                        <span>标题：库存不足提醒</span><br>
+                        <span>一级行业：IT科技</span><br>
+                        <span>二级行业：IT科技 - 互联网|电子商务</span><br>
+                        {/if}
+                        <br>
+                        <div>
+                            <div style="color:red;">#昵称#：将被替换成用户昵称</div>
+                            <div style="color:red;">#姓名#：将被替换成用户姓名</div>
+                            <div style="color:red;">#电话#：将被替换成用户联系电话</div>
+                            <div style="color:red;">#商品#：将被替换成用户当前购买商品</div>
+                            <div style="color:red;">所有<b>keyword</b>只可修改颜色</div>
+                        </div>
+                    </div>
                 </div>
+
             </div>
-            <table class="table table-hover">
-                <thead class="navbar-inner">
-                <th class="text-center">编号</th>
-                <th class="text-center">标题</th>
-                <th class="text-center">一级行业</th>
-                <th class="text-center">二级行业</th>
-                </thead>
-                <tbody>
-                <tr>
-                    <td align="center">
-                        <div class="type-parent opentm1">OPENTM415557602</div>
-                    </td>
-                    <td align="center">
-                        <div class="type-parent">下单成功提醒</div>
-                    </td>
-                    <td align="center">
-                        <div class="type-parent">IT科技</div>
-                    </td>
-                    <td align="center">
-                        <div class="type-parent">IT科技 - 互联网|电子商务</div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+
             <div class="form-group" id="addTemp">
-                <label class="col-sm-2 control-label">模版示例</label>
-                <div class="col-sm-8 example1">
-                    <span class="co_first">订单已经提交成功</span><br>
-                    订单号码：<span class="co_keyword1">1805020012</span><br>
-                    订单金额：<span class="co_keyword2">100</span><br>
-                    <span class="co_remark">可以在订单管理中查看详情</span><br>
-                </div>
+
+
             </div>
 
             <div class="form-group">
-                <label class="col-sm-2 control-label">模板开关</label>
+                <label class="col-sm-2 control-label">模板选择</label>
                 <div class="col-sm-8 col-xs-12">
                     <label class='radio-inline'>
-                        <input class="template1" type='radio' name='set[message][create_order][open]' value='0' {if intval($setting['create_order']['open']) == 0}checked{/if} /> 关闭
+<!--                        <input class="template1" type='radio' name='set[{$_skey}][open]' value='0' {if intval($temp['open']) == 0}checked{/if} /> 关闭-->
                     </label>
                     <label class='radio-inline'>
-                        <input class="template1" type='radio' name='set[message][create_order][open]' value='1' {if intval($setting['create_order']['open']) == 1}checked{/if} /> 新增
+                        <input class="template1" type='radio' name='set[{$_skey}][open]' value='2' {if intval($temp['open']) == 2 || intval($temp['open']) == 0}checked{/if} /> 选择
                     </label>
                     <label class='radio-inline'>
-                        <input class="template1" type='radio' name='set[message][create_order][open]' value='2' {if intval($setting['create_order']['open']) == 2}checked{/if} /> 选择
+                        <input class="template1" type='radio' name='set[{$_skey}][open]' value='1' {if intval($temp['open']) == 1}checked{/if} /> 新增
                     </label>
                 </div>
-                <input type="hidden" id="temp_id" name="set[message][create_order][temp_id]" value="{$setting['create_order']['temp_id']}"/>
+                <input type="hidden" id="temp_id" name="set[{$_skey}][temp_id]" value="{$temp['temp_id']}"/>
             </div>
 
             <div class="form-group" style="display: none">
@@ -79,7 +133,7 @@
                     微信模板详细内容
                 </label>
                 <div class="col-sm-8 col-xs-12">
-                    <textarea class="form-control content1" {if $setting['content']}readonly{/if} name="set[message][create_order][content]" rows="8">{$setting['create_order']['content']}</textarea>
+                    <textarea class="form-control content1" {if $temp['content']}readonly{/if} name="set[{$_skey}][content]" rows="8">{$temp['content']}</textarea>
                 </div>
             </div>
             <div class="form-group" style="display: none">
@@ -93,14 +147,14 @@
                 <div class="col-sm-4 col-xs-12">
                     <select class="form-control" name="">
                         {loop $list $lv}
-                        <option data-id="{$lv['template_id']}" data-content="{$lv['content']}" value="{$lv['template_id']}" {if $setting['create_order']['temp_id']==$lv['template_id']}selected{/if}>{$lv['title']}</option>
+                        <option data-id="{$lv['template_id']}" data-content="{$lv['content']}" value="{$lv['template_id']}" {if $temp['temp_id']==$lv['template_id']}selected{/if}>{$lv['title']}</option>
                         {/loop}
                     </select>
                 </div>
             </div>
 
 
-            <div id="J_KeyValue" class="form-group" {if $setting['create_order']['open'] == 0}style="display: none"{/if}>
+            <div id="J_KeyValue" class="form-group" {if $temp['open'] == 0}style="display: none"{/if}>
                 <label class="col-xs-12 col-sm-3 col-md-2 control-label">
                     <span class="text-danger">*</span>
                     模板参数
@@ -108,13 +162,13 @@
                 <div class="col-xs-12 col-sm-9 col-md-10">
                     <div id="J_keyValue_Content">
                         {php $i = 0;}
-                        {loop $setting['create_order']['data'] $k $it}
+                        {loop $temp['data'] $k $it}
                         <div class="form-inline" style="margin-bottom:5px; display: flex;align-items: center;">
-                            <input class="form-control" readonly="" name="set[message][create_order][data][{$it['key']}][key]" value="{$it['key']}" placeholder="键" style="width: 10%;"/>
+                            <input class="form-control" readonly="" name="set[{$_skey}][data][{$it['key']}][key]" value="{$it['key']}" placeholder="键" style="width: 10%;"/>
                             :
-                            <input class="form-control" name="set[message][create_order][data][{$it['key']}][value]" placeholder="默认值" value="{$it['value']}" style="width: 65%;"/>
+                            <input class="form-control" name="set[{$_skey}][data][{$it['key']}][value]" placeholder="默认值" value="{$it['value']}" style="width: 65%;"/>
                             <div style="display: inline-block; flex: 1;width: 25%;" class="color">
-                                {php echo tpl_form_field_color("set[message][create_order][data][" . $it['key'] . "][color]", $it['color']);}
+                                {php echo tpl_form_field_color("set[" . $_skey . "][data][" . $it['key'] . "][color]", $it['color']);}
                             </div>
                         </div>
                         {php $i++;}
@@ -150,16 +204,16 @@
     var main = $("#J_keyValue_Content");
     function addline(key) {
         var html = '<div class="form-inline" style="margin-bottom:5px;">' +
-            '<input class="form-control" readonly="" name="set[message][create_order][data][' + key + '][key]" value="' + key + '" placeholder="键" style="width: 10%;"/> :' +
-            '<input class="form-control" name="set[message][create_order][data][' + key + '][value]" placeholder="默认值" style="width: 70%;"/>' +
-            '<input class="form-control color" name="set[message][create_order][data][' + key + '][color]" placeholder="颜色" />' +
+            '<input class="form-control" readonly="" name="set[{$_skey}][data][' + key + '][key]" value="' + key + '" placeholder="键" style="width: 10%;"/> :' +
+            '<input class="form-control" name="set[{$_skey}][data][' + key + '][value]" placeholder="默认值" style="width: 70%;"/>' +
+            '<input class="form-control color" name="set[{$_skey}][data][' + key + '][color]" placeholder="颜色" />' +
             '</div>';
         main.html(main.html() + html);
         i += 1;
     }
     function addContent() {
         //解析
-        var content = $("[name='set[message][create_order][content]']").val();
+        var content = $("[name='set[{$_skey}][content]']").val();
         if (content == "" || content == undefined) {
             util.message("该详细内容无法解析！", "", "error");
             return false;
@@ -189,12 +243,12 @@
     function addTemp(example) {
 
         var html = '<label class="col-sm-2 control-label">模版示例</label>\n' +
-            '                <div class="col-sm-8 example1">\n' +
-            '                    <span class="co_first">订单已经提交成功</span><br>\n' +
-            '                    订单号码：<span class="co_keyword1">1805020012</span><br>\n' +
-            '                    订单金额：<span class="co_keyword2">100</span><br>\n' +
+            '<div class="col-sm-8 example1">\n' +
+            '    <span class="co_first">订单已经提交成功</span><br>\n' +
+            '    订单号码：<span class="co_keyword1">1805020012</span><br>\n' +
+            '    订单金额：<span class="co_keyword2">100</span><br>\n' +
             '                    <span class="co_remark">可以在订单管理中查看详情</span><br>\n' +
-            '                </div>'
+            '</div>'
         $("#addTemp").html(html);
     }
     var list={php echo json_encode($list)};
@@ -234,12 +288,17 @@
         $('#temp_id').val($('.s_list option:selected').attr('data-id'));
         addContent()
     })
-    {if intval($setting['create_order']['open']) == 2}
+    {if intval($temp['open']) == 2 || intval($temp['open']) == 0}
     $('.s_list').show();
+    {if intval($temp['open']) == 0}
+    $('.content1').val(list[0]['content']);
+    $('#temp_id').val(list[0]['template_id']);
+    addContent()
+    {/if}
     {/if}
 </script>
 <script>
     console.log({php echo json_encode($list)})
-    console.log({php echo json_encode($setting)})
+    console.log({php echo json_encode($temp)})
 </script>
 {template 'common/footer'}

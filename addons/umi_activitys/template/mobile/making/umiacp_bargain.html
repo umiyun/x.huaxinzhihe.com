@@ -517,29 +517,7 @@
 <div>
     <div class="tips"></div>
     <!--头部-->
-    <div class="a_head">
-        <img class="h_img" data-templateid="{if $activity['image']}{$activity['image']}{else}{$case['template']['id']}{/if}" data-bgimage="{if $activity['bgimage']}{$activity['bgimage']}{else}{$case['template']['bgimage']}{/if}" data-src="{if $activity['image']}{$activity['image']}{else}{$case['template']['image']}{/if}" src="{if $activity['bgimage']}{$activity['image']}{else}{$case['template']['image']}{/if}" alt="">
-        <div id="musicSelect">
-            <i class="iconfont icon-music"></i>
-            <div class="ft12" style="color: #fff">音乐</div>
-        </div>
-        <div id="effectsSelect">
-            <i class="iconfont icon-mofabang"></i>
-            <div class="ft12" style="color: #fff">特效</div>
-        </div>
-        <div class="h_tips">图片建议尺寸:750*600</div>
-        <div class="h_changes flex flex_a_center">
-            <div class="template_change flex flex_a_center flex_j_center">
-                <i class="iconfont icon-wodebaobeiye_genghuan"></i>
-                <div class="ft14">更换模板</div>
-            </div>
-            <div class="img_change flex flex_a_center flex_j_center">
-                <i class="iconfont icon-tupiantianjia"></i>
-                <div class="ft14">更换图片</div>
-            </div>
-        </div>
-
-    </div>
+    {template 'temp/activity_head'}
     <!--下部分，背景图片 background->repeat-->
     <div class="a_content">
         <!--活动标题-->
@@ -1395,5 +1373,9 @@
         }
 
     }
+
+    $('input,textarea').on("click", function(){
+        $('.a_changetemplate,.a_changeimg').hide();
+    })
 </script>
 {template 'common/footer'}

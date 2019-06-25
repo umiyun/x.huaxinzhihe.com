@@ -60,7 +60,7 @@
         position: fixed;
         width: 100%;
         left: 0;
-        bottom: -50%;
+        display: none;
         background: rgba(0,0,0,0.8);
         z-index: 20;
         color: #fff;
@@ -213,16 +213,16 @@
         }
     }
     $('.img_change').click(function () {
-        $(".a_changeimg").animate({bottom:"0"},800);
+        $(".a_changeimg").slideDown();
         $('.bg_fixed').show()
     })
     $('.acb_cancel').click(function () {
         $('.h_img').attr('src', $('.h_img').attr('data-src'))
-        $(".a_changeimg").animate({bottom:"-45%"},800);
+        $(".a_changeimg").slideDown();
         $('.bg_fixed').hide()
     })
     $('.acb_sure').click(function () {
-        $(".a_changeimg").animate({bottom:"-45%"},800);
+        $(".a_changeimg").slideDown();
         $('.h_img').attr('data-src', $('.h_img').attr('src'))
         $('.bg_fixed').hide()
         datas.image=$('.h_img').attr('src')
@@ -230,7 +230,7 @@
 
     //更换模板
     $('.template_change').click(function () {
-        $(".a_changetemplate").animate({bottom:"0"},600);
+        $(".a_changetemplate").slideDown();
         $('.bg_fixed').show()
     })
     function changeTemplate(self) {
@@ -251,12 +251,12 @@
     $('.atb_cancel').click(function () {
         $('.h_img').attr('src', $('.h_img').attr('data-src'))
         $('.a_content').css('background','url("'+$('.h_img').attr('data-bgimage')+'") repeat 100%')
-        $(".a_changetemplate").animate({bottom:"-45%"},600);
+        $(".a_changetemplate").slideDown();
         $('.titlebgimg').attr('src', datas.titlebgimg);
         $('.bg_fixed').hide()
     })
     $('.atb_sure').click(function () {
-        $(".a_changetemplate").animate({bottom:"-45%"},600);
+        $(".a_changetemplate").slideDown();
         $('.h_img').attr('data-src', $('.h_img').attr('src')).attr('data-bgimage',datas.bgimage).attr('data-templateid',datas.template_id)
         datas.titlebgimg=$('.titlebgimg').attr('src');
         $('.bg_fixed').hide()

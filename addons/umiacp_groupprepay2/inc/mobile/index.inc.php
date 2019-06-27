@@ -58,6 +58,9 @@ if ($op == 'display') {
     $cut = pdo_get(YOUMI_NAME . '_cut', ['mid' => $this->mid, 'activity_id' => $activity_id,'status !='=>'4']);
 
     $activity = pdo_fetch('select * from ' . tablename(YOUMI_NAME . '_activity') . ' where uniacid = ' . $uniacid . ' and id = ' . $activity_id);
+    if($activity['participate']<$activity['success']){
+        $activity['participate']=$activity['success'];
+    }
     if ($activity['status'] != 1 || $activity['endtime'] < time()||($records_count>=$activity['gnum'])) {
         $activity['status2']=2;
     }else{

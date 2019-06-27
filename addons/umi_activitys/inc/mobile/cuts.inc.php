@@ -303,7 +303,7 @@ if ($op=='download'){
             ['createtime', 200, 'date'],
         ];
     }
-    if (in_array($module, ['umiacp_10second', 'umiacp_eggfreny'])) {
+    if (in_array($module, ['umiacp_10second', 'umiacp_eggfreny','umiacp_speeddial'])) {
         $list = pdo_fetchall('SELECT * FROM ' . tablename($module . '_reward'). $condition . $orderby . $limit );
     } else if(in_array($module, ['umiacp_groupsimple'])){
         $list = pdo_fetchall('SELECT * FROM ' . tablename($module . '_order'). $condition . $orderby . $limit );

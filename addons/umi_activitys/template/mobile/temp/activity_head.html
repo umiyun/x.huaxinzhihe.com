@@ -64,6 +64,7 @@
         background: rgba(0,0,0,0.8);
         z-index: 20;
         color: #fff;
+        bottom: 0;
     }
     .a_changeimg .btn,.a_changetemplate .btn{
         color: #fff;
@@ -218,11 +219,11 @@
     })
     $('.acb_cancel').click(function () {
         $('.h_img').attr('src', $('.h_img').attr('data-src'))
-        $(".a_changeimg").slideDown();
+        $(".a_changeimg").slideUp();
         $('.bg_fixed').hide()
     })
     $('.acb_sure').click(function () {
-        $(".a_changeimg").slideDown();
+        $(".a_changeimg").slideUp();
         $('.h_img').attr('data-src', $('.h_img').attr('src'))
         $('.bg_fixed').hide()
         datas.image=$('.h_img').attr('src')
@@ -251,12 +252,12 @@
     $('.atb_cancel').click(function () {
         $('.h_img').attr('src', $('.h_img').attr('data-src'))
         $('.a_content').css('background','url("'+$('.h_img').attr('data-bgimage')+'") repeat 100%')
-        $(".a_changetemplate").slideDown();
+        $(".a_changetemplate").slideUp();
         $('.titlebgimg').attr('src', datas.titlebgimg);
         $('.bg_fixed').hide()
     })
     $('.atb_sure').click(function () {
-        $(".a_changetemplate").slideDown();
+        $(".a_changetemplate").slideUp();
         $('.h_img').attr('data-src', $('.h_img').attr('src')).attr('data-bgimage',datas.bgimage).attr('data-templateid',datas.template_id)
         datas.titlebgimg=$('.titlebgimg').attr('src');
         $('.bg_fixed').hide()

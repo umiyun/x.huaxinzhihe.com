@@ -59,6 +59,9 @@ if ($op == 'display') {
     $cut = pdo_get(YOUMI_NAME . '_cut', ['mid' => $this->mid, 'activity_id' => $activity_id,'status !='=>'4']);
 
     $activity = pdo_fetch('select * from ' . tablename(YOUMI_NAME . '_activity') . ' where uniacid = ' . $uniacid . ' and id = ' . $activity_id);
+    if($activity['participate']<$activity['success']){
+        $activity['participate']=$activity['success'];
+    }
     if ($activity['status'] != 1 || $activity['endtime'] < time()||($records_count>=$activity['gnum'])) {
         $activity['status2']=2;
     }else{
@@ -203,13 +206,7 @@ if ($op == 'share') {
 
 }
 
-if ($op == 'page_complain') {
-    $_W['page']['title'] = '投诉';
-    $activity_id = intval($_GPC['activity_id']);
 
-    include $this->template('complain');
-    exit();
-}
 if ($op == 'sign_up') {
     $activity_id = intval($_GPC['activity_id']);
     $activity = pdo_get(YOUMI_NAME . '_activity', ['id' => $activity_id]);
@@ -246,12 +243,11 @@ if ($op == 'sign_up') {
     $cut['oprice'] = '';
     $cut['rprice'] = '';
     $cut['times'] = '';
-    $cut['price'] = $activity['yprice'];
+    $cut['price'] = '';
     $cut['nprice'] = '';
     $cut['status'] = '1';
     $cut['realname'] = trim($_GPC['realname']);
     $cut['mobile'] = trim($_GPC['mobile']);
-    $cut['avatar'] = $this->getMemberInfo($this->mid)['avatar'];
     $cut['userinfo'] = $_GPC['userinfo'];
 
     $cut['createtime'] = time();
@@ -271,9 +267,9 @@ if ($op == 'sign_up') {
     $data['createtime'] = time();
 //    pdo_insert(YOUMI_NAME . '_record', $data);
 
-//    pdo_update(YOUMI_NAME . '_activity', ['participate +=' => 1], ['id' => $activity_id]);
-//    pdo_update(UMI_NAME . '_activity', ['participate +=' => 1], ['shop_id' => $activity['shop_id'], 'module' => YOUMI_NAME, 'activity_id' => $activity_id]);
-//
+    pdo_update(YOUMI_NAME . '_activity', ['participate +=' => 1], ['id' => $activity_id]);
+    pdo_update(UMI_NAME . '_activity', ['participate +=' => 1], ['shop_id' => $activity['shop_id'], 'module' => YOUMI_NAME, 'activity_id' => $activity_id]);
+
     if (!$this->member['mobile']) {
         pdo_update(YOUMI_NAME . '_member', ['realname' => $cut['realname'], 'mobile' => $cut['mobile']], ['mid' => $this->mid]);
     }

@@ -52,7 +52,7 @@ if ($op == 'display') {
 //        $fmid = 0;
 //    }
 //    $fmember = $this->getMemberInfo($fmid);
-    $cut = pdo_get(YOUMI_NAME . '_cut', ['mid' => $this->mid, 'activity_id' => $activity_id]);
+    $cut = pdo_get(YOUMI_NAME . '_cut', ['uniacid'=>$uniacid,'mid' => $this->mid, 'activity_id' => $activity_id]);
     $activity = pdo_fetch('select * from ' . tablename(YOUMI_NAME . '_activity') . ' where uniacid = ' . $uniacid . ' and id = ' . $activity_id);
     if ($activity['status'] != 1 || $activity['endtime'] < time()) {
         $activity['status2']=2;
@@ -188,7 +188,7 @@ if ($op == 'sign_up') {
         youmi_result(1, '报名人数已满');
     }
 //    $goods_id = intval($_GPC['goods_id']);
-    $cut = pdo_get(YOUMI_NAME . '_cut', ['mid' => $this->mid, 'activity_id' => $activity_id]);
+    $cut = pdo_get(YOUMI_NAME . '_cut', ['uniacid' => $uniacid,'mid' => $this->mid, 'activity_id' => $activity_id]);
     if ($cut) {
         youmi_result(1, '请勿重复报名');
     }

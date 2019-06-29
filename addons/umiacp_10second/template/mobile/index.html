@@ -179,13 +179,13 @@
     .btn2{
         width: 68%;
         left: 16%;
-        top: 82%;
+        top: 70%;
         z-index: 5;
     }
     .point{
         width: 12%;
         left: 60%;
-        top: 87%;
+        top: 75%;
         z-index: 3;
         animation: point 0.5s linear 0.5s infinite;
         -moz-animation: point 0.5s linear 0.5s infinite;
@@ -225,7 +225,10 @@
             {else}
             <img src="{YOUMI_URL_APP}images/2_title1.png" class="ani resize title1" swiper-animate-effect="zoomIn" swiper-animate-duration="1s" swiper-animate-delay="1s"  >
             {/if}
-            <img src="{YOUMI_URL_APP}images/1_arrow.png" id="array" class="resize">
+            <!--<img src="{YOUMI_URL_APP}images/1_arrow.png" id="array" class="resize">-->
+
+            <img onclick="goGame()" src="{YOUMI_URL_APP}images/2_btn.png" class="ani resize btn2" swiper-animate-effect="zoomIn" swiper-animate-duration="1s" swiper-animate-delay="1s"  >
+            <img src="{YOUMI_URL_APP}images/2_point.png" class="ani resize point" swiper-animate-effect="zoomIn" swiper-animate-duration="1s" swiper-animate-delay="1s" >
 
             {if $setting_activity&&$setting_activity['making_status2']==1}
             <div style="position: absolute;bottom: 8%;margin: auto;text-align: center;width: 100%;">
@@ -241,9 +244,11 @@
                 <a href="{$setting_activity['copyright_url']}">{if $setting_activity['copyright_buy']}{$setting_activity['copyright_buy']}{else}去购买{/if}</a>
             </div>
             {/if}
+
+
         </section>
         <!---------------slide2-------------->
-        <section class="swiper-slide swiper-slide2">
+        <section class="swiper-slide swiper-slide2" style="display: none">
             {if !empty($activity['title2'])}
             <img src="{$activity['title2']}" class="ani resize zhong" swiper-animate-effect="zoomIn" swiper-animate-duration="1s" swiper-animate-delay="0" >
             {/if}

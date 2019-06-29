@@ -18,6 +18,15 @@
         <div id="base" class="panel-body base">
 
             <div class="form-group">
+                <label class="col-sm-2 control-label">宝塔实时任务链接（一分钟执行一次）</label>
+                <div class="col-sm-8">
+                    <label class="control-label">
+                        <a href="javascript:;" data-url="{php echo $_W['siteroot'] . 'app/index.php?i=' . $_W['uniacid'] . '&c=entry&do=task&m=' . YOUMI_NAME . '&user_type=1'}" style="margin-right:0px;" class="color-default js-clip">复制链接</a>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
                 <label class="col-sm-2 control-label">炮灰域名</label>
                 <div class="col-sm-8">
                     <input type="text" class="form-control" name="set[base][cannon_fodder]" value="{$setting['cannon_fodder']}">
@@ -42,8 +51,27 @@
                     </label>
                 </div>
             </div>
-
-            <div class="form-group" style="display:none;">
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label">商户支付证书</label>
+                <div class="col-sm-8">
+                    <textarea class="form-control" name="apiclient_cert" rows="8" placeholder="为保证安全性, 不显示证书内容. 若要修改, 请直接输入"></textarea>
+                    <span class="help-block">从商户平台上下载支付证书, 解压并取得其中的 <mark>apiclient_cert.pem</mark> 用记事本打开并复制文件内容, 填至此处</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label">支付证书私钥</label>
+                <div class="col-sm-8">
+                    <textarea class="form-control" name="apiclient_key" rows="8" placeholder="为保证安全性, 不显示证书内容. 若要修改, 请直接输入"></textarea>
+                    <span class="help-block">从商户平台上下载支付证书, 解压并取得其中的 <mark>apiclient_key.pem</mark> 用记事本打开并复制文件内容, 填至此处</span>
+                </div>
+            </div>
+            <div class="form-group" >
+                <label class="col-sm-2 control-label">分享赚文字修改</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="set[base][change_change_btn]" value="{$setting['change_change_btn']}">
+                    <div class="help-block">这里填写文字后 ，UI上的"分享赚"文字将被替换</div>
+                </div>
+            </div><div class="form-group" style="display:none;">
                 <label class="col-sm-2 control-label">结算周期（天）</label>
                 <div class="col-sm-8">
                     <input type="number" class="form-control" name="set[base][billing_cycle]" value="{$setting['billing_cycle']}">

@@ -1,0 +1,516 @@
+{template 'header'}
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'/>
+<link rel="stylesheet" href="{YOUMI_URL_APP}css/swiper.min.css">
+<link rel="stylesheet" href="{YOUMI_URL_APP}css/animate.min.css">
+<script src="{YOUMI_URL_APP}js/swiper.min.js"></script>
+<script src="{YOUMI_URL_APP}js/swiper.animate.min.js"></script>
+<script src="{YOUMI_URL_APP}js/qrcode.min.js"></script>
+
+<style>
+    html,body{
+        height:100%;
+    }
+    body{
+        font-family:"microsoft yahei";
+        margin: 0;
+    }
+    .swiper-container {
+        width: 100%;
+        height: 100%;
+    }
+    .swiper-slide{
+        width:100%;
+        height:100%;
+    }
+    .swiper-slide1{
+        background:url({php echo tomedia($setting['bg4'])}) no-repeat left top;
+        background-size: 100% 100%;
+    }
+    .bg_fixed{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.65);
+        z-index: 5;
+        display: none;
+    }
+    img{
+        display:block;
+    }
+    .swiper-pagination-bullet {
+        width: 6px;
+        height: 6px;
+        background: #fff;
+        opacity: .4;
+    }
+    .swiper-pagination-bullet-active {
+        opacity: 1;
+    }
+    @-webkit-keyframes start {
+        0%,30% {opacity: 0;-webkit-transform: translate(0,10px);}
+        60% {opacity: 1;-webkit-transform: translate(0,0);}
+        100% {opacity: 0;-webkit-transform: translate(0,-8px);}
+    }
+    @-moz-keyframes start {
+        0%,30% {opacity: 0;-moz-transform: translate(0,10px);}
+        60% {opacity: 1;-moz-transform: translate(0,0);}
+        100% {opacity: 0;-moz-transform: translate(0,-8px);}
+    }
+    @keyframes start {
+        0%,30% {opacity: 0;transform: translate(0,10px);}
+        60% {opacity: 1;transform: translate(0,0);}
+        100% {opacity: 0;transform: translate(0,-8px);}
+    }
+    @keyframes tm1 {
+        0% {transform: translateX(180%);}
+        100% {transform: translateX(-130%);}
+    }
+    @keyframes tm2 {
+        0% {transform: translateX(160%);}
+        100% {transform: translateX(-130%);}
+    }
+    .ani{
+        position:absolute;
+        z-index: 3;
+    }
+    .array{
+        position:absolute;
+        z-index:999;
+        -webkit-animation: start 1.5s infinite ease-in-out;
+        width: 8%;
+        bottom: 1%;
+        right:0;
+    }
+
+    /*音乐*/
+
+    @-webkit-keyframes change {
+        from {
+            transform: rotate(0deg)
+        }
+        to {
+            transform: rotate(360deg)
+        }
+    }
+    @-webkit-keyframes point {
+        from {
+            opacity: 0.2
+        }
+        to {
+            opacity: 1
+        }
+    }
+    .music{
+        position: fixed;
+        right: 20px;
+        top: 10%;
+        border:1px solid #fff;
+        z-index: 999999;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: url(http://qiniu.longyue8.com/tgaaa.png) no-repeat;
+        background-size: cover;
+        cursor: pointer;
+    }
+    .muc{
+        background: url(http://qiniu.longyue8.com/tgaaa.gif) no-repeat;
+        background-size: cover;
+        animation: change 1s linear 0s infinite;
+        -moz-animation: change 1s linear 0s infinite;
+        -webkit-animation: change 1s linear 0s infinite;
+        -o-animation: change 1s linear 0s infinite;
+    }
+    .tips{
+        width: 30%;
+        position: fixed;
+        top: 30%;
+        left: 35%;
+        padding: 10px;
+        background: #aaa;
+        color: #fff;
+        z-index: 999;
+        text-align: center;
+        border-radius: 10px;
+        display: none;
+    }
+    .text-center.footer{
+        display: none;
+    }
+
+
+    .flex{
+        display: flex;
+        display: -webkit-flex;
+    }
+    .flex_j_center{
+        justify-content: center;
+        -webkit-justify-content: center;
+    }
+    .flex_j_around{
+        justify-content: space-around;
+        -webkit-justify-content: space-around;
+    }
+    .flex_j_between{
+        justify-content: space-between;
+        -webkit-justify-content: space-between;
+    }
+    .flex_a_center{
+        align-items: center;
+        -webkit-align-items: center;
+    }
+    .flex_wrap{
+      flex-wrap: wrap;
+      -webkit-flex-wrap: wrap;
+    }
+    .flex1{
+        flex: 1;
+        -webkit-flex: 1;
+    }
+    .text_center{
+        text-align: center;
+    }
+    .ft10{
+        font-size: 10px;
+    }
+    .ft12{
+        font-size: 12px;
+    }
+    .ft_weight{
+        font-weight: 900;
+    }
+
+    .swiper-slide1 .logo1{
+        width: 40%;
+        top: 2%;
+        left: 0;
+    }
+    .swiper-slide1 .logo2{
+        width: 40%;
+        top: 2%;
+        right: 1%;
+    }
+    .s_content{
+        position: absolute;
+        width: 74%;
+        left: 13%;
+        top: 12%;
+        border-radius: 20px;
+        background: #EBE8DF;
+        {if $_GPC['hexiao']!=1}
+            {if floatval($forder['status'])==1}
+            height: 85%;
+            {else}
+            height: 73%;
+            {/if}
+        {else}
+        height: 55%;
+        {/if}
+        border: 20px solid #EBE8DF;
+        box-sizing: border-box;
+        overflow-y: auto;
+    }
+    .swiper-slide1 .title1{
+        width: 16%;
+        top: 4%;
+        left: 42%;
+    }
+    .swiper-slide1 .img1{
+        width: 29%;
+        top: 2%;
+        left: 60%;
+    }
+    .swiper-slide1 .img2{
+        width: 46%;
+        top: 63%;
+        left: 2%;
+        z-index: 1;
+    }
+    .swiper-slide1 .bottom{
+        width: 100%;
+        bottom: 0;
+        left: 0;
+    }
+    .dian{
+        width: 6px;
+        height: 6px;
+        background: #7C151A;
+        border-radius: 50%;
+    }
+    .s_btns div{
+        font-size: 12px;
+        background: #fff;
+        padding: 2px 18px;
+        border-radius: 6px;
+    }
+    #qrcode{
+        width: 60%;
+        margin-left: 20%;
+    }
+    #qrcode img{
+        width: 100%;
+        border: 1px solid #aaa;
+        box-sizing: border-box;
+        padding: 10px;
+        background: #fff;
+    }
+    .detail{
+        padding-bottom: 2px;
+        padding-top: 2px;
+    }
+    .bg_fixed2{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.65);
+        z-index: 80;
+        display: none;
+    }
+    .s_share{
+        position: absolute;
+        right: 0;
+        top: 2%;
+        z-index: 90;
+        width: 21%;
+        display: none;
+    }
+</style>
+</head>
+
+<body>
+<div class="swiper-container">
+    <div id="music" class="music muc">
+        <audio id="audiojs" src="{$setting['music']}" autoplay loop></audio>
+    </div>
+    <div class="swiper-wrapper">
+        <section class="swiper-slide swiper-slide1">
+            <div class="bg_fixed2" onclick="$('.bg_fixed2,.s_share').fadeOut()"></div>
+            <img class="s_share" src="http://qiniu.longyue8.com/ticketdysp5_share.png" alt="">
+
+            <img src="{php echo tomedia($setting['logo1'])}" class="ani resize logo1" >
+            <img src="{php echo tomedia($setting['logo2'])}" class="ani resize logo2" >
+
+            <div class="flex flex_j_between" style="top: 15%;position: absolute;width: 60%;left: 20%;z-index: 20;">
+                <span class="dian"></span>
+                <span class="dian"></span>
+            </div>
+            <div class="flex flex_j_between" style="bottom: 7%;position: absolute;width: 60%;left: 20%;z-index: 20;display: none">
+                <span class="dian"></span>
+                <span class="dian"></span>
+            </div>
+            {if $_GPC['hexiao']!=1}
+                {if $forder['openid']==$member['openid']}
+                    {if floatval($forder['status'])==2}
+                    <div class="s_content">
+                        <div class="text_center ft12" style="color: #81372F;margin-top: 15px;font-weight: 900">恭喜您抢票成功!</div>
+                        <div class="text_center ft12" style="color: #81372F;margin-bottom: 20px;font-weight: 900">获得常熟世茂璀璨澜庭线下德云社演出门票一张!</div>
+                        <div id="qrcode"></div>
+                        <div class="text_center ft10 ft_weight" style="margin: 15px 0">（凭此二维码与线下核销员进行核销）</div>
+                        <hr>
+                        <div class="ft10 ft_weight text_center" style="margin-bottom: 4px">领取时间</div>
+                        <div class="ft10 ft_weight text_center" style="margin-bottom: 4px">2019年6月15日至2019年6月16日</div>
+                        <div class="ft10 ft_weight text_center" style="margin-bottom: 4px;margin-top: 15px">领取地点</div>
+                        <div class="ft10 ft_weight text_center" style="margin-bottom: 4px">深圳路与常熟路交汇处</div>
+                        <div class="ft10 ft_weight text_center" style="margin-bottom: 4px">往南约100m璀璨澜庭售楼处</div>
+                    </div>
+                    {else}
+                    <div class="s_content">
+                        <img style="border-radius: 50%;width: 60px;margin: 0 auto;margin-top: 0;" src="{$forder['avatar']}" alt="">
+                        <div style="text-align: center;font-size: 14px;">{$forder['nickname']}</div>
+                        <div class="flex flex_a_center flex_j_center" style="font-size: 12px">
+                            <img style="width: 13px;padding-right: 10px;border-right: 1px solid #101010;margin-right: 10px;" src="http://qiniu.longyue8.com/ticketdysp4_quan.png" alt="">
+                            <span>{$forder['price']}</span>
+                            <span>/</span>
+                            <span>{$forder['oprice']}</span>
+                        </div>
+                        {if  floatval($forder['status'])==6}
+                        <div style="font-size: 14px;text-align: center;color: #E96A68;margin-top: 15px">常熟世茂璀璨澜庭线下德云社演出票太抢手啦！您抢的{$forder['title']}门票已被一抢而空，建议您换区试试呢！</div>
+                        <div class="s_btns flex flex_j_center">
+                            <div onclick="goIndex()" style="margin-top: 10px">重 新 抢 票</div>
+                        </div>
+                        {elseif floatval($forder['status'])==1}
+                        <div style="font-size: 14px;text-align: center;color: #E96A68;margin-top: 15px">恭喜您订票成功，</div>
+                        <div style="font-size: 14px;text-align: center;color: #E96A68;margin-bottom: 20px">快邀请好友帮忙砍价吧!</div>
+                        {/if}
+                        {if  floatval($forder['status'])!=6}
+                        <div class="s_btns flex flex_j_between">
+                            {if floatval($forder['status'])==1}
+                            <div onclick="$('.bg_fixed2,.s_share').fadeIn()">邀 请 好 友</div>
+                            {else}
+                            <div>帮 他 砍 价</div>
+                            {/if}
+                            <div onclick="goIndex()">返 回 首 页</div>
+                        </div>
+                        {/if}
+                        <img style="width: 100%;margin-top: 10px;" src="http://qiniu.longyue8.com/ticketdysp4_title1.png">
+                        <div class="list">
+                            {loop $forder['cut'] $fcv}
+                            <div class="detail flex flex_a_center">
+                                <img style="width: 32px;border-radius: 50%;margin-right: 5px;" src="{$fcv['avatar']}" alt="">
+                                <div class="flex1" style="font-size: 10px;border-left: 1px solid #777;padding-left: 5px;">
+                                    <div>{$fcv['nickname']}</div>
+                                    <div>{php echo date('Y-m-d',$fcv['createtime'])}</div>
+                                </div>
+                                <div style="color:#E96A68;font-size: 12px"><span style="color: red">帮砍了</span> {$fcv['price']}元</div>
+                            </div>
+                            {/loop}
+                        </div>
+                    </div>
+                    {/if}
+                {else}
+                <div class="s_content">
+                    <img style="border-radius: 50%;width: 60px;margin: 0 auto;" src="{$forder['avatar']}" alt="">
+                    <div style="text-align: center;font-size: 14px;">{$forder['nickname']}</div>
+                    <div class="flex flex_a_center flex_j_center" style="font-size: 12px">
+                        <img style="width: 13px;padding-right: 10px;border-right: 1px solid #101010;margin-right: 10px;" src="http://qiniu.longyue8.com/ticketdysp4_quan.png" alt="">
+                        <span>{$forder['price']}</span>
+                        <span>/</span>
+                        <span>{$forder['oprice']}</span>
+                    </div>
+                    {if floatval($forder['status'])==2}
+                    <div style="font-size: 14px;text-align: center;color: #E96A68;margin-top: 15px">您的好友已完成砍价</div>
+                    {elseif  floatval($forder['status'])==6}
+                    <div style="font-size: 14px;text-align: center;color: #E96A68;margin-top: 15px">您的好友未及时完成砍价，请您再帮帮他吧！</div>
+                    <div class="s_btns flex flex_j_center" style="margin-top: 10px">
+                        <div onclick="goIndex()">我 也 要 抢</div>
+                    </div>
+                    {else}
+                    <div style="font-size: 14px;text-align: center;color: #E96A68;margin-top: 15px">您的好友在活动中抢到一张门票</div>
+                    <div style="font-size: 14px;text-align: center;color: #E96A68;margin-bottom: 20px">快来帮他砍价吧!</div>
+                    {/if}
+                    {if  floatval($forder['status'])!=6}
+                    <div class="s_btns flex flex_j_between">
+                        {if floatval($forder['status'])==1}
+                        <div onclick="helpCut()">帮 他 砍 价</div>
+                        {else}
+                        <div>帮 他 砍 价</div>
+                        {/if}
+                        <div onclick="goIndex()">我 也 要 抢</div>
+                    </div>
+                    {/if}
+                    <img style="width: 100%;margin-top: 10px;" src="http://qiniu.longyue8.com/ticketdysp4_title1.png">
+                    <div class="list">
+                        {loop $forder['cut'] $fcv}
+                        <div class="detail flex flex_a_center">
+                            <img style="width: 32px;border-radius: 50%;margin-right: 5px;" src="{$fcv['avatar']}" alt="">
+                            <div class="flex1" style="font-size: 10px;border-left: 1px solid #777;padding-left: 5px;">
+                                <div>{$fcv['nickname']}</div>
+                                <div>{php echo date('Y-m-d',$fcv['createtime'])}</div>
+                            </div>
+                            <div style="color:#E96A68;font-size: 12px"><span style="color: red">帮砍了</span> {$fcv['price']}元</div>
+                        </div>
+                        {/loop}
+                    </div>
+                </div>
+                {/if}
+            {else}
+            <div class="s_content">
+                <img style="border-radius: 50%;width: 60px;margin: 0 auto;margin-top: 5px;" src="{$forder['avatar']}" alt="">
+                <div style="text-align: center;font-size: 14px;">{$forder['nickname']}</div>
+                <hr style="margin: 10px 0">
+                <div class="text_center" style="margin-bottom: 4px">联 系 方 式</div>
+                <div class="text_center" style="margin-bottom: 4px">{$forder['mobile']}</div>
+                <div class="text_center" style="margin-bottom: 4px;margin-top: 15px">观 看 区 域</div>
+                <div class="text_center" style="margin-bottom: 4px">{$forder['title']}</div>
+                <div class="s_btns flex flex_j_between" style="margin-top: 20px">
+                    <div onclick="helpCheck()">确 认 核 销</div>
+                    <div onclick="openScan()">继 续 核 销</div>
+                </div>
+            </div>
+            {/if}
+            <img src="http://qiniu.longyue8.com/ticketdysp1_img1.png" class="ani resize img1" swiper-animate-effect="fadeInLeft" swiper-animate-duration="1.5s" swiper-animate-delay="0.3s">
+        </section>
+    </div>
+
+    <div class="swiper-pagination" style="display: none"></div>
+    <div class="tips"></div>
+</div>
+<script>
+    document.addEventListener('DOUMIontentLoaded', function () {
+        function audioAutoPlay() {
+            var audio = document.getElementById('audiojs');
+            audio.play();
+            document.addEventListener("WeixinJSBridgeReady", function () {
+                audio.play();
+            }, false);
+        }
+        audioAutoPlay();
+    });
+    if (/i(Phone|P(o|a)d)/.test(navigator.userAgent)) {
+        $(document).one('touchstart',
+            function(e) {
+                $('#audiojs').get(0).touchstart = true;
+                $('#audiojs').get(0).play();
+                return false;
+            });
+    }
+    var audio = document.getElementById('audiojs');
+    $('#music').click(function(){
+        if(audio.paused){
+            audio.play();
+            $(this).attr('class','music muc')
+        }else{
+            audio.pause();
+            $(this).attr('class','music')
+        }
+    });
+
+    new QRCode(document.getElementById("qrcode"), location.href+'&hexiao=1');  // 设置要生成二维码的链接
+</script>
+<script>
+
+
+
+    // 提示
+    function tips(txt,timer){
+        $('.tips').html(txt).fadeIn();
+        setTimeout(function(){$('.tips').fadeOut()},timer||1500);
+    }
+    function openScan() {
+        wx.scanQRCode({
+            needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+            scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+        });
+    }
+    function goIndex(){
+        location.href="{php echo $this->createMobileUrl('index')}"
+    }
+    function helpCut(){
+        $.post(
+            "{php echo $this->createMobileUrl('index',array('op' =>'cut'))}",
+            {
+                "order_id":"{$forder['id']}"
+            },
+            function (data) {
+                tips(data.message);
+                if(data.errno==0){
+                    setTimeout(function () {
+                       location.reload()
+                    },1500)
+                }
+            },'json'
+        )
+    }
+    function helpCheck(){
+        $.post(
+            "{php echo $this->createMobileUrl('index',array('op' =>'check'))}",
+            {
+                "order_id":"{$forder['id']}"
+            },
+            function (data) {
+                tips(data.message);
+                if(data.errno==0){
+                    setTimeout(function () {
+                       location.reload()
+                    },1500)
+                }
+            },'json'
+        )
+    }
+    console.log({php echo json_encode($forder)})
+</script>
+{template 'common/footer'}

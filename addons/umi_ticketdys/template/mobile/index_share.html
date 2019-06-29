@@ -1,0 +1,603 @@
+{template 'header'}
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'/>
+<link rel="stylesheet" href="{YOUMI_URL_APP}css/swiper.min.css">
+<link rel="stylesheet" href="{YOUMI_URL_APP}css/animate.min.css">
+<script src="{YOUMI_URL_APP}js/swiper.min.js"></script>
+<script src="{YOUMI_URL_APP}js/swiper.animate.min.js"></script>
+
+<style>
+    html,body{
+        height:100%;
+    }
+    body{
+        font-family:"microsoft yahei";
+        margin: 0;
+    }
+    .swiper-container {
+        width: 100%;
+        height: 100%;
+    }
+
+    .swiper-slide{
+        width:100%;
+        height:100%;
+    }
+    .swiper-slide1{
+        background:url({php echo tomedia($setting['bg1'])}) no-repeat left top;
+        background-size: 100% 100%;
+    }
+    .swiper-slide2{
+        background:url({php echo tomedia($setting['bg2'])}) no-repeat left top;
+        background-size: 100% 100%;
+    }
+    .swiper-slide3{
+        background:url({php echo tomedia($setting['bg3'])}) no-repeat left top;
+        background-size: 100% 100%;
+    }
+    .bg_fixed{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.65);
+        z-index: 5;
+    }
+    .bg_fixed1{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.65);
+        z-index: 40;
+    }
+    .bg_fixed2{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.65);
+        z-index: 80;
+    }
+    img{
+        display:block;
+    }
+    .swiper-pagination-bullet {
+        width: 6px;
+        height: 6px;
+        background: #fff;
+        opacity: .4;
+    }
+    .swiper-pagination-bullet-active {
+        opacity: 1;
+    }
+    @-webkit-keyframes start {
+        0%,30% {opacity: 0;-webkit-transform: translate(0,10px);}
+        60% {opacity: 1;-webkit-transform: translate(0,0);}
+        100% {opacity: 0;-webkit-transform: translate(0,-8px);}
+    }
+    @-moz-keyframes start {
+        0%,30% {opacity: 0;-moz-transform: translate(0,10px);}
+        60% {opacity: 1;-moz-transform: translate(0,0);}
+        100% {opacity: 0;-moz-transform: translate(0,-8px);}
+    }
+    @keyframes start {
+        0%,30% {opacity: 0;transform: translate(0,10px);}
+        60% {opacity: 1;transform: translate(0,0);}
+        100% {opacity: 0;transform: translate(0,-8px);}
+    }
+    @keyframes tm1 {
+        0% {transform: translateX(180%);}
+        100% {transform: translateX(-130%);}
+    }
+    @keyframes tm2 {
+        0% {transform: translateX(160%);}
+        100% {transform: translateX(-130%);}
+    }
+    .ani{
+        position:absolute;
+        z-index: 3;
+    }
+    .array{
+        position:absolute;
+        z-index:10;
+        -webkit-animation: start 1.5s infinite ease-in-out;
+        width: 8%;
+        bottom: 1%;
+        right:0;
+    }
+
+    /*音乐*/
+
+    @-webkit-keyframes change {
+        from {
+            transform: rotate(0deg)
+        }
+        to {
+            transform: rotate(360deg)
+        }
+    }
+    @-webkit-keyframes point {
+        from {
+            opacity: 0.2
+        }
+        to {
+            opacity: 1
+        }
+    }
+    .music{
+        position: fixed;
+        right: 20px;
+        top: 10%;
+        border:1px solid #fff;
+        z-index: 20;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: url(http://qiniu.longyue8.com/tgaaa.png) no-repeat;
+        background-size: cover;
+        cursor: pointer;
+    }
+    .muc{
+        background: url(http://qiniu.longyue8.com/tgaaa.gif) no-repeat;
+        background-size: cover;
+        animation: change 1s linear 0s infinite;
+        -moz-animation: change 1s linear 0s infinite;
+        -webkit-animation: change 1s linear 0s infinite;
+        -o-animation: change 1s linear 0s infinite;
+    }
+    .tips{
+        width: 40%;
+        position: fixed;
+        top: 30%;
+        left: 30%;
+        padding: 10px;
+        background: #aaa;
+        color: #fff;
+        z-index: 999;
+        text-align: center;
+        border-radius: 10px;
+        display: none;
+    }
+    .text-center.footer{
+        display: none;
+    }
+
+
+    .flex{
+        display: flex;
+        display: -webkit-flex;
+    }
+    .flex_j_center{
+        justify-content: center;
+        -webkit-justify-content: center;
+    }
+    .flex_j_around{
+        justify-content: space-around;
+        -webkit-justify-content: space-around;
+    }
+    .flex_j_between{
+        justify-content: space-between;
+        -webkit-justify-content: space-between;
+    }
+    .flex_a_center{
+        align-items: center;
+        -webkit-align-items: center;
+    }
+    .flex_wrap{
+      flex-wrap: wrap;
+      -webkit-flex-wrap: wrap;
+    }
+
+    .swiper-slide1 .logo1,.swiper-slide3 .logo1{
+        width: 40%;
+        top: 2%;
+        left: 0;
+    }
+    .swiper-slide1 .logo2,.swiper-slide3 .logo2{
+        width: 40%;
+        top: 2%;
+        right: 1%;
+    }
+    .swiper-slide1 .title1{
+        width: 16%;
+        top: 4%;
+        left: 42%;
+    }
+    .swiper-slide1 .title2{
+        width: 34%;
+        top: 39%;
+        left: 33%;
+    }
+    .swiper-slide1 .title3{
+        width: 16%;
+        top: 52%;
+        left: 42%;
+    }
+    .swiper-slide1 .title4{
+        width: 25%;
+        top: 67%;
+        left: 36%;
+    }
+    .swiper-slide1 .img1{
+        width: 29%;
+        top: 18%;
+        left: 60%;
+    }
+    .swiper-slide1 .img2{
+        width: 46%;
+        top: 63%;
+        left: 2%;
+        z-index: 1;
+    }
+    .swiper-slide1 .bottom{
+        width: 100%;
+        bottom: 0;
+        left: 0;
+    }
+    .swiper-slide2 .title1{
+        width: 36%;
+        left: 9%;
+        top: 8%;
+    }
+    .swiper-slide2 .img1{
+        width: 77%;
+        right: 0;
+        top: 22%;
+    }
+    .swiper-slide2 .img2{
+        width: 30%;
+        left: 37%;
+        top: 58%;
+        z-index: 5;
+    }
+    .swiper-slide3 .title1{
+        width: 100%;
+        left: 0;
+        top: 6%;
+    }
+    .swiper-slide3 .img1{
+        width: 100%;
+        right: 0;
+        top: 26%;
+    }
+    .swiper-slide3 .btn1{
+        width: 25%;
+        left: 14%;
+        top: 90%;
+        z-index: 5;
+    }
+    .swiper-slide3 .btn2{
+        width: 25%;
+        left: 60%;
+        top: 90%;
+        z-index: 5;
+    }
+    .swiper-slide3 .rule{
+        width: 88%;
+        position: absolute;
+        left: 6%;
+        top: 5%;
+        background: #fff;
+        z-index: 10;
+        border-radius: 10px;
+        padding: 10px;
+        box-sizing: border-box;
+        display: none;
+    }
+
+    .ticket_form{
+        position: absolute;
+        background: #EBE8DF;
+        bottom: 0;
+        width: 100%;
+        left: 0;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        box-sizing: border-box;
+        z-index: 5;
+    }
+    .ticket_form>div{
+        padding: 0 6%;
+    }
+    .tf_top{
+        height: 30px;
+        background: #CFCEC9;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        margin-bottom: 10px;
+    }
+    .tf_top img{
+        width: 27px;
+        margin: 0 auto;
+    }
+    .tf_title{
+        font-size: 14px;
+        font-weight: 900;
+    }
+    .tf_val span{
+        margin: 8px 0 10px 0;
+        background: #fff;
+        height: 5vh;
+        font-size: 12px;
+        font-weight: 900;
+        display: inline-block;
+        border-radius: 8px;
+        border: 1px solid #fff;
+        width: 22vh;
+        text-align: center;
+        line-height: 5vh;
+    }
+    .tf_val span.active{
+        border: 1px solid #CC431C;
+    }
+    .tf_val span.hidden{
+        background: #ddd;
+        border: 1px solid #ddd;
+    }
+    .ticket_form input{
+        margin: 10px 0;
+        background: #fff;
+        height: 5vh;
+        font-size: 12px;
+        /*font-weight: 900;*/
+        display: inline-block;
+        border-radius: 10px;
+        border: 1px solid #fff;
+        flex: 1;
+        text-align: left;
+        line-height: 5vh;
+        padding-left: 4vh;
+    }
+    input::placeholder{
+        color: #aaa;
+    }
+    .ticket_btn,.ticket_btn2{
+        background: #fff;
+        text-align: center;
+        margin: 3% 6%;
+        padding: 2%;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 900;
+        color: #E55351;
+        margin-bottom: 6%;
+        height: 6vh;
+        line-height: 6vh;
+    }
+    .area span{
+        margin: 5px 0;
+    }
+    .code{
+        position: fixed;
+        top: 14%;
+        width: 100%;
+        left: 0;
+        z-index: 50;
+    }
+    .s_share{
+        position: fixed;
+        right: 0;
+        top: 2%;
+        z-index: 90;
+        width: 21%;
+    }
+</style>
+</head>
+
+<body>
+<div class="swiper-container">
+    <div id="music" class="music muc">
+        <audio id="audiojs" src="{$setting['music']}" autoplay loop></audio>
+    </div>
+    <div class="bg_fixed2" onclick="goHelp()"></div>
+    <img class="s_share" src="http://qiniu.longyue8.com/ticketdysp5_share.png" alt="">
+    {if $fans['follow']=='0'}
+    <div class="bg_fixed1"></div>
+    <img class="code" src="{php echo tomedia($setting['code'])}" alt="">
+    {/if}
+    <div class="swiper-wrapper">
+        <section class="swiper-slide swiper-slide3">
+
+            <div class="bg_fixed"></div>
+            <img onclick="$('.bg_fixed,.rule').fadeOut()" class="rule" src="{php echo tomedia($setting['rule'])}" alt="">
+            <div class="ticket_form">
+                <div onclick="$('.bg_fixed').fadeOut();$('.ticket_form').slideUp()" class="tf_top"><img src="http://qiniu.longyue8.com/ticketdysp3_xia.png" alt=""></div>
+                <div>
+                    <div class="tf_title">日 期：</div>
+                    <div class="tf_val">
+                        <span class="active">2019 . 06 . 22</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="tf_title">时 间：</div>
+                    <div class="tf_val">
+                        <span class="active">19: 30-21: 00</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="tf_title">区 域：</div>
+                    <div class="area tf_val flex flex_j_between flex_wrap">
+                        {loop $prizes $pv}
+                        <span data-id="{$pv['id']}" class="{if $pv['num']==0}hidden{else}choose{/if} {if $order['prize_id']==$pv['id']}active{/if}">{$pv['typename']} | {$pv['price']}</span>
+                        {/loop}
+                    </div>
+                </div>
+                <div>
+                    <div class="tf_title">姓 名：</div>
+                    <div class="flex flex_a_center">
+                        <img style="width: 18px;margin: 0 15px;" src="http://qiniu.longyue8.com/ticketdysp3_edit.png" alt="">
+                        <input class="realname" type="text" maxlength="8" placeholder="请输入您的姓名" value="{$order['realname']}">
+                    </div>
+                </div>
+                <div>
+                    <div class="tf_title">电 话：</div>
+                    <div class="flex flex_a_center">
+                        <img style="width: 18px;margin: 0 15px;" src="http://qiniu.longyue8.com/ticketdysp3_edit.png" alt="">
+                        <input class="mobile" type="tel" maxlength="11" placeholder="请输入您的联系方式" value="{$order['mobile']}">
+                    </div>
+                </div>
+
+                <div class="ticket_btn" style="{if $order}display: none{/if}">抢 票</div>
+                <div class="ticket_btn2" style="color: #fff;background: #5F5F5F;{if empty($order)}display: none{/if}">点击右上角分享给好友帮忙砍价</div>
+            </div>
+        </section>
+    </div>
+
+    <div class="swiper-pagination" style="display: none"></div>
+    <div class="tips"></div>
+</div>
+<script>
+
+    document.addEventListener('DOUMIontentLoaded', function () {
+        function audioAutoPlay() {
+            var audio = document.getElementById('audiojs');
+            audio.play();
+            document.addEventListener("WeixinJSBridgeReady", function () {
+                audio.play();
+            }, false);
+        }
+        audioAutoPlay();
+    });
+    if (/i(Phone|P(o|a)d)/.test(navigator.userAgent)) {
+        $(document).one('touchstart',
+            function(e) {
+                $('#audiojs').get(0).touchstart = true;
+                $('#audiojs').get(0).play();
+                return false;
+            });
+    }
+    var audio = document.getElementById('audiojs');
+    $('#music').click(function(){
+        if(audio.paused){
+            audio.play();
+            $(this).attr('class','music muc')
+        }else{
+            audio.pause();
+            $(this).attr('class','music')
+        }
+    });
+</script>
+<script>
+
+    scaleW=window.innerWidth/320;
+    scaleH=window.innerHeight/480;
+    var resizes = document.querySelectorAll('.resize');
+
+    var mySwiper = new Swiper ('.swiper-container', {
+        direction : 'vertical',
+        pagination: '.swiper-pagination',
+        //virtualTranslate : true,
+        mousewheelControl : true,
+        onInit: function(swiper){
+            swiperAnimateCache(swiper);
+            swiperAnimate(swiper);
+        },
+        onSlideChangeEnd: function(swiper){
+            swiperAnimate(swiper);
+        },
+        onTransitionEnd: function(swiper){
+            swiperAnimate(swiper);
+        },
+
+
+        watchSlidesProgress: true,
+
+        onProgress: function(swiper){
+            for (var i = 0; i < swiper.slides.length; i++){
+                var slide = swiper.slides[i];
+                var progress = slide.progress;
+                var translate = progress*swiper.height/4;
+                scale = 1 - Math.min(Math.abs(progress * 0.5), 1);
+                var opacity = 1 - Math.min(Math.abs(progress/2),0.5);
+                slide.style.opacity = opacity;
+                es = slide.style;
+                es.webkitTransform = es.MsTransform = es.msTransform = es.MozTransform = es.OTransform = es.transform = 'translate3d(0,'+translate+'px,-'+translate+'px) scaleY(' + scale + ')';
+            }
+        },
+
+        onSetTransition: function(swiper, speed) {
+            for (var i = 0; i < swiper.slides.length; i++){
+                es = swiper.slides[i].style;
+                es.webkitTransitionDuration = es.MsTransitionDuration = es.msTransitionDuration = es.MozTransitionDuration = es.OTransitionDuration = es.transitionDuration = speed + 'ms';
+            }
+        },
+    })
+
+
+    $('.area').on('click','.choose',function () {
+        $('.area .choose').removeClass('active');
+        $(this).addClass('active');
+    })
+
+    $('.ticket_btn').click(function () {
+        var that=this;
+        var realname=$(".realname").val();
+        var mobile=$(".mobile").val();
+        var prize_id=$('.area .active').attr('data-id');
+        if(!prize_id){
+            tips('请选择区域');
+            return false;
+        }
+        if(!realname){
+            tips('请输入姓名');
+            return false;
+        }
+        if(!mobile){
+            tips('请输入手机号');
+            return false;
+        }
+        var myreg = /^(((13[0-9]{1})|(14[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[0-9]{1})|(18[0-9]{1})|(19[0-9]{1}))+\d{8})$/;
+        if(!myreg.test(mobile))
+        {
+            tips('请输入有效的手机号码');
+            return false;
+        }
+        $.post(
+            "{php echo $this->createMobileUrl('index',array('op' =>'apply'))}",
+            {
+                'realname':realname,
+                'mobile':mobile,
+                'prize_id':prize_id,
+            },
+            function (data) {
+                tips(data.message);
+                if(data.errno==0){
+                    // $(that).hide().next().show()
+                    setTimeout(function () {
+                        location.href="{php echo $this->createMobileUrl('index',array('op' =>'helping'))}&order_id="+data.data.id;
+                    },2000)
+                    // var $_share = {php echo json_encode($_share)};
+                    // if (typeof sharedata2 == 'undefined') {
+                    //     sharedata2 = $_share;
+                    // } else {
+                    //     sharedata2['title'] = sharedata2['title'] || $_share['title'];
+                    // }
+                    // sharedata2['link'] = "{php echo $this->createMobileUrl('index',array('op' =>'helping'))}&order_id="+data.data.id;
+                    // console.log(sharedata2);
+                    // alert(sharedata2['link'])
+                    // wx.ready(function () {
+                    //     wx.onMenuShareAppMessage(sharedata2);
+                    //     wx.onMenuShareTimeline(sharedata2);
+                    //     wx.onMenuShareQQ(sharedata2);
+                    //     wx.onMenuShareWeibo(sharedata2);
+                    // });
+                }
+            },'json'
+        )
+    });
+    // 提示
+    function tips(txt,timer){
+        $('.tips').html(txt).fadeIn();
+        setTimeout(function(){$('.tips').fadeOut()},timer||1500);
+    }
+    function goHelp(){
+        location.href="{php echo $this->createMobileUrl('index',array('op' =>'helping'))}&order_id={$order['id']}";
+    }
+    console.log({php echo json_encode($order)})
+    console.log({php echo json_encode($member)})
+    console.log({php echo json_encode($fans)})
+</script>
+{template 'common/footer'}

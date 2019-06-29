@@ -247,6 +247,7 @@ if ($op == 'sign_up') {
     $cut['nprice'] = '';
     $cut['status'] = '1';
     $cut['realname'] = trim($_GPC['realname']);
+    $cut['avatar'] =  $member['avatar'];
     $cut['mobile'] = trim($_GPC['mobile']);
     $cut['userinfo'] = $_GPC['userinfo'];
 

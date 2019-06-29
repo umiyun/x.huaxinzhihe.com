@@ -10,12 +10,22 @@
         width: 80%;
         left: 10%;
         z-index: 20;
+        box-sizing: border-box;
         display: none;
+    }
+    input[type=color], input[type=date], input[type=datetime-local], input[type=datetime], input[type=email], input[type=month], input[type=number], input[type=password], input[type=search], input[type=tel], input[type=text], input[type=time], input[type=url], input[type=week], select, textarea{
+        border: 1px solid transparent;
+        text-align: center;
+        margin: 0 2%;
+        height: 30px;
+        padding: 5px;
+        background: transparent;
+        width: 100%;
     }
     .open_signup .icon-Close,.open_userinfo .icon-Close{
         position: absolute;
         left: 44%;
-        bottom: -15%;
+        bottom: -20%;
         z-index: 20;
         font-size: 40px;
         color: #fff;

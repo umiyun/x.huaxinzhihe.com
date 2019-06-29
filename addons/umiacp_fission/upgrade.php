@@ -1,6 +1,6 @@
 <?php
 //自己删除上面的符号
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_fission_activity` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_fission_activity` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `shop_id` int(11) NOT NULL DEFAULT '0' COMMENT '商家',
@@ -14,11 +14,11 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_fission_activity` (
   `endtime` int(11) NOT NULL COMMENT '活动结束时间',
   `preferential_title` varchar(255) NOT NULL COMMENT '活动优惠标题',
   `preferential_val` text COMMENT '活动优惠内容',
-  `signstatus` varchar(100) NOT NULL COMMENT '活动描述标题',
+  `signstatus` varchar(100) NOT NULL COMMENT '限制报名人数, 1:不限制;2:限制',
   `needmoney` varchar(100) DEFAULT NULL COMMENT '费用',
   `desc_title` varchar(255) DEFAULT NULL,
   `desc_val` text COMMENT '活动描述内容',
-  `signnum` int(11) NOT NULL COMMENT '活动规则标题',
+  `signnum` int(11) NOT NULL COMMENT '限制报名人数',
   `rule_title` varchar(255) DEFAULT NULL,
   `rule_val` text COMMENT '活动规则内容',
   `shop_title` varchar(255) NOT NULL COMMENT '商家介绍标题',
@@ -59,9 +59,11 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_fission_activity` (
   KEY `uniacid` (`uniacid`) USING BTREE,
   KEY `title` (`title`) USING BTREE,
   KEY `shop_id` (`shop_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=143 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=151 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_fission_activity','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_activity')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -77,11 +79,11 @@ if(!pdo_fieldexists('umiacp_fission_activity','starttime')) {pdo_query("ALTER TA
 if(!pdo_fieldexists('umiacp_fission_activity','endtime')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_activity')." ADD   `endtime` int(11) NOT NULL COMMENT '活动结束时间'");}
 if(!pdo_fieldexists('umiacp_fission_activity','preferential_title')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_activity')." ADD   `preferential_title` varchar(255) NOT NULL COMMENT '活动优惠标题'");}
 if(!pdo_fieldexists('umiacp_fission_activity','preferential_val')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_activity')." ADD   `preferential_val` text COMMENT '活动优惠内容'");}
-if(!pdo_fieldexists('umiacp_fission_activity','signstatus')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_activity')." ADD   `signstatus` varchar(100) NOT NULL COMMENT '活动描述标题'");}
+if(!pdo_fieldexists('umiacp_fission_activity','signstatus')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_activity')." ADD   `signstatus` varchar(100) NOT NULL COMMENT '限制报名人数, 1:不限制;2:限制'");}
 if(!pdo_fieldexists('umiacp_fission_activity','needmoney')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_activity')." ADD   `needmoney` varchar(100) DEFAULT NULL COMMENT '费用'");}
 if(!pdo_fieldexists('umiacp_fission_activity','desc_title')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_activity')." ADD   `desc_title` varchar(255) DEFAULT NULL");}
 if(!pdo_fieldexists('umiacp_fission_activity','desc_val')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_activity')." ADD   `desc_val` text COMMENT '活动描述内容'");}
-if(!pdo_fieldexists('umiacp_fission_activity','signnum')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_activity')." ADD   `signnum` int(11) NOT NULL COMMENT '活动规则标题'");}
+if(!pdo_fieldexists('umiacp_fission_activity','signnum')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_activity')." ADD   `signnum` int(11) NOT NULL COMMENT '限制报名人数'");}
 if(!pdo_fieldexists('umiacp_fission_activity','rule_title')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_activity')." ADD   `rule_title` varchar(255) DEFAULT NULL");}
 if(!pdo_fieldexists('umiacp_fission_activity','rule_val')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_activity')." ADD   `rule_val` text COMMENT '活动规则内容'");}
 if(!pdo_fieldexists('umiacp_fission_activity','shop_title')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_activity')." ADD   `shop_title` varchar(255) NOT NULL COMMENT '商家介绍标题'");}
@@ -121,7 +123,7 @@ if(!pdo_fieldexists('umiacp_fission_activity','shop_code')) {pdo_query("ALTER TA
 if(!pdo_fieldexists('umiacp_fission_activity','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_activity')." ADD   PRIMARY KEY (`id`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_fission_activity','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_activity')." ADD   KEY `uniacid` (`uniacid`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_fission_activity','title')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_activity')." ADD   KEY `title` (`title`) USING BTREE");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_fission_cate` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_fission_cate` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `rank` int(11) NOT NULL DEFAULT '0',
@@ -135,7 +137,9 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_fission_cate` (
   KEY `title` (`title`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_fission_cate','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_cate')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -148,7 +152,7 @@ if(!pdo_fieldexists('umiacp_fission_cate','status')) {pdo_query("ALTER TABLE ".t
 if(!pdo_fieldexists('umiacp_fission_cate','createtime')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_cate')." ADD   `createtime` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间'");}
 if(!pdo_fieldexists('umiacp_fission_cate','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_cate')." ADD   PRIMARY KEY (`id`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_fission_cate','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_cate')." ADD   KEY `uniacid` (`uniacid`) USING BTREE");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_fission_complain` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_fission_complain` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `activity_id` int(11) NOT NULL DEFAULT '0' COMMENT '活动',
@@ -166,7 +170,9 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_fission_complain` (
   KEY `activity_id` (`activity_id`,`shop_id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=155 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_fission_complain','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_complain')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -183,7 +189,7 @@ if(!pdo_fieldexists('umiacp_fission_complain','status')) {pdo_query("ALTER TABLE
 if(!pdo_fieldexists('umiacp_fission_complain','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_complain')." ADD   PRIMARY KEY (`id`)");}
 if(!pdo_fieldexists('umiacp_fission_complain','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_complain')." ADD   KEY `uniacid` (`uniacid`)");}
 if(!pdo_fieldexists('umiacp_fission_complain','realname')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_complain')." ADD   KEY `realname` (`desc`,`mobile`) USING BTREE");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_fission_cut` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_fission_cut` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `mid` int(11) NOT NULL DEFAULT '0' COMMENT '砍价人',
@@ -203,15 +209,19 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_fission_cut` (
   `fmid` int(11) NOT NULL DEFAULT '0' COMMENT '上级',
   `share_num` int(11) NOT NULL DEFAULT '0',
   `commision` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `lottery_time` int(11) NOT NULL DEFAULT '0' COMMENT '核销时间',
+  `avatar` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `uniacid` (`uniacid`),
   KEY `mid` (`mid`),
   KEY `status` (`status`),
   KEY `realname` (`realname`,`mobile`) USING BTREE,
   KEY `activity_id` (`activity_id`,`goods_id`,`shop_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=181 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=383 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_fission_cut','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_cut')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -233,12 +243,14 @@ if(!pdo_fieldexists('umiacp_fission_cut','createtime')) {pdo_query("ALTER TABLE 
 if(!pdo_fieldexists('umiacp_fission_cut','fmid')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_cut')." ADD   `fmid` int(11) NOT NULL DEFAULT '0' COMMENT '上级'");}
 if(!pdo_fieldexists('umiacp_fission_cut','share_num')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_cut')." ADD   `share_num` int(11) NOT NULL DEFAULT '0'");}
 if(!pdo_fieldexists('umiacp_fission_cut','commision')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_cut')." ADD   `commision` decimal(10,2) NOT NULL DEFAULT '0.00'");}
+if(!pdo_fieldexists('umiacp_fission_cut','lottery_time')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_cut')." ADD   `lottery_time` int(11) NOT NULL DEFAULT '0' COMMENT '核销时间'");}
+if(!pdo_fieldexists('umiacp_fission_cut','avatar')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_cut')." ADD   `avatar` varchar(255) NOT NULL");}
 if(!pdo_fieldexists('umiacp_fission_cut','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_cut')." ADD   PRIMARY KEY (`id`)");}
 if(!pdo_fieldexists('umiacp_fission_cut','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_cut')." ADD   KEY `uniacid` (`uniacid`)");}
 if(!pdo_fieldexists('umiacp_fission_cut','mid')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_cut')." ADD   KEY `mid` (`mid`)");}
 if(!pdo_fieldexists('umiacp_fission_cut','status')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_cut')." ADD   KEY `status` (`status`)");}
 if(!pdo_fieldexists('umiacp_fission_cut','realname')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_cut')." ADD   KEY `realname` (`realname`,`mobile`) USING BTREE");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_fission_goods` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_fission_goods` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `mid` int(11) NOT NULL DEFAULT '0' COMMENT '用户',
@@ -262,7 +274,9 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_fission_goods` (
   KEY `activity_id` (`activity_id`,`shop_id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_fission_goods','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_goods')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -285,7 +299,7 @@ if(!pdo_fieldexists('umiacp_fission_goods','id')) {pdo_query("ALTER TABLE ".tabl
 if(!pdo_fieldexists('umiacp_fission_goods','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_goods')." ADD   KEY `uniacid` (`uniacid`)");}
 if(!pdo_fieldexists('umiacp_fission_goods','mid')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_goods')." ADD   KEY `mid` (`mid`)");}
 if(!pdo_fieldexists('umiacp_fission_goods','status')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_goods')." ADD   KEY `status` (`status`)");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_fission_log` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_fission_log` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `user_type` tinyint(3) NOT NULL DEFAULT '0' COMMENT '类型:1,后台;2,公众号;3,小程序;',
@@ -302,7 +316,9 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_fission_log` (
   KEY `mid` (`mid`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_fission_log','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_log')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -318,7 +334,7 @@ if(!pdo_fieldexists('umiacp_fission_log','id')) {pdo_query("ALTER TABLE ".tablen
 if(!pdo_fieldexists('umiacp_fission_log','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_log')." ADD   KEY `uniacid` (`uniacid`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_fission_log','type')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_log')." ADD   KEY `type` (`user_type`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_fission_log','uid')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_log')." ADD   KEY `uid` (`uid`) USING BTREE");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_fission_member` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_fission_member` (
   `mid` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `openid` varchar(255) NOT NULL COMMENT '用户',
@@ -338,9 +354,11 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_fission_member` (
   KEY `mobile` (`mobile`),
   KEY `status` (`status`),
   KEY `wxopenid` (`wxopenid`)
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_fission_member','mid')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_member')." ADD 
   `mid` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -361,7 +379,7 @@ if(!pdo_fieldexists('umiacp_fission_member','uniacid')) {pdo_query("ALTER TABLE 
 if(!pdo_fieldexists('umiacp_fission_member','openid')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_member')." ADD   KEY `openid` (`openid`,`wxopenid`)");}
 if(!pdo_fieldexists('umiacp_fission_member','mobile')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_member')." ADD   KEY `mobile` (`mobile`)");}
 if(!pdo_fieldexists('umiacp_fission_member','status')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_member')." ADD   KEY `status` (`status`)");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_fission_order` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_fission_order` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `fmid` int(11) NOT NULL DEFAULT '0' COMMENT '上级',
@@ -382,16 +400,20 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_fission_order` (
   `status` tinyint(3) NOT NULL DEFAULT '0' COMMENT '状态:1,待支付;2,已支付;3,已核销;4,已取消;5,申请退款;6,已退款;7已发送红包',
   `createtime` int(11) NOT NULL DEFAULT '0' COMMENT '下单时间',
   `send_status` int(3) NOT NULL DEFAULT '0' COMMENT '红包发送状态:0,未发送;1,已发送',
+  `send_result` varchar(255) NOT NULL DEFAULT '',
   `commission` decimal(10,2) DEFAULT '0.00' COMMENT '返现佣金',
+  `orderquery` tinyint(3) NOT NULL DEFAULT '0' COMMENT '更新支付错误订单',
   PRIMARY KEY (`id`),
   KEY `uniacid` (`uniacid`),
   KEY `tid` (`tid`),
   KEY `ordersn` (`ordersn`),
   KEY `status` (`status`),
   KEY `mid` (`mid`,`shop_id`,`activity_id`,`goods_id`,`cut_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=85 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=127 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_fission_order','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_order')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -414,13 +436,15 @@ if(!pdo_fieldexists('umiacp_fission_order','salertime')) {pdo_query("ALTER TABLE
 if(!pdo_fieldexists('umiacp_fission_order','status')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_order')." ADD   `status` tinyint(3) NOT NULL DEFAULT '0' COMMENT '状态:1,待支付;2,已支付;3,已核销;4,已取消;5,申请退款;6,已退款;7已发送红包'");}
 if(!pdo_fieldexists('umiacp_fission_order','createtime')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_order')." ADD   `createtime` int(11) NOT NULL DEFAULT '0' COMMENT '下单时间'");}
 if(!pdo_fieldexists('umiacp_fission_order','send_status')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_order')." ADD   `send_status` int(3) NOT NULL DEFAULT '0' COMMENT '红包发送状态:0,未发送;1,已发送'");}
+if(!pdo_fieldexists('umiacp_fission_order','send_result')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_order')." ADD   `send_result` varchar(255) NOT NULL DEFAULT ''");}
 if(!pdo_fieldexists('umiacp_fission_order','commission')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_order')." ADD   `commission` decimal(10,2) DEFAULT '0.00' COMMENT '返现佣金'");}
+if(!pdo_fieldexists('umiacp_fission_order','orderquery')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_order')." ADD   `orderquery` tinyint(3) NOT NULL DEFAULT '0' COMMENT '更新支付错误订单'");}
 if(!pdo_fieldexists('umiacp_fission_order','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_order')." ADD   PRIMARY KEY (`id`)");}
 if(!pdo_fieldexists('umiacp_fission_order','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_order')." ADD   KEY `uniacid` (`uniacid`)");}
 if(!pdo_fieldexists('umiacp_fission_order','tid')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_order')." ADD   KEY `tid` (`tid`)");}
 if(!pdo_fieldexists('umiacp_fission_order','ordersn')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_order')." ADD   KEY `ordersn` (`ordersn`)");}
 if(!pdo_fieldexists('umiacp_fission_order','status')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_order')." ADD   KEY `status` (`status`)");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_fission_puv` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_fission_puv` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `page` varchar(255) NOT NULL COMMENT '页面',
@@ -433,9 +457,11 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_fission_puv` (
   KEY `page` (`page`),
   KEY `goods_id` (`goods_id`),
   KEY `createtime` (`createtime`)
-) ENGINE=InnoDB AUTO_INCREMENT=140 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=198 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_fission_puv','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_puv')." ADD 
   `id` int(11) NOT NULL AUTO_INCREMENT");}
@@ -449,7 +475,7 @@ if(!pdo_fieldexists('umiacp_fission_puv','id')) {pdo_query("ALTER TABLE ".tablen
 if(!pdo_fieldexists('umiacp_fission_puv','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_puv')." ADD   KEY `uniacid` (`uniacid`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_fission_puv','page')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_puv')." ADD   KEY `page` (`page`)");}
 if(!pdo_fieldexists('umiacp_fission_puv','goods_id')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_puv')." ADD   KEY `goods_id` (`goods_id`)");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_fission_puv_record` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_fission_puv_record` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL,
   `openid` varchar(50) NOT NULL,
@@ -463,9 +489,11 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_fission_puv_record` (
   KEY `page` (`page`) USING BTREE,
   KEY `goods_id` (`goods_id`),
   KEY `createtime` (`createtime`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=3518 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4274 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_fission_puv_record','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_puv_record')." ADD 
   `id` int(11) NOT NULL AUTO_INCREMENT");}
@@ -480,7 +508,7 @@ if(!pdo_fieldexists('umiacp_fission_puv_record','uniacid')) {pdo_query("ALTER TA
 if(!pdo_fieldexists('umiacp_fission_puv_record','openid')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_puv_record')." ADD   KEY `openid` (`openid`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_fission_puv_record','page')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_puv_record')." ADD   KEY `page` (`page`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_fission_puv_record','goods_id')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_puv_record')." ADD   KEY `goods_id` (`goods_id`)");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_fission_record` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_fission_record` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `shop_id` int(11) NOT NULL DEFAULT '0' COMMENT '商家',
@@ -501,7 +529,9 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_fission_record` (
   KEY `activity_id` (`activity_id`,`goods_id`,`cut_id`,`shop_id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=144 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_fission_record','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_record')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -521,7 +551,7 @@ if(!pdo_fieldexists('umiacp_fission_record','id')) {pdo_query("ALTER TABLE ".tab
 if(!pdo_fieldexists('umiacp_fission_record','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_record')." ADD   KEY `uniacid` (`uniacid`)");}
 if(!pdo_fieldexists('umiacp_fission_record','mid')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_record')." ADD   KEY `mid` (`mid`)");}
 if(!pdo_fieldexists('umiacp_fission_record','status')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_record')." ADD   KEY `status` (`status`)");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_fission_saler` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_fission_saler` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `mid` int(11) NOT NULL DEFAULT '0' COMMENT '用户',
@@ -531,14 +561,17 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_fission_saler` (
   `mobile` varchar(255) NOT NULL COMMENT '电话',
   `status` tinyint(3) NOT NULL DEFAULT '0' COMMENT '状态:1,启用;0,禁用;',
   `createtime` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `activity_id` int(11) NOT NULL DEFAULT '0' COMMENT '子模块活动',
   PRIMARY KEY (`id`),
   KEY `uniacid` (`uniacid`),
   KEY `mid` (`mid`),
   KEY `status` (`status`),
   KEY `shop_id` (`shop_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_fission_saler','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_saler')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -550,11 +583,12 @@ if(!pdo_fieldexists('umiacp_fission_saler','realname')) {pdo_query("ALTER TABLE 
 if(!pdo_fieldexists('umiacp_fission_saler','mobile')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_saler')." ADD   `mobile` varchar(255) NOT NULL COMMENT '电话'");}
 if(!pdo_fieldexists('umiacp_fission_saler','status')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_saler')." ADD   `status` tinyint(3) NOT NULL DEFAULT '0' COMMENT '状态:1,启用;0,禁用;'");}
 if(!pdo_fieldexists('umiacp_fission_saler','createtime')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_saler')." ADD   `createtime` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间'");}
+if(!pdo_fieldexists('umiacp_fission_saler','activity_id')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_saler')." ADD   `activity_id` int(11) NOT NULL DEFAULT '0' COMMENT '子模块活动'");}
 if(!pdo_fieldexists('umiacp_fission_saler','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_saler')." ADD   PRIMARY KEY (`id`)");}
 if(!pdo_fieldexists('umiacp_fission_saler','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_saler')." ADD   KEY `uniacid` (`uniacid`)");}
 if(!pdo_fieldexists('umiacp_fission_saler','mid')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_saler')." ADD   KEY `mid` (`mid`)");}
 if(!pdo_fieldexists('umiacp_fission_saler','status')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_saler')." ADD   KEY `status` (`status`)");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_fission_setting` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_fission_setting` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `skey` varchar(255) NOT NULL COMMENT '键',
@@ -565,7 +599,9 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_fission_setting` (
   KEY `skey` (`skey`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_fission_setting','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_setting')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -575,3 +611,24 @@ if(!pdo_fieldexists('umiacp_fission_setting','svalue')) {pdo_query("ALTER TABLE 
 if(!pdo_fieldexists('umiacp_fission_setting','createtime')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_setting')." ADD   `createtime` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间'");}
 if(!pdo_fieldexists('umiacp_fission_setting','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_setting')." ADD   PRIMARY KEY (`id`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_fission_setting','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_setting')." ADD   KEY `uniacid` (`uniacid`) USING BTREE");}
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_fission_task` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `create_time` int(11) DEFAULT NULL,
+  `state` int(4) NOT NULL DEFAULT '0' COMMENT '启用状态 1启用',
+  `execute_time` int(11) DEFAULT NULL COMMENT '最后一次执行时间',
+  `execute_times` int(11) DEFAULT '0' COMMENT '执行次数',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8 COMMENT='活动宝定时任务';
+
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
+
+if(!pdo_fieldexists('umiacp_fission_task','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_task')." ADD 
+  `id` int(11) NOT NULL AUTO_INCREMENT");}
+if(!pdo_fieldexists('umiacp_fission_task','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_task')." ADD   `uniacid` int(11) DEFAULT NULL");}
+if(!pdo_fieldexists('umiacp_fission_task','create_time')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_task')." ADD   `create_time` int(11) DEFAULT NULL");}
+if(!pdo_fieldexists('umiacp_fission_task','state')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_task')." ADD   `state` int(4) NOT NULL DEFAULT '0' COMMENT '启用状态 1启用'");}
+if(!pdo_fieldexists('umiacp_fission_task','execute_time')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_task')." ADD   `execute_time` int(11) DEFAULT NULL COMMENT '最后一次执行时间'");}
+if(!pdo_fieldexists('umiacp_fission_task','execute_times')) {pdo_query("ALTER TABLE ".tablename('umiacp_fission_task')." ADD   `execute_times` int(11) DEFAULT '0' COMMENT '执行次数'");}

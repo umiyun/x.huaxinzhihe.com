@@ -344,7 +344,11 @@ if ($op == 'regional') {
 
 if ($op == 'detail') {
     $group_id = $_GPC['id'];
+
     $activity_id = $_GPC['activity_id'];
+    if(empty($group_id)){
+        header('Location:' . $_W['siteroot'] . "app/" . $this->createMobileUrl('index',['activity_id'=>$activity_id]));
+    }
     $members = pdo_getall(YOUMI_NAME . '_order', ['group_id' => $group_id, 'activity_id' => $activity_id, 'status' => [2, 3]], ['avatar', 'nickname', 'leader']);
     $activity = pdo_get(YOUMI_NAME . '_activity', ['id' => $activity_id]);
     $group = pdo_get(YOUMI_NAME . '_group', ['id' => $group_id]);

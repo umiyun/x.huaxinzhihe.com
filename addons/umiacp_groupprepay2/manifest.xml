@@ -3,7 +3,7 @@
 	<application setting="false">
 		<name><![CDATA[活动宝百人团]]></name>
 		<identifie><![CDATA[umiacp_groupprepay2]]></identifie>
-		<version><![CDATA[1.0.0]]></version>
+		<version><![CDATA[1.0.5]]></version>
 		<type><![CDATA[biz]]></type>
 		<ability><![CDATA[活动宝百人团]]></ability>
 		<description><![CDATA[同路人QQ群：758511946]]></description>
@@ -34,7 +34,11 @@
 		</cover>
 		<menu>
 			<entry title="炮灰域名" do="system" state="" direct="false" />
+			<entry title="活动管理" do="activity" state="" direct="false" />
+			<entry title="订单管理" do="order" state="" direct="false" />
+			<!--<entry title="核销员管理" do="saler" state="" direct="false" />-->
 			<entry title="用户管理" do="member" state="" direct="false" />
+			<entry title="投诉管理" do="complain" state="" direct="false" />
 		</menu>
 	</bindings>
 	<permissions>

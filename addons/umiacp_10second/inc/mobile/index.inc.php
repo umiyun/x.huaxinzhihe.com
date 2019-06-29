@@ -328,6 +328,7 @@ if ($op == 'start_game') {
         $reward['wishing'] = $activity['wishing'];
         $reward['act_name'] = $activity['act_name'];
         $reward['createtime'] = time();
+        $reward['cut_id'] = $member_a['id'];
         pdo_insert(YOUMI_NAME . '_reward', $reward);
         $reward['id'] = pdo_insertid();
     }else{

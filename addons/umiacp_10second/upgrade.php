@@ -1,6 +1,6 @@
 <?php
 //自己删除上面的符号
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_activity` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_10second_activity` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `shop_id` int(11) NOT NULL DEFAULT '0' COMMENT '商家',
@@ -58,9 +58,11 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_activity` (
   KEY `uniacid` (`uniacid`) USING BTREE,
   KEY `title` (`title`) USING BTREE,
   KEY `shop_id` (`shop_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=140 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=141 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_10second_activity','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_activity')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -119,7 +121,7 @@ if(!pdo_fieldexists('umiacp_10second_activity','shop_code')) {pdo_query("ALTER T
 if(!pdo_fieldexists('umiacp_10second_activity','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_activity')." ADD   PRIMARY KEY (`id`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_10second_activity','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_activity')." ADD   KEY `uniacid` (`uniacid`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_10second_activity','title')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_activity')." ADD   KEY `title` (`title`) USING BTREE");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_activity_prize` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_10second_activity_prize` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `activity_id` int(11) NOT NULL COMMENT '活动',
@@ -134,9 +136,11 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_activity_prize` (
   KEY `uniacid` (`uniacid`) USING BTREE,
   KEY `status` (`status`) USING BTREE,
   KEY `activity_id` (`activity_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_10second_activity_prize','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_activity_prize')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -152,7 +156,7 @@ if(!pdo_fieldexists('umiacp_10second_activity_prize','shop_id')) {pdo_query("ALT
 if(!pdo_fieldexists('umiacp_10second_activity_prize','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_activity_prize')." ADD   PRIMARY KEY (`id`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_10second_activity_prize','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_activity_prize')." ADD   KEY `uniacid` (`uniacid`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_10second_activity_prize','status')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_activity_prize')." ADD   KEY `status` (`status`) USING BTREE");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_boost` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_10second_boost` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `openid` varchar(255) NOT NULL COMMENT '助力人',
@@ -171,7 +175,9 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_boost` (
   KEY `day` (`day`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_10second_boost','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_boost')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -189,7 +195,7 @@ if(!pdo_fieldexists('umiacp_10second_boost','openid')) {pdo_query("ALTER TABLE "
 if(!pdo_fieldexists('umiacp_10second_boost','fopenid')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_boost')." ADD   KEY `fopenid` (`fopenid`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_10second_boost','status')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_boost')." ADD   KEY `status` (`status`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_10second_boost','activetime')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_boost')." ADD   KEY `activetime` (`activetime`) USING BTREE");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_cate` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_10second_cate` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `title` varchar(255) NOT NULL COMMENT '分类名',
@@ -201,7 +207,9 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_cate` (
   KEY `title` (`title`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_10second_cate','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_cate')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -212,7 +220,7 @@ if(!pdo_fieldexists('umiacp_10second_cate','status')) {pdo_query("ALTER TABLE ".
 if(!pdo_fieldexists('umiacp_10second_cate','createtime')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_cate')." ADD   `createtime` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间'");}
 if(!pdo_fieldexists('umiacp_10second_cate','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_cate')." ADD   PRIMARY KEY (`id`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_10second_cate','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_cate')." ADD   KEY `uniacid` (`uniacid`) USING BTREE");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_complain` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_10second_complain` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `activity_id` int(11) NOT NULL DEFAULT '0' COMMENT '活动',
@@ -230,7 +238,9 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_complain` (
   KEY `activity_id` (`activity_id`,`shop_id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=155 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_10second_complain','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_complain')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -247,7 +257,7 @@ if(!pdo_fieldexists('umiacp_10second_complain','status')) {pdo_query("ALTER TABL
 if(!pdo_fieldexists('umiacp_10second_complain','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_complain')." ADD   PRIMARY KEY (`id`)");}
 if(!pdo_fieldexists('umiacp_10second_complain','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_complain')." ADD   KEY `uniacid` (`uniacid`)");}
 if(!pdo_fieldexists('umiacp_10second_complain','realname')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_complain')." ADD   KEY `realname` (`desc`,`mobile`) USING BTREE");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_cut` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_10second_cut` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `mid` int(11) NOT NULL DEFAULT '0' COMMENT '砍价人',
@@ -264,15 +274,18 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_cut` (
   `userinfo` text COMMENT '具体用户信息',
   `status` tinyint(3) NOT NULL DEFAULT '0' COMMENT '状态:1,已报名;2,已支付;3,已购买;4已取消',
   `createtime` int(11) NOT NULL DEFAULT '0' COMMENT '发起时间',
+  `lottery_time` int(11) NOT NULL DEFAULT '0' COMMENT '核销时间',
   PRIMARY KEY (`id`),
   KEY `uniacid` (`uniacid`),
   KEY `mid` (`mid`),
   KEY `status` (`status`),
   KEY `realname` (`realname`,`mobile`) USING BTREE,
   KEY `activity_id` (`activity_id`,`goods_id`,`shop_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=162 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=165 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_10second_cut','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_cut')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -291,12 +304,13 @@ if(!pdo_fieldexists('umiacp_10second_cut','mobile')) {pdo_query("ALTER TABLE ".t
 if(!pdo_fieldexists('umiacp_10second_cut','userinfo')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_cut')." ADD   `userinfo` text COMMENT '具体用户信息'");}
 if(!pdo_fieldexists('umiacp_10second_cut','status')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_cut')." ADD   `status` tinyint(3) NOT NULL DEFAULT '0' COMMENT '状态:1,已报名;2,已支付;3,已购买;4已取消'");}
 if(!pdo_fieldexists('umiacp_10second_cut','createtime')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_cut')." ADD   `createtime` int(11) NOT NULL DEFAULT '0' COMMENT '发起时间'");}
+if(!pdo_fieldexists('umiacp_10second_cut','lottery_time')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_cut')." ADD   `lottery_time` int(11) NOT NULL DEFAULT '0' COMMENT '核销时间'");}
 if(!pdo_fieldexists('umiacp_10second_cut','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_cut')." ADD   PRIMARY KEY (`id`)");}
 if(!pdo_fieldexists('umiacp_10second_cut','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_cut')." ADD   KEY `uniacid` (`uniacid`)");}
 if(!pdo_fieldexists('umiacp_10second_cut','mid')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_cut')." ADD   KEY `mid` (`mid`)");}
 if(!pdo_fieldexists('umiacp_10second_cut','status')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_cut')." ADD   KEY `status` (`status`)");}
 if(!pdo_fieldexists('umiacp_10second_cut','realname')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_cut')." ADD   KEY `realname` (`realname`,`mobile`) USING BTREE");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_goods` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_10second_goods` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `mid` int(11) NOT NULL DEFAULT '0' COMMENT '用户',
@@ -320,7 +334,9 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_goods` (
   KEY `activity_id` (`activity_id`,`shop_id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_10second_goods','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_goods')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -343,7 +359,7 @@ if(!pdo_fieldexists('umiacp_10second_goods','id')) {pdo_query("ALTER TABLE ".tab
 if(!pdo_fieldexists('umiacp_10second_goods','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_goods')." ADD   KEY `uniacid` (`uniacid`)");}
 if(!pdo_fieldexists('umiacp_10second_goods','mid')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_goods')." ADD   KEY `mid` (`mid`)");}
 if(!pdo_fieldexists('umiacp_10second_goods','status')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_goods')." ADD   KEY `status` (`status`)");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_log` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_10second_log` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `user_type` tinyint(3) NOT NULL DEFAULT '0' COMMENT '类型 1 后台 2 公众号 3 小程序 ',
@@ -358,7 +374,9 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_log` (
   KEY `type` (`user_type`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_10second_log','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_log')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -372,7 +390,7 @@ if(!pdo_fieldexists('umiacp_10second_log','content')) {pdo_query("ALTER TABLE ".
 if(!pdo_fieldexists('umiacp_10second_log','createtime')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_log')." ADD   `createtime` int(11) NOT NULL DEFAULT '0' COMMENT '操作时间'");}
 if(!pdo_fieldexists('umiacp_10second_log','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_log')." ADD   PRIMARY KEY (`id`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_10second_log','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_log')." ADD   KEY `uniacid` (`uniacid`) USING BTREE");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_member` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_10second_member` (
   `mid` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `openid` varchar(255) NOT NULL COMMENT '用户',
@@ -390,9 +408,11 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_member` (
   KEY `mobile` (`mobile`),
   KEY `status` (`status`),
   KEY `wxopenid` (`wxopenid`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_10second_member','mid')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_member')." ADD 
   `mid` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -411,7 +431,7 @@ if(!pdo_fieldexists('umiacp_10second_member','uniacid')) {pdo_query("ALTER TABLE
 if(!pdo_fieldexists('umiacp_10second_member','openid')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_member')." ADD   KEY `openid` (`openid`,`wxopenid`)");}
 if(!pdo_fieldexists('umiacp_10second_member','mobile')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_member')." ADD   KEY `mobile` (`mobile`)");}
 if(!pdo_fieldexists('umiacp_10second_member','status')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_member')." ADD   KEY `status` (`status`)");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_message` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_10second_message` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `openid` varchar(255) NOT NULL,
@@ -426,7 +446,9 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_message` (
   KEY `status` (`status`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_10second_message','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_message')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -440,7 +462,7 @@ if(!pdo_fieldexists('umiacp_10second_message','status')) {pdo_query("ALTER TABLE
 if(!pdo_fieldexists('umiacp_10second_message','createtime')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_message')." ADD   `createtime` int(11) NOT NULL DEFAULT '0'");}
 if(!pdo_fieldexists('umiacp_10second_message','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_message')." ADD   PRIMARY KEY (`id`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_10second_message','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_message')." ADD   KEY `uniacid` (`uniacid`) USING BTREE");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_order` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_10second_order` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `openid` varchar(255) NOT NULL COMMENT '用户',
@@ -461,7 +483,9 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_order` (
   KEY `status` (`status`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_10second_order','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_order')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -481,7 +505,7 @@ if(!pdo_fieldexists('umiacp_10second_order','uniacid')) {pdo_query("ALTER TABLE 
 if(!pdo_fieldexists('umiacp_10second_order','openid')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_order')." ADD   KEY `openid` (`openid`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_10second_order','tid')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_order')." ADD   KEY `tid` (`tid`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_10second_order','ordersn')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_order')." ADD   KEY `ordersn` (`ordersn`) USING BTREE");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_prize_log` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_10second_prize_log` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `openid` varchar(255) NOT NULL COMMENT '用户',
@@ -499,9 +523,11 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_prize_log` (
   KEY `status` (`status`) USING BTREE,
   KEY `openid` (`openid`) USING BTREE,
   KEY `activity_id` (`activity_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=157 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=158 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_10second_prize_log','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_prize_log')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -520,7 +546,7 @@ if(!pdo_fieldexists('umiacp_10second_prize_log','id')) {pdo_query("ALTER TABLE "
 if(!pdo_fieldexists('umiacp_10second_prize_log','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_prize_log')." ADD   KEY `uniacid` (`uniacid`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_10second_prize_log','status')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_prize_log')." ADD   KEY `status` (`status`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_10second_prize_log','openid')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_prize_log')." ADD   KEY `openid` (`openid`) USING BTREE");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_puv` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_10second_puv` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `page` varchar(255) NOT NULL COMMENT '页面',
@@ -533,9 +559,11 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_puv` (
   KEY `page` (`page`) USING BTREE,
   KEY `goods_id` (`goods_id`) USING BTREE,
   KEY `createtime` (`createtime`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_10second_puv','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_puv')." ADD 
   `id` int(11) NOT NULL AUTO_INCREMENT");}
@@ -549,7 +577,7 @@ if(!pdo_fieldexists('umiacp_10second_puv','id')) {pdo_query("ALTER TABLE ".table
 if(!pdo_fieldexists('umiacp_10second_puv','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_puv')." ADD   KEY `uniacid` (`uniacid`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_10second_puv','page')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_puv')." ADD   KEY `page` (`page`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_10second_puv','goods_id')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_puv')." ADD   KEY `goods_id` (`goods_id`) USING BTREE");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_puv_record` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_10second_puv_record` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL,
   `openid` varchar(50) NOT NULL,
@@ -563,9 +591,11 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_puv_record` (
   KEY `page` (`page`) USING BTREE,
   KEY `goods_id` (`goods_id`) USING BTREE,
   KEY `createtime` (`createtime`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=3048 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3196 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_10second_puv_record','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_puv_record')." ADD 
   `id` int(11) NOT NULL AUTO_INCREMENT");}
@@ -580,7 +610,7 @@ if(!pdo_fieldexists('umiacp_10second_puv_record','uniacid')) {pdo_query("ALTER T
 if(!pdo_fieldexists('umiacp_10second_puv_record','openid')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_puv_record')." ADD   KEY `openid` (`openid`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_10second_puv_record','page')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_puv_record')." ADD   KEY `page` (`page`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_10second_puv_record','goods_id')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_puv_record')." ADD   KEY `goods_id` (`goods_id`) USING BTREE");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_record` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_10second_record` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `shop_id` int(11) NOT NULL DEFAULT '0' COMMENT '商家',
@@ -601,7 +631,9 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_record` (
   KEY `activity_id` (`activity_id`,`goods_id`,`cut_id`,`shop_id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=144 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_10second_record','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_record')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -621,7 +653,7 @@ if(!pdo_fieldexists('umiacp_10second_record','id')) {pdo_query("ALTER TABLE ".ta
 if(!pdo_fieldexists('umiacp_10second_record','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_record')." ADD   KEY `uniacid` (`uniacid`)");}
 if(!pdo_fieldexists('umiacp_10second_record','mid')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_record')." ADD   KEY `mid` (`mid`)");}
 if(!pdo_fieldexists('umiacp_10second_record','status')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_record')." ADD   KEY `status` (`status`)");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_recording` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_10second_recording` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `openid` varchar(255) NOT NULL COMMENT '用户',
@@ -635,9 +667,11 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_recording` (
   KEY `uniacid` (`uniacid`) USING BTREE,
   KEY `lkopenid` (`openid`) USING BTREE,
   KEY `status` (`status`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=216 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=221 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_10second_recording','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_recording')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -652,11 +686,12 @@ if(!pdo_fieldexists('umiacp_10second_recording','activity_id')) {pdo_query("ALTE
 if(!pdo_fieldexists('umiacp_10second_recording','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_recording')." ADD   PRIMARY KEY (`id`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_10second_recording','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_recording')." ADD   KEY `uniacid` (`uniacid`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_10second_recording','lkopenid')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_recording')." ADD   KEY `lkopenid` (`openid`) USING BTREE");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_reward` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_10second_reward` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `fopenid` varchar(255) DEFAULT NULL,
   `openid` varchar(255) NOT NULL COMMENT '用户',
+  `cut_id` int(11) DEFAULT NULL,
   `reward_type` tinyint(3) NOT NULL DEFAULT '0' COMMENT '奖励类型:1,随机红包;2,入场卷;3,未中奖;',
   `reward_name` varchar(255) NOT NULL COMMENT '奖励名称',
   `reward_money` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '红包奖励金额',
@@ -683,15 +718,18 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_reward` (
   KEY `lkopenid` (`openid`) USING BTREE,
   KEY `status` (`status`) USING BTREE,
   KEY `day` (`day`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=111 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_10second_reward','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_reward')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}
 if(!pdo_fieldexists('umiacp_10second_reward','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_reward')." ADD   `uniacid` int(11) NOT NULL DEFAULT '0'");}
 if(!pdo_fieldexists('umiacp_10second_reward','fopenid')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_reward')." ADD   `fopenid` varchar(255) DEFAULT NULL");}
 if(!pdo_fieldexists('umiacp_10second_reward','openid')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_reward')." ADD   `openid` varchar(255) NOT NULL COMMENT '用户'");}
+if(!pdo_fieldexists('umiacp_10second_reward','cut_id')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_reward')." ADD   `cut_id` int(11) DEFAULT NULL");}
 if(!pdo_fieldexists('umiacp_10second_reward','reward_type')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_reward')." ADD   `reward_type` tinyint(3) NOT NULL DEFAULT '0' COMMENT '奖励类型:1,随机红包;2,入场卷;3,未中奖;'");}
 if(!pdo_fieldexists('umiacp_10second_reward','reward_name')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_reward')." ADD   `reward_name` varchar(255) NOT NULL COMMENT '奖励名称'");}
 if(!pdo_fieldexists('umiacp_10second_reward','reward_money')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_reward')." ADD   `reward_money` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '红包奖励金额'");}
@@ -717,7 +755,7 @@ if(!pdo_fieldexists('umiacp_10second_reward','id')) {pdo_query("ALTER TABLE ".ta
 if(!pdo_fieldexists('umiacp_10second_reward','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_reward')." ADD   KEY `uniacid` (`uniacid`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_10second_reward','lkopenid')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_reward')." ADD   KEY `lkopenid` (`openid`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_10second_reward','status')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_reward')." ADD   KEY `status` (`status`) USING BTREE");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_saler` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_10second_saler` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `mid` int(11) NOT NULL DEFAULT '0' COMMENT '用户',
@@ -727,14 +765,17 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_saler` (
   `mobile` varchar(255) NOT NULL COMMENT '电话',
   `status` tinyint(3) NOT NULL DEFAULT '0' COMMENT '状态:1,启用;0,禁用;',
   `createtime` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `activity_id` int(11) NOT NULL DEFAULT '0' COMMENT '子模块活动',
   PRIMARY KEY (`id`),
   KEY `uniacid` (`uniacid`),
   KEY `mid` (`mid`),
   KEY `status` (`status`),
   KEY `shop_id` (`shop_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_10second_saler','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_saler')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -746,11 +787,12 @@ if(!pdo_fieldexists('umiacp_10second_saler','realname')) {pdo_query("ALTER TABLE
 if(!pdo_fieldexists('umiacp_10second_saler','mobile')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_saler')." ADD   `mobile` varchar(255) NOT NULL COMMENT '电话'");}
 if(!pdo_fieldexists('umiacp_10second_saler','status')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_saler')." ADD   `status` tinyint(3) NOT NULL DEFAULT '0' COMMENT '状态:1,启用;0,禁用;'");}
 if(!pdo_fieldexists('umiacp_10second_saler','createtime')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_saler')." ADD   `createtime` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间'");}
+if(!pdo_fieldexists('umiacp_10second_saler','activity_id')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_saler')." ADD   `activity_id` int(11) NOT NULL DEFAULT '0' COMMENT '子模块活动'");}
 if(!pdo_fieldexists('umiacp_10second_saler','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_saler')." ADD   PRIMARY KEY (`id`)");}
 if(!pdo_fieldexists('umiacp_10second_saler','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_saler')." ADD   KEY `uniacid` (`uniacid`)");}
 if(!pdo_fieldexists('umiacp_10second_saler','mid')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_saler')." ADD   KEY `mid` (`mid`)");}
 if(!pdo_fieldexists('umiacp_10second_saler','status')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_saler')." ADD   KEY `status` (`status`)");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_setting` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_10second_setting` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `skey` varchar(255) NOT NULL COMMENT '键',
@@ -761,7 +803,9 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_10second_setting` (
   KEY `skey` (`skey`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_10second_setting','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_10second_setting')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}

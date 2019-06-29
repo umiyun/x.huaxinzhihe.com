@@ -57,7 +57,7 @@ if ($op == 'display') {
 
     //参与人数
     $members = pdo_getall(YOUMI_NAME . '_cut', array('uniacid' => $uniacid, 'activity_id' => $activity_id));
-    $members2 = pdo_getall(YOUMI_NAME . '_cut', array('uniacid' => $uniacid, 'activity_id' => $activity_id, 'commision>' => 0), array(), '', 'commision DESC');
+    $members2 = pdo_getall(YOUMI_NAME . '_cut', array('uniacid' => $uniacid, 'activity_id' => $activity_id, 'commision >' => 0), array(), '', 'commision DESC');
     foreach ($members as &$mv) {
         if ($mv['mid'] == -1) {
             $mv['member']['nickname'] = $mv['realname'];
@@ -95,7 +95,7 @@ if ($op == 'display') {
 
         }
     }
-    $order_list = pdo_getall(YOUMI_NAME . '_order', ['activity_id' => $activity_id, 'status' => 2]);
+    $order_list = pdo_getall(YOUMI_NAME . '_order', ['activity_id' => $activity_id, 'status' => [2, 3]]);
     foreach ($order_list as &$li) {
         $li['member'] = $this->getMemberInfo($li['mid']);
         $li['createtime'] = date('Y-m-d H:i:s', $li['createtime']);

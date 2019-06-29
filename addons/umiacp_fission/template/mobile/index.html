@@ -541,6 +541,16 @@
         border-radius: 10px;
         display: none;
     }
+    .f_num{
+        display: inline-block;
+        height: 20px;
+        background: #ff6e40;
+        border-radius: 50%;
+        width: 20px;
+        text-align: center;
+        line-height: 20px;
+        color: #fff;
+    }
 </style>
 <body style="background-color: #fff;">
 
@@ -660,12 +670,12 @@
             <div class="a_btn pay_btn" >立即支付</div>
             {/if}
             {if $activity['status2']=='6'}
-            <div onclick="$('.open_userinfo,.bg_fixed').fadeIn()" class="a_btn" >报名信息</div>
+            <div onclick="$('.open_userinfo,.bg_fixed').fadeIn()" class="a_btn" >报名信息(¥{$activity['commission']})</div>
             {/if}
             <!--<div class="sign_sign_btn pay_btn">立即报名</div>-->
         </div>
         <div class="change_btn" style="width: 40%">
-            <div class="change_change_btn" onclick="$('.open_share,.bg_fixed').fadeIn()">分享赚</div>
+            <div class="change_change_btn" onclick="$('.open_share,.bg_fixed').fadeIn()">分享赚(赚¥{$activity['commission']})</div>
         </div>
         <div class="change_btn" style="width: 20%">
             <a href="{php echo $this->createMobileUrl('user')}" class="change_change_btn" style="background: #00A1F3">我的</a>
@@ -688,13 +698,13 @@
         </div>
         <div class="container-fluid">
             <div class="row" style="margin-bottom: 10px;">
-                <div class="col-md-4 col-xs-4">
+                <div class="col-md-4 col-xs-5">
                     排名
                 </div>
                 <div class="col-md-4 col-xs-3" style="text-align: center">
                     推荐数
                 </div>
-                <div class="col-md-4 col-xs-5" style="text-align: center">
+                <div class="col-md-4 col-xs-4" style="text-align: center">
                     佣金(元)
                 </div>
             </div>
@@ -702,13 +712,14 @@
         <div class="container-fluid">
             {loop $members2 $key $value}
             <div class="row rankings_list">
-                <div class="col-md-4 col-xs-4" style="padding-left: 0; text-overflow: ellipsis;white-space: nowrap;overflow: hidden;">
-                    {php echo $key+1}
+                <div class="col-md-4 col-xs-5" style="padding-left: 0; text-overflow: ellipsis;white-space: nowrap;overflow: hidden;">
+                    <span class="f_num">{php echo $key+1}</span>
+                    {$value['member']['nickname']}
                 </div>
                 <div class="col-md-4 col-xs-3" style="text-align: center">
                     {$value['share_num']} 人
                 </div>
-                <div class="col-md-4 col-xs-5" style="text-align: center">
+                <div class="col-md-4 col-xs-4" style="text-align: center">
                     <span style="color: rgb(253, 59, 0);">￥{$value['commision']}</span> 元
                 </div>
             </div>

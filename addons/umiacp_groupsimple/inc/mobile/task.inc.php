@@ -17,8 +17,7 @@ $op = trim($_GPC['op']) ? trim($_GPC['op']) : 'display';
 
 $setting = youmi_setting_get_list();
 
-//https://x.huaxinzhihe.com/app/index.php?i=3&c=entry&do=task&m=umiacp_groupsimple&user_type=1
-
+//
 if ($op == 'display') {
     youmi_internal_log('tasklog',time());
     send_com($uniacid);
@@ -151,6 +150,11 @@ function send_com($uniacid)
 
         foreach ($orders as &$order) {
             $commission = floatval($order['commission']);
+            if ($commission <= 0) {
+                $count++;
+                pdo_update(YOUMI_NAME . '_' . 'order', ['send_status' => 3, 'send_result' => '佣金为0跳过'], ['id' => $order['id']]);
+                continue;
+            }
             if (floatval($order['price']) <= $commission) {
                 $count++;
                 continue;
@@ -175,7 +179,7 @@ function send_com($uniacid)
 
         unset($group);
     }
-    echo '成功' . $success . ',失败' . $error . ',跳过' . $count . '<br/>';
+    echo '发放佣金成功' . $success . ',失败' . $error . ',跳过' . $count . '<br/>';
 
 }
 
@@ -276,24 +280,38 @@ function send_msg($uniacid)
             pdo_update(YOUMI_NAME . '_message', $data, ['id' => $it['id']]);
         }
     }
-    echo '成功' . $success . ',失败' . $error . '<br/>';
+    echo '发送模版消息成功' . $success . ',失败' . $error . '<br/>';
 
 }
 
 function youmi_finance($openid = '', $tid, $money, $desc = '')
 {
-
-
+    global $_W;
     $desc = empty($desc) ? '商家提现' : $desc;
-    $setting = youmi_setting_get_list();
 
-    $pay = new WeixinPay($setting['wxapp_appid'], $openid, $setting['wxapp_mchid'], $setting['wxapp_signkey'], $tid, $desc, $money);
+    load()->model('account');
+    $setting = uni_setting($_W['uniacid'], array('payment'));
+    if (is_array($setting['payment'])) {
+        $wechat = $setting['payment']['wechat'];
+        if (intval($wechat['switch']) == 3) {
+            $facilitator_setting = uni_setting($wechat['service'], array('payment'));
+            $wechat['signkey'] = $facilitator_setting['payment']['wechat_facilitator']['signkey'];
+        } else {
+            $wechat['signkey'] = ($wechat['version'] == 1) ? $wechat['key'] : $wechat['signkey'];
+        }
+    }
+
+    $appid = trim($_W['uniaccount']["key"]);
+    $mch_id = trim($wechat["mchid"]);
+    $key = trim($wechat["signkey"]);
+
+    $pay = new WeixinPay($appid, $openid, $mch_id, $key, $tid, $desc, $money);
 
     if (empty($openid)) return error(-1, 'openid不能为空');
 
     $pars = array();
-    $pars['mch_appid'] = $setting['wxapp_appid'];
-    $pars['mchid'] = $setting['wxapp_mchid'];
+    $pars['mch_appid'] = $appid;
+    $pars['mchid'] = $mch_id;
     $pars['partner_trade_no'] = $tid;
     $pars['openid'] = $openid;
     $pars['check_name'] = 'NO_CHECK';
@@ -301,7 +319,7 @@ function youmi_finance($openid = '', $tid, $money, $desc = '')
     $pars['desc'] = $desc;
     $pars['spbill_create_ip'] = gethostbyname($_SERVER["HTTP_HOST"]);
     if (empty($pars['mch_appid']) || empty($pars['mchid'])) {
-        $rearr['err_code'] = '请先在系统设置-小程序参数设置内设置微信商户号和秘钥';
+        $rearr['err_code_des'] = '请先在系统设置-小程序参数设置内设置微信商户号和秘钥';
         return $rearr;
     }
 
@@ -309,57 +327,4 @@ function youmi_finance($openid = '', $tid, $money, $desc = '')
 
     return $rearr;
 
-}
-
-function handleGroupMsg($openid, $k2, $k3, $k4, $url)
-{
-
-    $args = [
-        'keyword1' => '参团成功',
-        'keyword2' => $k2,
-        'keyword3' => $k3,
-        'keyword4' => $k4,
-        'keyword5' => date('Y-m-d H:i:s'),
-    ];
-    return sendGroupMsg($openid, $args, $url);
-}
-
-function sendGroupMsg($openid, $args, $url)
-{
-
-    $setting = youmi_setting_get_list();
-    $data = array(
-        'first' => array(
-            'value' => $setting['cut_first'],
-            'color' => '#ff510'
-        ),
-        'keyword1' => array(
-            'value' => $args['keyword1'],
-            'color' => '#ff510'
-        ),
-        'keyword2' => array(
-            'value' => $args['keyword2'],
-            'color' => '#ff510'
-        ),
-        'keyword3' => array(
-            'value' => $args['keyword3'],
-            'color' => '#ff510'
-        ),
-        'keyword4' => array(
-            'value' => $args['keyword4'],
-            'color' => '#ff510'
-        ),
-        'keyword5' => array(
-            'value' => $args['keyword5'],
-            'color' => '#ff510'
-        ),
-        'remark' => array(
-            'value' => $setting['cut_remark'],
-            'color' => '#ff510'
-        ),
-    );
-die(json_encode($setting));
-    $account_api = WeAccount::create();
-
-    return $account_api->sendTplNotice($openid, $setting['cut_id'], $data, $url);
 }

@@ -1,5 +1,5 @@
 <?php
-pdo_query("
+$sql_str="
  CREATE TABLE IF NOT EXISTS  `ims_umiacp_fission_activity` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
@@ -14,11 +14,11 @@ pdo_query("
   `endtime` int(11) NOT NULL COMMENT '活动结束时间',
   `preferential_title` varchar(255) NOT NULL COMMENT '活动优惠标题',
   `preferential_val` text COMMENT '活动优惠内容',
-  `signstatus` varchar(100) NOT NULL COMMENT '活动描述标题',
+  `signstatus` varchar(100) NOT NULL COMMENT '限制报名人数, 1:不限制;2:限制',
   `needmoney` varchar(100) DEFAULT NULL COMMENT '费用',
   `desc_title` varchar(255) DEFAULT NULL,
   `desc_val` text COMMENT '活动描述内容',
-  `signnum` int(11) NOT NULL COMMENT '活动规则标题',
+  `signnum` int(11) NOT NULL COMMENT '限制报名人数',
   `rule_title` varchar(255) DEFAULT NULL,
   `rule_val` text COMMENT '活动规则内容',
   `shop_title` varchar(255) NOT NULL COMMENT '商家介绍标题',
@@ -59,7 +59,7 @@ pdo_query("
   KEY `uniacid` (`uniacid`) USING BTREE,
   KEY `title` (`title`) USING BTREE,
   KEY `shop_id` (`shop_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=143 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=151 DEFAULT CHARSET=utf8;
 
 
  CREATE TABLE IF NOT EXISTS  `ims_umiacp_fission_cate` (
@@ -116,13 +116,15 @@ pdo_query("
   `fmid` int(11) NOT NULL DEFAULT '0' COMMENT '上级',
   `share_num` int(11) NOT NULL DEFAULT '0',
   `commision` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `lottery_time` int(11) NOT NULL DEFAULT '0' COMMENT '核销时间',
+  `avatar` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `uniacid` (`uniacid`),
   KEY `mid` (`mid`),
   KEY `status` (`status`),
   KEY `realname` (`realname`,`mobile`) USING BTREE,
   KEY `activity_id` (`activity_id`,`goods_id`,`shop_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=181 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=383 DEFAULT CHARSET=utf8;
 
 
  CREATE TABLE IF NOT EXISTS  `ims_umiacp_fission_goods` (
@@ -188,7 +190,7 @@ pdo_query("
   KEY `mobile` (`mobile`),
   KEY `status` (`status`),
   KEY `wxopenid` (`wxopenid`)
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8;
 
 
  CREATE TABLE IF NOT EXISTS  `ims_umiacp_fission_order` (
@@ -212,14 +214,16 @@ pdo_query("
   `status` tinyint(3) NOT NULL DEFAULT '0' COMMENT '状态:1,待支付;2,已支付;3,已核销;4,已取消;5,申请退款;6,已退款;7已发送红包',
   `createtime` int(11) NOT NULL DEFAULT '0' COMMENT '下单时间',
   `send_status` int(3) NOT NULL DEFAULT '0' COMMENT '红包发送状态:0,未发送;1,已发送',
+  `send_result` varchar(255) NOT NULL DEFAULT '',
   `commission` decimal(10,2) DEFAULT '0.00' COMMENT '返现佣金',
+  `orderquery` tinyint(3) NOT NULL DEFAULT '0' COMMENT '更新支付错误订单',
   PRIMARY KEY (`id`),
   KEY `uniacid` (`uniacid`),
   KEY `tid` (`tid`),
   KEY `ordersn` (`ordersn`),
   KEY `status` (`status`),
   KEY `mid` (`mid`,`shop_id`,`activity_id`,`goods_id`,`cut_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=85 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=127 DEFAULT CHARSET=utf8;
 
 
  CREATE TABLE IF NOT EXISTS  `ims_umiacp_fission_puv` (
@@ -235,7 +239,7 @@ pdo_query("
   KEY `page` (`page`),
   KEY `goods_id` (`goods_id`),
   KEY `createtime` (`createtime`)
-) ENGINE=InnoDB AUTO_INCREMENT=140 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=198 DEFAULT CHARSET=utf8;
 
 
  CREATE TABLE IF NOT EXISTS  `ims_umiacp_fission_puv_record` (
@@ -252,7 +256,7 @@ pdo_query("
   KEY `page` (`page`) USING BTREE,
   KEY `goods_id` (`goods_id`),
   KEY `createtime` (`createtime`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=3518 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4274 DEFAULT CHARSET=utf8;
 
 
  CREATE TABLE IF NOT EXISTS  `ims_umiacp_fission_record` (
@@ -287,12 +291,13 @@ pdo_query("
   `mobile` varchar(255) NOT NULL COMMENT '电话',
   `status` tinyint(3) NOT NULL DEFAULT '0' COMMENT '状态:1,启用;0,禁用;',
   `createtime` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `activity_id` int(11) NOT NULL DEFAULT '0' COMMENT '子模块活动',
   PRIMARY KEY (`id`),
   KEY `uniacid` (`uniacid`),
   KEY `mid` (`mid`),
   KEY `status` (`status`),
   KEY `shop_id` (`shop_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
 
 
  CREATE TABLE IF NOT EXISTS  `ims_umiacp_fission_setting` (
@@ -306,4 +311,16 @@ pdo_query("
   KEY `skey` (`skey`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
-");
+
+ CREATE TABLE IF NOT EXISTS  `ims_umiacp_fission_task` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uniacid` int(11) DEFAULT NULL,
+  `create_time` int(11) DEFAULT NULL,
+  `state` int(4) NOT NULL DEFAULT '0' COMMENT '启用状态 1启用',
+  `execute_time` int(11) DEFAULT NULL COMMENT '最后一次执行时间',
+  `execute_times` int(11) DEFAULT '0' COMMENT '执行次数',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8 COMMENT='活动宝定时任务';
+
+";$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);

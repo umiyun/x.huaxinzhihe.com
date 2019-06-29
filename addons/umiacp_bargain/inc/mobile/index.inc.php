@@ -55,6 +55,16 @@ if ($op == 'display') {
 
     $activity = pdo_fetch('select * from ' . tablename(YOUMI_NAME . '_activity') . ' where uniacid = ' . $uniacid . ' and id = ' . $activity_id);
 
+    $_share['title'] = $activity['share_title'];
+    $_share['imgUrl'] = $activity['share_img'];
+    $_share['desc'] = $activity['share_desc'];
+    if (empty($setting['cannon_fodder'])) {
+        $_share['link'] = $_W['siteroot'] . "app/" . $this->createMobileUrl('index', array('fmid' => $this->mid, 'activity_id' => $activity_id));
+    } else {
+        $_share['link'] = $setting['cannon_fodder'] . "app/" . $this->createMobileUrl('index', array('fmid' => $this->mid, 'activity_id' => $activity_id));
+    }
+
+
     if ($activity['status'] != 1 || $activity['endtime'] < time()) {
         $activity['status'] = 2;
     }
@@ -254,14 +264,6 @@ if ($op == 'display') {
     if ($activity['shop_id'] > 0) {
         $update1['times +='] = 1;
         pdo_update(UMI_NAME . '_shop', $update1, ['id' => $activity['shop_id']]);
-    }
-    $_share['title'] = $activity['share_title'];
-    $_share['imgUrl'] = $activity['share_img'];
-    $_share['desc'] = $activity['share_desc'];
-    if (empty($setting['cannon_fodder'])) {
-        $_share['link'] = $_W['siteroot'] . "app/" . $this->createMobileUrl('index', array('fmid' => $this->mid, 'activity_id' => $activity_id));
-    } else {
-        $_share['link'] = $setting['cannon_fodder'] . "app/" . $this->createMobileUrl('index', array('fmid' => $this->mid, 'activity_id' => $activity_id));
     }
 
 

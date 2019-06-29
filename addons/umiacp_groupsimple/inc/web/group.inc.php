@@ -57,13 +57,37 @@ if ($op == 'download') {
     $orderby = ' order by ';
 
     $orderby .= ' createtime desc ';
-    $list = pdo_fetchall('SELECT a.title as activitytitle,c.* FROM ' . tablename(YOUMI_NAME . '_' . 'cut') . ' c left join ' . tablename(YOUMI_NAME . '_' . 'activity') . ' a on c.activity_id = a.id where c.uniacid = :uniacid ' . $condition . $orderby, $paras);
+    $list = pdo_fetchall('SELECT a.title as activitytitle,c.* FROM ' . tablename(YOUMI_NAME . '_' . 'order') . ' c left join ' . tablename(YOUMI_NAME . '_' . 'activity') . ' a on c.activity_id = a.id where c.uniacid = :uniacid ' . $condition . $orderby, $paras);
 
+    foreach ($list as &$item){
+//        switch ($item['pay_type']){
+//            case 1:
+//                $item['group_type']='团长';
+//            case 2:
+//                $item['group_type']='团员';
+//            case 3:
+//                $item['group_type']='单买';
+//        }
+        $item['fmember']=$this->getMemberInfo($item['fmid']);
+        $item['f_nickname']=$item['fmember']['nickname'];
+        if($item['leader']){
+            $item['group_type']='团长';
+        }else{
+            $item['group_type']='团员';
+        }
+        if ($item['group_id']==0){
+            $item['group_type']='单买';
+    }
+    }
+    unset($item);
     $header = [
         '活动',
         '姓名',
         '手机号',
-        '具体用户信息',
+        '团购信息',
+        '金额',
+        '推荐者',
+        '佣金',
         '发起时间',
     ];
 
@@ -71,7 +95,10 @@ if ($op == 'download') {
         ['activitytitle', 300],
         ['realname', 200],
         ['mobile', 200],
-        ['userinfo', 500],
+        ['group_type', 200],
+        ['price', 200],
+        ['f_nickname', 200],
+        ['commission', 200],
         ['createtime', 200, 'date'],
     ];
 

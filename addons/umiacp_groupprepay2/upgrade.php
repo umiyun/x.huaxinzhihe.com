@@ -1,6 +1,6 @@
 <?php
 //自己删除上面的符号
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_groupprepay2_activity` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_groupprepay2_activity` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `shop_id` int(11) NOT NULL DEFAULT '0' COMMENT '商家',
@@ -59,9 +59,11 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_groupprepay2_activity` (
   KEY `uniacid` (`uniacid`) USING BTREE,
   KEY `title` (`title`) USING BTREE,
   KEY `shop_id` (`shop_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=152 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=156 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_groupprepay2_activity','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_activity')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -121,7 +123,7 @@ if(!pdo_fieldexists('umiacp_groupprepay2_activity','shop_code')) {pdo_query("ALT
 if(!pdo_fieldexists('umiacp_groupprepay2_activity','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_activity')." ADD   PRIMARY KEY (`id`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_groupprepay2_activity','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_activity')." ADD   KEY `uniacid` (`uniacid`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_groupprepay2_activity','title')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_activity')." ADD   KEY `title` (`title`) USING BTREE");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_groupprepay2_cate` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_groupprepay2_cate` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `rank` int(11) NOT NULL DEFAULT '0',
@@ -135,7 +137,9 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_groupprepay2_cate` (
   KEY `title` (`title`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_groupprepay2_cate','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_cate')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -148,7 +152,7 @@ if(!pdo_fieldexists('umiacp_groupprepay2_cate','status')) {pdo_query("ALTER TABL
 if(!pdo_fieldexists('umiacp_groupprepay2_cate','createtime')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_cate')." ADD   `createtime` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间'");}
 if(!pdo_fieldexists('umiacp_groupprepay2_cate','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_cate')." ADD   PRIMARY KEY (`id`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_groupprepay2_cate','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_cate')." ADD   KEY `uniacid` (`uniacid`) USING BTREE");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_groupprepay2_complain` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_groupprepay2_complain` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `activity_id` int(11) NOT NULL DEFAULT '0' COMMENT '活动',
@@ -165,7 +169,9 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_groupprepay2_complain` (
   KEY `activity_id` (`activity_id`,`shop_id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=157 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_groupprepay2_complain','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_complain')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -181,7 +187,7 @@ if(!pdo_fieldexists('umiacp_groupprepay2_complain','title')) {pdo_query("ALTER T
 if(!pdo_fieldexists('umiacp_groupprepay2_complain','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_complain')." ADD   PRIMARY KEY (`id`)");}
 if(!pdo_fieldexists('umiacp_groupprepay2_complain','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_complain')." ADD   KEY `uniacid` (`uniacid`)");}
 if(!pdo_fieldexists('umiacp_groupprepay2_complain','realname')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_complain')." ADD   KEY `realname` (`desc`,`mobile`) USING BTREE");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_groupprepay2_cut` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_groupprepay2_cut` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `mid` int(11) NOT NULL DEFAULT '0' COMMENT '砍价人',
@@ -193,6 +199,7 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_groupprepay2_cut` (
   `rprice` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '底价',
   `price` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '砍价',
   `times` int(11) NOT NULL DEFAULT '0' COMMENT '剩余砍价次数',
+  `avatar` varchar(255) DEFAULT NULL,
   `realname` varchar(255) NOT NULL COMMENT '姓名',
   `mobile` varchar(255) NOT NULL COMMENT '手机号',
   `userinfo` text COMMENT '具体用户信息',
@@ -204,9 +211,11 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_groupprepay2_cut` (
   KEY `status` (`status`),
   KEY `realname` (`realname`,`mobile`) USING BTREE,
   KEY `activity_id` (`activity_id`,`goods_id`,`shop_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=180 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=192 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_groupprepay2_cut','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_cut')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -220,6 +229,7 @@ if(!pdo_fieldexists('umiacp_groupprepay2_cut','nprice')) {pdo_query("ALTER TABLE
 if(!pdo_fieldexists('umiacp_groupprepay2_cut','rprice')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_cut')." ADD   `rprice` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '底价'");}
 if(!pdo_fieldexists('umiacp_groupprepay2_cut','price')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_cut')." ADD   `price` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '砍价'");}
 if(!pdo_fieldexists('umiacp_groupprepay2_cut','times')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_cut')." ADD   `times` int(11) NOT NULL DEFAULT '0' COMMENT '剩余砍价次数'");}
+if(!pdo_fieldexists('umiacp_groupprepay2_cut','avatar')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_cut')." ADD   `avatar` varchar(255) DEFAULT NULL");}
 if(!pdo_fieldexists('umiacp_groupprepay2_cut','realname')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_cut')." ADD   `realname` varchar(255) NOT NULL COMMENT '姓名'");}
 if(!pdo_fieldexists('umiacp_groupprepay2_cut','mobile')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_cut')." ADD   `mobile` varchar(255) NOT NULL COMMENT '手机号'");}
 if(!pdo_fieldexists('umiacp_groupprepay2_cut','userinfo')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_cut')." ADD   `userinfo` text COMMENT '具体用户信息'");}
@@ -230,7 +240,7 @@ if(!pdo_fieldexists('umiacp_groupprepay2_cut','uniacid')) {pdo_query("ALTER TABL
 if(!pdo_fieldexists('umiacp_groupprepay2_cut','mid')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_cut')." ADD   KEY `mid` (`mid`)");}
 if(!pdo_fieldexists('umiacp_groupprepay2_cut','status')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_cut')." ADD   KEY `status` (`status`)");}
 if(!pdo_fieldexists('umiacp_groupprepay2_cut','realname')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_cut')." ADD   KEY `realname` (`realname`,`mobile`) USING BTREE");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_groupprepay2_goods` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_groupprepay2_goods` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `mid` int(11) NOT NULL DEFAULT '0' COMMENT '用户',
@@ -254,7 +264,9 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_groupprepay2_goods` (
   KEY `activity_id` (`activity_id`,`shop_id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_groupprepay2_goods','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_goods')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -277,7 +289,7 @@ if(!pdo_fieldexists('umiacp_groupprepay2_goods','id')) {pdo_query("ALTER TABLE "
 if(!pdo_fieldexists('umiacp_groupprepay2_goods','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_goods')." ADD   KEY `uniacid` (`uniacid`)");}
 if(!pdo_fieldexists('umiacp_groupprepay2_goods','mid')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_goods')." ADD   KEY `mid` (`mid`)");}
 if(!pdo_fieldexists('umiacp_groupprepay2_goods','status')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_goods')." ADD   KEY `status` (`status`)");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_groupprepay2_log` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_groupprepay2_log` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `user_type` tinyint(3) NOT NULL DEFAULT '0' COMMENT '类型:1,后台;2,公众号;3,小程序;',
@@ -294,7 +306,9 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_groupprepay2_log` (
   KEY `mid` (`mid`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_groupprepay2_log','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_log')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -310,7 +324,7 @@ if(!pdo_fieldexists('umiacp_groupprepay2_log','id')) {pdo_query("ALTER TABLE ".t
 if(!pdo_fieldexists('umiacp_groupprepay2_log','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_log')." ADD   KEY `uniacid` (`uniacid`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_groupprepay2_log','type')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_log')." ADD   KEY `type` (`user_type`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_groupprepay2_log','uid')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_log')." ADD   KEY `uid` (`uid`) USING BTREE");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_groupprepay2_member` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_groupprepay2_member` (
   `mid` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `openid` varchar(255) NOT NULL COMMENT '用户',
@@ -328,9 +342,11 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_groupprepay2_member` (
   KEY `mobile` (`mobile`),
   KEY `status` (`status`),
   KEY `wxopenid` (`wxopenid`)
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_groupprepay2_member','mid')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_member')." ADD 
   `mid` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -349,7 +365,7 @@ if(!pdo_fieldexists('umiacp_groupprepay2_member','uniacid')) {pdo_query("ALTER T
 if(!pdo_fieldexists('umiacp_groupprepay2_member','openid')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_member')." ADD   KEY `openid` (`openid`,`wxopenid`)");}
 if(!pdo_fieldexists('umiacp_groupprepay2_member','mobile')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_member')." ADD   KEY `mobile` (`mobile`)");}
 if(!pdo_fieldexists('umiacp_groupprepay2_member','status')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_member')." ADD   KEY `status` (`status`)");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_groupprepay2_order` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_groupprepay2_order` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `mid` int(11) NOT NULL DEFAULT '0' COMMENT '用户',
@@ -374,9 +390,11 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_groupprepay2_order` (
   KEY `ordersn` (`ordersn`),
   KEY `status` (`status`),
   KEY `mid` (`mid`,`shop_id`,`activity_id`,`goods_id`,`cut_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=86 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_groupprepay2_order','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_order')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -402,7 +420,7 @@ if(!pdo_fieldexists('umiacp_groupprepay2_order','uniacid')) {pdo_query("ALTER TA
 if(!pdo_fieldexists('umiacp_groupprepay2_order','tid')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_order')." ADD   KEY `tid` (`tid`)");}
 if(!pdo_fieldexists('umiacp_groupprepay2_order','ordersn')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_order')." ADD   KEY `ordersn` (`ordersn`)");}
 if(!pdo_fieldexists('umiacp_groupprepay2_order','status')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_order')." ADD   KEY `status` (`status`)");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_groupprepay2_puv` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_groupprepay2_puv` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `page` varchar(255) NOT NULL COMMENT '页面',
@@ -415,9 +433,11 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_groupprepay2_puv` (
   KEY `page` (`page`),
   KEY `goods_id` (`goods_id`),
   KEY `createtime` (`createtime`)
-) ENGINE=InnoDB AUTO_INCREMENT=132 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=158 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_groupprepay2_puv','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_puv')." ADD 
   `id` int(11) NOT NULL AUTO_INCREMENT");}
@@ -431,7 +451,7 @@ if(!pdo_fieldexists('umiacp_groupprepay2_puv','id')) {pdo_query("ALTER TABLE ".t
 if(!pdo_fieldexists('umiacp_groupprepay2_puv','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_puv')." ADD   KEY `uniacid` (`uniacid`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_groupprepay2_puv','page')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_puv')." ADD   KEY `page` (`page`)");}
 if(!pdo_fieldexists('umiacp_groupprepay2_puv','goods_id')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_puv')." ADD   KEY `goods_id` (`goods_id`)");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_groupprepay2_puv_record` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_groupprepay2_puv_record` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL,
   `openid` varchar(50) NOT NULL,
@@ -445,9 +465,11 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_groupprepay2_puv_record` (
   KEY `page` (`page`) USING BTREE,
   KEY `goods_id` (`goods_id`),
   KEY `createtime` (`createtime`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=3674 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4023 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_groupprepay2_puv_record','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_puv_record')." ADD 
   `id` int(11) NOT NULL AUTO_INCREMENT");}
@@ -462,7 +484,7 @@ if(!pdo_fieldexists('umiacp_groupprepay2_puv_record','uniacid')) {pdo_query("ALT
 if(!pdo_fieldexists('umiacp_groupprepay2_puv_record','openid')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_puv_record')." ADD   KEY `openid` (`openid`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_groupprepay2_puv_record','page')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_puv_record')." ADD   KEY `page` (`page`) USING BTREE");}
 if(!pdo_fieldexists('umiacp_groupprepay2_puv_record','goods_id')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_puv_record')." ADD   KEY `goods_id` (`goods_id`)");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_groupprepay2_record` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_groupprepay2_record` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `shop_id` int(11) NOT NULL DEFAULT '0' COMMENT '商家',
@@ -483,7 +505,9 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_groupprepay2_record` (
   KEY `activity_id` (`activity_id`,`goods_id`,`cut_id`,`shop_id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=144 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_groupprepay2_record','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_record')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -503,7 +527,7 @@ if(!pdo_fieldexists('umiacp_groupprepay2_record','id')) {pdo_query("ALTER TABLE 
 if(!pdo_fieldexists('umiacp_groupprepay2_record','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_record')." ADD   KEY `uniacid` (`uniacid`)");}
 if(!pdo_fieldexists('umiacp_groupprepay2_record','mid')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_record')." ADD   KEY `mid` (`mid`)");}
 if(!pdo_fieldexists('umiacp_groupprepay2_record','status')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_record')." ADD   KEY `status` (`status`)");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_groupprepay2_saler` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_groupprepay2_saler` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `mid` int(11) NOT NULL DEFAULT '0' COMMENT '用户',
@@ -513,14 +537,17 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_groupprepay2_saler` (
   `mobile` varchar(255) NOT NULL COMMENT '电话',
   `status` tinyint(3) NOT NULL DEFAULT '0' COMMENT '状态:1,启用;0,禁用;',
   `createtime` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `activity_id` int(11) NOT NULL DEFAULT '0' COMMENT '子模块活动',
   PRIMARY KEY (`id`),
   KEY `uniacid` (`uniacid`),
   KEY `mid` (`mid`),
   KEY `status` (`status`),
   KEY `shop_id` (`shop_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_groupprepay2_saler','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_saler')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}
@@ -532,11 +559,12 @@ if(!pdo_fieldexists('umiacp_groupprepay2_saler','realname')) {pdo_query("ALTER T
 if(!pdo_fieldexists('umiacp_groupprepay2_saler','mobile')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_saler')." ADD   `mobile` varchar(255) NOT NULL COMMENT '电话'");}
 if(!pdo_fieldexists('umiacp_groupprepay2_saler','status')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_saler')." ADD   `status` tinyint(3) NOT NULL DEFAULT '0' COMMENT '状态:1,启用;0,禁用;'");}
 if(!pdo_fieldexists('umiacp_groupprepay2_saler','createtime')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_saler')." ADD   `createtime` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间'");}
+if(!pdo_fieldexists('umiacp_groupprepay2_saler','activity_id')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_saler')." ADD   `activity_id` int(11) NOT NULL DEFAULT '0' COMMENT '子模块活动'");}
 if(!pdo_fieldexists('umiacp_groupprepay2_saler','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_saler')." ADD   PRIMARY KEY (`id`)");}
 if(!pdo_fieldexists('umiacp_groupprepay2_saler','uniacid')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_saler')." ADD   KEY `uniacid` (`uniacid`)");}
 if(!pdo_fieldexists('umiacp_groupprepay2_saler','mid')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_saler')." ADD   KEY `mid` (`mid`)");}
 if(!pdo_fieldexists('umiacp_groupprepay2_saler','status')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_saler')." ADD   KEY `status` (`status`)");}
-pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_groupprepay2_setting` (
+$sql_str="CREATE TABLE IF NOT EXISTS  `ims_umiacp_groupprepay2_setting` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `skey` varchar(255) NOT NULL COMMENT '键',
@@ -547,7 +575,9 @@ pdo_query("CREATE TABLE IF NOT EXISTS `ims_umiacp_groupprepay2_setting` (
   KEY `skey` (`skey`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
-");
+";
+$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);
 
 if(!pdo_fieldexists('umiacp_groupprepay2_setting','id')) {pdo_query("ALTER TABLE ".tablename('umiacp_groupprepay2_setting')." ADD 
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT");}

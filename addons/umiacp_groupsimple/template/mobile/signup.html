@@ -1,4 +1,8 @@
 <style>
+    ::-webkit-input-placeholder {
+        /* WebKit browsers */
+        color: #333;
+    }
     .open_signup,.open_userinfo{
         position: fixed;
         bottom: 0;
@@ -188,7 +192,7 @@
                 }
                 setTimeout(function () {
                     canPay=true;
-                },2000)
+                },5000)
             }, 'json'
         )
     })

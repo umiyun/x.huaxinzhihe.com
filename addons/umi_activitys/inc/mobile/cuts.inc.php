@@ -25,24 +25,21 @@ $_W['page']['title'] = '报名信息管理';
 
 $member = $this->member;
 
-foreach ($list as &$item){
-    $item['member']=pdo_get($_GPC['module'].'_member',array('mid'=>$item['mid']));
-    $item['salertime']=date('Y-d-m H:i:s',$item['salertime']);
-    unset($item);
-}
+//foreach ($list as &$item){
+//    $item['member']=pdo_get($_GPC['module'].'_member',array('mid'=>$item['mid']));
+//    $item['salertime']=date('Y-d-m H:i:s',$item['salertime']);
+//    unset($item);
+//}
 
 if ($op == 'display') {
     $activity = pdo_get($_GPC['module'] . '_activity', ['id' => $_GPC['activity_id']]);
-    $list = pdo_fetchall('SELECT * FROM ' . tablename($_GPC['module'] . '_cut') . ' where uniacid = :uniacid and activity_id = :activity_id order by createtime DESC ' , [':uniacid'=>$uniacid,':activity_id'=>$_GPC['activity_id']]);
+//    $list = pdo_fetchall('SELECT * FROM ' . tablename($_GPC['module'] . '_cut') . ' where uniacid = :uniacid and activity_id = :activity_id order by createtime DESC ' , [':uniacid'=>$uniacid,':activity_id'=>$_GPC['activity_id']]);
     $module = trim($_GPC['module']);
     $condition = ' where uniacid = ' . $uniacid;
     $condition .= ' and activity_id = ' . $_GPC['activity_id'];
     $orderby = ' order by ';
-
     $orderby .= ' createtime desc ';
-    if (in_array($module, ['umiacp_10second', 'umiacp_eggfreny'])) {
-        $list = pdo_fetchall('SELECT * FROM ' . tablename($module . '_reward'). $condition . $orderby . $limit );
-    } else if(in_array($module, ['umiacp_groupsimple'])){
+    if(in_array($module, ['umiacp_groupsimple'])){
         $list = pdo_fetchall('SELECT * FROM ' . tablename($module . '_order'). $condition . $orderby . $limit );
 
     }else {
@@ -95,83 +92,7 @@ if ($op == 'display') {
                         break;
                 }
                 break;
-            case 'umiacp_apply' :
-                switch ($item['status']) {
-                    case 1 :
-                        $item['statusname'] = '已报名';
-                        break;
-                    case 2 :
-                        $item['statusname'] = '已支付';
-                        break;
-                    case 3 :
-                        $item['statusname'] = '已购买';
-                        break;
-                    case 4 :
-                        $item['statusname'] = '已取消';
-                        break;
-                    default :
-                        $item['statusname'] = '';
-                        break;
-                }
-                break;
-            case 'umiacp_groupsimple' :
-                switch ($item['status']) {
-                    case 1 :
-                        $item['statusname'] = '已报名';
-                        break;
-                    case 2 :
-                        $item['statusname'] = '已支付';
-                        break;
-                    case 3 :
-                        $item['statusname'] = '已购买';
-                        break;
-                    case 4 :
-                        $item['statusname'] = '已取消';
-                        break;
-                    default :
-                        $item['statusname'] = '';
-                        break;
-                }
-                break;
-            case 'umiacp_lighten' :
-                switch ($item['status']) {
-                    case 1 :
-                        $item['statusname'] = '已报名';
-                        break;
-                    case 2 :
-                        $item['statusname'] = '已支付';
-                        break;
-                    case 3 :
-                        $item['statusname'] = '已购买';
-                        break;
-                    case 4 :
-                        $item['statusname'] = '已取消';
-                        break;
-                    default :
-                        $item['statusname'] = '';
-                        break;
-                }
-                break;
-            case 'umiacp_10second' :
-            case 'umiacp_eggfreny' :
-                switch ($item['status']) {
-                    case 1 :
-                        $item['statusname'] = '已报名';
-                        break;
-                    case 2 :
-                        $item['statusname'] = '已支付';
-                        break;
-                    case 3 :
-                        $item['statusname'] = '已购买';
-                        break;
-                    case 4 :
-                        $item['statusname'] = '已取消';
-                        break;
-                    default :
-                        $item['statusname'] = '';
-                        break;
-                }
-                break;
+            case 'umiacp_10second' :$item['statusname'] = '已报名';break;
             default :
                 switch ($item['status']) {
                     case 1 :
@@ -203,7 +124,12 @@ if ($op == 'prize') {
 
     $list = pdo_fetchall('SELECT * FROM ' . tablename($_GPC['module'] . '_reward') . ' where uniacid = :uniacid and activity_id = :activity_id order by createtime DESC ' , [':uniacid'=>$uniacid,':activity_id'=>$_GPC['activity_id']]);
     foreach ($list as &$item) {
-
+        if($_GPC['module']=='umiacp_10second') {
+            $item['cut'] = pdo_fetch('SELECT * FROM ' . tablename($_GPC['module'] . '_cut') . ' WHERE id = :id limit 1 ', [':id' => $item['cut_id']]);
+            $item['realname'] = $item['cut']['realname'];
+            $item['mobile'] = $item['cut']['mobile'];
+            $item['userinfo'] = $item['cut']['userinfo'];
+        }
         switch ($item['status']) {
             case 1 :
                 $item['statusname'] = '已报名';
@@ -303,7 +229,7 @@ if ($op=='download'){
             ['createtime', 200, 'date'],
         ];
     }
-    if (in_array($module, ['umiacp_10second', 'umiacp_eggfreny','umiacp_speeddial'])) {
+    if (in_array($module, ['umiacp_10second', 'umiacp_eggfreny','umiacp_speeddial','umiacp_roulette','umiacp_leapcliff'])) {
         $list = pdo_fetchall('SELECT * FROM ' . tablename($module . '_reward'). $condition . $orderby . $limit );
     } else if(in_array($module, ['umiacp_groupsimple'])){
         $list = pdo_fetchall('SELECT * FROM ' . tablename($module . '_order'). $condition . $orderby . $limit );
@@ -377,57 +303,25 @@ if ($op=='download'){
                         break;
                 }
                 break;
-            case 'umiacp_apply' :
+            case 'umiacp_eggfreny' :
+            case 'umiacp_speeddial' :
+            case 'umiacp_roulette' :
+            case 'umiacp_leapcliff' :
                 switch ($item['status']) {
                     case 1 :
                         $item['statusname'] = '已报名';
                         break;
                     case 2 :
-                        $item['statusname'] = '已支付';
+                        $item['statusname'] = '入场卷';
                         break;
                     case 3 :
-                        $item['statusname'] = '已购买';
+                        $item['statusname'] = '红包已发';
                         break;
                     case 4 :
-                        $item['statusname'] = '已取消';
+                        $item['statusname'] = '红包发放失败';
                         break;
-                    default :
-                        $item['statusname'] = '';
-                        break;
-                }
-                break;
-            case 'umiacp_groupsimple' :
-                switch ($item['status']) {
-                    case 1 :
-                        $item['statusname'] = '已报名';
-                        break;
-                    case 2 :
-                        $item['statusname'] = '已支付';
-                        break;
-                    case 3 :
-                        $item['statusname'] = '已购买';
-                        break;
-                    case 4 :
-                        $item['statusname'] = '已取消';
-                        break;
-                    default :
-                        $item['statusname'] = '';
-                        break;
-                }
-                break;
-            case 'umiacp_lighten' :
-                switch ($item['status']) {
-                    case 1 :
-                        $item['statusname'] = '已报名';
-                        break;
-                    case 2 :
-                        $item['statusname'] = '已支付';
-                        break;
-                    case 3 :
-                        $item['statusname'] = '已购买';
-                        break;
-                    case 4 :
-                        $item['statusname'] = '已取消';
+                    case 5 :
+                        $item['statusname'] = '未中奖';
                         break;
                     default :
                         $item['statusname'] = '';
@@ -435,24 +329,11 @@ if ($op=='download'){
                 }
                 break;
             case 'umiacp_10second' :
-            case 'umiacp_eggfreny' :
-                switch ($item['status']) {
-                    case 1 :
-                        $item['statusname'] = '已报名';
-                        break;
-                    case 2 :
-                        $item['statusname'] = '已支付';
-                        break;
-                    case 3 :
-                        $item['statusname'] = '已购买';
-                        break;
-                    case 4 :
-                        $item['statusname'] = '已取消';
-                        break;
-                    default :
-                        $item['statusname'] = '';
-                        break;
-                }
+                $item['cut']=pdo_fetch('SELECT * FROM ' . tablename($_GPC['module'] . '_cut'). ' WHERE id = :id limit 1 ', [':id'=>$item['cut_id']]);
+                $item['realname']=$item['cut']['realname'];
+                $item['mobile']=$item['cut']['mobile'];
+                $item['userinfo']=$item['cut']['userinfo'];
+                $item['statusname'] = '已报名';
                 break;
             default :
                 switch ($item['status']) {
@@ -476,7 +357,6 @@ if ($op=='download'){
         }
         unset($item);
     }
-
 
     download('报名记录', $list, $header, $types,$email);
 }

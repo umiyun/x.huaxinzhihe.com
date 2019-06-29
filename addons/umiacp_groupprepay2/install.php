@@ -1,5 +1,5 @@
 <?php
-pdo_query("
+$sql_str="
  CREATE TABLE IF NOT EXISTS  `ims_umiacp_groupprepay2_activity` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
@@ -59,7 +59,7 @@ pdo_query("
   KEY `uniacid` (`uniacid`) USING BTREE,
   KEY `title` (`title`) USING BTREE,
   KEY `shop_id` (`shop_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=152 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=156 DEFAULT CHARSET=utf8;
 
 
  CREATE TABLE IF NOT EXISTS  `ims_umiacp_groupprepay2_cate` (
@@ -107,6 +107,7 @@ pdo_query("
   `rprice` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '底价',
   `price` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '砍价',
   `times` int(11) NOT NULL DEFAULT '0' COMMENT '剩余砍价次数',
+  `avatar` varchar(255) DEFAULT NULL,
   `realname` varchar(255) NOT NULL COMMENT '姓名',
   `mobile` varchar(255) NOT NULL COMMENT '手机号',
   `userinfo` text COMMENT '具体用户信息',
@@ -118,7 +119,7 @@ pdo_query("
   KEY `status` (`status`),
   KEY `realname` (`realname`,`mobile`) USING BTREE,
   KEY `activity_id` (`activity_id`,`goods_id`,`shop_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=180 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=192 DEFAULT CHARSET=utf8;
 
 
  CREATE TABLE IF NOT EXISTS  `ims_umiacp_groupprepay2_goods` (
@@ -182,7 +183,7 @@ pdo_query("
   KEY `mobile` (`mobile`),
   KEY `status` (`status`),
   KEY `wxopenid` (`wxopenid`)
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8;
 
 
  CREATE TABLE IF NOT EXISTS  `ims_umiacp_groupprepay2_order` (
@@ -210,7 +211,7 @@ pdo_query("
   KEY `ordersn` (`ordersn`),
   KEY `status` (`status`),
   KEY `mid` (`mid`,`shop_id`,`activity_id`,`goods_id`,`cut_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=86 DEFAULT CHARSET=utf8;
 
 
  CREATE TABLE IF NOT EXISTS  `ims_umiacp_groupprepay2_puv` (
@@ -226,7 +227,7 @@ pdo_query("
   KEY `page` (`page`),
   KEY `goods_id` (`goods_id`),
   KEY `createtime` (`createtime`)
-) ENGINE=InnoDB AUTO_INCREMENT=132 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=158 DEFAULT CHARSET=utf8;
 
 
  CREATE TABLE IF NOT EXISTS  `ims_umiacp_groupprepay2_puv_record` (
@@ -243,7 +244,7 @@ pdo_query("
   KEY `page` (`page`) USING BTREE,
   KEY `goods_id` (`goods_id`),
   KEY `createtime` (`createtime`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=3674 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4023 DEFAULT CHARSET=utf8;
 
 
  CREATE TABLE IF NOT EXISTS  `ims_umiacp_groupprepay2_record` (
@@ -278,12 +279,13 @@ pdo_query("
   `mobile` varchar(255) NOT NULL COMMENT '电话',
   `status` tinyint(3) NOT NULL DEFAULT '0' COMMENT '状态:1,启用;0,禁用;',
   `createtime` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `activity_id` int(11) NOT NULL DEFAULT '0' COMMENT '子模块活动',
   PRIMARY KEY (`id`),
   KEY `uniacid` (`uniacid`),
   KEY `mid` (`mid`),
   KEY `status` (`status`),
   KEY `shop_id` (`shop_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
 
 
  CREATE TABLE IF NOT EXISTS  `ims_umiacp_groupprepay2_setting` (
@@ -297,4 +299,5 @@ pdo_query("
   KEY `skey` (`skey`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
-");
+";$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);

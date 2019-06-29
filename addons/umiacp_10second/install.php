@@ -1,5 +1,5 @@
 <?php
-pdo_query("
+$sql_str="
  CREATE TABLE IF NOT EXISTS  `ims_umiacp_10second_activity` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uniacid` int(11) NOT NULL DEFAULT '0',
@@ -58,7 +58,7 @@ pdo_query("
   KEY `uniacid` (`uniacid`) USING BTREE,
   KEY `title` (`title`) USING BTREE,
   KEY `shop_id` (`shop_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=140 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=141 DEFAULT CHARSET=utf8;
 
 
  CREATE TABLE IF NOT EXISTS  `ims_umiacp_10second_activity_prize` (
@@ -76,7 +76,7 @@ pdo_query("
   KEY `uniacid` (`uniacid`) USING BTREE,
   KEY `status` (`status`) USING BTREE,
   KEY `activity_id` (`activity_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
 
 
  CREATE TABLE IF NOT EXISTS  `ims_umiacp_10second_boost` (
@@ -148,13 +148,14 @@ pdo_query("
   `userinfo` text COMMENT '具体用户信息',
   `status` tinyint(3) NOT NULL DEFAULT '0' COMMENT '状态:1,已报名;2,已支付;3,已购买;4已取消',
   `createtime` int(11) NOT NULL DEFAULT '0' COMMENT '发起时间',
+  `lottery_time` int(11) NOT NULL DEFAULT '0' COMMENT '核销时间',
   PRIMARY KEY (`id`),
   KEY `uniacid` (`uniacid`),
   KEY `mid` (`mid`),
   KEY `status` (`status`),
   KEY `realname` (`realname`,`mobile`) USING BTREE,
   KEY `activity_id` (`activity_id`,`goods_id`,`shop_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=162 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=165 DEFAULT CHARSET=utf8;
 
 
  CREATE TABLE IF NOT EXISTS  `ims_umiacp_10second_goods` (
@@ -216,7 +217,7 @@ pdo_query("
   KEY `mobile` (`mobile`),
   KEY `status` (`status`),
   KEY `wxopenid` (`wxopenid`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
 
 
  CREATE TABLE IF NOT EXISTS  `ims_umiacp_10second_message` (
@@ -275,7 +276,7 @@ pdo_query("
   KEY `status` (`status`) USING BTREE,
   KEY `openid` (`openid`) USING BTREE,
   KEY `activity_id` (`activity_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=157 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=158 DEFAULT CHARSET=utf8;
 
 
  CREATE TABLE IF NOT EXISTS  `ims_umiacp_10second_puv` (
@@ -291,7 +292,7 @@ pdo_query("
   KEY `page` (`page`) USING BTREE,
   KEY `goods_id` (`goods_id`) USING BTREE,
   KEY `createtime` (`createtime`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8;
 
 
  CREATE TABLE IF NOT EXISTS  `ims_umiacp_10second_puv_record` (
@@ -308,7 +309,7 @@ pdo_query("
   KEY `page` (`page`) USING BTREE,
   KEY `goods_id` (`goods_id`) USING BTREE,
   KEY `createtime` (`createtime`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=3048 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3196 DEFAULT CHARSET=utf8;
 
 
  CREATE TABLE IF NOT EXISTS  `ims_umiacp_10second_record` (
@@ -347,7 +348,7 @@ pdo_query("
   KEY `uniacid` (`uniacid`) USING BTREE,
   KEY `lkopenid` (`openid`) USING BTREE,
   KEY `status` (`status`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=216 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=221 DEFAULT CHARSET=utf8;
 
 
  CREATE TABLE IF NOT EXISTS  `ims_umiacp_10second_reward` (
@@ -355,6 +356,7 @@ pdo_query("
   `uniacid` int(11) NOT NULL DEFAULT '0',
   `fopenid` varchar(255) DEFAULT NULL,
   `openid` varchar(255) NOT NULL COMMENT '用户',
+  `cut_id` int(11) DEFAULT NULL,
   `reward_type` tinyint(3) NOT NULL DEFAULT '0' COMMENT '奖励类型:1,随机红包;2,入场卷;3,未中奖;',
   `reward_name` varchar(255) NOT NULL COMMENT '奖励名称',
   `reward_money` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '红包奖励金额',
@@ -381,7 +383,7 @@ pdo_query("
   KEY `lkopenid` (`openid`) USING BTREE,
   KEY `status` (`status`) USING BTREE,
   KEY `day` (`day`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=111 DEFAULT CHARSET=utf8;
 
 
  CREATE TABLE IF NOT EXISTS  `ims_umiacp_10second_saler` (
@@ -394,12 +396,13 @@ pdo_query("
   `mobile` varchar(255) NOT NULL COMMENT '电话',
   `status` tinyint(3) NOT NULL DEFAULT '0' COMMENT '状态:1,启用;0,禁用;',
   `createtime` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `activity_id` int(11) NOT NULL DEFAULT '0' COMMENT '子模块活动',
   PRIMARY KEY (`id`),
   KEY `uniacid` (`uniacid`),
   KEY `mid` (`mid`),
   KEY `status` (`status`),
   KEY `shop_id` (`shop_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
 
 
  CREATE TABLE IF NOT EXISTS  `ims_umiacp_10second_setting` (
@@ -413,4 +416,5 @@ pdo_query("
   KEY `skey` (`skey`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
-");
+";$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
+pdo_query($sql_str);

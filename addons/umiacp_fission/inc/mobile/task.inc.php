@@ -8,145 +8,104 @@
 
 global $_W, $_GPC;
 
+//error_reporting(E_ALL);
+//ini_set('display_errors', 'On');
+
 $uniacid = intval($this->uniacid);
 
 $op = trim($_GPC['op']) ? trim($_GPC['op']) : 'display';
 
 $setting = youmi_setting_get_list();
 
-/**
- * 每天凌晨0点重置商品数据  跑1小时
- * do : task   op : reset_goods
- */
-if ($op == 'reset_goods') {
-    $referrer = trim($_GPC['referrer']);
-//    if (!$referrer) {
-//        youmi_result(1, '非法访问');
-//    }
+//https://x.huaxinzhihe.com/app/index.php?i=3&c=entry&do=task&m=umiacp_fission&user_type=1
 
-    $paras[':uniacid'] = $this->uniacid;
-    $new = strtotime(date('Y-m-d'));
-    $paras[':new'] = $new;
-
-    $goods = pdo_fetchall('SELECT * FROM ' . tablename(YOUMI_NAME . '_' . 'goods') . ' where uniacid = :uniacid and ((goods_type = 1 and batch_number <> \'\' ) or endtime < :new) and id not in (select goods_id from ' . tablename(YOUMI_NAME . '_' . 'goods_log') . ' where uniacid = :uniacid and createtime = :new) limit 50 ', $paras);
-    $res = 0;
-
-    if ($goods) {
-        foreach ($goods as $good) {
-
-            if ($good['goods_type'] == 1) {
-                $update['temp_price'] = $good['price'];
-                $update['batch_number'] = '';
-                $update['batch_status'] = 2;
-                $update['pv'] = 0;
-                $update['stock'] = 1;
-                if ($good['batch_number']) {
-                    pdo_update(YOUMI_NAME . '_' . 'batch', [
-                        'status' => 3,
-                        'updatetime' => TIMESTAMP,
-                    ], ['goods_id' => $good['id'], 'batch_number' => $good['batch_number']]);
-                }
-            }
-            if ($good['endtime'] < TIMESTAMP) {
-                $update['status'] = 2;
-            }
-            $res += pdo_update(YOUMI_NAME . '_' . 'goods', $update, ['id' => $good['id']]);
-            pdo_insert(YOUMI_NAME . '_' . 'goods_log', [
-                'uniacid' => $uniacid,
-                'goods_id' => $good['id'],
-                'status' => 1,
-                'createtime' => strtotime(date('Y-m-d'))
-            ]);
-
-            unset($good);
-            unset($update);
-        }
-    }
-    pdo_delete(YOUMI_NAME . '_' . 'goods_log', ['uniacid' => $uniacid, 'createtime' => strtotime(date('Y-m-d') . ' -3 day')]);
-    youmi_result(0, '成功处理' . $res . '条商品！');
-
+if ($op == 'display') {
+    youmi_internal_log('tasklog', time());
+    send_com($uniacid);
+    exit();
 }
 
 /**
- * 定时更新订单
- * do : task   op : reset_order
+ * 实时发送佣金
  */
-if ($op == 'reset_order') {
-    $referrer = trim($_GPC['referrer']);
-//    if (!$referrer) {
-//        youmi_result(1, '非法访问');
-//    }
+function send_com($uniacid)
+{
+    $success = 0;
+    $count = 0;
+    $error = 0;
 
-    $paras[':uniacid'] = $this->uniacid;
-    $new = strtotime(date('Y-m-d'));
+    $orders = pdo_getall(YOUMI_NAME . '_' . 'order', ['uniacid' => $uniacid, 'send_status !=' => 1, 'status' => 2, 'fmid !=' => 0, 'commission >' => 0]);
 
-    $orders = pdo_fetchall('SELECT * FROM ' . tablename(YOUMI_NAME . '_' . 'order') . ' where uniacid = :uniacid and status = 1 limit 20 ', $paras);
-    if ($orders) {
-        $res = 0;
-
-        $setting = youmi_setting_get_list();
-
-        $appid = $setting["wxapp_appid"];
-        $mch_id = $setting["wxapp_mchid"];
-        $key = $setting["wxapp_signkey"];
-
-        foreach ($orders as $order) {
-
-            $weixinpay = new WeixinPay($appid, $openid, $mch_id, $key, $order['tid'], $order['title'], $order['price']);
-            $return = $weixinpay->orderquery();
-            if ($return['return_code'] == 'SUCCESS' && $return['result_code'] == 'SUCCESS') {
-                if ($return['trade_state'] == 'SUCCESS' && floatval($return['total_fee']) / 100 == $order['price']) {
-                    $res += pdo_update(YOUMI_NAME . '_' . 'order', ['status' => 2, 'pay_time' => TIMESTAMP, 'transid' => $return['transaction_id']], ['id' => $order['id']]);
-                    pdo_update(YOUMI_NAME . '_' . 'goods', ['stock -=' => $order['num']], ['id' => $order['goods_id']]);
-                    if ($order['goods_type'] == 1) {
-//                pdo_update(YOUMI_NAME . '_' . 'goods', ['batch_number' => '', 'batch_status' => 2], ['id' => $order['goods_id']]);
-                        pdo_update(YOUMI_NAME . '_' . 'batch', ['status' => 2, 'updatetime' => TIMESTAMP], ['batch_number' => $order['batch_number']]);
-                    }
-                    $order['status'] = 2;
-                }
-            }
-
-            if ($order['goods_type'] == 1 && $order['status'] == 1 && $order['createtime'] + 10 * 60 < TIMESTAMP) {
-                $res += pdo_update(YOUMI_NAME . '_' . 'order', ['status' => 4], ['id' => $order['id']]);
-            }
-
-            unset($order);
+    foreach ($orders as &$order) {
+        $commission = floatval($order['commission']);
+        if (floatval($order['price']) <= $commission) {
+            $count++;
+            pdo_update(YOUMI_NAME . '_' . 'order', ['send_status' => 3, 'send_result' => '金额错误跳过'], ['id' => $order['id']]);
+            continue;
         }
+        $f_member = pdo_get(YOUMI_NAME . '_member', array('mid' => $order['fmid'], 'uniacid' => $order['uniacid']), ['openid', 'mid']);
+        $result = youmi_finance($f_member['openid'], 'DK' . $order['tid'], $commission, '分享赚佣金');
+
+        if (($result['return_code'] == 'SUCCESS') && ($result['result_code'] == 'SUCCESS')) {
+            $success++;
+            pdo_update(YOUMI_NAME . '_' . 'order', ['send_status' => 1, 'send_result' => '发放成功'], ['id' => $order['id']]);
+            pdo_update(YOUMI_NAME . '_' . 'cut', ['commision +=' => $commission], ['mid' => $order['fmid'], 'activity_id' => $order['activity_id']]);
+            pdo_debug();
+        } else {
+            $result['msg'] = (empty($result['err_code_des']) ? $result['return_msg'] : $result['err_code_des']);
+            pdo_update(YOUMI_NAME . '_' . 'order', ['send_status' => 2, 'send_result' => $result['msg']], ['id' => $order['id']]);
+            $error++;
+            break;
+        }
+        unset($order);
     }
-    youmi_result(0, '成功处理' . $res . '条订单！');
+
+    echo '发放佣金成功' . $success . ',失败' . $error . ',跳过' . $count . '<br/>';
 
 }
 
 
-/**
- * 定时结算订单
- * do : task   op : settle_order
- */
-if ($op == 'settle_order') {
-    $referrer = trim($_GPC['referrer']);
-//    if (!$referrer) {
-//        youmi_result(1, '非法访问');
-//    }
+function youmi_finance($openid = '', $tid, $money, $desc = '')
+{
+    global $_W;
+    $desc = empty($desc) ? '商家提现' : $desc;
 
-    $paras[':uniacid'] = $this->uniacid;
-    $setting = youmi_setting_get_list();
-    $setting['billing_cycle'] = intval($setting['billing_cycle']) ? intval($setting['billing_cycle']) : 3;
-    $paras[':new'] = time() - $setting['billing_cycle'] * 24 * 60 * 60;
-
-    $orders = pdo_fetchall('SELECT * FROM ' . tablename(YOUMI_NAME . '_' . 'order') . ' where uniacid = :uniacid and status = 3 and is_settle = 0 and salertime <= :new limit 20 ', $paras);
-    if ($orders) {
-        $res = 0;
-
-        foreach ($orders as $order) {
-            $res = youmi_settlement_log($order, 4, $order['price'], '结算订单：订单ID：' . $order['id'] . '，结算时间：' . date('Y-m-d H:i:s'));
-            if ($res['errno'] === 0) {
-                pdo_update(YOUMI_NAME . '_' . 'order', ['is_settle' => 1], ['id' => $order['id']]);
-            }
-            unset($order);
+    load()->model('account');
+    $setting = uni_setting($_W['uniacid'], array('payment'));
+    if (is_array($setting['payment'])) {
+        $wechat = $setting['payment']['wechat'];
+        if (intval($wechat['switch']) == 3) {
+            $facilitator_setting = uni_setting($wechat['service'], array('payment'));
+            $wechat['signkey'] = $facilitator_setting['payment']['wechat_facilitator']['signkey'];
+        } else {
+            $wechat['signkey'] = ($wechat['version'] == 1) ? $wechat['key'] : $wechat['signkey'];
         }
     }
-    youmi_result(0, '成功处理' . $res . '条订单！');
+
+    $appid = trim($_W['uniaccount']["key"]);
+    $mch_id = trim($wechat["mchid"]);
+    $key = trim($wechat["signkey"]);
+
+    $pay = new WeixinPay($appid, $openid, $mch_id, $key, $tid, $desc, $money);
+
+    if (empty($openid)) return error(-1, 'openid不能为空');
+
+    $pars = array();
+    $pars['mch_appid'] = $appid;
+    $pars['mchid'] = $mch_id;
+    $pars['partner_trade_no'] = $tid;
+    $pars['openid'] = $openid;
+    $pars['check_name'] = 'NO_CHECK';
+    $pars['amount'] = floatval($money) * 100;
+    $pars['desc'] = $desc;
+    $pars['spbill_create_ip'] = gethostbyname($_SERVER["HTTP_HOST"]);
+    if (empty($pars['mch_appid']) || empty($pars['mchid'])) {
+        $rearr['err_code_des'] = '请先在系统设置-小程序参数设置内设置微信商户号和秘钥';
+        return $rearr;
+    }
+
+    $rearr = $pay->finance($pars);
+
+    return $rearr;
 
 }
-
-

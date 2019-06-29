@@ -558,7 +558,7 @@
                             </div>
                         </div>
                         <div class="ft10 color777">第一页主题(建议尺寸 750*250)</div>
-                        <div class="flex flex_j_between">
+                        <div class="flex flex_j_between" style="display: none">
                             <div class="s_goodimg p_relative">
                                 <input class="select_good2img" type="file" onchange="selectGoodimg(this)">
                                 <div>
@@ -568,8 +568,8 @@
                                 <img class="good_logo d_bgimage2" {if !empty($activity['bgimage2'])}src="{$activity['bgimage2']}"{/if} alt="">
                             </div>
                         </div>
-                        <div class="ft10 color777">第二页背景图(不填则为系统默认图片)</div>
-                        <div class="flex flex_j_between">
+                        <div class="ft10 color777" style="display: none">第二页背景图(不填则为系统默认图片)</div>
+                        <div class="flex flex_j_between" style="display: none">
                             <div class="s_goodimg p_relative">
                                 <input class="select_good2img" type="file" onchange="selectGoodimg(this)">
                                 <div>
@@ -579,8 +579,8 @@
                                 <img class="good_logo d_title2" {if !empty($activity['title2'])}src="{$activity['title2']}"{/if} alt="">
                             </div>
                         </div>
-                        <div class="ft10 color777">第二页标题 建议尺寸 700*900 (不填则为系统默认图片)</div>
-                        <div class="flex flex_j_between">
+                        <div class="ft10 color777" style="display: none">第二页标题 建议尺寸 700*900 (不填则为系统默认图片)</div>
+                        <div class="flex flex_j_between" style="display: none">
                             <div class="s_goodimg p_relative">
                                 <input class="select_good2img" type="file" onchange="selectGoodimg(this)">
                                 <div>
@@ -590,7 +590,7 @@
                                 <img class="good_logo d_desc2" {if !empty($activity['desc2'])}src="{$activity['desc2']}"{/if} alt="">
                             </div>
                         </div>
-                        <div class="ft10 color777">第二页说明</div>
+                        <div class="ft10 color777" style="display: none">第二页说明</div>
                         <div class="flex flex_j_between">
                             <div class="s_goodimg p_relative">
                                 <input class="select_good2img" type="file" onchange="selectGoodimg(this)">

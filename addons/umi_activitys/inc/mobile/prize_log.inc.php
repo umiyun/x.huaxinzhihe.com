@@ -35,6 +35,12 @@ $list=pdo_getall($_GPC['module'].'_prize_log',$data);
 foreach ($list as &$item){
     $item['member']=pdo_get($_GPC['module'].'_member',array('mid'=>$item['mid']));
     $item['createtime']=date('Y-m-d H:i:s',$item['createtime']);
+    if($_GPC['module']=='umiacp_10second') {
+        $item['cut']=pdo_fetch('SELECT * FROM ' . tablename($_GPC['module'] . '_cut'). ' WHERE mid = :mid and activity_id = :activity_id limit 1 ', [':mid'=>$item['mid'],':activity_id'=>$item['activity_id']]);
+        $item['realname']=$item['cut']['realname'];
+        $item['mobile']=$item['cut']['mobile'];
+        $item['userinfo']=$item['cut']['userinfo'];
+    }
     unset($item);
 }
 

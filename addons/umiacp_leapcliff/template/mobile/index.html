@@ -571,7 +571,7 @@
         <div class="ac_youhui p_relative">
             <div class="acy_title p_relative">
                 <img style="height: 40px" src="{if $activity['titlebgimg']}{$activity['titlebgimg']}{else}{YOUMI_URL_APP}img/m_titlebg2.png{/if}" alt="">
-                <input type="text" value="活动介绍" readonly>
+                <input type="text" value="{if $activity['desc_title']}{$activity['desc_title']}{else}{YOUMI_URL_APP}活动介绍{/if}" readonly>
             </div>
             <div class="acy_content">
                 <div class="acys_contents">
@@ -590,7 +590,7 @@
         <div class="ac_youhui p_relative">
             <div class="acy_title p_relative">
                 <img style="height: 40px" src="{if $activity['titlebgimg']}{$activity['titlebgimg']}{else}{YOUMI_URL_APP}img/m_titlebg2.png{/if}" alt="">
-                <input type="text" value="主办方资料" readonly>
+                <input type="text" value="{if $activity['shop_title']}{$activity['shop_title']}{else}{YOUMI_URL_APP}主办方资料{/if}" readonly>
             </div>
             <div class="acy_content">
                 <div class="acys_contents">

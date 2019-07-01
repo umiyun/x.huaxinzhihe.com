@@ -72,9 +72,6 @@ if (!function_exists('youmi_save_activity')) {
         $data['shop_title'] = $from['shop_title'];
         $data['shop_val'] = $from['shop_val'];
         $data['shop_imgs'] = serialize($from['shop_imgs']);
-        $data['receive_name'] = $from['receive_name'];
-        $data['receive_time'] = $from['receive_time'];
-        $data['receive_address'] = $from['receive_address'];
 //        $data['receive_mobile'] = $from['receive_mobile'];
         if($shop_default==1) {//默认商家信息
             $data['shop_name'] = $shop['realname'];

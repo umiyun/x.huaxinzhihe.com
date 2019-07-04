@@ -62,7 +62,7 @@ $sql_str="
   KEY `uniacid` (`uniacid`) USING BTREE,
   KEY `title` (`title`) USING BTREE,
   KEY `shop_id` (`shop_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=150 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=151 DEFAULT CHARSET=utf8;
 
 
  CREATE TABLE IF NOT EXISTS  `ims_umiacp_vote_cate` (
@@ -126,7 +126,7 @@ $sql_str="
   KEY `status` (`status`),
   KEY `realname` (`realname`,`mobile`) USING BTREE,
   KEY `activity_id` (`activity_id`,`goods_id`,`shop_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=182 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=183 DEFAULT CHARSET=utf8;
 
 
  CREATE TABLE IF NOT EXISTS  `ims_umiacp_vote_goods` (
@@ -190,7 +190,7 @@ $sql_str="
   KEY `mobile` (`mobile`),
   KEY `status` (`status`),
   KEY `wxopenid` (`wxopenid`)
-) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8;
 
 
  CREATE TABLE IF NOT EXISTS  `ims_umiacp_vote_order` (
@@ -234,7 +234,7 @@ $sql_str="
   KEY `page` (`page`),
   KEY `goods_id` (`goods_id`),
   KEY `createtime` (`createtime`)
-) ENGINE=InnoDB AUTO_INCREMENT=96 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=102 DEFAULT CHARSET=utf8;
 
 
  CREATE TABLE IF NOT EXISTS  `ims_umiacp_vote_puv_record` (
@@ -251,7 +251,7 @@ $sql_str="
   KEY `page` (`page`) USING BTREE,
   KEY `goods_id` (`goods_id`),
   KEY `createtime` (`createtime`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=5214 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5332 DEFAULT CHARSET=utf8;
 
 
  CREATE TABLE IF NOT EXISTS  `ims_umiacp_vote_record` (
@@ -274,7 +274,7 @@ $sql_str="
   KEY `mid` (`mid`),
   KEY `status` (`status`),
   KEY `activity_id` (`activity_id`,`goods_id`,`cut_id`,`shop_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=837 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=848 DEFAULT CHARSET=utf8;
 
 
  CREATE TABLE IF NOT EXISTS  `ims_umiacp_vote_saler` (
@@ -329,7 +329,7 @@ $sql_str="
   KEY `status` (`status`),
   KEY `realname` (`realname`,`mobile`) USING BTREE,
   KEY `activity_id` (`activity_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=197 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=198 DEFAULT CHARSET=utf8;
 
 ";$sql_str=str_replace('ims_', $GLOBALS['_W']['config']['db']['tablepre'], $sql_str);
 pdo_query($sql_str);

@@ -5,8 +5,11 @@
     }
 </style>
 <ul class="nav nav-tabs">
-    <li {if $op == '' || $op == 'display'}class="active"{/if}>
+    <li class="active">
         <a href="{php echo $this->createWebUrl('cuts')}">报名人员列表</a>
+    </li>
+    <li>
+        <a href="{php echo $this->createWebUrl('cuts',['activity_id'=>$_GPC['id'],'op'=>'edit','module'=>$_GPC['module']])}">添加报名人员</a>
     </li>
 </ul>
 {if $op == 'display' || $op == ''}
@@ -68,7 +71,7 @@
                         </td>
                         
                         <td align="center">
-                            <div class="type-parent"><img style="width: 50px;height: 50px;border-radius: 50%" src="{$item['avatar']}" alt=""></div>
+                            <div class="type-parent"><img style="width: 50px;height: 50px;border-radius: 50%" src="{php echo tomedia($item['avatar'])}" alt=""></div>
                         </td>
                         
                         <td align="center">
@@ -81,7 +84,7 @@
                         
                         <td align="center">
                             {loop $item['vote_imgs'] $vv}
-                            <img style="width: 50px" src="{$vv}" alt="">
+                            <img style="width: 50px" src="{php echo tomedia($vv)}" alt="">
                             {/loop}
                         </td>
                         <td align="center">
@@ -99,6 +102,8 @@
                             {if $item['status']=='1'}
                             <a class="btn btn-success btn-sm" href="{php echo $this->createWebUrl('cuts',array('op'=>'audit','id'=>$item['id'],'status'=>2,'module'=>$_GPC['module']))}" onclick="return confirm('确认通过吗？');return false;" title="通过">通过</a>
                             <a class="btn btn-danger btn-sm" href="{php echo $this->createWebUrl('cuts',array('op'=>'audit','id'=>$item['id'],'status'=>3,'module'=>$_GPC['module']))}" onclick="return confirm('确认拒绝吗？');return false;" title="拒绝">拒绝</a>
+                            {else}
+                            <a class="btn btn-success btn-sm" href="{php echo $this->createWebUrl('cuts',array('activity_id'=>$_GPC['id'],'op'=>'edit','id'=>$item['id'],'module'=>$_GPC['module']))}" title="修改">修改</a>
                             {/if}
                         </td>
                     </tr>

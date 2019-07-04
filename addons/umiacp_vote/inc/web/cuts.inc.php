@@ -137,6 +137,37 @@ if ($op == 'audit') {
     pdo_update(YOUMI_NAME . '_' . 'cut', ['status' => $status], array('id' => $id));
     itoast('温馨提示：操作成功！', referer(), 'success');
 }
+if ($op == 'edit') {
+    $id = intval($_GPC['id']);
+    $paras[':id'] = $id;
+    $item = pdo_fetch('SELECT * FROM ' . tablename(YOUMI_NAME . '_' . 'cut') . ' WHERE id = :id limit 1 ', $paras);
+    if ($item['status'] == -1) {
+        itoast('温馨提示：报名人员不存在或是已经被删除！', referer(), 'error');
+    }
+    $item['vote_imgs']=unserialize($item['vote_imgs']);
+    include $this->template('cuts_edit');
+}
+
+if ($op == 'post') {
+    //选择用户
+
+    $id = intval($_GPC['id']);
+    $data = $_GPC['data'];
+    $data['vote_imgs'] = serialize($data['vote_imgs']);
+    if(empty($id)){
+        $data['uniacid']=$uniacid;
+        $data['mid']=-1;
+        $data['shop_id']=0;
+        $data['goods_id']=0;
+        $data['status']=2;
+        $data['createtime']=time();
+        $data['islottery']=0;
+        pdo_insert(YOUMI_NAME . '_' . 'cut', $data);
+    }else {
+        pdo_update(YOUMI_NAME . '_' . 'cut', $data, array('id' => $id));
+    }
+    itoast('温馨提示：操作成功！', referer(), 'success');
+}
 
 if ($op == 'search') {
     //选择用户

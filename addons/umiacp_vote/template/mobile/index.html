@@ -623,7 +623,7 @@
                         <div>
                             <i class="number">{$cv['id']}号</i>
                             <a href="{php echo $this->createMobileUrl('detail',['activity_id'=>$_GPC['activity_id'],'cut_id'=>$cv['id']])}" class="img">
-                                <img src="{if $cv['vote_imgs'][0]}{$cv['vote_imgs'][0]}{else}{$cv['vote_imgs'][1]}{/if}" />
+                                <img src="{if $cv['vote_imgs'][0]}{php echo tomedia($cv['vote_imgs'][0])}{else}{$cv['vote_imgs'][1]}{/if}" />
                             </a>
                             <div class="tou">
                                 <div class="divP">

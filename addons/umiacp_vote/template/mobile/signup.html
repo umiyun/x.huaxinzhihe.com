@@ -161,9 +161,15 @@
             tips('请上传图片');
             return false;
         }
+
         var vote_imgs=[];
         for (var j=0;j<$('.d_vote_imgs').length;j++){
-            vote_imgs.push($($('.d_vote_imgs')[j]).attr('src'));
+            if (!/\.(jpg|JPG|png|PNG|jpeg|JPEG|)$/.test($($('.d_vote_imgs')[j]).attr('src'))) {
+                tips("图片类型有误");
+                return false;
+            }else {
+                vote_imgs.push($($('.d_vote_imgs')[j]).attr('src'));
+            }
         }
         $.post(
             "{php echo $this->createMobileUrl('index',array('op' =>'sign_up'))}",

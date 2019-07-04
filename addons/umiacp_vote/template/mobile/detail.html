@@ -380,7 +380,7 @@
     <!--下部分，背景图片 background->repeat-->
     <div class="a_content">
         <div class="ac_member flex flex_a_center ac_detail">
-            <img src="{$cut['avatar']}" alt="">
+            <img src="{php echo tomedia($cut['avatar'])}" alt="">
             <span>{$cut['realname']}</span>
         </div>
         {if $cut['userinfo']}
@@ -399,7 +399,7 @@
         </div>
         <div>
             {loop $cut['vote_imgs'] $vv}
-            <img style="width: 100%;margin-top: 3px" src="{$vv}" alt="">
+            <img style="width: 100%;margin-top: 3px" src="{php echo tomedia($vv)}" alt="">
             {/loop}
         </div>
         <div class="ac_detail flex flex_a_center flex_wrap">

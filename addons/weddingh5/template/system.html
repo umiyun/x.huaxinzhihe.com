@@ -1,0 +1,79 @@
+{template 'common/header'}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            系统设置
+        </h3>
+    </div>
+    <div class="panel-body">
+        <form class="form-horizontal" role="form" method="post" action="" name="submit">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">系统名称</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="setting[title]" value="{$setting['title']}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">logo</label>
+                <div class="col-sm-8">
+                    {php echo tpl_form_field_image('setting[logo]',$setting['logo']);}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">首页幻灯片</label>
+                <div class="col-sm-8">
+                    {php echo tpl_form_field_multi_image('setting[thumbs]',$setting['thumbs']);}
+                </div>
+            </div>
+
+            <div class="form-group" style="display:none;">
+                <label class="col-sm-2 control-label">首页视频链接</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="setting[index_video]" value="{$setting['index_video']}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">短信模板id</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="setting[tpl_id]" value="{$setting['tpl_id']}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">聚合短信AppKey</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="setting[appkey]" value="{$setting['appkey']}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">客服电话</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="copyphone" name="setting[copyphone]" value="{$setting['copyphone']}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style="color:red">*</span>废品价格跳转详情</label>
+                <div class="col-sm-8">
+                    {php echo tpl_ueditor('setting[content]', $setting['content'])}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-8">
+                    <input type="submit" name="submit" value="提交" class="btn btn-info col-lg-1" />
+                    <input type="hidden" name="token" value="{$_W['token']}" />
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+
+{template 'common/footer'}

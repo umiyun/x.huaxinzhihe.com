@@ -1,0 +1,527 @@
+{template 'header'}
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'/>
+<link rel="stylesheet" href="{YOUMI_URL_APP}css/swiper.min.css">
+<link rel="stylesheet" href="{YOUMI_URL_APP}css/animate.min.css">
+<script src="{YOUMI_URL_APP}js/swiper.min.js"></script>
+<script src="{YOUMI_URL_APP}js/swiper.animate.min.js"></script>
+<script src="{YOUMI_URL_APP}js/qrcode.min.js"></script>
+
+<style>
+    html,body{
+        height:100%;
+    }
+    body{
+        font-family:"microsoft yahei";
+        margin: 0;
+    }
+    .swiper-container {
+        width: 100%;
+        height: 100%;
+    }
+    .swiper-slide{
+        width:100%;
+        height:100%;
+    }
+    .swiper-slide1{
+        background:url({YOUMI_URL_APP}images/p1_bg.png) no-repeat left top;
+        background-size: 100% 100%;
+
+    }
+    .swiper-slide2{
+        background:url({YOUMI_URL_APP}images/p5_bg.png) no-repeat left top;
+        background-size: 100% 100%;
+    }
+    .bg_fixed{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.65);
+        z-index: 15;
+        display: none;
+    }
+    img{
+        display:block;
+    }
+    .swiper-pagination-bullet {
+        width: 6px;
+        height: 6px;
+        background: #fff;
+        opacity: .4;
+    }
+    .swiper-pagination-bullet-active {
+        opacity: 1;
+    }
+    @-webkit-keyframes start {
+        0%,30% {opacity: 0;-webkit-transform: translate(0,10px);}
+        60% {opacity: 1;-webkit-transform: translate(0,0);}
+        100% {opacity: 0;-webkit-transform: translate(0,-8px);}
+    }
+    @-moz-keyframes start {
+        0%,30% {opacity: 0;-moz-transform: translate(0,10px);}
+        60% {opacity: 1;-moz-transform: translate(0,0);}
+        100% {opacity: 0;-moz-transform: translate(0,-8px);}
+    }
+    @keyframes start {
+        0%,30% {opacity: 0;transform: translate(0,10px);}
+        60% {opacity: 1;transform: translate(0,0);}
+        100% {opacity: 0;transform: translate(0,-8px);}
+    }
+    @keyframes tm1 {
+        0% {transform: translateX(180%);}
+        100% {transform: translateX(-130%);}
+    }
+    @keyframes tm2 {
+        0% {transform: translateX(160%);}
+        100% {transform: translateX(-130%);}
+    }
+    .ani{
+        position:absolute;
+        z-index: 3;
+    }
+    .array{
+        position:absolute;
+        z-index:999;
+        -webkit-animation: start 1.5s infinite ease-in-out;
+        width: 8%;
+        bottom: 1%;
+        right:0;
+    }
+
+    /*音乐*/
+
+    @-webkit-keyframes change {
+        from {
+            transform: rotate(0deg)
+        }
+        to {
+            transform: rotate(360deg)
+        }
+    }
+    @-webkit-keyframes point {
+        from {
+            opacity: 0.2
+        }
+        to {
+            opacity: 1
+        }
+    }
+    .music{
+        position: fixed;
+        right: 10px;
+        top: 2%;
+        border:1px solid #fff;
+        z-index: 9;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: url(http://qiniu.longyue8.com/tgaaa.png) no-repeat;
+        background-size: cover;
+        cursor: pointer;
+    }
+    .muc{
+        background: url(http://qiniu.longyue8.com/tgaaa.gif) no-repeat;
+        background-size: cover;
+        animation: change 1s linear 0s infinite;
+        -moz-animation: change 1s linear 0s infinite;
+        -webkit-animation: change 1s linear 0s infinite;
+        -o-animation: change 1s linear 0s infinite;
+    }
+    .tips{
+        width: 30%;
+        position: fixed;
+        top: 30%;
+        left: 35%;
+        padding: 10px;
+        background: #aaa;
+        color: #fff;
+        z-index: 999;
+        text-align: center;
+        border-radius: 10px;
+        display: none;
+    }
+    .text-center.footer{
+        display: none;
+    }
+
+
+    .flex{
+        display: flex;
+        display: -webkit-flex;
+    }
+    .flex_j_center{
+        justify-content: center;
+        -webkit-justify-content: center;
+    }
+    .flex_j_around{
+        justify-content: space-around;
+        -webkit-justify-content: space-around;
+    }
+    .flex_j_between{
+        justify-content: space-between;
+        -webkit-justify-content: space-between;
+    }
+    .flex_a_center{
+        align-items: center;
+        -webkit-align-items: center;
+    }
+    .flex_wrap{
+        flex-wrap: wrap;
+        -webkit-flex-wrap: wrap;
+    }
+    .flex1{
+        flex: 1;
+        -webkit-flex: 1;
+    }
+    .text_center{
+        text-align: center;
+    }
+    .ft10{
+        font-size: 10px;
+    }
+    .ft12{
+        font-size: 12px;
+    }
+    .ft_weight{
+        font-weight: 900;
+    }
+
+    .s_content{
+        position: absolute;
+        width: 74%;
+        left: 13%;
+        top: 10%;
+        border-radius: 20px;
+        background: #EBE8DF;
+        border: 20px solid #EBE8DF;
+        box-sizing: border-box;
+        overflow-y: auto;
+    }
+    .swiper-slide1 .title1{
+        width: 75%;
+        left: 0;
+        top: 0;
+    }
+    .swiper-slide1 .title2{
+        top: 24%;
+        width: 47%;
+        left: 12%;
+    }
+    .swiper-slide1 .title3{
+        width: 11%;
+        right: 7%;
+        top: 1%;
+    }
+    .swiper-slide1 .img1{
+        top: 54%;
+        width: 84%;
+        left: 8%;
+    }
+    .swiper-slide1 .datas{
+        top: 38%;
+        left: 12%;
+        font-size: 10px;
+        border-top: 1px solid #888;
+        padding-top: 6px;
+        color: #007a86;
+    }
+    .datas div.num{
+        font-size: 30px;
+        font-family: Serif,"Times New Roman",Georgia;
+        letter-spacing: 6pt;
+    }
+    #qrcode{
+        width: 50%;
+        margin-left: 25%;
+    }
+    #qrcode img,#qrcode canvas{
+        width: 100%;
+        max-width: 135px;
+        border: 1px solid #aaa;
+        box-sizing: border-box;
+        padding: 5px;
+        background: #fff;
+        margin: 0 auto;
+    }
+    .detail {
+        padding-bottom: 2px;
+        padding-top: 2px;
+        border-bottom: 1px solid #aaa;
+    }
+    .bg_fixed2{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.65);
+        z-index: 80;
+        display: none;
+    }
+    .s_share{
+        position: absolute;
+        right: 0;
+        top: 2%;
+        z-index: 90;
+        width: 21%;
+        display: none;
+    }
+    .p5_btns{
+        position: absolute;
+        top: 90%;
+        width: 80%;
+        left: 10%;
+        font-size: 12px;
+        opacity: 0.8;
+    }
+    .p5_btns>div{
+        color: #fff;
+        background: #007a86;
+        border-radius: 3px;
+        padding: 7px 0;
+        width: 30%;
+        text-align: center;
+    }
+    .list {
+        top: 10%;
+        left: 10%;
+        width: 80%;
+        z-index: 20;
+        background: #f3efe4;
+        border-radius: 10px;
+        padding: 20px 40px;
+        box-sizing: border-box;
+        display: none;
+    }
+    .list>img{
+        position: absolute;
+        right: -15px;
+        top: -15px;
+        width: 36px;
+    }
+    .l_title{
+        color: #ff644b;
+        text-align: center;
+        border-bottom: 1px solid #aaa;
+        padding-bottom: 15px;
+    }
+    .d_time{
+        font-family: Serif,"Times New Roman",Georgia;
+        letter-spacing: 4pt;
+        font-size: 14px;
+    }
+    .d_txt{
+        font-size: 14px;
+    }
+    .p5_btns .shake{
+        background: #555;
+    }
+    .p5_btns .shake.active{
+        background: #007a86;
+    }
+    @media screen and (max-width: 350px){
+        .d_time,.list{font-size: 14px}
+        .p5_btns{font-size: 12px;}
+        .d_time{letter-spacing: 2pt;}
+    }
+</style>
+</head>
+
+<body>
+<div class="swiper-container">
+    <div id="music" class="music muc">
+        <audio id="audiojs" src="{$setting['music']}" autoplay loop></audio>
+    </div>
+    <div class="swiper-wrapper">
+        {if $cut_new['openid']==$member['openid']&&$cut_new['status']==3}
+        <section class="swiper-slide swiper-slide2">
+            <div class="s_content">
+                <div class="text_center ft12" style="color: #f55a3c;margin-top: 15px;font-weight: 900">恭喜您抢票成功!</div>
+                <div class="text_center ft12" style="color: #f55a3c;font-weight: 900">获得百亿元年·九溪映象舞蹈</div>
+                <div class="text_center ft12" style="color: #f55a3c;margin-bottom: 20px;font-weight: 900">演出门票一张!</div>
+                <div id="qrcode"></div>
+                <div class="text_center ft10 ft_weight" style="margin: 15px 0">凭此二维码 至售楼处兑换门票 与时代共鸣</div>
+                <hr style="width: 70%">
+                <div class="ft10 ft_weight text_center" style="margin-bottom: 4px;margin-top: 20px;">兑换时间</div>
+                <div class="ft10 ft_weight text_center" style="margin-bottom: 4px">2019年7月3日至2019年7月5日</div>
+                <div class="ft10 ft_weight text_center" style="margin-bottom: 4px">（10:00-17:00）</div>
+                <div class="ft10 ft_weight text_center" style="margin-bottom: 4px;margin-top: 25px">兑换地址</div>
+                <div class="ft10 ft_weight text_center" style="margin-bottom: 4px">张家港市暨阳湖大道与港城大道交汇处</div>
+                <div class="ft10 ft_weight text_center" style="margin-bottom: 4px">世茂九溪墅售楼处</div>
+                <div class="ft10 ft_weight text_center" style="margin-bottom: 4px">详询: <a href="tel:0512-58666666">0512-5866 6666</a></div>
+            </div>
+        </section>
+        {else}
+        <section class="swiper-slide swiper-slide1">
+            <div class="bg_fixed2" onclick="$('.bg_fixed2,.s_share').fadeOut()"></div>
+            <div class="bg_fixed"></div>
+            <img class="s_share" src="{YOUMI_URL_APP}images/p5_share.png" alt="">
+
+            <img src="{YOUMI_URL_APP}images/p2_title1.png" class="ani title1" swiper-animate-effect="fadeIn" swiper-animate-duration="1s" swiper-animate-delay="0s">
+            <img src="{YOUMI_URL_APP}images/p5_title2_1.png" class="ani title2" swiper-animate-effect="fadeIn" swiper-animate-duration="1s" swiper-animate-delay="0.5s">
+            <img src="{YOUMI_URL_APP}images/p3_title3.png" class="ani title3" swiper-animate-effect="fadeIn" swiper-animate-duration="1s" swiper-animate-delay="1s">
+            <div class="ani datas" swiper-animate-effect="fadeLeft" swiper-animate-duration="1s" swiper-animate-delay="0.8s">
+                <div>目前抢票人数</div>
+                <div class="num">{$all_cuts}</div>
+                <div>目前剩余票数</div>
+                <div class="num">{$ticket_surplus}</div>
+            </div>
+
+            <img src="{YOUMI_URL_APP}images/p5_kq{php echo $cut_new['times']+1}.png" class="ani resize img1 s1_imgprev" swiper-animate-effect="fadeInLeft" swiper-animate-duration="1.5s" swiper-animate-delay="0.3s">
+            <img style="display: none" src="{YOUMI_URL_APP}images/p5_kq{php echo $cut_new['times']+2}.png" class="ani resize img1 s1_imgnext">
+
+
+            <div class="p5_btns ani flex flex_j_between" swiper-animate-effect="fadeIn" swiper-animate-duration="1s" swiper-animate-delay="1.5s">
+                {if $cut_new['openid']!=$member['openid']}
+                <div class="shake {if !$isHelping}active{/if}">帮 TA 摇 一 摇</div>
+                {else}
+                {if $cut_new['status']==5}
+                <div class="shake active">抢 票 失 败</div>
+                {elseif $cut_new['status']==4}
+                <div class="shake active">已 核 销</div>
+                {else}
+                <div class="shake active" onclick="$('.bg_fixed2,.s_share').fadeIn()">请 好 友 帮 忙</div>
+                {/if}
+                {/if}
+
+                <div onclick="$('.list,.bg_fixed').fadeIn();">帮 助 记 录</div>
+                {if $cut_new['openid']!=$member['openid']}
+                <div onclick="goIndex()">我 也 要 领</div>
+                {/if}
+            </div>
+
+            <div class="list ani">
+            <img src="{YOUMI_URL_APP}images/p5_close.png" onclick="$('.list,.bg_fixed').fadeOut()">
+            <div class="l_title">帮助记录</div>
+                {if empty($list)}
+                <div style="text-align: center;margin: 10px">暂无记录</div>
+                {else}
+                {loop $list $lv}
+                <div class="detail flex flex_a_center">
+                    <img style="width: 43px;border-radius: 50%;margin: 10px 15px 5px 0;" src="{$lv['avatar']}" alt="">
+                    <div class="flex1">
+                        <div class="d_txt">{$lv['nickname']}帮忙摇了一下</div>
+                        <div class="d_time">{php echo date('Y-m-d',$lv['createtime'])}</div>
+                    </div>
+                </div>
+                {/loop}
+                {/if}
+        </div>
+        </section>
+        {/if}
+    </div>
+
+    <div class="swiper-pagination" style="display: none"></div>
+    <div class="tips"></div>
+</div>
+<script>
+    document.addEventListener('DOUMIontentLoaded', function () {
+        function audioAutoPlay() {
+            var audio = document.getElementById('audiojs');
+            audio.play();
+            document.addEventListener("WeixinJSBridgeReady", function () {
+                audio.play();
+            }, false);
+        }
+        audioAutoPlay();
+    });
+    if (/i(Phone|P(o|a)d)/.test(navigator.userAgent)) {
+        $(document).one('touchstart',
+            function(e) {
+                $('#audiojs').get(0).touchstart = true;
+                $('#audiojs').get(0).play();
+                return false;
+            });
+    }
+    var audio = document.getElementById('audiojs');
+    $('#music').click(function(){
+        if(audio.paused){
+            audio.play();
+            $(this).attr('class','music muc')
+        }else{
+            audio.pause();
+            $(this).attr('class','music')
+        }
+    });
+
+    new QRCode(document.getElementById("qrcode"), "{$_W['siteroot']}app/index.php?c=entry&i={$_W['uniacid']}&do=index&op=saler&m=umi_ballet&id={$_GPC['id']}");  // 设置要生成二维码的链接
+</script>
+<script>
+
+    // 提示
+    function tips(txt,timer){
+        $('.tips').html(txt).fadeIn();
+        setTimeout(function(){$('.tips').fadeOut()},timer||1500);
+    }
+    function openScan() {
+        wx.scanQRCode({
+            needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+            scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+        });
+    }
+    function goIndex(){
+        location.href="{php echo $this->createMobileUrl('index')}"
+    }
+    console.log({php echo json_encode($list)})
+    console.log({php echo json_encode($cut_new)})
+    console.log('$ticket_surplus',{php echo json_encode($ticket_surplus)})
+</script>
+{if $cut_new['openid']!=$member['openid']&&!$isHelping}
+<script>
+    // 摇一摇
+    // document.addEventListener("WeixinJSBridgeReady", function () {
+    //     createjs.Sound.registerSound({ src: "{YOUMI_URL_APP}music/2.mp3", id: "myAudio" });
+    // }, false);
+
+    var isajax = true;
+
+    var SHAKE_THRESHOLD = 3000;
+    var last_update = 0;
+    var x = y = z = last_x = last_y = last_z = 0;
+    function init() {
+        if (window.DeviceMotionEvent) {
+            window.addEventListener('devicemotion', deviceMotionHandler, false);
+        } else {
+            alert('not support mobile event');
+        }
+    }
+    function deviceMotionHandler(eventData) {
+        var acceleration = eventData.accelerationIncludingGravity;
+        var curTime = new Date().getTime();
+        if ((curTime - last_update) > 100) {
+            var diffTime = curTime - last_update;
+            last_update = curTime;
+            x = acceleration.x;
+            y = acceleration.y;
+            z = acceleration.z;
+            var speed = Math.abs(x + y + z - last_x - last_y - last_z) / diffTime * 10000;
+
+            if (speed > SHAKE_THRESHOLD) {
+                if(!isajax){
+                    return false;
+                }
+                isajax=false;
+                $.post(
+                    "{php echo $this->createMobileUrl('index',array('op' =>'helping'))}",
+                    {id:"{$_GPC['cut_id']}"},
+                    function (data) {
+                        tips(data.message);
+                        if(data.errno==0){
+                            $('.s1_imgnext').fadeIn(1500);
+                            setTimeout(function(){
+                                location.reload()
+                            },3000);
+                        }
+                    },'json'
+                )
+            }
+            last_x = x;
+            last_y = y;
+            last_z = z;
+        }
+    }
+    init();
+</script>
+{/if}
+{template 'common/footer'}

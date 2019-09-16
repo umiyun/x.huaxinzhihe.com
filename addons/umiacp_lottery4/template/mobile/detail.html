@@ -1,0 +1,43 @@
+{template 'header'}
+
+
+<h1 onclick="reward()">报名</h1>
+<h1 onclick="reach()">签到</h1>
+<script>
+    function reward() {
+        $.post(
+            "{php echo $_W['siteroot'] . 'addons/umi_common/public/?service=Lottery4.Reward.Save'}",
+            {
+                'uniacid': "{$_W['uniacid']}",
+                'user_type': "2",
+                'mid': "{php echo $this->mid}",
+                'openid': "{php echo $this->openid}",
+                'activity_id': "3",
+                'nickname': "{php echo $_W['fans']['nickname']}",
+                'avatar': "{php echo $_W['fans']['avatar']}",
+                'realname': "111",
+                'mobile': "18888888888",
+                'userinfo': "xxxx",
+            },
+            function (data) {
+                console.log(data)
+            }, 'json'
+        )
+    }
+    function reach() {
+        $.post(
+            "{php echo $_W['siteroot'] . 'addons/umi_common/public/?service=Lottery4.Reach.Save'}",
+            {
+                'uniacid': "{$_W['uniacid']}",
+                'user_type': "2",
+                'mid': "{php echo $this->mid}",
+                'openid': "{php echo $this->openid}",
+                'reward_id': "{php echo $reward_id}",
+            },
+            function (data) {
+                console.log(data)
+            }, 'json'
+        )
+    }
+</script>
+{template 'footer'}

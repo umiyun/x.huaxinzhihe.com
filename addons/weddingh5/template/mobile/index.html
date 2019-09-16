@@ -1,0 +1,504 @@
+﻿{template 'header'}
+<title>郭然爱臻婚礼邀请函</title>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'/>
+<link rel="stylesheet" href="{MC_URL_APP}css/swiper.min.css">
+<link rel="stylesheet" href="{MC_URL_APP}css/animate.min.css">
+<script src="{MC_URL_APP}js/swiper.min.js"></script>
+<script src="{MC_URL_APP}js/swiper.animate.min.js"></script>
+
+<!--<link rel="stylesheet" href="/dist/css/swiper.min.css">
+<link rel="stylesheet" href="/dist/css/animate.min.css">
+<script src="/dist/js/swiper.min.js"></script>
+<script src="/dist/js/swiper.animate.min.js"></script>-->
+
+<style>
+*{
+	margin:0;
+	padding:0;
+}
+html,body{
+	height:100%;
+}
+body{
+	font-family:"microsoft yahei";
+}
+.swiper-container {
+  /*  width: 320px;
+    height: 480px;*/
+	width: 100%;
+    height: 100%;
+	background:#000;
+
+  
+}  
+
+.swiper-slide{
+	width:100%;
+	height:100%;
+	/*background:url({MC_URL_APP}upload/bg.jpg) no-repeat left top;*/
+	background-size:100% 100%;
+
+}
+.swiper-slide1{
+    background:url({MC_URL_APP}images/1_bg.png) no-repeat left top;
+    background-size: 100%;
+}
+.swiper-slide2{
+    background:url({MC_URL_APP}images/2_bg.png) no-repeat left top;
+    background-size: 100%;
+}
+.swiper-slide3{
+    background:url({MC_URL_APP}images/3_bg.png) no-repeat left top;
+    background-size: 100%;
+}
+.swiper-slide4{
+    background:url({MC_URL_APP}images/4_bg.png) no-repeat left top;
+    background-size: 100%;
+}
+.swiper-slide5{
+    background:url({MC_URL_APP}images/5_bg.png) no-repeat left top;
+    background-size: 100%;
+}
+.swiper-slide6{
+    background:url({MC_URL_APP}images/6_bg1.png) no-repeat left top;
+    background-size: 100%;
+}
+img{
+	display:block;
+}
+.swiper-pagination-bullet {
+width: 6px;
+height: 6px;
+background: #fff;
+opacity: .4;
+}
+.swiper-pagination-bullet-active {
+opacity: 1;
+}
+@-webkit-keyframes start {
+	0%,30% {opacity: 0;-webkit-transform: translate(0,10px);}
+	60% {opacity: 1;-webkit-transform: translate(0,0);}
+	100% {opacity: 0;-webkit-transform: translate(0,-8px);}
+}
+@-moz-keyframes start {
+	0%,30% {opacity: 0;-moz-transform: translate(0,10px);}
+	60% {opacity: 1;-moz-transform: translate(0,0);}
+	100% {opacity: 0;-moz-transform: translate(0,-8px);}
+}
+@keyframes start {
+	0%,30% {opacity: 0;transform: translate(0,10px);}
+	60% {opacity: 1;transform: translate(0,0);}
+	100% {opacity: 0;transform: translate(0,-8px);}
+}
+
+.tm1{
+    -webkit-animation: tm1 forwards 6s 1;
+}
+.tm2{
+    -webkit-animation: tm2 forwards 8s 1;
+
+}
+
+#tm1,#tm2{
+    display: inline-block;
+    position: absolute;
+    z-index: 999;
+    background: rgba(0,0,0,0.7);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 35px;
+    margin: 5px;
+    display: none;
+}
+#tm1 img,#tm2 img{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    float: left;
+    display: inline-block;
+}
+@keyframes tm1 {
+	0% {transform: translateX(180%);}
+	100% {transform: translateX(-130%);}
+}
+@keyframes tm2 {
+	0% {transform: translateX(160%);}
+	100% {transform: translateX(-130%);}
+}
+.ani{
+	position:absolute;
+	}
+.txt{
+	position:absolute;
+}
+#array{
+	position:absolute;z-index:999;
+    -webkit-animation: start 1.5s infinite ease-in-out;
+    width: 20px;
+    height: 15px;
+    bottom: 2px;
+    left: 47%;
+}
+
+/*音乐*/
+.music{
+    width:30px;
+    height: 30px;
+    border-radius: 30px;
+    border:1px solid #fff;
+    position: fixed;
+    top:30px;
+    right: 30px;
+    z-index: 34;
+    cursor: pointer;
+}
+
+@-webkit-keyframes change {
+    from {
+        transform: rotate(0deg)
+    }
+    to {
+        transform: rotate(360deg)
+    }
+}
+.music{
+    position: fixed;
+    right: 20px;
+    top: 20px;
+    z-index: 999999;
+    /* display: none; */
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: url({MC_URL_APP}images/aaa.png) no-repeat;
+    background-size: cover;
+}
+.muc{
+    background: url({MC_URL_APP}images/aaa.gif) no-repeat;
+    background-size: cover;
+    animation: change 1s linear 0s infinite;
+    -moz-animation: change 1s linear 0s infinite;
+    -webkit-animation: change 1s linear 0s infinite;
+    -o-animation: change 1s linear 0s infinite;
+}
+img.map{
+    width: 70%;
+    left: 15%;
+    top: 32%;
+    z-index:1;
+}
+/*@media screen and (max-width: 380px){*/
+    /*img.map{top: 38%;}*/
+/*}*/
+/*@media screen and (max-width: 320px){*/
+    /*img.map{top: 39%;}*/
+/*}*/
+.submit{
+    position: absolute;
+    top: 66%;
+    width: 70%;
+    left: 15%;
+}
+.submit button{
+    width: 100%;
+    border: 1px solid transparent;
+    height: 30px;
+    border-radius: 5px;
+    color: #fff;
+    background: #B87F6A;
+    font-size: 14px;
+}
+.submit textarea{
+    width: 95%;
+    border: 1px solid transparent;
+    padding: 2%;
+}
+    .tips{
+        width: 30%;
+        position: fixed;
+        top: 30%;
+        left: 35%;
+        padding: 10px;
+        background: #aaa;
+        color: #fff;
+        z-index: 999;
+        text-align: center;
+        border-radius: 10px;
+        display: none;
+    }
+    .text-center.footer{
+        display: none;
+    }
+</style>
+</head>
+
+<body>
+<div class="swiper-container">
+    <div id="music" class="music muc">
+        <audio id="audiojs" src="{MC_URL_APP}music.mp3" autoplay loop></audio>
+    </div>
+    <div class="swiper-wrapper">
+    <!-------------slide1----------------->
+        <section class="swiper-slide swiper-slide1">
+
+        <img src="{MC_URL_APP}images/1_title.png" class="ani resize" style="width:46%;left:25%;top:8%;z-index:3;" swiper-animate-effect="zoomIn" swiper-animate-duration="1.5s" swiper-animate-delay="0s"  >
+        <!--<img src="{MC_URL_APP}upload/bonus_02.jpg" class="ani resize" style="width:320px;height:27px;left:0px;top:75px;z-index:3;" swiper-animate-effect="fadeIn" swiper-animate-duration="0.5s" swiper-animate-delay="1.5s"  > -->
+        <img src="{MC_URL_APP}images/1_bottom.png" class="ani resize" style="width:40%;left:30%;bottom:5%;z-index:2;" swiper-animate-effect="rotateInDownLeft" swiper-animate-duration="0.5s" swiper-animate-delay="1s"   >
+        <img src="{MC_URL_APP}images/1_name.png"  class="ani resize" style="width:44%;left:28%;bottom:15%;z-index:1;" swiper-animate-effect="bounceInDown" swiper-animate-duration="1.5s" swiper-animate-delay="1.5s"  >
+        <img src="{MC_URL_APP}images/1_word1.png"  class="ani resize" style="width:60%;left:17%;bottom:10%;z-index:1;" swiper-animate-effect="fadeInUp" swiper-animate-duration="0.5s" swiper-animate-delay="3s"  >
+        
+        </section>
+     <!---------------slide2-------------->   
+        <section class="swiper-slide swiper-slide2">
+            <img src="{MC_URL_APP}images/2_word.png" class="ani resize" style="width:60%;left:10%;top:7%;z-index:5; " swiper-animate-effect="bounce" swiper-animate-duration="0.5s" swiper-animate-delay="0s"  >
+            <img src="{MC_URL_APP}images/2_word1.png" class="ani resize" style="width:50%;left:10%;top:15%;z-index:4;" swiper-animate-effect="fadeIn" swiper-animate-duration="0.5s" swiper-animate-delay="0.5s"  >
+            <img src="{MC_URL_APP}images/2_word2.png" class="ani resize" style="width:50%;left:10%;top:19%;z-index:4;" swiper-animate-effect="fadeIn" swiper-animate-duration="0.5s" swiper-animate-delay="0.7s"  >
+            <img src="{MC_URL_APP}images/2_word3.png" class="ani resize" style="width:50%;left:10%;top:23%;z-index:4;" swiper-animate-effect="fadeIn" swiper-animate-duration="0.5s" swiper-animate-delay="0.9s"  >
+            <img src="{MC_URL_APP}images/2_img1.png" class="ani resize" style="width:37%;right:0;top:15%;z-index:3;" swiper-animate-effect="bounceInRight" swiper-animate-duration="1.6s" swiper-animate-delay="1s"  >
+            <img src="{MC_URL_APP}images/2_img2.png" class="ani resize" style="width:65%;left:0;top:33%;z-index:3;" swiper-animate-effect="bounceInLeft" swiper-animate-duration="2s" swiper-animate-delay="1.2s"  >
+            <img src="{MC_URL_APP}images/2_img3.png" class="ani resize" style="width:35%;right:0;bottom:0;z-index:3;" swiper-animate-effect="bounceInRight" swiper-animate-duration="1.6s" swiper-animate-delay="1.4s"  >
+
+        </section>
+        <!---------------slide3-------------->
+        <section class="swiper-slide swiper-slide3">
+            <img src="{MC_URL_APP}images/3_word.png" class="ani resize" style="width:60%;left:10%;top:67%;z-index:5; " swiper-animate-effect="bounce" swiper-animate-duration="0.5s" swiper-animate-delay="0.2s"  >
+            <img src="{MC_URL_APP}images/3_word1.png" class="ani resize" style="width:50%;left:10%;top:75%;z-index:4;" swiper-animate-effect="fadeIn" swiper-animate-duration="0.5s" swiper-animate-delay="0.5s"  >
+            <img src="{MC_URL_APP}images/3_word2.png" class="ani resize" style="width:50%;left:10%;top:79%;z-index:4;" swiper-animate-effect="fadeIn" swiper-animate-duration="0.5s" swiper-animate-delay="0.7s"  >
+            <img src="{MC_URL_APP}images/3_word3-1.png" class="ani resize" style="width:50%;left:10%;top:83%;z-index:4;" swiper-animate-effect="fadeIn" swiper-animate-duration="0.5s" swiper-animate-delay="0.9s"  >
+            <img src="{MC_URL_APP}images/3_word4-1.png" class="ani resize" style="width:50%;left:10%;top:87%;z-index:4;" swiper-animate-effect="fadeIn" swiper-animate-duration="0.5s" swiper-animate-delay="1.1s"  >
+            <img src="{MC_URL_APP}images/3_img1.png" class="ani resize" style="width:68%;left:0;top:5%;z-index:3;" swiper-animate-effect="bounceInRight" swiper-animate-duration="2s" swiper-animate-delay="0s"  >
+            <img src="{MC_URL_APP}images/3_img2.png" class="ani resize" style="width:35%;right:0;top:30%;z-index:3;" swiper-animate-effect="bounceInLeft" swiper-animate-duration="1s" swiper-animate-delay="1.3s"  >
+            <img src="{MC_URL_APP}images/3_img3.png" class="ani resize" style="width:43%;right:0;bottom:0;z-index:3;" swiper-animate-effect="bounceInUp" swiper-animate-duration="1.6s" swiper-animate-delay="1.4s"  >
+
+        </section>
+        <!---------------slide4-------------->
+        <section class="swiper-slide swiper-slide4">
+            <img src="{MC_URL_APP}images/4_word.png" class="ani resize" style="width:30%;left:2%;top:60%;z-index:5; " swiper-animate-effect="bounce" swiper-animate-duration="0.5s" swiper-animate-delay="1.5s"  >
+            <img src="{MC_URL_APP}images/4_word1.png" class="ani resize" style="width:45%;right:10%;top:12%;z-index:4;" swiper-animate-effect="fadeIn" swiper-animate-duration="0.5s" swiper-animate-delay="0s"  >
+            <img src="{MC_URL_APP}images/4_word2.png" class="ani resize" style="width:45%;right:10%;top:16%;z-index:4;" swiper-animate-effect="fadeIn" swiper-animate-duration="0.5s" swiper-animate-delay="0.2s"  >
+            <img src="{MC_URL_APP}images/4_word3.png" class="ani resize" style="width:45%;right:10%;top:82%;z-index:4;" swiper-animate-effect="fadeIn" swiper-animate-duration="0.5s" swiper-animate-delay="0.4s"  >
+            <img src="{MC_URL_APP}images/4_word4.png" class="ani resize" style="width:45%;right:10%;top:86%;z-index:4;" swiper-animate-effect="fadeIn" swiper-animate-duration="0.5s" swiper-animate-delay="0.6s"  >
+            <img src="{MC_URL_APP}images/4_word5.png" class="ani resize" style="width:45%;right:10%;top:90%;z-index:4;" swiper-animate-effect="fadeIn" swiper-animate-duration="0.5s" swiper-animate-delay="0.9s"  >
+            <img src="{MC_URL_APP}images/4_img1.png" class="ani resize" style="width:37%;left:0;top:5%;z-index:3;" swiper-animate-effect="bounceInRight" swiper-animate-duration="1.6s" swiper-animate-delay="0.1s"  >
+            <img src="{MC_URL_APP}images/4_img2.png" class="ani resize" style="width:65%;right:0;top:22%;z-index:3;" swiper-animate-effect="bounceInLeft" swiper-animate-duration="2s" swiper-animate-delay="0.3s"  >
+
+        </section>
+     <!----------------slide5-------------->
+        <section class="swiper-slide swiper-slide5">
+
+            <img src="{MC_URL_APP}images/5_word1.png" class="ani resize" style="width:22%;left:39%;top:30%;z-index:2;" swiper-animate-effect="zoomIn" swiper-animate-duration="0.5s" swiper-animate-delay="0s"  >
+            <img src="{MC_URL_APP}images/5_word2.png" class="ani resize" style="width:44%;left:27%;top:43%;z-index:3;" swiper-animate-effect="bounceInLeft" swiper-animate-duration="0.5s" swiper-animate-delay="0.5s"  >
+            <img src="{MC_URL_APP}images/5_word3.png" class="ani resize" style="width:44%;left:27%;top:59%;z-index:4;" swiper-animate-effect="bounceInRight" swiper-animate-duration="0.5s" swiper-animate-delay="0.8s"   >
+            <img src="{MC_URL_APP}images/5_word4.png" class="ani resize" style="width:44%;left:27%;top:70%;z-index:5; " swiper-animate-effect="bounce" swiper-animate-duration="0.5s" swiper-animate-delay="1.1s"  >
+
+        
+        </section>
+        <!-------------slide6----------------->
+        <section class="swiper-slide swiper-slide6">
+        <!--<img src="{MC_URL_APP}images/001.jpg" class="ani resize" style="width:320px;height:46px;left:0;top:20px;z-index:2;" swiper-animate-effect="fadeInDown" swiper-animate-duration="0.5s" swiper-animate-delay="0s"   >-->
+            <div id="tm1" class="">
+
+            </div>
+            <div id="tm2" class="">
+                <img src="{$_W['fans']['avatar']}" style="width: 40px;height: 40px;border-radius: 50%;line-height: 40px">
+                <span style="margin: 0 5px;line-height: 40px;">{$_W['fans']['nickname']}：</span>
+                <span></span>
+            </div>
+            <img onclick="openMap()" src="{MC_URL_APP}images/6_map1.png"  class="ani resize map" swiper-animate-effect="zoomInLeft" swiper-animate-duration="0.5s" swiper-animate-delay="0.5s"  >
+            <div class="ani resize submit" swiper-animate-effect="zoomInLeft" swiper-animate-duration="0.5s" swiper-animate-delay="0.5s">
+                <textarea placeholder="请输入您对新人的祝福" rows="2"></textarea>
+                <button>提交</button>
+            </div>
+        </section>
+        
+        
+        
+    </div>
+    
+   <img src="{MC_URL_APP}images/arrow.png" id="array" class="resize">
+  <div class="swiper-pagination" style="display: none"></div>
+    <div class="tips">留言成功</div>
+</div>
+
+
+<script>  
+
+scaleW=window.innerWidth/320;
+scaleH=window.innerHeight/480;
+var resizes = document.querySelectorAll('.resize');
+          // for (var j=0; j<resizes.length; j++) {
+          //  resizes[j].style.width=parseInt(resizes[j].style.width)*scaleW+'px';
+		   // resizes[j].style.height=parseInt(resizes[j].style.height)*scaleH+'px';
+		   // resizes[j].style.top=parseInt(resizes[j].style.top)*scaleH+'px';
+		   // resizes[j].style.left=parseInt(resizes[j].style.left)*scaleW+'px';
+          // }
+		  
+  var mySwiper = new Swiper ('.swiper-container', {
+   direction : 'vertical',
+   pagination: '.swiper-pagination',
+  //virtualTranslate : true,
+   mousewheelControl : true,
+   onInit: function(swiper){
+   swiperAnimateCache(swiper);
+   swiperAnimate(swiper);
+	  },
+   onSlideChangeEnd: function(swiper){
+	swiperAnimate(swiper);
+    },
+	onTransitionEnd: function(swiper){
+	swiperAnimate(swiper);
+    },
+	
+	
+	watchSlidesProgress: true,
+
+      onProgress: function(swiper){
+        for (var i = 0; i < swiper.slides.length; i++){
+          var slide = swiper.slides[i];
+          var progress = slide.progress;
+          var translate = progress*swiper.height/4;  
+		  scale = 1 - Math.min(Math.abs(progress * 0.5), 1);
+          var opacity = 1 - Math.min(Math.abs(progress/2),0.5);
+          slide.style.opacity = opacity;
+		  es = slide.style;
+		  es.webkitTransform = es.MsTransform = es.msTransform = es.MozTransform = es.OTransform = es.transform = 'translate3d(0,'+translate+'px,-'+translate+'px) scaleY(' + scale + ')';
+            if(i==5){
+
+            }
+        }
+      },
+	
+	   onSetTransition: function(swiper, speed) {
+        for (var i = 0; i < swiper.slides.length; i++){
+          es = swiper.slides[i].style;
+		  es.webkitTransitionDuration = es.MsTransitionDuration = es.msTransitionDuration = es.MozTransitionDuration = es.OTransitionDuration = es.transitionDuration = speed + 'ms';
+
+        }
+      },
+	
+	
+	
+	   })
+
+
+var audio=document.getElementsByTagName('audio')[0];
+$('#music').click(function(){
+    if(audio.paused){
+        audio.play();
+        $(this).attr('class','music muc')
+    }else{
+        audio.pause();
+        $(this).attr('class','music')
+    }
+});
+document.addEventListener('DOMContentLoaded', function () {
+    function audioAutoPlay() {
+        var audio = document.getElementById('audiojs');
+        audio.play();
+        document.addEventListener("WeixinJSBridgeReady", function () {
+            audio.play();
+        }, false);
+    }
+    audioAutoPlay();
+});
+if (/i(Phone|P(o|a)d)/.test(navigator.userAgent)) {
+    $(document).one('touchstart',
+        function(e) {
+            $('#audiojs').get(0).touchstart = true;
+            $('#audiojs').get(0).play();
+            return false;
+        });
+}
+
+
+
+function openMap() {
+    wx.openLocation({
+        latitude: 34.153362, // 纬度，浮点数，范围为90 ~ -90
+        longitude: 112.700260, // 经度，浮点数，范围为180 ~ -180。
+        name: '河南省汝州市寄料镇河西家宴城', // 位置名
+        address: '', // 地址详情说明
+        scale: 8, // 地图缩放级别,整形值,范围从1~28。默认为最大
+        infoUrl: '' // 在查看位置界面底部显示的超链接,可点击跳转
+    });
+}
+
+$('.submit button').click(function(){
+    var content=$('.submit textarea').val();
+    if(content){
+        $.post(
+            '{php echo $this->createMobileUrl("index")}',
+            {
+                op:'post_message',
+                content:content
+            },
+            function(res){
+                var data=JSON.parse(res);
+                if(data.status==1){
+                    $('.submit textarea').val('');
+                    $('.tips').fadeIn();
+                    setTimeout(function(){$('.tips').fadeOut()},1000);
+                    setTimeout(function(){
+                        $('#tm2').find('span:last-child').html(content).parent().css('display','inline-block').addClass('tm2')
+                    },1000);
+                }
+            }
+        )
+    }
+})
+var contents=[];
+console.log({php echo json_encode($_W['fans'])});
+    setTimeout(function(){
+        $.post(
+            '{php echo $this->createMobileUrl("index")}',
+            {
+                op:'message_list'
+            },
+            function(res){
+                var data=JSON.parse(res);
+                if(data.status==1){
+                    contents=data.data;
+                    console.log(contents)
+                }
+            }
+        )
+    },4000);
+
+var itm=0;
+var t=setInterval(function () {
+    console.log(1);
+    if(itm==contents.length){itm=0}
+    itm++;
+    var data=contents[itm];
+    var marginTop=randomNum(6,16)+'%';
+    var html='<img src="'+data['avatar']+'" style="width: 40px;height: 40px;border-radius: 50%">' +
+        '                <span style="line-height: 40px;margin: 0 5px;line-height: 40px;">'+data['nickname']+'：</span>' +
+        '                <span>'+data['content']+'</span>';
+    $('#tm1').removeClass('tm1').css('display','none');
+    setTimeout(function() {
+        $('#tm1').html(html).css('display', 'inline-block').css('top',marginTop).addClass('tm1')
+    },2000)
+}, 7000);
+function randomNum(minNum,maxNum){
+    switch(arguments.length){
+        case 1:
+            return parseInt(Math.random()*minNum+1,10);
+            break;
+        case 2:
+            return parseInt(Math.random()*(maxNum-minNum+1)+minNum,10);
+            break;
+        default:
+            return 0;
+            break;
+    }
+}
+function testAnim(cls) {
+    $(cls).html('佩服佩服').removeClass().attr('swiper-animate-duration','20s').addClass('bounceInRight animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+        $(this).removeClass();
+    });
+};
+  </script>
+<script>
+
+</script>
+{template 'common/footer'}

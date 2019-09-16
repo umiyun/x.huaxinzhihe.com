@@ -1,0 +1,79 @@
+{template 'header'}
+<link rel="stylesheet" href="{YOUMI_URL_APP}css/animate.min.css">
+<link rel="stylesheet" href="{YOUMI_URL_APP}css/waiting.css">
+<link rel="stylesheet" href="{YOUMI_URL_APP}css/amazeui.css">
+<link rel="stylesheet" href="{YOUMI_URL_APP}css/reset.css">
+<style>
+    body {
+        background-color: #ebebeb;
+        font-size: 12px;
+    }
+    p{
+        margin: 0;
+        color: inherit;
+        font-size: inherit;
+    }
+</style>
+<!-- 扫码次数显示 -->
+<div id="mid"></div>
+<div class="am-padding-vertical-lg bg-fff">
+    <div>
+        <!-- 边框变红 在 class 上加 brRed ，变回绿色 remove brRed -->
+        <div class="anti-result-circle mgCter po-re  brRed ">
+            <span class="po-abs am-text-center am-text-lg am-g scan-total">累计扫码</span>
+            <span class="po-abs am-text-center am-text-xxxl scan-times w-all">{$code['times']}</span>
+            <span class="po-abs am-text-right am-text-sm times" style="right:3rem">次</span>
+        </div>
+    </div>
+    <div class="wb75 mgCter indt2 am-padding-top-lg">
+        <p>您的防伪码首次查询于{php echo date('Y-m-d H:i:s',$code['use_time'])}，已被查询过<font color=red size=4>{$code['times']}</font>次。</p>
+    </div>
+    <div class="wb75 mgCter am-text-center am-padding-top-xs am-text-sm" id = "salePlace">
+    </div>
+</div>
+<!-- 点我抽奖 -->
+<!--<div class="am-text-center am-padding-vertical-lg am-margin-top-sm bg-fff am-text-sm po-re">-->
+    <!--<div>-->
+        <!--<font color=red> 谢谢品尝！</font>-->
+    <!--</div>-->
+    <!--<div class="po-abs baby-boy animated fadeInLeft">-->
+        <!--<img src="http://m.code.jinshiyuan.com.cn/resource/images/dj_img/baby_boy.png" width="100" alt="">-->
+    <!--</div>-->
+    <!--<div class="po-abs baby-girl animated fadeInRight">-->
+        <!--<img src="http://m.code.jinshiyuan.com.cn/resource/images/dj_img/baby_girl.png" width="100" alt="">-->
+    <!--</div>-->
+<!--</div>-->
+<!-- 商品详情 -->
+
+<div class="bg-fff am-margin-top-sm">
+    <div class="am-text-center animated bounceIn">
+        <img src="{$activity['goods']['image']}" class="goodsImg" style="width: 50%;">
+    </div>
+    <hr data-am-widget="divider" style="" class="am-divider am-divider-default am-margin-0" />
+    <div class="am-padding-sm">
+        <div class="am-g">
+            <div class="am-u-sm-12 am-padding-0">
+                <ul class="ulNoStyle am-margin-top-sm am-text-sm">
+                    {loop $activity['goods']['content'] $agv}
+                    <li>
+                        <span class="itemTitle">{$agv['label']}：</span>
+                        <span class="itemInfo">{$agv['value']}</span>
+                    </li>
+                    {/loop}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    var fromPage=sessionStorage.getItem('fromPage');
+    if(!fromPage||fromPage==null){
+        // window.opener = null;
+        // window.open('', '_self');
+        // window.close();
+        // history.go(-1);
+    }
+    console.log('$activity',{php echo json_encode($activity)})
+</script>
+{template 'footer'}

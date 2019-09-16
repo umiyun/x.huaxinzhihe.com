@@ -1,0 +1,263 @@
+{template 'header'}
+<link rel="stylesheet" href="{YOUMI_URL_APP}css/common.css">
+<style>
+    .color_yellow{
+        color: #FFC82D;
+    }
+
+    .toping{
+        margin-top: 5%;
+    }
+    .t_detail{
+        width: 33%;
+    }
+    .d_avatar img:first-child{
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+    }
+    .d_avatar img:last-child{
+        position: absolute;
+        z-index: 2;
+        bottom: -7px;
+        width: 75%;
+        left: 15%;
+    }
+    .d_name{
+        margin-top: 10px;
+    }
+    .nav-menu-wx{
+        display: none;
+    }
+    .t_title2 img{
+        width: 30px;
+    }
+    .t_btns{
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: 60%;
+        margin: 2% 0 5% 20%;
+    }
+    .t_btns>div{
+        width: 33.3%;
+        text-align: center;
+        padding: 4px 0;
+        color: #555;
+    }
+    .t_btns>div:nth-child(2){
+        border-left: 1px solid #ccc;
+        border-right: 1px solid #ccc;
+    }
+    .t_btns>div.active{
+        color: #fff;
+        background: #FC8020;
+    }
+    #tab2,#tab3{
+        display: none;
+    }
+    .ta_detail{
+        margin: 0 10%;
+        border-bottom: 1px solid #eee;
+        padding: 10px 0;
+    }
+    .ta_detail img{
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        margin-right: 5px;
+    }
+    .ta_detail p{
+        color: #7CB6B3;
+
+    }
+    .ta_detail div{
+        text-align: right;
+        color: #B4B69B;
+    }
+    .open_prize{
+        position: fixed;
+        top: 20%;
+        width: 70%;
+        left: 15%;
+        z-index: 20;
+        color: #fff;
+        /*display: none;*/
+        text-align: center;
+        background: url({YOUMI_URL_APP}img/t_dialog.png) no-repeat;
+        background-size: 100% 100%; 
+    }
+    .open_prize .iconfont{
+        font-size: 24px;
+    }
+    .open_prize {
+        height: 50%;
+        padding-top: 27%;
+        border-radius: 12px;
+    }
+    .open_prize .p_close {
+        position: absolute;
+        top: 0;
+        right: 7px;
+        z-index: 99;
+    }
+    .open_prize .u-btn-node {
+        display: inline-block;
+        margin-top: 15%;
+        border-radius: 50px;
+        text-align: center;
+        line-height: 99px;
+        height: 99px;
+        width: 99px;
+        font-size: 20px;
+        color: #fff;
+        background-image: -webkit-linear-gradient(325deg,#ff5d53,#ff8d85);
+        background-image: linear-gradient(-235deg,#ff5d53,#ff8d85);
+        box-shadow: 3px 4px 8px #ff8d85;
+    }
+    .open_prize .p_detail {
+        color: #FFF;
+        font-size: 12px;
+        font-family: 'PingFang SC', 'HanHei SC', 'Helvetica Neue', 'Helvetica', sans-serif;
+    }
+    .open_prize .p_detail .p_prize {
+        width: 66px;
+        height: 66px;
+        overflow: hidden;
+        border: 2px solid #fd6e4a;
+        border-radius: 6px;
+        margin: 10px auto;
+    }
+
+    .back_btn {
+        position: absolute;
+        left: 5%;
+        z-index: 999;
+        background: #fff;
+        border: 2px solid #dddddd;
+        height: 33px;
+        border-radius: 44px;
+        width: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .back_btn .jiantouyou {
+        transform: rotate(180deg);
+    }
+</style>
+<a class="back_btn" href="{php echo $this->createMobileUrl('index',['op'=>'speeddial','activity_id'=>$_GPC['activity_id']])}"><i class="iconfont icon-jiantouyou jiantouyou"></i>去抽奖</a>
+<h4 class="text_center" style="margin-top: 5%">今日打卡战况</h4>
+
+<div class="flex flex_j_center">
+    <div style="margin-right: 10px"><span class="color_yellow">{$success}</span>成功</div>
+    <div>{$error}失败</div>
+</div>
+
+<div class="toping flex flex_j_between">
+    {loop $early $index $item}
+        {if $index == 0}
+            <div class="t_detail text_center">
+                <div class="d_avatar p_relative">
+                    <img src="{$item['avatar']}" alt="">
+                    <img src="{YOUMI_URL_APP}img/t_icon1.png" alt="">
+                </div>
+                <div class="d_name">{$item['nickname']}</div>
+                <div class="color_yellow">{php echo date('H:i',$item['reach_time'])}打卡</div>
+            </div>
+        {/if}
+    {/loop}
+    {loop $luck $index $item}
+        {if $index == 0}
+            <div class="t_detail text_center">
+                <div class="d_avatar p_relative">
+                    <img src="{$item['avatar']}" alt="">
+                    <img src="{YOUMI_URL_APP}img/t_icon2.png" alt="">
+                </div>
+                <div class="d_name">{$item['nickname']}</div>
+                <div class="color_yellow">{$item['price']}元</div>
+            </div>
+        {/if}
+    {/loop}
+    {loop $perseverance $index $item}
+        {if $index == 0}
+            <div class="t_detail text_center">
+                <div class="d_avatar p_relative">
+                    <img src="{$item['avatar']}" alt="">
+                    <img src="{YOUMI_URL_APP}img/t_icon3.png" alt="">
+                </div>
+                <div class="d_name">{$item['nickname']}</div>
+                <div class="color_yellow">连续{$item['max_times']}次</div>
+            </div>
+        {/if}
+    {/loop}
+</div>
+<div class="t_title2 flex flex_j_center flex_a_center" style="margin-top: 5%">
+    <img src="{YOUMI_URL_APP}img/t_icon4.png" alt="">
+    <h5>今日排行榜 TOP 10</h5>
+</div>
+
+<div class="t_btns flex flex_a_center flex_j_center">
+    <div data-id="#tab1" class="tab1 active">手气榜</div>
+    <div data-id="#tab2" class="tab2">早起榜</div>
+    <div data-id="#tab3" class="tab3">毅力榜</div>
+</div>
+<div id="tab1">
+    {loop $luck $index $item}
+        {if $index > 0}
+        <div class="ta_detail flex flex_j_between flex_a_center">
+            <img src="{$item['avatar']}" alt="">
+            <p>{$item['nickname']}</p>
+            <div class="flex1">{$item['price']}元</div>
+        </div>
+        {/if}
+    {/loop}
+</div>
+<div id="tab2">
+    {loop $early $index $item}
+        {if $index > 0}
+        <div class="ta_detail flex flex_j_between flex_a_center">
+            <img src="{$item['avatar']}" alt="">
+            <p>{$item['nickname']}</p>
+            <div class="flex1">{php echo date('H:i',$item['reach_time'])}</div>
+        </div>
+        {/if}
+    {/loop}
+</div>
+<div id="tab3">
+    {loop $perseverance $index $item}
+        {if $index > 0}
+        <div class="ta_detail flex flex_j_between flex_a_center">
+            <img src="{$item['avatar']}" alt="">
+            <div>{$item['nickname']}</div>
+            <div class="flex1">连续{$item['max_times']}天</div>
+        </div>
+        {/if}
+    {/loop}
+</div>
+
+{if $reward['reach_time'] < strtotime(date('Y-m-d'))}
+ <div class="open_prize">
+    <i class="iconfont icon-Close p_close" onclick="$('.open_prize,.bg_fixed').fadeOut();"></i>
+    <div>
+        <div class="p_detail">
+            活动时间:{php echo date('m-d',$activity['starttime'])} ~ {php echo date('m-d',$activity['endtime'])}
+        </div>
+    </div>
+    <a class="u-btn-node" href="{php echo $this->createMobileUrl('index',['activity_id'=>$activity['id'], 'op' => 'display'])}">去签到<a>
+</div>
+{/if}
+
+<script>
+    console.log('$activity',{php echo json_encode($activity)});
+    $('.t_btns').on('click','div',function () {
+        if(!$(this).hasClass('active')){
+            $('.t_btns>div').removeClass('active');
+            $(this).addClass('active');
+            $('#tab1,#tab2,#tab3').hide();
+            $($(this).attr('data-id')).show();
+        }
+    })
+</script>
+
+{template 'footer'}

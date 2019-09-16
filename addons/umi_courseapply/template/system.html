@@ -1,0 +1,276 @@
+{template 'common/header'}
+<ul class="nav nav-tabs">
+    <li data-class="#base" class="active">
+        <a href="javascript:;">基本设置</a>
+    </li>
+    <li data-class="#share">
+        <a href="javascript:;">分享设置</a>
+    </li>
+    <li data-class="#sms" style="display: none">
+        <a href="javascript:;">短信设置</a>
+    </li>
+    <li data-class="#wxapp" style="display: none">
+        <a href="javascript:;">小程序参数设置</a>
+    </li>
+</ul>
+<div class="panel panel-default">
+    <form class="form-horizontal" role="form" method="post" action="" name="submit">
+        <div id="base" class="panel-body base">
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">系统标题</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="set[base][title]" value="{$setting['title']}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">浏览量</label>
+                <div class="col-sm-8">
+                    <input type="text" disabled class="form-control" value="{$pv}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">p1背景</label>
+                <div class="col-sm-8">
+                    {php echo tpl_form_field_image('set[base][bg1]',$setting['bg1']);}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">p2背景</label>
+                <div class="col-sm-8">
+                    {php echo tpl_form_field_image('set[base][bg2]',$setting['bg2']);}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">p3背景</label>
+                <div class="col-sm-8">
+                    {php echo tpl_form_field_image('set[base][bg3]',$setting['bg3']);}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">p4背景</label>
+                <div class="col-sm-8">
+                    {php echo tpl_form_field_image('set[base][bg4]',$setting['bg4']);}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">logo1</label>
+                <div class="col-sm-8">
+                    {php echo tpl_form_field_image('set[base][logo1]',$setting['logo1']);}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">logo2</label>
+                <div class="col-sm-8">
+                    {php echo tpl_form_field_image('set[base][logo2]',$setting['logo2']);}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">P1标题1</label>
+                <div class="col-sm-8">
+                    {php echo tpl_form_field_image('set[base][p1_title1]',$setting['p1_title1']);}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">P1标题2</label>
+                <div class="col-sm-8">
+                    {php echo tpl_form_field_image('set[base][p1_title2]',$setting['p1_title2']);}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">P1图</label>
+                <div class="col-sm-8">
+                    {php echo tpl_form_field_image('set[base][p1_img1]',$setting['p1_img1']);}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">P2标题1</label>
+                <div class="col-sm-8">
+                    {php echo tpl_form_field_image('set[base][p2_title1]',$setting['p2_title1']);}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">P2标题2</label>
+                <div class="col-sm-8">
+                    {php echo tpl_form_field_image('set[base][p2_title2]',$setting['p2_title2']);}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">P2图</label>
+                <div class="col-sm-8">
+                    {php echo tpl_form_field_image('set[base][p2_img1]',$setting['p2_img1']);}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">P3标题1</label>
+                <div class="col-sm-8">
+                    {php echo tpl_form_field_image('set[base][p3_title1]',$setting['p3_title1']);}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">P3标题2</label>
+                <div class="col-sm-8">
+                    {php echo tpl_form_field_image('set[base][p3_title2]',$setting['p3_title2']);}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">P3图</label>
+                <div class="col-sm-8">
+                    {php echo tpl_form_field_image('set[base][p3_img1]',$setting['p3_img1']);}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">P4标题1</label>
+                <div class="col-sm-8">
+                    {php echo tpl_form_field_image('set[base][p4_title1]',$setting['p4_title1']);}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">P4标题2</label>
+                <div class="col-sm-8">
+                    {php echo tpl_form_field_image('set[base][p4_title2]',$setting['p4_title2']);}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">P4图</label>
+                <div class="col-sm-8">
+                    {php echo tpl_form_field_image('set[base][p4_img1]',$setting['p4_img1']);}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">P5图</label>
+                <div class="col-sm-8">
+                    {php echo tpl_form_field_image('set[base][p5_img1]',$setting['p5_img1']);}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">音乐地址</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="set[base][music]" value="{$setting['music']}">
+                </div>
+            </div>
+
+            <div class="form-group" style="display:none;">
+                <label class="col-sm-2 control-label">客服电话</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="set[base][hotline]" value="{$setting['hotline']}">
+                </div>
+            </div>
+
+            <div class="form-group" style="display:none;">
+                <label class="col-sm-2 control-label">版权信息</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="set[base][copyright]" value="{$setting['copyright']}">
+                </div>
+            </div>
+
+            <div class="form-group" style="display:none;">
+                <label class="col-sm-2 control-label">地址</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="set[base][address]" value="{$setting['address']}">
+                </div>
+            </div>
+
+            <div class="form-group" style="display:none;">
+                <label class="col-sm-2 control-label">百度地图秘钥</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="set[base][baidu_ak]" value="{$setting['baidu_ak']}">
+                </div>
+            </div>
+
+            <div class="form-group" style="display:none;">
+                <label class="col-xs-12 col-sm-3 col-md-2 control-label">评论审核</label>
+                <div class="col-sm-8 col-xs-12">
+                    <label class='radio-inline'>
+                        <input type='radio' name='set[base][comment_review]' value='1' {if intval($item['comment_review']) == 1}checked{/if} /> 开启
+                    </label>
+                    <label class='radio-inline'>
+                        <input type='radio' name='set[base][comment_review]' value='2' {if intval($item['comment_review']) == 2 || intval($item['comment_review']) == 0}checked{/if} /> 关闭
+                    </label>
+                    <div class="help-block">开启：用户评论数据需要后台审核通过后才显示；关闭：用户评论完就直接显示。系统默认关闭审核</div>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="share" style="display: none" class="panel-body share">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">分享标题</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="set[share][share_title]" value="{$setting['share_title']}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">分享描述</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="set[share][share_desc]" value="{$setting['share_desc']}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">分享图片</label>
+                <div class="col-sm-8">
+                    {php echo tpl_form_field_image('set[share][share_image]',$setting['share_image']);}
+                </div>
+            </div>
+        </div>
+
+
+        <div id="wxapp" style="display: none" class="panel-body wxapp">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">身份标识<br>(appId)</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="set[wxapp][wxapp_appid]" value="{$setting['wxapp_appid']}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">身份密钥<br>(appSecret)</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="set[wxapp][wxapp_secret]" value="{$setting['wxapp_secret']}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">微信支付商户号</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="set[wxapp][wxapp_mchid]" value="{$setting['wxapp_mchid']}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">微信支付秘钥</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="set[wxapp][wxapp_signkey]" value="{$setting['wxapp_signkey']}">
+                </div>
+                <span class="help-block">
+                    财付通商户权限密钥
+                </span>
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-8">
+                <input type="submit" name="submit" value="提交" class="btn btn-info col-lg-1"/>
+                <input type="hidden" name="token" value="{$_W['token']}"/>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    $('ul.nav').on('click', 'li', function () {
+        if ($(this).hasClass('active')) {
+            return false;
+        }
+        $('.nav li').removeClass('active');
+        $(this).addClass('active');
+        $('form>.panel-body').hide();
+        $($(this).data('class')).show();
+    })
+</script>
+
+{template 'common/footer'}

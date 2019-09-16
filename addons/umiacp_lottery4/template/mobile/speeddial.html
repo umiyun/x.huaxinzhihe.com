@@ -1,0 +1,811 @@
+{template 'header'}
+<link rel="stylesheet" href="{YOUMI_URL_APP}css/animate.min.css">
+<script src="{YOUMI_URL_APP}js/preloadjs-NEXT.min.js"></script>
+<script src="{YOUMI_URL_APP}js/soundjs-NEXT.min.js"></script>
+<style>
+    .moneybox{width: 100%;height: 100%;}
+
+    @-webkit-keyframes fade {
+        0% {
+            opacity: 1;
+        }
+        95% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0;
+        }
+    }
+    @-webkit-keyframes drop {
+        0% {
+            -webkit-transform: translate(0px, -50px);
+        }
+        100% {
+            -webkit-transform: translate(0px, 650px);
+        }
+    }
+    @-webkit-keyframes clockwiseSpin {
+        0% {
+            -webkit-transform: rotate(-50deg);
+        }
+        100% {
+            -webkit-transform: rotate(50deg);
+        }
+    }
+    @-webkit-keyframes counterclockwiseSpinAndFlip {
+        0% {
+            -webkit-transform: scale(-1, 1) rotate(50deg);
+        }
+        100% {
+            -webkit-transform: scale(-1, 1) rotate(-50deg);
+        }
+    }
+
+</style>
+<style>
+    .color_red{
+        color: #ED5F43
+    }
+    img{
+        width: 100%;
+    }
+    input[type=color], input[type=date], input[type=datetime-local], input[type=datetime], input[type=email], input[type=month], input[type=number], input[type=password], input[type=search], input[type=tel], input[type=text], input[type=time], input[type=url], input[type=week], select{
+        border: 1px solid transparent;
+        text-align: center;
+        margin: 0 2%;
+        height: 30px;
+        padding: 5px;
+        background: transparent;
+    }
+    .bg_fixed{
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 15;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        display: none;
+    }
+
+    .h_img{
+        width: 100%;
+        position: fixed;
+        z-index: 1;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background: url("{$activity['bgimage']}") repeat 100%;
+    }
+    .ah_top{
+        background: rgba(0,0,0,0.7);
+        color: #aaa;
+        display: inline-flex;
+        padding: 0 6px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 5;
+    }
+    .ah_top span{
+        color: #fff;
+        font-weight: 700;
+    }
+    .a_head .iconfont{
+        position: fixed;
+        z-index: 5;
+        color: #fff;
+        font-size: 28px;
+        border-radius: 50%;
+        border: 1px solid #fff;
+        background: rgba(0,0,0,0.4);
+        left: 5%;
+        width: 35px;
+        height: 35px;
+        text-align: center;
+        line-height: 33px;
+    }
+    .ac_time>div{
+        width: 100%;
+        text-align: center;
+        left: 0;
+        top: 28%;
+    }
+    .ac_time span{
+        color: #111;
+        background: #ED5F43;
+        border-radius: 50%;
+        padding: 2px;
+        margin: 0 2px;
+        display: inline-block;
+        /*width: 20px;*/
+        height: 20px;
+        text-align: center;
+        line-height: 16px;
+    }
+
+    .ac_messages{
+        margin: 5% 0;
+        text-align: center;
+        background: #FEF4DC;
+        width: 84%;
+        left: 8%;
+        position: relative;
+        border-radius: 10px;
+    }
+    .notice_active {
+        display: none;
+        height: 3rem;
+        padding: 0;
+        overflow: hidden;
+        position: relative;
+    }
+    .notice_active ul{
+        padding: 0 6px;
+    }
+    .notice_active li{
+        list-style-type:none;line-height: 2.6rem;overflow: hidden;
+        text-align: center;
+    }
+
+
+    .ac_goods{
+        background: #fff;
+        border-radius: 5px;
+        padding: 2%;
+        margin-top: 20px;
+    }
+    .goods{
+        border: 1px solid #111;
+        border-radius: 5px;
+        padding: 12% 2% 2% 2%;
+        margin-top: 50px;
+    }
+    .goods .gt_logo{
+        width: 100px;
+        height: 100px;
+        margin-right: 3%;
+    }
+    .gt_detail>div{
+        margin: 10px 0;
+    }
+    .g_title{
+        width: 70%;
+        position: absolute;
+        top: -25px;
+        left: 15%;
+    }
+    .g_title>div{
+        position: absolute;
+        top: 5px;
+        width: 100%;
+        text-align: center;
+        left: 0;
+    }
+
+    .ac_youhui{
+        margin-top: 25px;
+    }
+    .acy_title{
+        width: 66%;
+        left: 17%;
+        margin-bottom: 8px;
+    }
+    .acy_title input{
+        width: 78%;
+        top: 5px;
+        left: 8%;
+        position: absolute;
+        z-index: 5;
+    }
+    .acy_content{
+        background: #fff;
+        border-radius: 5px;
+        padding: 2%;
+    }
+
+    .acs_content .acsc_title,.acsc_list>div{
+        display: flex;
+        display: -webkit-flex;
+        justify-content: space-around;
+        -webkit-justify-content: space-around;
+    }
+    .acs_content span{
+        width: 20%;
+        text-align: center;
+        margin-top: 5px;
+    }
+    .acsc_tip{
+        padding-top: 18px;
+        text-align: center;
+    }
+
+
+    .open_prize{
+        position: fixed;
+        top: 20%;
+        width: 70%;
+        left: 15%;
+        z-index: 20;
+        color: #fff;
+        display: none;
+        text-align: center;
+    }
+    .open_prize .iconfont{
+        font-size: 35px;
+        margin-top: 20px;
+    }
+    .os_btns img{
+        background: #fff;
+        border-radius: 50%;
+        padding: 8px;
+        width: 50px;
+    }
+    .osb_cancel{
+        position: fixed;
+        bottom: 5%;
+        padding: 2px;
+        border-bottom: 1px solid #fff;
+        left: 45%;
+    }
+
+
+    .kanjia_btn{
+        -webkit-animation: kanjia 1s ease-in infinite;
+        margin-left: 5%;
+        min-width: 70px;
+    }
+    .open_kjtips{
+        position: fixed;
+        top: 10%;
+        width: 80%;
+        left: 10%;
+        z-index: 20;
+        background: #D3441B;
+        border-radius: 10px;
+        display: none;
+    }
+    .a_btn2{
+        width: 96%;
+        margin: 4% 2%;
+        display: block;
+        box-sizing: border-box;
+        padding: 2%;
+        font-size: 18px;
+    }
+    .a_btn3{
+        display: block;
+        width: 96%;
+        margin: 0 auto;
+    }
+    .ok_price{
+        margin: 4% 2% 8% 2%;
+    }
+    .a_footer{
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        padding: 4%;
+        background: rgba(0,0,0,0.7);
+        z-index: 10;
+        width: 100%;
+        text-align: center;
+    }
+    .a_footer a{
+        font-size: 20px;
+    }
+    .gdtp_bg{
+        width: 100%;
+        height: 10px;
+        background: #ddd;
+        border-radius: 10px;
+        margin: 5px 0;
+    }
+    .gdtp_bg>div{
+        background: #ED5F43;
+        border-radius: 20px;
+        height: 10px;
+    }
+    .gdtp_bg>span{
+        background: #fff;
+        width: 16px;
+        border-radius: 50%;
+        height: 16px;
+        border: 3px solid #ED5F43;
+        top: -3px;
+    }
+
+    @-webkit-keyframes zhuan {
+        0%{transform: rotate(0deg)}
+        100%{transform: rotate(360deg)}
+    }
+    @-webkit-keyframes zhuan2 {
+        0%{transform: rotate(0deg)}
+        45%{transform: rotate(-30deg)}
+        90%{transform: rotate(30deg)}
+        100%{transform: rotate(0deg)}
+    }
+    @-webkit-keyframes kanjia {
+        10%{
+            transform: rotate(-3deg) scale(0.9);
+        }
+        35%{
+            transform: rotate(3deg) scale(1.1);
+        }
+        45%{
+            transform: rotate(-3deg);
+        }
+        55%{
+            transform: rotate(3deg);
+        }
+        65%{
+            transform: rotate(-3deg);
+        }
+        90%{
+            transform: rotate(0) scale(1);
+        }
+    }
+
+    .acs_navbar{
+        border-bottom: 1px solid #ddd;
+    }
+    .acs_navbar>div{
+        padding: 2% 0;
+        border-bottom: 2px solid transparent;
+    }
+    .acs_navbar>div.active{
+        border-bottom: 2px solid #ED5F43;
+        color: #ED5F43;
+    }
+    .acysc_detail{
+        border: 2px solid #FD6E4A;
+        margin-bottom: 10px;
+    }
+    .acysc_detail span{
+        background: #FD6E4A;
+        width: 25px;
+        text-align: center;
+        color: #fff;
+        margin: 10px;
+        display: block;
+        border-radius: 50%;
+        height: 25px;
+        line-height: 25px;
+    }
+
+    .fb_tip{
+        padding: 1% 0;
+        margin-bottom: -15px;
+        margin-top: 10px;
+        position: relative;
+    }
+    .fb_tip a{
+        font-size: 16px;
+    }
+    .fb_tip .iconfont{
+        color: #fff;
+        position: absolute;
+        right: -10px;
+        top: 5px;
+    }
+    .nav-menu-wx{
+        display: none;
+    }
+</style>
+<style>
+    table {
+        border-spacing: 0;
+        border-collapse: collapse;
+        text-align: center;
+        margin-top: 9px;
+        width: 100%;
+    }
+
+    .draw {
+        width: 80%;
+        left: 10%;
+        margin: 0 auto;
+        padding: 2%;
+        position: fixed;
+        top: 15%;
+        z-index: 10;
+        box-sizing: border-box;
+        animation-delay: 0.5s;
+    }
+
+    .draw .item {
+        width: 30%;
+    }
+
+    .draw .item.active img{
+        background: #f39800;
+    }
+
+    .draw .img {
+        display: table-cell;
+        width: 100%;
+        height: 100%;
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    .draw .img img {
+        border-radius: 5px;
+        padding: 5%;
+        box-sizing: border-box;
+        border: 2px solid #F00C0A;
+        background: #FD6E4A;
+        width: 85px;
+        height: 85px;
+    }
+    @media screen and (max-width: 350px){
+        .draw .img img {
+            width: 53px;
+            height: 53px;
+        }
+    }
+
+    .draw .gap {
+        width: 3px;
+    }
+
+    .draw .gap-2 {
+        height: 10px;
+    }
+
+    .draw .name {
+        display: block;
+        margin-top: 10px;
+        font-size: 14px;
+    }
+
+    .draw .draw-btn {
+        width: 98%;
+        border-radius: 5px;
+        padding: 5%;
+        box-sizing: border-box;
+        border: 2px solid #F00C0A;
+        background: #FD6E4A;
+    }
+    li{
+        list-style: none;
+    }
+    .notice_active img{
+        width: 30px;
+        margin-right: 2px;
+        margin-top: 0;
+    }
+    .notice_active li div{
+        display: inline-block;
+    }
+
+    .open_prize {
+        background: #FFF;
+        height: 50%;
+        padding-top: 35%;
+        border-radius: 12px;
+    }
+    .open_prize .s_tip_img {
+        display: none;
+        position: absolute;
+        left: 50%;
+        top: -40px;
+        transform: translateX(-50%);
+        width: 50%;
+    }
+    .open_prize .u-btn-node {
+        display: inline-block;
+        border-radius: 50px;
+        text-align: center;
+        line-height: 33px;
+        height: 33px;
+        width: 99px;
+        font-size: 13px;
+        color: #fff;
+        background-image: -webkit-linear-gradient(325deg,#ff5d53,#ff8d85);
+        background-image: linear-gradient(-235deg,#ff5d53,#ff8d85);
+        box-shadow: 3px 4px 8px #ff8d85;
+    }
+    .open_prize .p_detail {
+        color: #000;
+        font-size: 18px;
+        font-family: 'PingFang SC', 'HanHei SC', 'Helvetica Neue', 'Helvetica', sans-serif;
+    }
+    .open_prize .p_detail .p_prize {
+        width: 66px;
+        height: 66px;
+        overflow: hidden;
+        border: 2px solid #fd6e4a;
+        border-radius: 6px;
+        margin: 10px auto;
+    }
+</style>
+<div>
+
+    <div class="tips"></div>
+    <!--头部-->
+    <div class="a_head p_relative">
+        <img class="h_img" src="{$activity['bgimage']}" alt="">
+        <div class="draw animated bounceIn" id="lottery">
+            <table>
+                <tr>
+                    <td data-num="0" class="item lottery-unit lottery-unit-0 prize{$prizes[0]['id']}">
+                        <div class="img">
+                            <img src="{$prizes[0]['image']}" alt="">
+                        </div>
+                    </td>
+                    <td class="gap"></td>
+                    <td data-num="1" class="item lottery-unit lottery-unit-1 prize{$prizes[1]['id']}">
+                        <div class="img">
+                            <img src="{$prizes[1]['image']}" alt="">
+                        </div>
+                    </td>
+                    <td class="gap"></td>
+                    <td data-num="2" class="item lottery-unit lottery-unit-2 prize{$prizes[2]['id']}">
+                        <div class="img">
+                            <img src="{$prizes[2]['image']}" alt="">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="gap-2" colspan="1"></td>
+                </tr>
+                <tr>
+                    <td data-num="7" class="item lottery-unit lottery-unit-7 prize{$prizes[7]['id']}">
+                        <div class="img">
+                            <img src="{$prizes[7]['image']}" alt="">
+                        </div>
+                    </td>
+                    <td class="gap"></td>
+                    <td class="">
+                        <div class="img">
+                            <img class="draw-btn" src="{YOUMI_URL_APP}img/s_btn.png" alt="">
+                        </div>
+                        <!--<a class="draw-btn" href="javascript:"></a>-->
+
+                    </td>
+                    <td class="gap"></td>
+                    <td data-num="3" class="item lottery-unit lottery-unit-3 prize{$prizes[3]['id']}">
+                        <div class="img">
+                            <img src="{$prizes[3]['image']}" alt="">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="gap-2" colspan="1"></td>
+                </tr>
+                <tr>
+                    <td data-num="6" class="item lottery-unit lottery-unit-6 prize{$prizes[6]['id']}">
+                        <div class="img">
+                            <img src="{$prizes[6]['image']}" alt="">
+                        </div>
+                    </td>
+                    <td class="gap"></td>
+                    <td data-num="5" class="item lottery-unit lottery-unit-5 prize{$prizes[5]['id']}">
+                        <div class="img">
+                            <img src="{$prizes[5]['image']}" alt="">
+                        </div>
+                    </td>
+                    <td class="gap"></td>
+                    <td data-num="4" class="item lottery-unit lottery-unit-4 prize{$prizes[4]['id']}">
+                        <div class="img">
+                            <img src="{$prizes[4]['image']}" alt="">
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+
+
+    <div class="bg_fixed"></div>
+
+    <div class="open_prize">
+        <div>
+            <img class="s_succ s_tip_img" src="{YOUMI_URL_APP}img/s_succ.png" alt="">
+            <img class="s_err s_tip_img" src="{YOUMI_URL_APP}img/s_err.png" alt="">
+            <div class="p_detail">
+                <span>恭喜获得</span>
+                <div class="p_prize">
+                    <img src="" alt="">
+                </div>
+            </div>
+        </div>
+        <span class="u-btn-node" onclick="$('.open_prize,.bg_fixed').fadeOut(); againPlay();">收下<span>
+    </div>
+</div>
+<script>
+    var goods={php echo json_encode($goods)};
+</script>
+<script>
+
+    $(function(){
+        var num = $('.notice_active').find('li').length;
+        if(num > 1){
+            var time=setInterval('timer(".notice_active")',3000);
+            $('.gg_more a').mousemove(function(){
+                clearInterval(time);
+            }).mouseout(function(){
+                time = setInterval('timer(".notice_active")',3000);
+            });
+        }
+    });
+    $('.go_top').click(function(){
+        $(window).scrollTop(0);
+        $('.go_top').fadeOut()
+    })
+
+    // 提示
+    function tips(txt){
+        $('.tips').html(txt).fadeIn()
+        setTimeout(function(){$('.tips').fadeOut()},1500);
+    }
+
+    //砍价
+    function openSign(){
+        var kj_userinfo=JSON.parse(localStorage.getItem('bm_userinfo'))
+        if(!!kj_userinfo){
+            $($(".os_input").eq(0)).find('input').val(kj_userinfo.realname)
+            $($(".os_input").eq(1)).find('input').val(kj_userinfo.mobile)
+        }
+
+        $('.open_signup,.bg_fixed').fadeIn()
+    }
+
+    console.log('$activity',{php echo json_encode($activity)})
+    console.log('$prizes',{php echo json_encode($prizes)})
+</script>
+<script type="text/javascript">
+    var number=0;
+    var status;
+    var lottery = {
+        index: -1, //当前转动到哪个位置，起点位置
+        count: 0, //总共有多少个位置
+        timer: 0, //setTimeout的ID，用clearTimeout清除
+        speed: 20, //初始转动速度
+        times: 0, //转动次数
+        cycle: 50, //转动基本次数：即至少需要转动多少次再进入抽奖环节
+        prize: -1, //中奖位置
+        init: function(id) {
+            if($('#' + id).find('.lottery-unit').length > 0) {
+                $lottery = $('#' + id);
+                $units = $lottery.find('.lottery-unit');
+                this.obj = $lottery;
+                this.count = $units.length;
+                $lottery.find('.lottery-unit.lottery-unit-' + this.index).addClass('active');
+            };
+        },
+        roll: function() {
+            var index = this.index;
+            var count = this.count;
+            var lottery = this.obj;
+            $(lottery).find('.lottery-unit.lottery-unit-' + index).removeClass('active');
+            index += 1;
+            if(index > count - 1) {
+                index = 0;
+            };
+            $(lottery).find('.lottery-unit.lottery-unit-' + index).addClass('active');
+            this.index = index;
+            return false;
+        },
+        stop: function(index) {
+            this.prize = index;
+            return false;
+        }
+    };
+
+    function roll() {
+        lottery.times += 1;
+        lottery.roll(); //转动过程调用的是lottery的roll方法，这里是第一次调用初始化
+
+        if(lottery.times > lottery.cycle + 10 && lottery.prize == lottery.index) {
+            clearTimeout(lottery.timer);
+            setTimeout(function(){
+                $('.ruse').html($('.ruse').html()-1);
+                if(status == 3){
+                    $('.open_prize .s_err').show();
+                    $('.open_prize .s_succ').hide();
+                } else {
+                    $('.open_prize .s_succ').show();
+                    $('.open_prize .s_err').hide();
+                }
+                $('.open_prize,.bg_fixed').fadeIn();
+            },1500);
+
+            lottery.prize = -1;
+            lottery.times = 0;
+            click = true;
+        } else {
+            if(lottery.times < lottery.cycle) {
+                lottery.speed -= 10;
+            } else if(lottery.times == lottery.cycle) {
+                // var index = Math.random() * (lottery.count) | 0; //静态演示，随机产生一个奖品序号，实际需请求接口产生
+                // var index = number;
+                lottery.prize = number;
+            } else {
+                if(lottery.times > lottery.cycle + 10 && ((lottery.prize == 0 && lottery.index == 7) || lottery.prize == lottery.index + 1)) {
+                    lottery.speed += 110;
+                } else {
+                    lottery.speed += 20;
+                }
+            }
+            if(lottery.speed < 40) {
+                lottery.speed = 40;
+            }
+            lottery.timer = setTimeout(roll, lottery.speed); //循环调用
+        }
+        return false;
+    }
+
+    var click = true;
+    window.onload = function() {
+        $('.draw-btn').click(function() {
+            $('.open_prize .s_err').hide();
+            $('.open_prize .s_succ').hide();
+            $('.open_prize .u-btn-node').html('收下');
+            choujiang();
+        });
+
+        function choujiang(){
+            if(!click){return false};
+            click=false;
+            $.post(
+                "{php echo $this->createMobileUrl('index',['op'=>'lottery'])}",
+                {
+                    'activity_id':"{$_GPC['activity_id']}",
+                    'reward_id':"{$reward['id']}",
+                },
+                function(data){
+                    if(data.errno==0){
+                        if(data.data.prize) {
+                            var clsname = '.prize' + data.data.prize.id;
+                            number = $(clsname).data('num');
+                            status = data.data.prize.type;
+                            lottery.init('lottery');
+                            lottery.speed = 100;
+                            roll(); //转圈过程不响应click事件，会将click置为false
+                            $('.p_prize img').attr('src', data.data.prize.image);
+                            if(status == 3) {
+                                $('.p_detail span').html('好可惜,差一点就中了');
+                                $('.open_prize .u-btn-node').html('关闭');
+                            } else {
+                                var _redpack = data.data.prize.type == '1' ? '('+data.data.prize.money+'元)' : '';
+                                $('.p_detail span').html('恭喜获得'+data.data.prize.title + _redpack );
+                            }
+                            return false;
+                        }else{
+                            tips(data.message);
+                            click = true; //一次抽奖完成后，设置click为true，可继续抽奖
+                        }
+                    }else{
+                        tips(data.message);
+                        click = true; //一次抽奖完成后，设置click为true，可继续抽奖
+                    }
+                },'json')
+        }
+    };
+    var regional=true;
+    function map_click(lng,lat){
+        $.post(
+            "{php echo $this->createMobileUrl('index',['op'=>'regional'])}",
+            {
+                'lng': lng,
+                'lat': lat,
+                'activity_id':"{$activity_id}"
+            },
+            function (data) {
+                if(data.errno==1){
+                    tips(data.message,3000);
+                    regional=false;
+                }else{
+                    regional=true;
+                }
+            }, 'json'
+        );
+    }
+    console.log({php echo json_encode($setting)})
+    console.log({php echo json_encode($_W['fans'])})
+</script>
+
+{template 'footer'}

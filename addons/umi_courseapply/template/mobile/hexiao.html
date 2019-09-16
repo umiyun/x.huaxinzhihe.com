@@ -1,0 +1,362 @@
+{template 'header'}
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'/>
+<link rel="stylesheet" href="{YOUMI_URL_APP}css/swiper.min.css">
+<link rel="stylesheet" href="{YOUMI_URL_APP}css/animate.min.css">
+<script src="{YOUMI_URL_APP}js/swiper.min.js"></script>
+<script src="{YOUMI_URL_APP}js/swiper.animate.min.js"></script>
+
+<style>
+    html,body{
+        height:100%;
+    }
+    body{
+        font-family:"microsoft yahei";
+        margin: 0;
+    }
+    .swiper-container {
+        width: 100%;
+        height: 100%;
+    }
+
+    .swiper-slide{
+        width:100%;
+        height:100%;
+    }
+    .swiper-slide1{
+        background:url("{YOUMI_URL_APP}images/p4_bg.png") no-repeat left top;
+        background-size: 100% 100%;
+    }
+    .bg_fixed1{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.65);
+        z-index: 40;
+    }
+    img{
+        display:block;
+    }
+    .swiper-pagination-bullet {
+        width: 6px;
+        height: 6px;
+        background: #fff;
+        opacity: .4;
+    }
+    .swiper-pagination-bullet-active {
+        opacity: 1;
+    }
+    @-webkit-keyframes start {
+        0%,30% {opacity: 0;-webkit-transform: translate(0,10px);}
+        60% {opacity: 1;-webkit-transform: translate(0,0);}
+        100% {opacity: 0;-webkit-transform: translate(0,-8px);}
+    }
+    @-moz-keyframes start {
+        0%,30% {opacity: 0;-moz-transform: translate(0,10px);}
+        60% {opacity: 1;-moz-transform: translate(0,0);}
+        100% {opacity: 0;-moz-transform: translate(0,-8px);}
+    }
+    @keyframes start {
+        0%,30% {opacity: 0;transform: translate(0,10px);}
+        60% {opacity: 1;transform: translate(0,0);}
+        100% {opacity: 0;transform: translate(0,-8px);}
+    }
+    @keyframes tm1 {
+        0% {transform: translateX(180%);}
+        100% {transform: translateX(-130%);}
+    }
+    @keyframes tm2 {
+        0% {transform: translateX(160%);}
+        100% {transform: translateX(-130%);}
+    }
+    .ani{
+        position:absolute;
+        z-index: 3;
+    }
+    .array{
+        position:absolute;
+        z-index:10;
+        -webkit-animation: start 1.5s infinite ease-in-out;
+        width: 8%;
+        bottom: 1%;
+        right:0;
+    }
+
+    /*音乐*/
+
+    @-webkit-keyframes change {
+        from {
+            transform: rotate(0deg)
+        }
+        to {
+            transform: rotate(360deg)
+        }
+    }
+    @-webkit-keyframes point {
+        from {
+            opacity: 0.2
+        }
+        to {
+            opacity: 1
+        }
+    }
+    .flex{
+        display: flex;
+        display: -webkit-flex;
+    }
+    .flex_j_center{
+        justify-content: center;
+        -webkit-justify-content: center;
+    }
+    .flex_j_around{
+        justify-content: space-around;
+        -webkit-justify-content: space-around;
+    }
+    .flex_j_between{
+        justify-content: space-between;
+        -webkit-justify-content: space-between;
+    }
+    .flex_a_center{
+        align-items: center;
+        -webkit-align-items: center;
+    }
+    .flex_wrap{
+        flex-wrap: wrap;
+        -webkit-flex-wrap: wrap;
+    }
+
+    .music{
+        position: fixed;
+        right: 20px;
+        top: 10%;
+        border:1px solid #fff;
+        z-index: 20;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: url("{YOUMI_URL_APP}images/icon_music.png") no-repeat;
+        background-size: cover;
+        cursor: pointer;
+    }
+    .muc{
+        background: url("{YOUMI_URL_APP}images/icon_music.png") no-repeat;
+        background-size: cover;
+        animation: change 1s linear 0s infinite;
+        -moz-animation: change 1s linear 0s infinite;
+        -webkit-animation: change 1s linear 0s infinite;
+        -o-animation: change 1s linear 0s infinite;
+    }
+    .tips{
+        width: 40%;
+        position: fixed;
+        top: 30%;
+        left: 30%;
+        padding: 10px;
+        background: #aaa;
+        color: #fff;
+        z-index: 999;
+        text-align: center;
+        border-radius: 10px;
+        display: none;
+    }
+    .text-center.footer{
+        display: none;
+    }
+
+    .logo1{
+        width: 30%;
+        top: 2%;
+        left: 2%;
+    }
+    .logo2{
+        width: 30%;
+        top: 2%;
+        right: 2%;
+    }
+    .title1{
+        width: 76%;
+        top: 15%;
+        left: 12%;
+    }
+    .title2{
+        width: 30%;
+        top: 25%;
+        left: 35%;
+        font-size: 14px;
+        color: #fff;
+        text-align: center;
+    }
+    .title3{
+        bottom: 0;
+        left: 0;
+        width: 100%;
+    }
+    .btns{
+        position: absolute;
+        top: 58%;
+        width: 80%;
+        left: 10%;
+    }
+    .btns>div{
+        width: 40%;
+        border-radius: 8px;
+        text-align: center;
+        font-size: 14px;
+        border: 1px dashed #101010;
+        background: #fff;
+        padding: 4px;
+    }
+    .h_tips{
+        position: absolute;
+        top: 68%;
+        color: #fff;
+        width: 100%;
+        text-align: center;
+        font-size: 10px;
+    }
+</style>
+</head>
+
+<body>
+<div class="swiper-container">
+    <div id="music" class="music muc">
+        <audio id="audiojs" src="{$setting['music']}" autoplay loop></audio>
+    </div>
+    <div class="swiper-wrapper">
+        <section class="swiper-slide swiper-slide1">
+            <img src="{YOUMI_URL_APP}images/logo1.png" class="ani resize logo1" >
+            <img src="{YOUMI_URL_APP}images/logo2.png" class="ani resize logo2" >
+            <img src="{php echo tomedia($order['prize']['title_img'])}" class="ani resize title1" swiper-animate-effect="zoomIn" swiper-animate-duration="1s" swiper-animate-delay="0">
+            <div class="ani resize title2" swiper-animate-effect="zoomIn" swiper-animate-duration="1s" swiper-animate-delay="0.5s">
+                <img style="width: 50%;margin: 0 auto" src="{$order['avatar']}" alt="">
+                <div>{$order['realname']}</div>
+                <div style="padding-top: 15%;border-top: 1px solid #eee;margin-top: 15%;">联系方式</div>
+                <div>{$order['mobile']}</div>
+            </div>
+            <div class="btns flex flex_j_between">
+                <div onclick="check()">确认核销</div>
+                <div onclick="scanQRcode()">继续核销</div>
+            </div>
+            <div class="h_tips">报名情况反馈请以后续电话通知为准</div>
+            <img src="{YOUMI_URL_APP}images/p5_img1.png" class="ani resize title3" swiper-animate-effect="zoomIn" swiper-animate-duration="1s" swiper-animate-delay="1s">
+        </section>
+    </div>
+
+    <div class="swiper-pagination" style="display: none"></div>
+    <div class="tips"></div>
+</div>
+<script>
+
+    document.addEventListener('DOUMIontentLoaded', function () {
+        function audioAutoPlay() {
+            var audio = document.getElementById('audiojs');
+            audio.play();
+            document.addEventListener("WeixinJSBridgeReady", function () {
+                audio.play();
+            }, false);
+        }
+        audioAutoPlay();
+    });
+    if (/i(Phone|P(o|a)d)/.test(navigator.userAgent)) {
+        $(document).one('touchstart',
+            function(e) {
+                $('#audiojs').get(0).touchstart = true;
+                $('#audiojs').get(0).play();
+                return false;
+            });
+    }
+    var audio = document.getElementById('audiojs');
+    $('#music').click(function(){
+        if(audio.paused){
+            audio.play();
+            $(this).attr('class','music muc')
+        }else{
+            audio.pause();
+            $(this).attr('class','music')
+        }
+    });
+</script>
+<script>
+
+    scaleW=window.innerWidth/320;
+    scaleH=window.innerHeight/480;
+    var resizes = document.querySelectorAll('.resize');
+
+    var mySwiper = new Swiper ('.swiper-container', {
+        direction : 'vertical',
+        pagination: '.swiper-pagination',
+        //virtualTranslate : true,
+        mousewheelControl : true,
+        onInit: function(swiper){
+            swiperAnimateCache(swiper);
+            swiperAnimate(swiper);
+        },
+        onSlideChangeEnd: function(swiper){
+            swiperAnimate(swiper);
+        },
+        onTransitionEnd: function(swiper){
+            swiperAnimate(swiper);
+        },
+
+
+        watchSlidesProgress: true,
+
+        onProgress: function(swiper){
+            for (var i = 0; i < swiper.slides.length; i++){
+                var slide = swiper.slides[i];
+                var progress = slide.progress;
+                var translate = progress*swiper.height/4;
+                scale = 1 - Math.min(Math.abs(progress * 0.5), 1);
+                var opacity = 1 - Math.min(Math.abs(progress/2),0.5);
+                slide.style.opacity = opacity;
+                es = slide.style;
+                es.webkitTransform = es.MsTransform = es.msTransform = es.MozTransform = es.OTransform = es.transform = 'translate3d(0,'+translate+'px,-'+translate+'px) scaleY(' + scale + ')';
+            }
+        },
+
+        onSetTransition: function(swiper, speed) {
+            for (var i = 0; i < swiper.slides.length; i++){
+                es = swiper.slides[i].style;
+                es.webkitTransitionDuration = es.MsTransitionDuration = es.msTransitionDuration = es.MozTransitionDuration = es.OTransitionDuration = es.transitionDuration = speed + 'ms';
+            }
+        },
+    })
+    console.log({php echo json_encode($order)});
+
+    function check(){
+        $.post(
+            "{php echo $this->createMobileUrl('index',array('op' =>'check'))}",
+            {
+                'id':"{$_GPC['id']}",
+            },
+            function (data) {
+                tips(data.message);
+                if(data.errno==0){
+                    setTimeout(function () {
+                        wx.scanQRCode({
+                            needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+                            scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+                            success: function (res) {
+                            }
+                        });
+                    },1500)
+                }
+            },'json'
+        )
+    }
+    function scanQRcode() {
+        wx.scanQRCode({
+            needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+            scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+            success: function (res) {
+            }
+        });
+    }
+    // 提示
+    function tips(txt,timer){
+        $('.tips').html(txt).fadeIn();
+        setTimeout(function(){$('.tips').fadeOut()},timer||1500);
+    }
+</script>
+{template 'common/footer'}

@@ -1,0 +1,185 @@
+/*橙色   #F8A40D */
+/*灰色  #B0B0B0*/
+/*绿色 #04be02*/
+/*红色 #f9292a*/
+
+a{
+    color: #F8A40D;
+}
+.sys_bgcolor{
+    background: #F8A40D;
+}
+.sys_color{
+    color: #F8A40D;
+}
+.color_fff{
+    color: #fff!important;
+}
+.color555{
+    color: #555;
+}
+.color777{
+    color: #777!important;
+}
+.footer .weui-tabbar{
+    position: fixed;
+    background-color: #fff;
+}
+.footer .weui-tabbar__label{
+    font-size: 12px;
+}
+.weui-tabbar__item.weui-bar__item--on .weui-tabbar__label{
+    color: #F8A40D;
+}
+div p{
+    margin-bottom: 0;
+}
+.word-break{
+    word-break: keep-all;
+}
+
+div{
+    font-size: 14px;
+}
+img{vertical-align:middle}
+.ft10{
+    font-size: 10px!important;
+}
+.ft12{
+    font-size: 12px!important;
+}
+.ft14{
+    font-size: 14px!important;
+}
+.ft16{
+    font-size: 16px!important;
+}
+
+.text_center{
+    text-align: center;
+}
+.text_left{
+    text-align: left;
+}
+
+.flex{
+    display: flex;
+}
+.flex1{
+    flex: 1;
+    -webkit-flex: 1;
+}
+
+.flex_j_center{
+    justify-content: center;
+    -webkit-justify-content: center;
+}
+.flex_j_around{
+    justify-content: space-around;
+    -webkit-justify-content: space-around;
+}
+.flex_j_between{
+    justify-content: space-between;
+    -webkit-justify-content: space-between;
+}
+.flex_j_end{
+    justify-content: flex-end;
+    -webkit-justify-content: flex-end;
+}
+.flex_a_center{
+    align-items: center;
+    -webkit-align-items: center;
+}
+.flex_a_end{
+    align-items: flex-end;
+    -webkit-align-items: flex-end;
+}
+.flex_wrap{
+    flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+}
+.p_relative{
+    position: relative;
+}
+.p_absolute{
+    position: absolute;
+}
+
+
+
+/*按钮渐变*/
+.a_btn{
+    background: linear-gradient(to bottom,#F1B65F,#E39341);
+    text-align: center;
+    padding: 1.5% 4%;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 12px;
+}
+.bg_fixed{
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 15;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    display: none;
+}
+.tips{
+    width: 40%;
+    position: fixed;
+    top: 30%;
+    left: 30%;
+    padding: 6px 10px;
+    background: #aaa;
+    color: #fff;
+    z-index: 999;
+    text-align: center;
+    border-radius: 10px;
+    display: none;
+}
+
+.weui-toast_content{
+    color: #fff!important;
+}
+.weui-mask_transparent{
+    display: none!important;
+}
+.swiper-pagination-bullet-active{
+    background: #F8A40D;
+}
+
+
+.text-center.footer{
+    display: none;
+}
+
+input[type=color], input[type=date], input[type=datetime-local], input[type=datetime], input[type=email], input[type=month], input[type=number], input[type=password], input[type=search], input[type=tel], input[type=text], input[type=time], input[type=url], input[type=week], select, textarea{
+    margin-bottom: 0;
+}
+label{
+    font-weight: 400;
+    margin-bottom: 0;
+}
+.iconPig{
+    position: relative;
+    bottom: 10px;
+    right: 0;
+    z-index: 5;
+    width: 7%;
+    float: right;
+    display: none;
+}
+.border_sysdashed {
+    border: 1px dashed #F9292A!important;
+    border-radius: 3px;
+}
+.border_transparent{
+    border:1px solid transparent!important;
+}
+
+.weui-cells_checkbox .weui-check:checked+.weui-icon-checked:before{
+    color: red;
+}
+

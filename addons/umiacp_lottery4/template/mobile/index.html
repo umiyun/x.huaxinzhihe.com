@@ -1,0 +1,948 @@
+{template 'header'}
+
+<style>
+    .moneybox{width: 100%;height: 100%;}
+
+    #leafContainer {
+        /*position: absolute;*/
+        /*width: 100%;*/
+        /*height: 100%;*/
+        overflow: hidden;
+    }
+
+    #leafContainer > div {
+        position: fixed;
+        z-index: 10;
+        width: 25px;
+        /*height: 150px;*/
+        -webkit-animation-iteration-count: infinite, infinite;
+        -webkit-animation-direction: normal, normal;
+        -webkit-animation-timing-function: linear, ease-in;
+    }
+    #leafContainer > div > img {
+        position: absolute;
+        width: 25px;
+        -webkit-animation-iteration-count: infinite;
+        -webkit-animation-direction: alternate;
+        -webkit-animation-timing-function: ease-in-out;
+        -webkit-transform-origin: 50% -100%;
+    }
+    @-webkit-keyframes fade {
+        0% {
+            opacity: 1;
+        }
+        95% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0;
+        }
+    }
+    @-webkit-keyframes drop {
+        0% {
+            -webkit-transform: translate(0px, -50px);
+        }
+        100% {
+            -webkit-transform: translate(0px, 650px);
+        }
+    }
+    @-webkit-keyframes clockwiseSpin {
+        0% {
+            -webkit-transform: rotate(-50deg);
+        }
+        100% {
+            -webkit-transform: rotate(50deg);
+        }
+    }
+    @-webkit-keyframes counterclockwiseSpinAndFlip {
+        0% {
+            -webkit-transform: scale(-1, 1) rotate(50deg);
+        }
+        100% {
+            -webkit-transform: scale(-1, 1) rotate(-50deg);
+        }
+    }
+
+</style>
+<style>
+    body{
+        margin: 0;
+    }
+    .color_yellow{
+        color: #FFC82D;
+    }
+    .color_red{
+        color: #ED5F43
+    }
+    img{
+        width: 100%;
+    }
+    input[type=color], input[type=date], input[type=datetime-local], input[type=datetime], input[type=email], input[type=month], input[type=number], input[type=password], input[type=search], input[type=tel], input[type=text], input[type=time], input[type=url], input[type=week], select{
+        border: 1px solid transparent;
+        text-align: center;
+        margin: 0 2%;
+        height: 30px;
+        padding: 5px;
+        background: transparent;
+    }
+    .bg_fixed{
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 15;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        display: none;
+    }
+
+    .h_img{
+        width: 100%;
+    }
+    .ah_top{
+        background: rgba(0,0,0,0.7);
+        color: #aaa;
+        display: inline-flex;
+        padding: 0 6px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 5;
+    }
+    .ah_top span{
+        color: #fff;
+        font-weight: 700;
+    }
+    .a_head .iconfont{
+        position: fixed;
+        z-index: 5;
+        color: #fff;
+        font-size: 28px;
+        border-radius: 50%;
+        border: 1px solid #fff;
+        background: rgba(0,0,0,0.4);
+        left: 5%;
+        width: 35px;
+        height: 35px;
+        text-align: center;
+        line-height: 33px;
+    }
+    .icon-music{
+        top: 5%;
+    }
+    .icon-music.active,.icon-mofabang.active{
+        -webkit-animation: zhuan 2s linear infinite;
+    }
+    .icon-mofabang{
+        top: 15%;
+        font-size: 24px!important;
+    }
+    .ah_user,.ah_contact,.ah_complain,.ah_share{
+        top: 25%;
+        left: 5%;
+        width: 42px;
+        height: 42px;
+        background: #333;
+        color: #fff;
+        text-align: center;
+        padding: 6px;
+        line-height: 14px;
+        border-radius: 50%;
+        position: fixed;
+        z-index: 10;
+    }
+    .ah_complain{
+        left: inherit;
+        right: 5%;
+        top: 15%;
+        line-height: 30px;
+    }
+    .ah_share{
+        left: inherit;
+        right: 5%;
+        top: 5%;
+        line-height: 30px;
+    }
+    .ah_contact{
+        left: inherit;
+        right: 5%;
+        -webkit-animation: zhuan2 1.5s ease-in infinite;
+    }
+
+
+    .a_content{
+        padding: 4%;
+        box-sizing: border-box;
+        background: url("{$activity['bgimage']}") repeat 100%;
+        background-size: 100% 100%;
+        padding-bottom: 15%;
+    }
+    .ac_title{
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+    .ac_time{
+
+    }
+    .ac_time>div{
+        width: 100%;
+        text-align: center;
+        left: 0;
+        top: 28%;
+    }
+    .ac_time span{
+        color: #111;
+        background: #ED5F43;
+        border-radius: 50%;
+        padding: 2px;
+        margin: 0 2px;
+        display: inline-block;
+        /*width: 20px;*/
+        height: 20px;
+        text-align: center;
+        line-height: 16px;
+    }
+
+    .ac_messages{
+        margin: 5% 0;
+        text-align: center;
+        background: #FEF4DC;
+        width: 84%;
+        left: 8%;
+        position: relative;
+        border-radius: 10px;
+    }
+    .notice_active {
+        height: 3rem;
+        padding: 0;
+        overflow: hidden;
+        position: relative;
+    }
+    .notice_active ul{
+        padding: 0 6px;
+    }
+    .notice_active li{
+        list-style-type:none;line-height: 2.6rem;overflow: hidden;
+        text-align: center;
+    }
+
+
+    .ac_goods{
+        background: #fff;
+        border-radius: 5px;
+        padding: 2%;
+        margin-top: 20px;
+    }
+    .goods{
+        border: 1px solid #111;
+        border-radius: 5px;
+        padding: 12% 2% 2% 2%;
+        margin-top: 50px;
+    }
+    .goods .gt_logo{
+        width: 100px;
+        height: 100px;
+        margin-right: 3%;
+    }
+    .gt_detail>div{
+        margin: 10px 0;
+    }
+    .g_title{
+        width: 70%;
+        position: absolute;
+        top: -25px;
+        left: 15%;
+    }
+    .g_title>div{
+        position: absolute;
+        top: 5px;
+        width: 100%;
+        text-align: center;
+        left: 0;
+    }
+
+    .ac_youhui{
+        margin-top: 25px;
+    }
+    .acy_title{
+        width: 66%;
+        left: 17%;
+        margin-bottom: 8px;
+    }
+    .acy_title input{
+        width: 78%;
+        top: 5px;
+        left: 8%;
+        position: absolute;
+        z-index: 5;
+    }
+    .acy_content{
+        background: #fff;
+        border-radius: 5px;
+        padding: 2%;
+        position: relative;
+        height: 90%;
+        overflow-y: auto;
+    }
+
+    .acs_content .acsc_title,.acsc_list>div{
+        display: flex;
+        display: -webkit-flex;
+        justify-content: space-around;
+        justify-content: space-around;
+        align-items: center;
+        -webkit-align-items: center;
+    }
+    .acsc_list img{
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+    }
+    .acs_content span{
+        width: 25%;
+        text-align: center;
+        margin-top: 5px;
+    }
+    .acsc_tip{
+        padding-top: 18px;
+        text-align: center;
+    }
+
+
+    .go_top{
+        position: fixed;
+        bottom: 15%;
+        right: 5%;
+        width: 50px;
+        height: 50px;
+        z-index: 10;
+        color: #fff;
+        border-radius: 50%;
+        background: rgba(0,0,0,0.6);
+        text-align: center;
+        line-height: 18px;
+        padding: 6px;
+        display: none;
+    }
+    .open_share{
+        position: fixed;
+        top: 8%;
+        width: 60%;
+        left: 20%;
+        z-index: 20;
+        color: #fff;
+        display: none;
+    }
+    .os_btns img{
+        background: #fff;
+        border-radius: 50%;
+        padding: 8px;
+        width: 50px;
+    }
+    .osb_cancel{
+        position: fixed;
+        bottom: 5%;
+        padding: 2px;
+        border-bottom: 1px solid #fff;
+        left: 45%;
+    }
+
+
+    .open_kjtips{
+        position: fixed;
+        top: 10%;
+        width: 80%;
+        left: 10%;
+        z-index: 20;
+        background: #D3441B;
+        border-radius: 10px;
+        display: none;
+    }
+    .a_btn2{
+        width: 96%;
+        margin: 4% 2%;
+        display: block;
+        box-sizing: border-box;
+        padding: 2%;
+        font-size: 18px;
+    }
+    .a_btn3{
+        display: block;
+        width: 96%;
+        margin: 0 auto;
+    }
+    .swing{
+        -webkit-animation: kanjia 1.5s ease-in infinite;
+    }
+    .ok_price{
+        margin: 4% 2% 8% 2%;
+    }
+    .a_footer{
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        z-index: 10;
+        width: 100%;
+        text-align: center;
+    }
+    .a_footer>a{
+        margin: 0 auto;
+        margin-bottom: 10px;
+    }
+    .a_footer a{
+        font-size: 12px;
+        display: block;
+        width: 28%;
+    }
+    .fb_tip{
+        padding: 2% 0;
+        margin-top: 10px;
+        position: relative;
+        background: rgba(0,0,0,0.7);
+    }
+    .fb_tip a{
+        font-size: 12px;
+    }
+    .fb_tip .iconfont{
+        color: #fff;
+        position: absolute;
+        right: 2px;
+        top: 10px;
+    }
+    .gdtp_bg{
+        width: 100%;
+        height: 10px;
+        background: #ddd;
+        border-radius: 10px;
+        margin: 5px 0;
+    }
+    .gdtp_bg>div{
+        background: #ED5F43;
+        border-radius: 20px;
+        height: 10px;
+    }
+    .gdtp_bg>span{
+        background: #fff;
+        width: 16px;
+        border-radius: 50%;
+        height: 16px;
+        border: 3px solid #ED5F43;
+        top: -3px;
+    }
+
+    @-webkit-keyframes zhuan {
+        0%{transform: rotate(0deg)}
+        100%{transform: rotate(360deg)}
+    }
+    @-webkit-keyframes zhuan2 {
+        0%{transform: rotate(0deg)}
+        45%{transform: rotate(-30deg)}
+        90%{transform: rotate(30deg)}
+        100%{transform: rotate(0deg)}
+    }
+    @-webkit-keyframes kanjia {
+        10%{
+            transform: rotate(-3deg) scale(0.9);
+        }
+        35%{
+            transform: rotate(3deg) scale(1.1);
+        }
+        45%{
+            transform: rotate(-3deg);
+        }
+        55%{
+            transform: rotate(3deg);
+        }
+        65%{
+            transform: rotate(-3deg);
+        }
+        90%{
+            transform: rotate(0) scale(1);
+        }
+    }
+
+    .acs_navbar>div{
+        padding: 2% 0;
+        border-bottom: 2px solid transparent;
+    }
+    .acs_navbar>div.active{
+        border-bottom: 2px solid #ED5F43;
+        color: #ED5F43;
+    }
+    .acysc_detail span{
+        background: #FD6E4A;
+        width: 25px;
+        text-align: center;
+        color: #fff;
+        margin: 10px;
+        display: block;
+        border-radius: 50%;
+        height: 25px;
+        line-height: 25px;
+    }
+
+    .a_explain{
+        display: none;
+        position: fixed;
+        z-index: 50;
+        left: 5%;
+        width: 90%;
+        top: 5%;
+        height: 80%;
+        overflow-y: auto;
+        background: #fff;
+        border-radius: 5px;
+        padding: 5px;
+        background: url("{$activity['bgimage']}") repeat 100%;
+    }
+    .e_close.icon-Close{
+        display: none;
+        position: fixed;
+        left: 44%;
+        bottom: 5%;
+        z-index: 20;
+        font-size: 40px;
+        color: #fff;
+    }
+    .ac_list{
+        text-align: center;
+    }
+    .ac_list img{
+        width: 14%;
+        margin: 2%;
+    }
+
+    .a_cheating,.ac_sort{
+        position: fixed;
+        border-radius: 10px;
+        top: 15%;
+        color: #111;
+        padding: 5% 2%;
+        width: 80%;
+        left: 10%;
+        z-index: 20;
+        /*background: #F00C0A;*/
+        display: none;
+        background: url("{$activity['bgimage']}") repeat 100%;
+    }
+    .a_cheating .icon-Close{
+        position: absolute;
+        left: 44%;
+        bottom: -30%;
+        z-index: 20;
+        font-size: 40px;
+        color: #fff;
+    }
+    .ach_member{
+        /*background: #FD6E4A;*/
+        padding: 3%;
+    }
+    .ach_member img{
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+    }
+    .ach_member div{
+        font-size: 18px;
+    }
+    .ach_member p{
+        font-size: 16px;
+        margin-top: 10px;
+    }
+
+    .ac_sort{
+        top: 0;
+        height: 80%;
+    }
+    .a_close.icon-Close{
+        display: none;
+        position: fixed;
+        left: 44%;
+        bottom: 4%;
+        z-index: 20;
+        font-size: 40px;
+        color: #fff;
+    }
+
+    .ac_member{
+        margin-top: 15px;
+        margin-bottom: 10px;
+    }
+    .ac_member>img{
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+    }
+    .acm_detail{
+        background: #CC9A20;
+        color: #F00C0A;
+        padding: 5px 20px;
+        border-radius: 10px;
+        margin-left: 20px;
+    }
+    .h_jinnang{
+        position: absolute;
+        top: 0;
+        right: 15px;
+        width: 15%;
+    }
+    .nav-menu-wx{
+        display: none;
+    }
+    .c_title{
+        color: #D26150;
+        text-align: center;
+        /* text-shadow: #fff 0px 0px 0px; */
+        font-size: 16px;
+        -webkit-text-stroke: 1px rgba(255,255,255,0.7);
+        font-weight: 900;
+    }
+    .d_avarar{
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: 2px solid #E49586;
+        margin-right: 10px;
+    }
+    .c_data{
+        padding: 10px 10%;
+        color: #fff;
+    }
+    .c_btn{
+        width: 40%;
+        margin: 0 0 0 30%;
+    }
+    .c_btn2{
+        width: 50%;
+        margin: 0 0 0 25%;
+    }
+    .c_gold{
+        color: #fff;
+        text-align: center;
+        margin: 15px;
+    }
+    .a_complain{
+        position: fixed;
+        bottom: 50px;
+        right: 10px;
+        background: rgba(0,0,0,0.5);
+        padding: 2px 10px;
+        border-radius: 5px;
+        color: #fff;
+        z-index: 5;
+    }
+    .a_toping{
+        position: fixed;
+        bottom: 110px;
+        right: 10px;
+        background: rgba(0,0,0,0.5);
+        padding: 2px 10px;
+        border-radius: 5px;
+        color: #fff;
+        z-index: 5;
+    }
+    .a_user{
+        position: fixed;
+        bottom: 80px;
+        right: 10px;
+        background: rgba(0,0,0,0.5);
+        padding: 2px 10px;
+        border-radius: 5px;
+        color: #fff;
+        z-index: 5;
+    }
+    .a_order{
+        position: fixed;
+        bottom: 140px;
+        right: 10px;
+        background: rgba(0,0,0,0.5);
+        padding: 2px 10px;
+        border-radius: 5px;
+        color: #fff;
+        z-index: 5;
+    }
+</style>
+
+<div>
+    <div class="tips"></div>
+    {if $activity['effects_imgs']}<div class="moneybox" id="leafContainer"></div>{/if}
+
+    <!--头部-->
+    <div class="a_head p_relative">
+        <img class="h_img" src="{$activity['image']}" alt="">
+        <img onclick="goDetail()" class="h_jinnang" src="{YOUMI_URL_APP}img/jinnang.png" alt="">
+
+        {if $activity['music']}<i id="music" class="iconfont icon-music active"><audio id="audiojs" src="{$activity['music']}" autoplay loop></audio></i>{/if}
+        {if $activity['effects_imgs']}<i class="iconfont icon-mofabang active"></i>{/if}
+    </div>
+
+    <!--下部分，背景图片 background->repeat-->
+    <div class="a_content">
+
+        <div class="c_title">已有 {php echo intval($count)} 人参加活动</div>
+        <div class="c_data flex flex_a_center">
+            <img class="d_avarar" src="{$member['avatar']}" alt="">
+            <div><span class="color_yellow">{php echo intval($reward['lastl_points'])}</span>金币</div>
+            <div class="flex1" style="text-align: right">
+                <div>累计签到： <span class="color_yellow">{php echo intval($reward['total_times'])}</span>天</div>
+                <div>连续签到： <span class="color_yellow">{php echo intval($reward['reach_times'])}</span>天</div>
+            </div>
+        </div>
+        <img onclick="openSign()" class="c_btn" src="{YOUMI_URL_APP}img/c_btn.png" alt="">
+
+        <div class="c_gold">
+            <div>连续签到将获得翻倍金币</div>
+            <div>消耗<span class="color_yellow"> {$activity['lottery_points']} </span>金币可进行抽奖</div>
+        </div>
+        <img onclick="goSpeed()" class="c_btn2" src="{YOUMI_URL_APP}img/c_btn2.png" alt="">
+
+        {if $setting&&$setting['making_status2']==1}
+        <!--<div style="text-align: center;margin: 40px 0 0 0;">-->
+            <!--<a href="{$_W['siteroot']}index.php?c=entry&i={$_W['uniacid']}&do=making&case_id={$activity_umi['case_id']}&m=umi_activitys&module={$_W['current_module']['name']}" style="color:#000;border: 1px solid #000;padding: 6px 16px;border-radius: 5px;text-decoration: none;">-->
+                <!--<span>我也要创建活动</span>-->
+                <!--<i class="iconfont icon-jiantou1" style="font-size: 12px"></i>-->
+            <!--</a>-->
+        <!--</div>-->
+        {/if}
+    </div>
+</div>
+<!--底部按钮-->
+<a href="{php echo $this->createMobileUrl('order')}" class="a_order">中奖纪录</a>
+<a href="{php echo $this->createMobileUrl('user',['op'=>'user_balance'])}" class="a_user">提现</a>
+<a href="{php echo $this->createMobileUrl('index',['op'=>'toping','activity_id'=>$activity['id']])}" class="a_toping">排行榜</a>
+<a href="{php echo $this->createMobileUrl('index',['op'=>'page_complain','activity_id'=>$activity['id']])}" class="a_complain">投诉</a>
+<div class="a_footer" style="display: none">
+    {if $setting&&$setting['making_status']==1}
+    <div class="fb_tip flex flex_j_around flex_a_center ft16">
+        <div class="color_fff">{$setting['copyright']}</div>
+        <a href="{$setting['copyright_url']}">{if $setting['copyright_buy']}{$setting['copyright_buy']}{else}去购买{/if}</a>
+        <i class="iconfont icon-Close" onclick="$('.fb_tip').hide()"></i>
+    </div>
+    {/if}
+</div>
+<div class="bg_fixed"></div>
+<!--提交信息-->
+{template 'signup'}
+
+</div>
+<script>
+
+    const NUMBER_OF_LEAVES = 10;
+    const width=window.screen.width;
+    function init(){
+        var container = document.getElementById('leafContainer');
+        for (var i = 0; i < NUMBER_OF_LEAVES; i++)
+        {
+            container.appendChild(createALeaf());
+        }
+    }
+    function randomInteger(low, high)
+    {
+        return low + Math.floor(Math.random() * (high - low));
+    }
+    function randomFloat(low, high)
+    {
+        return low + Math.random() * (high - low);
+    }
+    function pixelValue(value)
+    {
+        return value + 'px';
+    }
+
+    function durationValue(value)
+    {
+        return value + 's';
+    }
+    function createALeaf()
+    {
+        var effects_imgs= {php echo json_encode($activity['effects_imgs'])};
+        var leafDiv = document.createElement('div');
+        var image = document.createElement('img');
+        image.src = effects_imgs[randomInteger(0, 4)];
+        leafDiv.style.top = "-10px";
+        leafDiv.style.left = pixelValue(randomInteger(0, width));
+        var spinAnimationName = (Math.random() < 1.5) ? 'clockwiseSpin' : 'counterclockwiseSpinAndFlip';
+        leafDiv.style.webkitAnimationName = 'fade, drop';
+        image.style.webkitAnimationName = spinAnimationName;
+        var fadeAndDropDuration = durationValue(randomFloat(13, 39));
+        var spinDuration = durationValue(randomFloat(3, 7));
+        leafDiv.style.webkitAnimationDuration = fadeAndDropDuration + ', ' + fadeAndDropDuration;
+        var leafDelay = durationValue(randomFloat(0, 0));
+        leafDiv.style.webkitAnimationDelay = leafDelay + ', ' + leafDelay;
+        image.style.webkitAnimationDuration = spinDuration;
+        leafDiv.appendChild(image);
+        return leafDiv;
+    }
+    window.addEventListener('load', init, false);
+</script>
+<script>
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        function audioAutoPlay() {
+            var audio = document.getElementById('audiojs');
+            audio.play();
+            document.addEventListener("WeixinJSBridgeReady", function () {
+                audio.play();
+            }, false);
+        }
+        audioAutoPlay();
+    });
+    if (/i(Phone|P(o|a)d)/.test(navigator.userAgent)) {
+        $(document).one('touchstart',
+            function(e) {
+                $('#audiojs').get(0).touchstart = true;
+                $('#audiojs').get(0).play();
+                return false;
+            }
+        );
+    }
+    var goods={php echo json_encode($goods)};
+    var audio=document.getElementsByTagName('audio')[0];
+</script>
+<script>
+    function goDetail(){
+        // location.href = "{php echo $this->createMobileUrl('index',['op'=>'detail'])}";
+    }
+    function goSpeed(){
+        location.href = "{php echo $this->createMobileUrl('index',['op'=>'speeddial','activity_id'=>$_GPC['activity_id']])}";
+    }
+
+    $('.icon-music').click(function () {
+        if(audio.paused){
+            audio.play();
+            $(this).addClass('active')
+        }else{
+            audio.pause();
+            $(this).removeClass('active')
+        }
+    });
+    $('.icon-mofabang').click(function(){
+        if($(this).hasClass('active')){
+            $(this).removeClass('active')
+            $('#leafContainer').hide()
+        }else{
+            $(this).addClass('active')
+            $('#leafContainer').show()
+        }
+    });
+
+
+    countDown({php echo intval($activity['endtime']-time())})//时间戳相减
+    //带天数的倒计时
+    function countDown(times){
+        var timer=null;
+        timer=setInterval(function(){
+            var day=0,
+                hour=0,
+                minute=0,
+                second=0;//时间默认值
+            if(times > 0){
+                day = Math.floor(times / (60 * 60 * 24));
+                hour = Math.floor(times / (60 * 60)) - (day * 24);
+                minute = Math.floor(times / 60) - (day * 24 * 60) - (hour * 60);
+                second = Math.floor(times) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
+            }
+            if (day <= 9) day = '0' + day;
+            if (hour <= 9) hour = '0' + hour;
+            if (minute <= 9) minute = '0' + minute;
+            if (second <= 9) second = '0' + second;
+            //
+            $('.act_day').html(day)
+            $('.act_hour').html(hour)
+            $('.act_min').html(minute)
+            $('.act_sec').html(second)
+            // console.log(day+"天:"+hour+"小时："+minute+"分钟："+second+"秒");
+            times--;
+        },1000);
+        if(times<=0){
+            clearInterval(timer);
+        }
+    }
+
+    // 公告
+    function timer(opj){
+        $(opj).find('ul').animate({
+            marginTop : "-2.1rem"
+        },500,function(){
+            $(this).css({marginTop : "0.3rem"}).find("li:first").appendTo(this);
+        })
+    }
+    $(function(){
+        var num = $('.notice_active').find('li').length;
+        if(num > 1){
+            var time=setInterval('timer(".notice_active")',3000);
+            $('.gg_more a').mousemove(function(){
+                clearInterval(time);
+            }).mouseout(function(){
+                time = setInterval('timer(".notice_active")',3000);
+            });
+        }
+    });
+    var startX,startY;
+    $('.go_top').click(function(){
+        $(window).scrollTop(0);
+        $('.go_top').fadeOut()
+    })
+
+    // 提示
+    function tips(txt){
+        $('.tips').html(txt).fadeIn()
+        setTimeout(function(){$('.tips').fadeOut()},1500);
+    }
+
+    //报名
+    function openSign() {
+        {if $reward}
+        reaching();
+        {else}
+        $('.open_signup,.bg_fixed').fadeIn()
+        {/if}
+    }
+    //签到
+    function reaching(id){
+        $.post(
+            "{php echo $this->createMobileUrl('index',['op'=>'reach'])}",
+            {
+                'reward_id':id?id:"{$reward['id']}",
+                'activity_id':"{$_GPC['activity_id']}"
+            },
+            function (data) {
+                tips(data.message);
+                if(data.errno==0) {
+                    setTimeout(function () {
+                        location.reload();
+                    },1500)
+                }
+            }, 'json'
+        )
+    }
+
+        console.log('$activity',{php echo json_encode($activity)})
+        console.log('$reward',{php echo json_encode($reward)})
+        console.log('$record_list',{php echo json_encode($record_list)})
+        console.log('$cut',{php echo json_encode($cut)})
+        console.log('$cut_my',{php echo json_encode($cut_my)})
+</script>
+<script>
+    var regional=true;
+    function map_click(lng,lat){
+        $.post(
+            "{php echo $this->createMobileUrl('index',['op'=>'regional'])}",
+            {
+                'lng': lng,
+                'lat': lat,
+                'activity_id':"{$activity_id}"
+            },
+            function (data) {
+                if(data.errno==1){
+                    tips(data.message,3000);
+                    regional=false;
+                }else{
+                    regional=true;
+                }
+            }, 'json'
+        );
+    }
+</script>
+{template 'footer'}

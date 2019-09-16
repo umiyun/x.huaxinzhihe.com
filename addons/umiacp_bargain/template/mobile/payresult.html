@@ -1,0 +1,57 @@
+{template 'header'}
+<style>
+	body{
+		background: #f3f3f3;
+	}
+	.nav-menu-wx{display: none}
+	.t_top{
+		background: #f3f3f3;
+		padding: 10px;
+	}
+	.t_top>div{
+		padding: 8px 10px;
+		background: #fff;
+		border-radius: 5px;
+	}
+	.icon-xuanzhong{
+		font-size: 8px;
+		border: 2px solid #27A8FF;
+		padding: 5px;
+		border-radius: 50%;
+		width: 25px;
+		height: 25px;
+		text-align: center;
+		line-height: 12px;
+		color: #27A8FF;
+		font-weight: 900;
+		margin-right: 10px;
+	}
+	.go_back{
+		display: inline-block;
+		border-radius: 50px;
+		text-align: center;
+		line-height: 35px;
+		height: 35px;
+		margin-left: 25%;
+		width: 50%;
+		font-size: 16px;
+		color: #fff;
+		background: #FF8800;
+		box-shadow: 0 2px 8px #F9D5AC;
+	}
+</style>
+
+<div class="t_top">
+	<div class="flex flex_a_center">
+		<i class="iconfont icon-xuanzhong"></i>
+		<div class="ft16">支付成功!</div>
+	</div>
+</div>
+<div style="padding: 10px;background: #fff;margin-bottom: 20px;">
+	{php echo htmlspecialchars_decode($setting['ad_desc'])}
+</div>
+<div>
+	<a class="go_back" href="{$url}">完成</a>
+</div>
+
+{template 'common/footer'}

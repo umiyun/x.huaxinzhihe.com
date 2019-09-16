@@ -1,0 +1,138 @@
+{template "common/header"}
+<style>
+    .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+        vertical-align: middle;
+    }
+</style>
+<ul class="nav nav-tabs">
+    <li {if $op == '' || $op == 'display'}class="active"{/if}>
+    <a href="javascript:;">用户管理</a>
+    </li>
+</ul>
+<div class="panel panel-default">
+    <div class="panel-default">
+        <div class="panel-heading">查询</div>
+        <div class="panel-body">
+            <form action="./index.php" method="get" class="form-horizontal" role="form" id="form1">
+                <input type="hidden" name="c" value="site">
+                <input type="hidden" name="a" value="entry">
+                <input type="hidden" name="m" value="hbs_recycle">
+                <input type="hidden" name="do" value="member">
+                <div class="form-group">
+                    <label class="col-md-4 col-lg-1 control-label">粉丝</label>
+                    <div class="col-md-4">
+                        <input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}" placeholder="可模糊查询">
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    {if $list}
+    <div class="panel-body">
+        <form action="" method="post" class="form-horizontal form">
+            <input type="hidden" name="token" value="{$_W['token']}">
+            <div class="table-responsive panel-body">
+                <table class="table table-hover">
+                    <thead class="navbar-inner">
+                        <th class="text-center">用户</th><th class="text-center">手机号码</th><th class="text-center">积分</th><th class="text-center">加入时间</th><th style="text-align:right;">操作</th>
+                    </thead>
+                    <tbody id="level-list">
+                    {loop $list $index $item}
+                    <tr>
+                        {if $item['avatar']}
+                        <td style="text-align: left;height:45px;" align="center">
+                            <img style="width:40px;height:40px;padding:1px;margin-right:5px;border:1px solid #ccc;border-radius: 50%;" src="{php echo tomedia($item['avatar'])}">
+                            {$item['nickname']}
+                        </td>
+                        {else}
+                        <td class="text-center" align="center">
+                            <div class="type-parent text-center text-align:center" style="color: red;">用户未授权,无法获取</div>
+                        </td>
+                        {/if}
+                        <td class="text-center" align="center">
+                            <div class="type-parent text-center text-align:center">{$item['mobile']}</div>
+                        </td>
+                        <td class="text-center" align="center">
+                            <div class="type-parent text-center text-align:center">{$item['credit2']}</div>
+                        </td>
+                        <td class="text-center" align="center">
+                            <div class="type-parent text-align:center">{if $item['createtime']}{php echo date('Y-m-d H:i' , $item['createtime'])}{else}{/if}</div>
+                        </td>
+
+                        <td align="right">
+                            <!--<a class="btn btn-info btn-sm" href="{php echo $this->createWebUrl('member',array('op'=>'post','uid'=>$item['uid']))}" title="基本信息">基本信息</a>-->
+                            <!--<a class="btn btn-default btn-sm" href="{php echo $this->createWebUrl('recharge',array('uid'=>$item['uid']))}" title="会员订单">会员订单</a>-->
+                            <a class="btn btn-default btn-sm" href="javascript:;" data-href="{php echo $this->createWebUrl('consume',array('op'=>'post','uid'=>$item['uid']))}" title="积分修改" onclick="$('.cz').attr('data-id',{$item['uid']}).show()">积分修改</a>
+                        </td>
+                    </tr>
+                    {/loop}
+                    {if $pager}
+                    <tr>
+                        <td colspan="5" align="right">{$pager}</td>
+                    </tr>
+                    {/if}
+                    </tbody>
+                </table>
+            </div>
+            
+        </form>
+    </div>
+
+
+    <div class="cz" style="display: none">
+        <div class="modal-dialog" style="top: 10%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button onclick="$('.cz').hide()" class="close" type="button">×</button>
+                    <h4 class="modal-title">积分修改(正数为增加积分，负数为减少积分)</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group" style="margin: 0 10px;">
+                        <div class="col-sm-9 col-xs-12">
+                            <input type="text" id="reason" name="" class="form-control" value="" placeholder="请输入积分">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer cz_btn">
+                    <button class="btn btn-primary" type="button">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {else}
+    <div style="text-align: center;padding: 90px 0;" class="panel panel-default">暂无数据~</div>
+    {/if}
+</div>
+<script>
+    $('.cz_btn').on('click','button',function () {
+        var uid=$('.cz').attr('data-id');
+        var credit2=$('.cz input').val();
+        if(credit2==''){
+            return;
+        }
+        $.post(
+            "{php echo $this->createWebUrl('member',array('op'=>'update_credit2'))}",
+            {
+                "uid":uid,
+                "credit2":credit2
+            },
+            function (res) {
+                var data=JSON.parse(res);
+                console.log(data);
+                util.message(data.message);
+                if(data.status>0){
+                    setTimeout(function () {
+                        location.reload();
+                    },1000)
+                }
+            }
+        )
+    })
+</script>
+{template "common/footer"}

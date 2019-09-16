@@ -1,0 +1,395 @@
+{template 'header'}
+<style>
+    body{
+        background: #f3f3f3;
+    }
+	#tiger_poster {
+        width: 80%;
+        /*height: 79.15vh;*/
+		border: 1px solid #ccc;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 5;
+        margin-left: 1vh;
+        margin-top: 1vh;
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+	}
+
+	#tiger_poster .drag[type=img] img, #tiger_poster .drag[type=thumb] img {
+		width: 100%;
+		height: 100%;
+	}
+
+	#tiger_poster .drag {
+		position: absolute;
+		width: 12vh;
+		height: 12vh;
+		border: 1px solid #000;
+	}
+    #tiger_poster .drag[type="img"]{
+        width: 10vh;
+        height: 10vh;
+    }
+
+	#tiger_poster .bg {
+		position: absolute;
+		width: 100%;
+		z-index: 0
+	}
+
+	#tiger_poster .drag[type=name] {
+		width: 10vh;
+		height: 5vh;
+		font-size: 16px;
+	}
+
+	#tiger_poster .drag img {
+		position: absolute;
+		z-index: 0;
+		width: 100%;
+	}
+    .btns{
+        position: fixed;
+        left: 1vh;
+        top: 85vh;
+        z-index: 5;
+        width: 100%;
+        text-align: left;
+    }
+    .btns button{
+        width: 12.1vh;
+        height: 5vh;
+        font-size: 12px;
+        padding: 0;
+        position: relative;
+    }
+    .select_goodimg{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        z-index: 8;
+    }
+    .iconfs{
+        display: none;
+    }
+    .iconfs_title{
+        position: fixed;
+        top: 1vh;
+        right: 0.5vh;
+        z-index: 5;
+        font-size: 12px;
+    }
+    .icon-webicon308{
+        position: fixed;
+        right: 2vh;
+        font-size: 30px;
+        top: 6vh;
+    }
+    .icon-delete-s{
+        position: fixed;
+        right: 1.5vh;
+        font-size: 34px;
+        top: 15vh;
+    }
+</style>
+<style>
+    .footer_btns{
+        position: fixed;
+        z-index: 15;
+        bottom: 0;
+        width: 100%;
+        left: 0;
+        color: #fff;
+    }
+    .fb_btns{
+        background: #fff;
+    }
+    .fb_btns>div{
+        width: 40%;
+        font-size: 16px;
+        text-align: center;
+        padding: 4px 8px;
+    }
+    .fb_tip{
+        padding: 1% 5%;
+        background: rgba(0,0,0,0.7);
+    }
+</style>
+<input type="hidden" name="reply_id" value="{$reply['id']}" />
+<div class="main">
+    <div id='tiger_poster' style='background-image: url("{$reply['bg']}")'>
+      {if !empty($reply['data'])}
+      {loop $reply['data'] $key $dv}
+      <div onclick="tiger_bind(this)" class="drag" type="{$dv['type']}" index="{php echo $key+1}" style="zindex:{php echo $key+1};">
+            {if $dv['type']=='img' || $dv['type']=='thumb'}
+              <img src="{YOUMI_URL_APP}img/default.jpg" />
+            {elseif $dv['type']=='qr'}
+              <img src="{YOUMI_URL_APP}img/qrcode_9.jpg" />
+            {elseif $dv['type']=='name'}
+               <div class=text>昵称</div>
+            {/if}
+      </div>
+      {/loop}
+      {/if}
+    </div>
+    <div class="iconfs">
+        <div class="iconfs_title">头像属性</div>
+        <i class="iconfont icon-webicon308" onclick="zoomChange('in')"></i>
+        <i class="iconfont icon-delete-s" onclick="zoomChange('out')"></i>
+    </div>
+
+    <div class='btns'>
+      <button class='btn btn-info btn-poster' data-type='img' >头像</button>
+      <button class='btn btn-primary btn-poster' data-type='name'>昵称</button>
+      <button class='btn btn-warning btn-poster' data-type='qr' >二维码</button>
+      <button class='btn btn-warning btn-poster' data-type='bg' style="width: auto">
+          背景图(640*1008)
+          <input class="select_goodimg" type="file" accept="image/*" onchange="selectGoodimg(this)" style="position: absolute">
+      </button>
+    </div>
+</div>
+<!--底部按钮-->
+
+<div class="footer_btns">
+    <div class="fb_btns flex flex_j_center flex_a_center">
+        <div class="sys_color" onclick="submit('1')">预览</div>
+        <div class="sys_bgcolor" onclick="submit('2')">保存</div>
+        <div class='btn btn-warning' style="width: 20%;background: #aaa" onclick="submit('3')" >重置</div>
+    </div>
+</div>
+<script>
+    $('#tiger_poster').height($('#tiger_poster')[0].offsetWidth*1008/640+'px');
+
+    var bg="{$reply['bg']}";
+    $('.btn-poster').click(function(){
+      var imgsset = $('#imgsset');
+      var namesset = $("#namesset");
+      imgsset.hide();
+      namesset.hide();
+       var type = $(this).data('type');
+        attributeChange(this);
+       if(type=='img'&&$('.drag[type="img"]').length>0){
+           return false;
+       }
+        if(type=='name'&&$('.drag[type="name"]').length>0){
+            return false;
+        }
+        if(type=='qr'&&$('.drag[type="qr"]').length>0){
+            return false;
+        }
+        if(type!='bg'){
+            var img = "";
+            if (type == 'img' || type == 'thumb') {
+                img = '<img src="https://x.huaxinzhihe.com/addons/umiacp_groupsimple/template/images/default.jpg" />';
+            } else if (type == 'name') {
+                img = '<div class=text>昵称</div>';
+            } else if (type == 'qr') {
+                img = '<img src="https://x.huaxinzhihe.com/addons/umiacp_groupsimple/template/images/qrcode_9.jpg" />';
+            }
+            var index = $('#tiger_poster .drag').length + 1;
+            var obj = $('<div class="drag" onclick="tiger_bind(this)" type="' + type + '" index="' + index + '" style="z-index:' + index + '">' + img + '</div>');
+            $('#tiger_poster').append(obj);
+            $('#tiger_poster .drag').click();
+        }
+    });
+    function submit(cate) {
+        if(cate=='3'){
+            $('#tiger_poster').html('').css('background-image','');
+        }else{
+            var poster = [];
+            $('.drag').each(function(){
+                var obj = $(this);
+                var type = obj.attr('type');
+                var left = obj.css('left');
+                var top = obj.css('top');
+                left=Number(left.replace('px',''))*(640/$('#tiger_poster')[0].offsetWidth).toFixed(2)+'px';
+                top=Number(top.replace('px',''))*(640/$('#tiger_poster')[0].offsetWidth).toFixed(2)+'px';
+                var width=Number(obj.css('width').replace('px',''))*(640/$('#tiger_poster')[0].offsetWidth).toFixed(2)+'px';
+                var height=Number(obj.css('height').replace('px',''))*(640/$('#tiger_poster')[0].offsetWidth).toFixed(2)+'px';
+                var d= {left:left,top:top,type:obj.attr('type'),width:width,height:height};
+                if(type=='name'){
+                    d.size = obj.css('font-size');
+                    d.color = '#101010';
+                }
+                poster.push(d);
+            });
+            $.post(
+                "{php echo $this->createMobileUrl('activitys',['op'=>'up_poster'])}",
+                {
+                    'module':"{$_GPC['module']}",
+                    'activity_id': "{$_GPC['activity_id']}",
+                    'bg':bg,
+                    'data':JSON.stringify(poster)
+                },
+                function (data) {
+                    tips(data.message);
+                    if (data.errno == 0) {
+                        setTimeout(function () {
+                            if(cate=='2') {
+                                location.href = "{php echo $this->createMobileUrl('activitys',['op'=>'activitys_detail'])}&activity_id=" + data.data.id;
+                            }else{
+                                location.href="./index.php?c=entry&i={$_W['uniacid']}&do=index&activity_id="+data.data.activity_id+"&m="+data.data.module;
+                            }
+                        },1500)
+
+                    }
+                }, 'json'
+            );
+
+            if(!poster){
+                tips('请设置海报参数');
+                return false;
+            }
+        }
+    }
+    function tiger_bind(self) {
+        var tiger_poster=document.getElementById('tiger_poster');
+        var drag = document.querySelector('.drag');
+        attributeChange(self);
+        //限制最大宽高，不让滑块出去
+        var maxW = tiger_poster.clientWidth - self.offsetWidth;
+        var maxH = tiger_poster.clientHeight - self.offsetHeight;
+        //手指触摸开始，记录div的初始位置
+        self.addEventListener('touchstart', function (e) {
+            var ev = e || window.event;
+            var touch = ev.targetTouches[0];
+            oL = touch.clientX - self.offsetLeft;
+            oT = touch.clientY - self.offsetTop;
+            document.addEventListener("touchmove", defaultEvent, false);
+        });
+
+        //触摸中的，位置记录
+        self.addEventListener('touchmove', function(e) {
+            var ev = e || window.event;
+            var touch = ev.targetTouches[0];
+            var oLeft = touch.clientX - oL;
+            var oTop = touch.clientY - oT;
+            if(oLeft < 0) {
+                oLeft = 0;
+            } else if(oLeft >= maxW) {
+                oLeft = maxW;
+            }
+            if(oTop < 0) {
+                oTop = 0;
+            } else if(oTop >= maxH) {
+                oTop = maxH;
+            }
+            self.style.left = oLeft + 'px';
+            self.style.top = oTop + 'px';
+        });
+        //触摸结束时的处理
+        self.addEventListener('touchend', function() {
+            document.removeEventListener("touchmove", defaultEvent);
+        });
+    }
+    //阻止默认事件
+    function defaultEvent(e) {
+        e.preventDefault();
+    }
+    function selectGoodimg(self) {
+        tips('图片上传中...')
+        var reader=new FileReader();
+        var arr=$(self).val().split('\\');
+        arr=arr[arr.length-1].split('/');
+        var my=arr[arr.length-1];//这就是要取得的图片名称
+        reader.onload=function(e){
+            $.post(
+                "{php echo $this->createMobileUrl('upload',['op'=>'image'])}",
+                {
+                    'file':reader.result,
+                    'name':my,
+                    'size':e.total,
+                    'module':"{$_GPC['module']}",
+                    'activity_id':"{$activity_id}",
+                },
+                function (data) {
+                    $('#tiger_poster').css('background-image','url('+data.message+')')
+                    bg=data.message;
+                    tips('上传成功')
+                },'json'
+            )
+            // console.log( reader.result);  //或者 e.target.result都是一样的，都是base64码
+        };
+        reader.readAsDataURL(self.files[0])
+        $('#tiger_poster .drag').click();
+    }
+    console.log('$reply',{php echo json_encode($reply)})
+    setTimeout(function () {
+        $('#tiger_poster .drag').click();
+    },1000);
+    function attributeChange(self) {
+        var type=$(self).attr('type');
+        if(type=='qr'){
+            $('.iconfs_title').html('二维码属性');
+            $('.iconfs').attr('type',type).show();
+        }else if(type=='name'){
+            $('.iconfs_title').html('昵称属性');
+            $('.iconfs').attr('type',type).show();
+        }else if(type=='img'){
+            $('.iconfs_title').html('头像属性');
+            $('.iconfs').attr('type',type).show();
+        }
+    }
+    function zoomChange(zoomName) {
+        var type=$('.iconfs').attr('type');
+        var cName='.drag[type="'+type+'"]';
+        var dName=$(cName);
+
+        var width=Number(dName[0].offsetWidth);
+        dName.click();
+        if(zoomName=='in'){
+            if(type!='name') {
+                if(width>100){
+                    return false;
+                }
+                dName.css('width', width + 4 + 'px').css('height', width + 4 + 'px');
+            }else{
+                var dSize= Number(dName.find('div').css('font-size').replace('px',''));
+                if(dSize>22){
+                    return false;
+                }
+                dName.find('div').css('font-size', dSize+2+'px');
+            }
+        }else if(zoomName=='out'){
+
+            if(type!='name') {
+                if(width<40){
+                    return false;
+                }
+                dName.css('width', width - 4 + 'px').css('height', width - 4 + 'px');
+            }else{
+                var dSize= Number(dName.find('div').css('font-size').replace('px',''));
+                if(dSize<10){
+                    return false;
+                }
+                dName.find('div').css('font-size', dSize-2+'px');
+            }
+        }
+    }
+</script>
+<script>
+    {if $reply['data']}
+    function realDistance(num) {
+        return (Number(num.replace('px',''))*$('#tiger_poster')[0].offsetWidth/640)+'px'
+    }
+    var data={php echo json_encode($reply['data'])};
+    for(var i=0;i<data.length;i++){
+        if(data[i]['type']=='name'){
+            $('.drag[type="name"]').css('left',realDistance(data[i]['left'])).css('top',realDistance(data[i]['top'])).css('width',realDistance(data[i]['width'])).css('height',realDistance(data[i]['height']));
+        }
+        if(data[i]['type']=='img'){
+            $('.drag[type="img"]').css('left',realDistance(data[i]['left'])).css('top',realDistance(data[i]['top'])).css('width',realDistance(data[i]['width'])).css('height',realDistance(data[i]['height']));
+        }
+        if(data[i]['type']=='qr'){
+            $('.drag[type="qr"]').css('left',realDistance(data[i]['left'])).css('top',realDistance(data[i]['top'])).css('width',realDistance(data[i]['width'])).css('height',realDistance(data[i]['height']));
+        }
+    }
+
+    {/if}
+</script>
+{template 'footer'}

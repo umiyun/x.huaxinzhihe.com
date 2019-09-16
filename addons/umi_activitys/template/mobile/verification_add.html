@@ -1,0 +1,181 @@
+{template 'header'}
+<style>
+    .v_cells img{
+        width: 45px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+    .weui-cells{
+        margin-top: 0;
+    }
+    .v_add{
+        background: #fff;
+        padding: 10px;
+        border-radius: 5px;
+    }
+    .va_search{
+
+    }
+    .va_search a{
+        height: 40px;
+        background: #f8a40d;
+        color: #fff;
+        width: 60px;
+        text-align: center;
+        line-height: 40px;
+        border-bottom-right-radius: 5px;
+        border-top-right-radius: 5px;
+    }
+    .va_search input{
+        border-bottom-right-radius: 0;
+        border-top-right-radius: 0;
+    }
+    .v_add .icon-Close{
+        position: fixed;
+        left: 44%;
+        bottom: 10%;
+        z-index: 20;
+        font-size: 40px;
+        color: #fff;
+    }
+    .va_cells{
+        margin:  10% 0;
+        min-height: 100px;
+        max-height: 250px;
+        overflow-y: auto;
+    }
+    .va_btn{
+        margin-top: 20px;
+    }
+    .va_btn.active{
+        background: #aaa;
+    }
+    .realname,.mobile{
+        border: 0!important;
+    }
+    .weui-switch-cp__input:checked~.weui-switch-cp__box, .weui-switch:checked{
+        border-color: #f8a40d;
+        background-color: #f8a40d;
+    }
+</style>
+
+<!--添加弹窗-->
+<div class="v_add">
+    {if empty($item)}
+    <div class="va_search flex flex_a_center">
+        <input type="text" placeholder="请输入用户昵称">
+        <a href="javascript:;">搜索</a>
+    </div>
+    {/if}
+    <div class="va_cells weui-cells weui-cells_radio">
+        {if $item}
+        <label class="weui-cell weui-check__label" for="x11">
+            <div class="weui-cell__bd">
+                <img style="width: 45px;margin-right:5px;border-radius: 50%" src="{$item['avatar']}" alt="">
+                <p>{$item['nickname']}</p>
+            </div>
+            <div class="weui-cell__ft">
+                <input type="radio" class="weui-check" name="radio1" id="x11" checked value="{$item['openid']}">
+                <span class="weui-icon-checked"></span>
+            </div>
+        </label>
+        {/if}
+
+    </div>
+    <div class="weui-cell">
+        <div class="weui-cell__hd"><label class="weui-label">姓名</label></div>
+        <div class="weui-cell__bd">
+            <input class="weui-input realname" type="text" placeholder="请输入姓名" value="{$item['realname']}">
+        </div>
+    </div>
+    <div class="weui-cell">
+        <div class="weui-cell__hd"><label class="weui-label">电话</label></div>
+        <div class="weui-cell__bd">
+            <input class="weui-input mobile" maxlength="11" type="tel" placeholder="请输入电话" value="{$item['mobile']}">
+        </div>
+    </div>
+    <div class="weui-cells weui-cells_form">
+        <div class="weui-cell weui-cell_switch">
+            <div class="weui-cell__bd">状态</div>
+            <div class="weui-cell__ft">
+                <input class="weui-switch" type="checkbox" {if $item['status']==1}checked{/if}>
+            </div>
+        </div>
+    </div>
+    {if $item}
+    <div class="a_btn va_btn">保存</div>
+    {else}
+    <div class="a_btn va_btn active">添加</div>
+    {/if}
+</div>
+<script>
+
+    console.log({php echo json_encode($item)})
+
+    $('.va_search a').click(function(){
+        var keyword=$('.va_search input').val();
+        if(keyword){
+            $.post(
+                "{php echo $this->createMobileUrl('verification',array('op'=>'search'))}",
+                {
+                    keyword: keyword
+                }, function (data) {
+                    if(data.length>0){
+                        var html='';
+                        for(var i=0;i<data.length;i++){
+                            html+='<label onclick="$(\'.va_btn\').removeClass(\'active\')" class="weui-cell weui-check__label" for="x'+i+'">' +
+                                '    <div class="weui-cell__bd">' +
+                                '        <p><img style="width: 45px;margin-right:5px;border-radius: 50%" src="'+data[i]['avatar']+'" alt="">'+data[i]['nickname']+'</p>' +
+                                '    </div>' +
+                                '    <div class="weui-cell__ft">' +
+                                '        <input data-openid="'+data[i]['openid']+'"  type="radio" name="radio1" class="weui-check" id="x'+i+'">' +
+                                '        <span class="weui-icon-checked"></span>' +
+                                '    </div>' +
+                                '</label>'
+                        }
+                        $('.va_btn').removeClass('active');
+                        $('.va_cells').html(html);
+                    }else{
+                        tips('没有搜索到会员')
+                    }
+                },'json'
+            )
+        }
+    })
+
+
+    //添加核销员
+    $('.va_btn').click(function () {
+        var realname=$('.realname').val();
+        var mobile=$('.mobile').val();
+        var status=$('.weui-switch')[0].checked?'1':'2';
+        if(realname==''||mobile==''){
+            tips('请输入姓名和电话');
+            return false;
+        }
+        if(!$(this).hasClass('active')){
+            var obj=$('.va_cells input:checked');
+            $.post(
+                "{php echo $this->createMobileUrl('verification',array('op'=>'addmember'))}",
+                {
+                    id:"{$item['id']}",
+                    nopenid: obj.attr('data-openid'),
+                    realname:realname,
+                    mobile:mobile,
+                    status:status
+                }, function (data) {
+                    tips(data.message)
+                    if(data.errno==0) {
+                        setTimeout(function () {
+                           history.go(-1);
+                        },2000)
+                    }
+                },'json'
+            )
+        }
+    });
+
+</script>
+
+
+{template 'footer'}

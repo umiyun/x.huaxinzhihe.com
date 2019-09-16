@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns="http://www.we7.cc" versionCode="0.8,1.0">
+	<application setting="false">
+		<name><![CDATA[郭&杨婚礼H5]]></name>
+		<identifie><![CDATA[weddingh5]]></identifie>
+		<version><![CDATA[0.0.3]]></version>
+		<type><![CDATA[business]]></type>
+		<ability><![CDATA[郭&杨婚礼H5]]></ability>
+		<description><![CDATA[同路人QQ群：758511946]]></description>
+		<author><![CDATA[蚂蚁]]></author>
+		<url><![CDATA[http://www.we7.cc]]></url>
+	</application>
+	<platform>
+		<subscribes>
+			<message type="text" />
+		</subscribes>
+		<handles>
+			<message type="subscribe" />
+			<message type="qr" />
+			<message type="text" />
+			<message type="image" />
+		</handles>
+		<rule embed="false" />
+		<card embed="false" />
+	</platform>
+	<bindings>
+		<cover>
+			<entry title="首页" do="index" state="" direct="false" />
+		</cover>
+		<menu>
+			<entry title="留言" do="message" state="" direct="false" />
+			<!--<entry title="用户管理" do="member" state="" direct="false" />-->
+			<!--<entry title="分类管理" do="cate" state="" direct="false" />-->
+		</menu>
+	</bindings>
+	<permissions>
+	</permissions>
+	<install>
+		<![CDATA[]]>
+	</install>
+	<uninstall>
+		<![CDATA[]]>
+	</uninstall>
+	<upgrade></upgrade>
+</manifest>

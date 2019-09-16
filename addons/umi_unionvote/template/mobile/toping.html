@@ -1,0 +1,65 @@
+{template 'header'}
+<style>
+    .t_img2{
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1;
+    }
+    .list{
+        position: relative;
+        z-index: 5;
+        padding: 0 20%;
+        font-size: 14px;
+        max-height: 75vh;
+        overflow-y: auto;
+    }
+    .detail h4{
+        font-weight: inherit;
+        font-size: 16px;
+    }
+    .detail span{
+        background: #EF0202;
+        color: #fff;
+        padding: 2px;
+        width: 15px;
+        height: 15px;
+        text-align: center;
+        line-height: 15px;
+        margin-right: 20px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+    .detail h4.c0{
+        color: #992A0C;
+        font-weight: 700;
+    }
+    .detail h4.c1{
+        color: #F35E3C;
+        font-weight: 700;
+    }
+    .detail h4.c2{
+        color: #EC903B;
+        font-weight: 700;
+    }
+
+</style>
+<img style="width: 100%" src="{YOUMI_URL_APP}imgs/top_img.png" alt="">
+<div class="list">
+    {loop $cuts $cdx $cv}
+    <div class="detail flex flex_j_between flex_a_center">
+        <div class="flex flex_j_between flex_a_center">
+            <span>{php echo $cdx+1}</span>
+            <h4 class="c{$cdx}">{$cv['realname']}</h4>
+        </div>
+        <div>{$cv['times']}票</div>
+    </div>
+    {/loop}
+</div>
+<img class="t_img2" src="{YOUMI_URL_APP}imgs/top_img2.png" alt="">
+<script>
+    console.log('$cuts',{php echo json_encode($cuts)})
+</script>
+
+{template 'common/footer'}

@@ -1,12 +1,12 @@
 <template>
 	<view>
-		<view class="cu-bar bg-black">
+		<view class="cu-bar bg-black fixed">
 			<view class="action" @tap="goIndex">
 				<text class="cuIcon-homefill text-gray"></text> 首页
 			</view>
 			<view class="content text-bold">{{detail.goods_name}}</view>
 		</view>
-
+		<view style="height: 100rpx;"></view>
 		<hswiper :url="this.siteinfo.urlImg" :banner="detail.imgs"></hswiper>
 
 		<view class="d_title">

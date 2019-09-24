@@ -1,15 +1,16 @@
 <template>
 	<view>
-		<home v-if="PageCur=='home'"></home>
-		<activitys v-if="PageCur=='activitys'"></activitys> 
-		<user v-if="PageCur=='user'"></user>
+		<home v-if="url_name=='首页'"></home>
+		<activitys v-if="url_name=='商店'"></activitys> 
+		<user v-if="url_name=='我的'"></user>
 		<view style="height: 100rpx;"></view>
+		
 		<view class="cu-bar tabbar bg-white shadow foot">
-			<view v-for="(item,index) in tabs" :key="index" class="action" @click="NavChange" :data-cur="item.cur">
+			<view v-for="(item,index) in tabs" :key="index" class="action" @click="NavChange" :data-is_url="item.is_url" :data-url_name="item.url_name">
 				<view class='cuIcon-cu-image'>
-					<image :src="PageCur==item.cur?(item.attachurl+item.clickafter_icon):(item.attachurl+item.clickago_icon)"></image>
+					<image :src="PageCur==item.is_url?(item.attachurl+item.clickafter_icon):(item.attachurl+item.clickago_icon)"></image>
 				</view>
-				<view :class="PageCur==item.cur?'sys_color':'text-gray'">{{item.title}}</view>
+				<view :class="PageCur==item.is_url?'sys_color':'text-gray'">{{item.title}}</view>
 			</view>
 		</view>
 	</view>
@@ -18,41 +19,61 @@
 <script>
 	export default {
 		data() {
-		return {
-				PageCur: 'home',
-				tabs:[
-					{
-						attachurl: "http://x.umiyun.net/",
-						clickafter_icon: "images/28/2019/03/Hu3UKvIKRIWTNKvmKmNFWuxPrNPXkF.png",
-						clickago_icon: "images/28/2019/03/qxGaj0ZIcDaakjaGaMMJNTnLAWcGz2.png",
-						cur:"home",
-						title: "首页"
-					},
-					{
-						attachurl: "http://x.umiyun.net/",
-						clickafter_icon: "images/30/2019/06/ZiIzz2Iz0Y50539fFe95BFZB9eHXSn.png",
-						clickago_icon: "images/30/2019/06/Tbp57SIb94N9uzpc5ZBs44PSKpPwJg.png",
-						cur:"component",
-						title: "商城"
-					},
-					{
-						attachurl: "http://x.umiyun.net/",
-						clickafter_icon: "images/28/2019/03/MXCFDlDFIdzpeP1uDl1IlDDDZxifIi.png",
-						clickago_icon: "images/28/2019/03/p6Z8dSWEe5xXWsNS5Ts5szECHZ5Hd2.png",
-						cur:"user",
-						title: "我的"
-					}
-				]
+			return {
+				siteinfo:this.siteinfo,
+				url_name:'',
+				isIpx:!1,
+				PageCur: '',
+				tabs:[],
+				Customize:{}
 			}
+		},
+		onLaunch: function() {
+			
+		},
+		onShow: function() {
+			var that=this;
+			uni.request({
+				url: that.siteinfo.url,
+				data: {
+					do:'getCustomize',
+					inn_id:3
+				},
+				success: res => {
+					that.tabs=res.data.tab;
+					that.PageCur=res.data.tab[0]['is_url'];
+					that.url_name='首页';
+					that.Customize=res.data
+				}
+			});
+			uni.request({
+				url: that.siteinfo.url,
+				data: {do:'system'},
+				success: res => {
+					uni.setStorage({
+					    key: 'setting',
+					    data: res.data
+					});
+				}
+			});
 		},
 		methods: {
 			NavChange: function(e) {
-				this.PageCur = e.currentTarget.dataset.cur
+				this.PageCur = e.currentTarget.dataset.is_url;
+				this.url_name = e.currentTarget.dataset.url_name;
 			}
+		},
+		onShareAppMessage(res) {
+		    return {
+		      title: uni.getStorageSync('setting')['index_title'],
+		      path: '../home/index'
+		    }
 		}
 	}
 </script>
 
 <style>
-	
+	.isIpx {
+	    height: 200rpx;
+	}
 </style>
